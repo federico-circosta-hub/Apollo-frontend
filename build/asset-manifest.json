@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.bad9dc8e.css",
+    "main.js": "/static/js/main.f7617a53.js",
+    "static/js/787.37a04fc0.chunk.js": "/static/js/787.37a04fc0.chunk.js",
+    "static/media/stetoscopio.jpeg": "/static/media/stetoscopio.cc7a3e5be26954afe850.jpeg",
+    "static/media/ospedale-loghi.jpeg": "/static/media/ospedale-loghi.22a575159c9ad8a81833.jpeg",
+    "static/media/scientist.jpeg": "/static/media/scientist.74ae401300f210ecc2a4.jpeg",
+    "static/media/male.png": "/static/media/male.db61fc44b31bb2d71e41.png",
+    "static/media/logo_unimi.png": "/static/media/logo_unimi.157c3ad59611f1b71daa.png",
+    "static/media/add-event.png": "/static/media/add-event.0ef711848d6ba5344592.png",
+    "static/media/question.png": "/static/media/question.a97e45146636971d8892.png",
+    "static/media/add-user.png": "/static/media/add-user.a5c6ae51810f726594ac.png",
+    "static/media/new-file.png": "/static/media/new-file.1a13a066141ef1308848.png",
+    "static/media/search.png": "/static/media/search.a27091ef0c45faf8a66e.png",
+    "index.html": "/index.html",
+    "main.bad9dc8e.css.map": "/static/css/main.bad9dc8e.css.map",
+    "main.f7617a53.js.map": "/static/js/main.f7617a53.js.map",
+    "787.37a04fc0.chunk.js.map": "/static/js/787.37a04fc0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bad9dc8e.css",
+    "static/js/main.f7617a53.js"
+  ]
+}
