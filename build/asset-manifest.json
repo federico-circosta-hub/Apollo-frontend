@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c302fe05.css",
-    "main.js": "/static/js/main.5654b548.js",
+    "main.js": "/static/js/main.7058215e.js",
     "static/js/787.37a04fc0.chunk.js": "/static/js/787.37a04fc0.chunk.js",
     "static/media/stetoscopio.jpeg": "/static/media/stetoscopio.cc7a3e5be26954afe850.jpeg",
     "static/media/ospedale-loghi.jpeg": "/static/media/ospedale-loghi.22a575159c9ad8a81833.jpeg",
@@ -15,11 +15,11 @@
     "static/media/search.png": "/static/media/search.a27091ef0c45faf8a66e.png",
     "index.html": "/index.html",
     "main.c302fe05.css.map": "/static/css/main.c302fe05.css.map",
-    "main.5654b548.js.map": "/static/js/main.5654b548.js.map",
+    "main.7058215e.js.map": "/static/js/main.7058215e.js.map",
     "787.37a04fc0.chunk.js.map": "/static/js/787.37a04fc0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c302fe05.css",
-    "static/js/main.5654b548.js"
+    "static/js/main.7058215e.js"
   ]
 }
