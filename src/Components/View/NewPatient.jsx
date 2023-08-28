@@ -3,7 +3,6 @@ import { useState } from "react"
 import male from '../img/male.png'
 import question from '../img/icon/question.png'
 import Slider from '@mui/material/Slider';
-import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { format, } from 'date-fns';
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
@@ -15,19 +14,22 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'dayjs/locale/it';
-
+import { validateForm } from "../ViewModel/Validation";
+import FormModal from "./FormModal"
 
 export default function NewPatient() {
 
     const marksH = [{ value: 180, label: '180cm', }, { value: 170, label: '170cm', }, { value: 190, label: '190cm', }, { value: 160, label: '160cm', }, { value: 220, label: '220cm', }, { value: 120, label: '120cm', }];
     const marksW = [{ value: 40, label: '40kg', }, { value: 50, label: '50kg', }, { value: 60, label: '60kg', }, { value: 70, label: '70kg', }, { value: 80, label: '80kg', }, { value: 90, label: '90kg', }, { value: 100, label: '100kg', }, { value: 150, label: '150kg', }];
-    const [patient, setPatient] = useState(new PatientModel('Mario', 'Rossi', '', 'M', 170, 75, []))
+    const [patient, setPatient] = useState(new PatientModel('', '', '', 'M', 170, 75, []))
     const [protButtonClass, setProtButtonClass] = useState("btn btn-warning")
     const [showProthesis, setShowProthesis] = useState('none')
     const [showModal, setShowModal] = useState(false)
     const [disabled, setDisabled] = useState(false)
     const [sendingButton, setSendingButton] = useState('Conferma e procedi')
     const [showAlert, setShowAlert] = useState(false)
+    const [formModal, setFormModal] = useState(false)
+    const [errors, setErrors] = useState({ none: 'none' })
     const navigate = useNavigate();
 
     const handleNew = async () => {
@@ -37,6 +39,17 @@ export default function NewPatient() {
             patient.register()
             setShowAlert(true)
         }, 3000)
+    }
+
+    const add = () => {
+        let e = validateForm('newPatient', patient)
+        if (Object.keys(e).length == 0) {
+            setShowModal(true)
+        }
+        else {
+            setErrors(e)
+            setFormModal(true)
+        }
     }
 
     const modifyPatientName = (event) => {
@@ -229,12 +242,14 @@ export default function NewPatient() {
                 </div>
 
                 <div>
-                    <button class="btn btn-success btn-lg" onClick={() => setShowModal(true)} >Aggiungi paziente</button>
+                    <button class="btn btn-success btn-lg" onClick={() => add()} >Aggiungi paziente</button>
                 </div>
             </div>
 
             <NewPatientModal data={{ navigate: navigate, showAlert: showAlert, patient: patient, disabled: disabled, showModal: showModal, handleNew: handleNew, sendingButton: sendingButton, setShowModal: setShowModal }} />
-
+            < div >
+                {formModal && <FormModal formModal={formModal} setFormModal={setFormModal} errors={errors} />}
+            </div >
         </div>
     )
 }

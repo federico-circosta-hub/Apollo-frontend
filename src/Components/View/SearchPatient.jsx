@@ -57,7 +57,7 @@ export default function SearchPatient() {
 
             <div style={style.box}>
                 <input type="text" name="name" placeholder='cerca per cognome...' onChange={(event) => research(event)} />
-                <div style={{ overflow: 'auto', width: '90%', textAlign: 'center' }}>
+                <div style={{ height: '65vh', overflow: 'auto', width: '90%', textAlign: 'center' }}>
 
                     <h2 style={{ position: 'sticky', top: 0, bottom: 10, background: 'white' }}>Elenco pazienti:</h2>
                     <div style={{ height: '45vh' }}>
@@ -65,12 +65,6 @@ export default function SearchPatient() {
                             <PatientLine key={index} patient={patient} isSelected={patient === selectedPatient} onSelectPatient={() => { setSelectedPatient(patient); handleSelect() }} />
                         ))}
                     </div>
-                </div>
-                <div style={{ display: forward }}>
-                    <Link to={'/visit'} style={{ margin: 20 }} class="btn btn-success btn-lg" >Prosegui</Link>
-                </div>
-                <div style={{ display: disabledForward }}>
-                    <button to={'/visit'} style={{ margin: 20 }} class="btn btn-success btn-lg" disabled>Prosegui</button>
                 </div>
             </div>
 
@@ -91,10 +85,10 @@ const style = {
         alignText: 'center',
         alignItems: 'center',
         paddingBottom: '2%',
-        paddingTop: '5%',
+        paddingTop: '0.2%',
         overflow: 'auto',
         justifyContent: 'space-around',
-        gap: 20
+
     }
 }
 

@@ -1,5 +1,5 @@
 import { format, } from 'date-fns';
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function PatientLine(props) {
 
@@ -9,9 +9,12 @@ export default function PatientLine(props) {
 
     return (
         <div style={{ padding: 30, background: props.isSelected ? 'lightgreen' : 'white' }} onClick={() => select()} >
-            <h5>
-                {props.patient.surname}, {props.patient.name}, {format(props.patient.birthdate, 'y-MM-dd')}
-            </h5>
+            <Link className="btn btn-success btn-lg" to={'/visit'}>
+                <h5>
+                    {props.patient.surname}, {props.patient.name}, {format(props.patient.birthdate, 'y-MM-dd')}
+                </h5>
+            </Link>
+
         </div>
     )
 }

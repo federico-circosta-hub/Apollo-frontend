@@ -28,16 +28,16 @@ export default function Visit() {
                     }}
                 ></div>
                 <div style={styles.buttonsDiv}>
-                    <Link to={'/visit/searchVisit'} className="btn btn-primary btn-lg" style={styles.button}>
-                        <label style={styles.label}>Consulta visite passate <img src={folder} alt="search" width={50} style={{ filter: `invert(100%)` }} /></label>
-                    </Link>
-
                     <Link to={'/visit/newVisitInPresence'} className="btn btn-primary btn-lg" style={styles.button}>
                         <label style={styles.label}>Nuova visita <img src={newFile} alt="search" width={50} style={{ filter: `invert(100%)` }} /></label>
                     </Link>
 
+                    <Link to={'/visit/searchVisit'} className="btn btn-primary btn-lg" style={styles.button}>
+                        <label style={styles.label}>Visite precedenti <img src={folder} alt="search" width={50} style={{ filter: `invert(100%)` }} /></label>
+                    </Link>
+
                     <Link to={'/visit/newVisitPast'} className="btn btn-primary btn-lg" style={styles.button}>
-                        <label style={styles.label}>Inserisci visita passata <img src={newEvent} alt="search" width={50} style={{ filter: `invert(100%)` }} /></label>
+                        <label style={styles.label}>Trascrivi visita <img src={newEvent} alt="search" width={50} style={{ filter: `invert(100%)` }} /></label>
                     </Link>
                 </div>
             </div>

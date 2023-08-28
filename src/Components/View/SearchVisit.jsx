@@ -25,7 +25,6 @@ export default function SearchVisit() {
 
     const getVisits = () => {
         let arr = GenerateVisits()
-        arr.sort((a, b) => b - a);
         setVisitList(arr);
     }
 

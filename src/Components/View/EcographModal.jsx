@@ -16,7 +16,7 @@ export default function EcographModal(props) {
                     Ho esportato le immagini
                 </Link>
                 <button class="btn btn-danger" onClick={() => (props.setShowModal(false))} >
-                    Annulla articolazione
+                    Annulla
                 </button>
             </Modal.Footer>
 
