@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 import { NewVisitContext } from "../Model/NewVisitContext"
 import { PatientContext } from "../Model/PatientContext"
+import NewVisitModel from "../Model/NewVisitModel"
 import HeaderPatient from "./HeaderPatient"
 import NoContextModal from "./NoContextModal"
-import { Switch } from "@mui/material"
+import { FormControl, Switch, InputLabel, Select, MenuItem } from "@mui/material"
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -13,12 +14,10 @@ import JointModel from "../Model/JointModel"
 import EcographImages from "./EcographImages"
 import GenerateImages from "../Model/GenerateImages"
 import { Modal } from "react-bootstrap"
-import format from "date-fns/format"
-import { RefreshButton } from "./RefreshButton"
 
 
 
-export default function Joint(props) {
+export default function JointPage2(props) {
 
     const { newVisit, setNewVisit } = useContext(NewVisitContext)
     const { selectedPatient } = useContext(PatientContext)
@@ -27,43 +26,45 @@ export default function Joint(props) {
     const [photos, setPhotos] = useState([]);
     const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
     const [showModal, setShowModal] = useState(false)
-    const [selectedImages, setSelectedImages] = useState([]);
-    const [isLoading, setIsLoading] = useState(false)
+
 
     useEffect(() => {
         loadJoint();
+        fetchPhotos()
     }, [])
 
-    const forward = () => {
-        if (newVisit.jointPresence(joint.jointName)) {
-            newVisit.deleteJoint(joint.jointName)
+    const fetchPhotos = async () => {
+        let arr = await GenerateImages()
+        setPhotos(arr);
+    };
+
+    const checkPresence = (s) => {
+        for (let i = 0; i < newVisit.joints.length; i++) {
+            if (newVisit.joints[i].jointName == s) {
+                return true
+            }
         }
-        joint.setImages(photos)
-        joint.setSelectedImages(selectedImages)
-        setJoint(joint)
-        newVisit.addJoint(joint)
-        setNewVisit(newVisit)
-        console.log(newVisit)
+        return false
     }
 
-    const loadJoint = async () => {
+    const end = () => {
+        if (checkPresence(joint.jointName)) {
+            newVisit.deleteJoint(joint.jointName)
+        }
+        newVisit.addJoint(joint)
+        newVisit.setCurrentJoint('')
+        setNewVisit(newVisit)
+    }
+
+    const loadJoint = () => {
         let j = newVisit.getJoint(newVisit.currentJoint)
         setJoint(j)
-        let images
-        let selectedImages = []
-        if (j.images == undefined) {
-            images = await GenerateImages()
-        } else {
-            images = j.images
-            selectedImages = j.selectedImages
-        }
-        setPhotos(images);
-        setSelectedImages(selectedImages)
     }
 
     const openModal = (e) => {
         let index = Number(e.target.alt.substring(e.target.alt.length - 1, e.target.alt.length))
         console.log(photos[index])
+
         setCurrentPhotoIndex(index);
         setShowModal(true);
     };
@@ -71,34 +72,6 @@ export default function Joint(props) {
     const closeModal = () => {
         setShowModal(false);
     };
-
-    const modifyJoint = (e, field) => {
-        let b = e.target.checked
-        switch (field) {
-            case 'index':
-                return joint.setIndexJoint(b)
-            case 'difficulty':
-                return joint.setJointDiffuculty(b)
-            case 'pain':
-                return joint.setPain(b)
-        }
-        setJoint(joint)
-    }
-
-    const lastBleed = (d) => {
-        joint.setLastBleed(d)
-        setJoint(joint)
-    }
-
-    const handleRefresh = async () => {
-        setIsLoading(true)
-        let arr = await GenerateImages()
-        setPhotos(arr)
-        setSelectedImages([])
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 1000)
-    }
 
     return (selectedPatient !== null) ? (
         <div>
@@ -109,12 +82,7 @@ export default function Joint(props) {
                 <div>
                     <h2>{joint.jointName}</h2>
                 </div>
-                <div style={{ overflow: 'auto', width: '97%', textAlign: 'center', border: '1px solid black', borderRadius: '20px', }}>
-                    <EcographImages handleClick={(e) => openModal(e)} selectedImages={selectedImages} setSelectedImages={setSelectedImages} photos={photos} joint={{ joint, setJoint }} />
-                </div>
-                <div >
-                    <RefreshButton onClick={handleRefresh} loading={isLoading} />
-                </div>
+
                 <div style={style.horizontalLine}>
 
                 </div>
@@ -123,34 +91,31 @@ export default function Joint(props) {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '50%', }}>
                     <div style={{ width: '60%', height: '100%' }}>
                         <div >
-                            <label style={{ fontSize: 25 }}>Index Joint</label>
-                            <Switch checked={joint.indexJoint} onChange={(e) => modifyJoint(e, 'index')} />
+                            <label style={{ fontSize: 25 }}>pippo</label>
+                            <Switch />
                         </div>
                         <div >
-                            <label style={{ fontSize: 25 }}>Fatica muovere articolazione</label>
-                            <Switch checked={joint.jointDifficulty} onChange={(e) => modifyJoint(e, 'difficulty')} />
+                            <label style={{ fontSize: 25 }}>ciao</label>
+                            <Switch />
                         </div >
-                        <div >
-                            <label style={{ fontSize: 25 }}>Dolore</label>
-                            <Switch checked={joint.pain} onChange={(e) => modifyJoint(e, 'pain')} />
-                        </div>
+
                     </div>
-                    <div >
+                    {/* <div >
                         <label style={{ fontSize: 25 }} >Data ultimo sanguinamento:</label>
                         <br />
                         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='it'>
-                            <DatePicker label={joint.lastBleed != undefined ? format(joint.lastBleed, 'dd-MM-y') : 'DD-MM-YYYY'} onChange={(newValue) => lastBleed(newValue.$d)} />
+                            <DatePicker />
                         </LocalizationProvider >
-                    </div>
+                    </div> */}
                 </div>
 
 
                 <div style={{ display: 'flex', marginBottom: '1.5%', justifyContent: 'space-between', width: '95%' }}>
                     <div>
-                        <Link to={'/visit/newVisitInPresence/jointSelection'} onClick={() => { newVisit.setCurrentJoint(''); newVisit.deleteJoint(joint.jointName) }} class="btn btn-danger btn-lg">Elimina articolazione</Link>
+                        <Link to={'/visit/newVisitInPresence/jointSelection/joint'} class="btn btn-warning btn-lg">Indietro</Link>
                     </div>
                     <div>
-                        <Link to={'/visit/newVisitInPresence/jointSelection/jointPage2'} style={style.forwardButton} class="btn btn-success btn-lg" onClick={forward}>Prosegui</Link>
+                        <Link to={'/visit/newVisitInPresence/jointSelection'} style={style.forwardButton} class="btn btn-success btn-lg" onClick={end}>Fine</Link>
                     </div>
                 </div>
             </div>

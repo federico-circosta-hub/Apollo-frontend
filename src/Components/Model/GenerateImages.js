@@ -1,9 +1,9 @@
 export default async function GenerateImages() {
     const images = [];
 
-    let imagesCount = Math.floor(Math.random() * 50);
+    let imagesCount = Math.floor(Math.random() * 10);
     while (imagesCount == 0) {
-        imagesCount = Math.floor(Math.random() * 50);
+        imagesCount = Math.floor(Math.random() * 10);
     }
 
 

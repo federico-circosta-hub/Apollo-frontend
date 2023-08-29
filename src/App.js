@@ -18,6 +18,7 @@ import JointSelection from './Components/View/JointSelection';
 import Joint from './Components/View/Joint';
 import Drug from './Components/View/Drug';
 import FollowUp from './Components/View/FollowUp';
+import JointPage2 from './Components/View/JointPage2';
 
 function App() {
 
@@ -39,11 +40,13 @@ function App() {
                 <Route path='/visit/newVisitInPresence' element={<NewVisit />} />
                 <Route path='/visit/newVisitInPresence/jointSelection' element={<JointSelection />} />
                 <Route path='/visit/newVisitInPresence/jointSelection/joint' element={<Joint />} />
+                <Route path='/visit/newVisitInPresence/jointSelection/jointPage2' element={<JointPage2 />} />
                 <Route path='/visit/newVisitInPresence/drug' element={<Drug />} />
                 <Route path='/visit/newVisitInPresence/followUp' element={<FollowUp />} />
                 <Route path='/visit/newVisitPast' element={<NewVisitPast />} />
                 <Route path='/visit/searchVisit' element={<SearchVisit />} />
                 <Route path='/visit/seeVisit' element={<SeeVisit />} />
+
 
               </Routes >
             </NewVisitProvider>

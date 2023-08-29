@@ -16,7 +16,6 @@ export default function NoContextModal(props) {
                     Ok
                 </Link>
             </Modal.Footer>
-
         </Modal>
     )
 }

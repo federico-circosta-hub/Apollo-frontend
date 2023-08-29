@@ -9,6 +9,7 @@ import JointModel from "../Model/JointModel";
 import { NewVisitContext } from "../Model/NewVisitContext";
 import EcographModal from "./EcographModal";
 import EndingJointModal from "./EndingJointModal";
+import JointSelectionButtonVisualizer from "../ViewModel/JointSelectionButtonVisualizer";
 
 
 export default function JointSelection() {
@@ -18,11 +19,17 @@ export default function JointSelection() {
     const [showModal, setShowModal] = useState(false)
     const [showEndingModal, setShowEndingModal] = useState(false)
 
-    const handleJoint = (e) => {
-        newVisit.setCurrentJoint(e.target.name)
+    const navigate = useNavigate()
+
+    const handleJoint = (s, b) => {
+        newVisit.setCurrentJoint(s)
         setNewVisit(newVisit)
         console.log(newVisit)
-        setShowModal(true)
+        if (b) {
+            navigate('/visit/newVisitInPresence/jointSelection/joint')
+        } else {
+            setShowModal(true)
+        }
     }
 
     return (
@@ -48,13 +55,13 @@ export default function JointSelection() {
 
                     <div style={style.protLeft} >
                         <div >
-                            <button name="Gom dx" class="btn btn-info btn-lg" onClick={handleJoint}>Gom dx</button>
+                            <JointSelectionButtonVisualizer click={(alreadySeen) => handleJoint('Gom dx', alreadySeen)} name={'Gom dx'} />
                         </div>
                         <div  >
-                            <button name="Gin dx" class="btn btn-info btn-lg" onClick={handleJoint}>Gin dx</button>
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Gin dx')} name={'Gin dx'} />
                         </div>
                         <div >
-                            <button name="Cav dx" class="btn btn-info btn-lg" onClick={handleJoint}>Cav dx</button>
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Cav dx')} name={'Cav dx'} />
                         </div>
                     </div>
 
@@ -64,13 +71,13 @@ export default function JointSelection() {
                     <div style={style.prot}>
 
                         <div >
-                            <button name="Gom sx" class="btn btn-info btn-lg" onClick={handleJoint}>Gom sx</button>
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Gom sx')} name={'Gom sx'} />
                         </div>
                         <div >
-                            <button name="Gin sx" class="btn btn-info btn-lg" onClick={handleJoint}>Gin sx</button>
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Gin sx')} name={'Gin sx'} />
                         </div>
                         <div >
-                            <button name="Cav sx" class="btn btn-info btn-lg" onClick={handleJoint}>Cav sx</button>
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Cav sx')} name={'Cav sx'} />
                         </div>
                     </div>
                 </div>

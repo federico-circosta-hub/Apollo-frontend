@@ -140,13 +140,13 @@ export default class NewVisitModel {
 
     jointPresence(s) {
         console.log('chiamato jointPresence')
+        let b = false
         this.joints.forEach(e => {
             if (e.jointName == s) {
-                return true
+                b = true
             }
-            console.log(e.jointName + ' non uguale a ' + s)
         })
-        return false
+        return b
     }
 
     deleteJoint(s) {
@@ -181,8 +181,8 @@ export default class NewVisitModel {
                 let s = 'Sono stati visitati:\n'
                 this.joints.forEach(e => {
                     s += e.jointName + " num ecografie: "
-                    if (e.images != undefined) {
-                        s += e.images.length + '\n'
+                    if (e.selectedImages != undefined) {
+                        s += e.selectedImages.length + '\n'
                     } else {
                         s += 0
                     }
