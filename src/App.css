@@ -125,6 +125,10 @@
   --bs-form-invalid-border-color: #dc3545
 }
 
+.MuiSlider-markLabel {
+  font-size: 11px !important;
+}
+
 [data-bs-theme=dark] {
   color-scheme: dark;
   --bs-body-color: #dee2e6;
@@ -6355,7 +6359,7 @@ fieldset:disabled .btn {
   }
 
   .modal-sm {
-    --bs-modal-width: 300px
+    --bs-modal-width: 960px
   }
 }
 
@@ -6363,13 +6367,13 @@ fieldset:disabled .btn {
 
   .modal-lg,
   .modal-xl {
-    --bs-modal-width: 1200px
+    --bs-modal-width: 1024px
   }
 }
 
 @media (min-width:1200px) {
   .modal-xl {
-    --bs-modal-width: 1920px
+    --bs-modal-width: 300px
   }
 }
 

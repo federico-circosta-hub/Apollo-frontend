@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, CircularProgress } from '@mui/material';
+import reload from './../img/icon/reload.png'
 
 export const RefreshButton = ({ onClick, loading }) => {
     return (
@@ -10,7 +11,7 @@ export const RefreshButton = ({ onClick, loading }) => {
                 onClick={onClick}
                 disabled={loading}
             >
-                {loading ? <CircularProgress size={20} style={{ alignItems: 'center' }} color="inherit" /> : 'AGGIORNA'}
+                {loading ? <CircularProgress size={20} style={{ alignItems: 'center' }} color="inherit" /> : <> reload images  <img src={reload} width={20} /></>}
             </Button>
         </div>
     );

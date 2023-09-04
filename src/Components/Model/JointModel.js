@@ -57,4 +57,8 @@ export default class JointModel {
     setLastBleed(d) {
         this.lastBleed = d
     }
+
+    setSynovitis(s) {
+        this.synovitis = s
+    }
 }

@@ -6,33 +6,52 @@ import HeaderPatient from "./HeaderPatient"
 import NoContextModal from "./NoContextModal"
 import { FormControl, Switch, InputLabel, Select, MenuItem } from "@mui/material"
 import format from "date-fns/format"
+import { DayPicker } from "react-day-picker"
 import { Link } from "react-router-dom"
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'dayjs/locale/it';
-import FollowUpHelper from "../ViewModel/FollowUpHelper"
-import { validateForm } from '../ViewModel/Validation'
-import FormModal from './FormModal'
-import { useNavigate } from 'react-router-dom';
 
-export default function NewVisit(props) {
 
-    const nav = useNavigate()
 
+export default function EndVisit(props) {
+
+    const { newVisit, setNewVisit } = useContext(NewVisitContext)
+    const { selectedPatient, setSelectedPatient } = useContext(PatientContext)
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1%' }}>
+            <div>
+                <h1>End visit</h1>
+            </div>
+
+            <div>
+                <h3>Report</h3>
+                <h3>Coming soon</h3>
+            </div>
+            <div style={{ display: 'flex', marginBottom: '1.5%', justifyContent: 'center', width: '95%' }}>
+                <div>
+                    <Link to={'/'} class="btn btn-primary btn-lg" onClick={() => { setNewVisit(null); setSelectedPatient(null) }} >Exit</Link>
+                </div>
+
+            </div>
+        </div>
+    )
+
+}
+/* 
     const { newVisit, setNewVisit } = useContext(NewVisitContext)
     const { selectedPatient } = useContext(PatientContext)
 
-    const activities = ['Cycling', 'Walk', 'Running', 'Swimming',]
-    const traumaticEvents = ['None', 'Operation', 'Fall', 'Accident',]
+    const activities = ['Bicicletta', 'Camminata', 'Corsa', 'Nuoto',]
+    const traumaticEvents = ['Nessuno', 'Operazione', 'Caduta', 'Incidente',]
 
-    const [isFollowUp, setIsFollowUp] = useState(newVisit === null ? false : newVisit.followUp.followUp)
     const [disabledLeft, setDisabledLeft] = useState(newVisit === null ? true : !newVisit.physicalActivity.physicalActivity)
-    const [physicalActivity, setPhysicalActivity] = useState(newVisit === null ? { 'physicalActivity': false, 'physicalActivityDate': '', 'physicalActivityType': '' } : newVisit.physicalActivity)
-    const [traumaticEvent, setTraumaticEvent] = useState(newVisit === null ? { 'traumaticEvent': 'None', 'traumaticEventDate': '' } : newVisit.traumaticEvent)
-    const [disabledRight, setDisabledRight] = useState(newVisit === null ? true : (newVisit.traumaticEvent.traumaticEvent === 'None') ? true : false)
-    const [formModal, setFormModal] = useState(false)
-    const [errors, setErrors] = useState({ none: 'none' })
+    const [physicalActivity, setPhysicalActivity] = useState(newVisit === null ? { 'physicalActivity': false, 'physicalActivityDate': 'none', 'physicalActivityType': 'none' } : newVisit.physicalActivity)
+    const [traumaticEvent, setTraumaticEvent] = useState(newVisit === null ? { 'traumaticEvent': 'none', 'traumaticEventDate': 'none' } : newVisit.traumaticEvent)
+    const [showDatePickerR, setShowDatePickerR] = useState('none')
+    const [disabledRight, setDisabledRight] = useState(newVisit === null ? true : (newVisit.traumaticEvent.traumaticEvent === 'Nessuno') ? true : false)
 
     useEffect(() => {
         if (newVisit === null) {
@@ -41,34 +60,22 @@ export default function NewVisit(props) {
             nv.setPatient(selectedPatient.surname)
             setNewVisit(nv)
         }
-    }, [])
+    }, [traumaticEvent, physicalActivity])
 
     const handleChange = (e) => {
         physicalActivity.physicalActivity = e.target.checked
         setPhysicalActivity(physicalActivity)
         setDisabledLeft(!e.target.checked)
-        if (!e.target.checked) { setPhysicalActivity({ 'physicalActivity': false, 'physicalActivityDate': '', 'physicalActivityType': '' }) }
+        if (!e.target.checked) { setPhysicalActivity({ 'physicalActivity': false, 'physicalActivityDate': 'none', 'physicalActivityType': 'none' }) }
     }
 
     const forward = () => {
-        let o = {}
-        o.traumaticEvent = traumaticEvent
-        o.physicalActivity = physicalActivity
-        let e = (validateForm('newVisit', o))
-        console.log(Object.keys(e))
-        if (Object.keys(e).length == 0) {
-            newVisit.setIsFollowUp(isFollowUp)
-            newVisit.setVisitDate(new Date())
-            newVisit.setPhysicalActivity(physicalActivity)
-            newVisit.setTraumaticEvent(traumaticEvent)
-            setNewVisit(newVisit)
-            setErrors({})
-            console.log(newVisit)
-            nav('/visit/newVisitInPresence/jointSelection');
-        } else {
-            setErrors(e)
-            setFormModal(true)
-        }
+        newVisit.setVisitDate(new Date())
+        newVisit.setPhysicalActivity(physicalActivity)
+        newVisit.setTraumaticEvent(traumaticEvent)
+        newVisit.setJoints([])
+        setNewVisit(newVisit)
+        console.log(newVisit)
     }
 
     const modifyDate = (date, whatDate) => {
@@ -79,6 +86,7 @@ export default function NewVisit(props) {
             traumaticEvent.traumaticEventDate = format(date, 'y-MM-dd')
             setTraumaticEvent(traumaticEvent)
         }
+
     }
 
     const displayActivityItems = () => {
@@ -96,9 +104,9 @@ export default function NewVisit(props) {
 
     const handleTrauma = (e) => {
         let newtraumaticEvent = { ...traumaticEvent }
-        if (e.target.value === 'None') {
+        if (e.target.value === 'Nessuno') {
             setDisabledRight(true)
-            newtraumaticEvent.traumaticEventDate = ''
+            newtraumaticEvent.traumaticEventDate = 'none'
         } else {
             setDisabledRight(false)
         }
@@ -107,19 +115,16 @@ export default function NewVisit(props) {
     }
 
     const followUp = (e) => {
-        setIsFollowUp(e.target.checked)
+        newVisit.followUp.followup = e.target.checked
+        setNewVisit(newVisit)
     }
 
     const datePickerResolver = (b, s) => {
         if (b) {
             return <DatePicker disabled />
         } else {
-            return <DatePicker onChange={(newValue) => modifyDate(newValue.$d, s)} label={s == 'traumaDate' ? traumaticEvent.traumaticEventDate : physicalActivity.physicalActivityDate} />
+            return <DatePicker onChange={(newValue) => modifyDate(newValue.$d, s)} />
         }
-    }
-
-    const handleCancel = () => {
-        setIsFollowUp(false)
     }
 
     return (selectedPatient !== null) ? (
@@ -128,19 +133,14 @@ export default function NewVisit(props) {
                 <HeaderPatient />
             </div>
             <div className="box-bianco" style={style.box}>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <div style={{ width: '100%', alignItems: 'center' }}>
-                        <label style={{ fontSize: 25 }}>Is this a follow up visit?</label>
-                        <Switch defaultChecked={isFollowUp} onChange={followUp} />
-                    </div>
-                    <div >
-                        {isFollowUp && <FollowUpHelper onCancel={handleCancel} />}
-                    </div>
+                <div>
+                    <label style={{ fontSize: 25 }}>È una visita di follow up?</label>
+                    <Switch onChange={followUp} />
                 </div>
                 <div style={{ display: 'flex', width: '95%', alignItems: "center", justifyContent: 'space-between', }}>
                     <div style={style.buttons}>
                         <div style={{ display: 'flex' }}>
-                            <label style={{ fontSize: 26 }} >Performed physical activity?</label>
+                            <label style={{ fontSize: 26 }} >Ha svolto esercizio fisico?</label>
                             <Switch defaultChecked={newVisit === null ? false : newVisit.physicalActivity.physicalActivity} onChange={handleChange} />
 
                         </div>
@@ -151,7 +151,7 @@ export default function NewVisit(props) {
                         </div>
                         <div >
                             <FormControl fullWidth disabled={disabledLeft} style={{ minWidth: 120, fontSize: 28 }}>
-                                <InputLabel id="demo-simple-select-label">Physical activity</InputLabel>
+                                <InputLabel id="demo-simple-select-label">Attività fisica</InputLabel>
                                 <Select style={{ fontSize: 26 }}
                                     id="demo-simple-select"
                                     label="esercizio"
@@ -168,10 +168,10 @@ export default function NewVisit(props) {
                     <div style={style.buttons}>
                         <div >
                             <FormControl fullWidth >
-                                <InputLabel id="demo-simple-select-label" style={{ width: 160 }}>Events</InputLabel>
+                                <InputLabel id="demo-simple-select-label" style={{ width: 160 }}>Eventi</InputLabel>
                                 <Select style={{ fontSize: 28 }}
                                     id="demo-simple-select"
-                                    label="event"
+                                    label="evento"
                                     value={traumaticEvent.traumaticEvent}
                                     onChange={handleTrauma}>
                                     {displayTraumaticItems()}
@@ -188,23 +188,19 @@ export default function NewVisit(props) {
 
                 <div style={{ display: 'flex', marginBottom: '1.5%', justifyContent: 'space-between', width: '95%' }}>
                     <div>
-                        <Link onClick={() => setNewVisit(null)} to={'/visit/'} class="btn btn-danger btn-lg">Cancel</Link>
+                        <Link onClick={() => setNewVisit(null)} to={'/visit/'} class="btn btn-danger btn-lg">Annulla</Link>
                     </div>
                     <div>
-                        <button style={style.forwardButton} class="btn btn-success btn-lg" onClick={forward}>Forward</button>
+                        <Link to={'/visit/newVisitInPresence/jointSelection'} style={style.forwardButton} class="btn btn-success btn-lg" onClick={forward}>Prosegui</Link>
                     </div>
                 </div>
             </div>
-            < div >
-                {formModal && <FormModal formModal={formModal} setFormModal={setFormModal} errors={errors} />}
-            </div >
         </div>
     )
         :
         (
             <NoContextModal what={" un paziente "} service={" nuova visita "} />
         )
-
 }
 
 
@@ -248,3 +244,4 @@ const style = {
 }
 
 
+ */

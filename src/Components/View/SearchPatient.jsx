@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import back from '../img/stetoscopio.jpeg';
 import search from '../img/icon/search.png'
 import add from '../img/icon/add-user.png'
@@ -11,8 +11,9 @@ export default function SearchPatient() {
 
     const [patientList, setPatientList] = useState([])
     const [patientListToShow, setPatientListToShow] = useState([])
-    const [forward, setForward] = useState('none');
-    const [disabledForward, setDisabledForward] = useState('flex');
+
+    const navigate = useNavigate()
+
     const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
 
     useEffect(() => {
@@ -28,8 +29,9 @@ export default function SearchPatient() {
     }
 
     const handleSelect = () => {
-        setForward('flex')
-        setDisabledForward('none')
+        setTimeout(() => {
+            navigate('/visit')
+        }, 200)
     }
 
     const research = (event) => {

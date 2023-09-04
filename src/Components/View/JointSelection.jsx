@@ -40,7 +40,7 @@ export default function JointSelection() {
             <div className="box-bianco" style={style.box}>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'left', padding: '1%' }}>
                     <div >
-                        <h2 >Seleziona l'articolazione da visitare: </h2>
+                        <h3 >Select joint to visit: </h3>
                     </div>
 
                 </div>
@@ -50,43 +50,43 @@ export default function JointSelection() {
                     flexDirection: 'row',
                     justifyContent: 'center',
                     textAlign: 'center',
-                    margin: '1.5%'
+                    margin: '1%'
                 }}>
 
                     <div style={style.protLeft} >
                         <div >
-                            <JointSelectionButtonVisualizer click={(alreadySeen) => handleJoint('Gom dx', alreadySeen)} name={'Gom dx'} />
+                            <JointSelectionButtonVisualizer click={(alreadySeen) => handleJoint('Right elbow', alreadySeen)} name={'Right elbow'} />
                         </div>
                         <div  >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Gin dx')} name={'Gin dx'} />
+                            <JointSelectionButtonVisualizer click={(alreadySeen) => handleJoint('Right knee', alreadySeen)} name={'Right knee'} />
                         </div>
                         <div >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Cav dx')} name={'Cav dx'} />
+                            <JointSelectionButtonVisualizer click={(alreadySeen) => handleJoint('Right ankle', alreadySeen)} name={'Right ankle'} />
                         </div>
                     </div>
 
                     <div style={{ width: '33%' }}>
-                        <img src={male} alt="male human silhouette" style={{ width: '100%', position: 'relative', margin: 'auto' }} />
+                        <img src={male} alt="male human silhouette" style={{ maxWidth: '100%', maxHeight: '120vh', position: 'relative', margin: 'auto' }} />
                     </div>
                     <div style={style.prot}>
 
                         <div >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Gom sx')} name={'Gom sx'} />
+                            <JointSelectionButtonVisualizer click={(alreadySeen) => handleJoint('Left elbow', alreadySeen)} name={'Left elbow'} />
                         </div>
                         <div >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Gin sx')} name={'Gin sx'} />
+                            <JointSelectionButtonVisualizer click={(alreadySeen) => handleJoint('Left knee', alreadySeen)} name={'Left knee'} />
                         </div>
                         <div >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Cav sx')} name={'Cav sx'} />
+                            <JointSelectionButtonVisualizer click={(alreadySeen) => handleJoint('Left ankle', alreadySeen)} name={'Left ankle'} />
                         </div>
                     </div>
                 </div>
                 <div style={{ display: 'flex', marginBottom: '1.5%', justifyContent: 'space-between', width: '95%' }}>
                     <div >
-                        <Link class="btn btn-danger btn-lg" to={'/visit/newVisitInPresence/'} >Indietro</Link>
+                        <Link class="btn btn-danger btn-lg" to={'/visit/newVisitInPresence/'} >Back</Link>
                     </div>
                     <div >
-                        <button class="btn btn-warning btn-lg" onClick={() => setShowEndingModal(true)} >Avvia conclusione visita</button>
+                        <button class="btn btn-warning btn-lg" onClick={() => setShowEndingModal(true)} >Visit conclusion</button>
                     </div>
                 </div>
 
@@ -121,7 +121,7 @@ const style = {
         borderRadius: '15px',
         background: 'white',
         margin: 'auto',
-        marginTop: '2%',
+        marginTop: '1.5%',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'

@@ -7,37 +7,39 @@ export default class NewVisitModel {
     patient
     visitDate;
     physicalActivity = {
-        'physicalActivity': Boolean,
-        'physicalActivityDate': Date,
-        'physicalActivityType': String
+        'physicalActivity': false,
+        'physicalActivityDate': '',
+        'physicalActivityType': ''
     };
 
     traumaticEvent = {
-        'traumaticEvent': String,
-        'traumaticEventDate': Date
+        'traumaticEvent': 'None',
+        'traumaticEventDate': ''
     };
     followUp = {
         'followUp': false,
-        'treatmentResponse': Number,
-        'lastVisit': Date
+        'treatmentResponse': '',
+        'lastVisit': ''
     };
 
     joints = [];
 
     needFollowUp = {
-        'needFollowUp': Boolean,
-        'followUp': Date,
+        'needFollowUp': false,
+        'followUpDate': '',
     };
 
     prophylacticDrug = {
-        'drug': String,
-        'dose': Number,
-        'frequency': Number
+        'drug': 'None',
+        'unit': '',
+        'dose': '',
+        'frequency': ''
     }
 
     acuteDrug = {
-        'drug': String,
-        'dose': Number,
+        'drug': 'None',
+        'unit': '',
+        'dose': '',
     }
 
     currentJoint;
@@ -95,26 +97,16 @@ export default class NewVisitModel {
         this.joints.push(j)
     }
 
-    setNeedFollowUp(b, n) {
-        this.needFollowUp = {
-            needFollowUp: b,
-            followUp: n
-        };
+    setNeedFollowUp(nfu) {
+        this.needFollowUp = nfu
     }
 
-    setProphylacticDrug(dr, ds, f) {
-        this.prophylacticDrug = {
-            drug: dr,
-            dose: ds,
-            frequency: f
-        }
+    setProphylacticDrug(pd) {
+        this.prophylacticDrug = pd
     }
 
-    setAcuteDrug(dr, ds) {
-        this.acuteDrug = {
-            drug: dr,
-            dose: ds,
-        }
+    setAcuteDrug(ad) {
+        this.acuteDrug = ad
     }
 
     setCurrentJoint(s) {
@@ -126,15 +118,11 @@ export default class NewVisitModel {
     }
 
     getJoint(s) {
-        let joint = new JointModel()
-        this.joints.forEach(e => {
-            if (e.jointName === s) {
-                console.log(e.jointName, ' è uguale a ', s)
-                joint = e
-                return joint
-            }
-        });
-        joint.setName(s)
+        let joint = this.joints.find(e => e.jointName == s)
+        if (joint == undefined) {
+            joint = new JointModel()
+            joint.setName(s)
+        }
         return joint
     }
 
@@ -150,13 +138,8 @@ export default class NewVisitModel {
     }
 
     deleteJoint(s) {
-        let index
-        for (let i = 0; i < this.joints.length; i++) {
-            if (this.joints[i].jointName === s) {
-                index = i
-            }
-        }
-        this.joints.splice(index, 1)
+        console.log('elimino', s)
+        this.joints = this.joints.filter(joint => joint.jointName != s)
     }
 
     toString(f) {
@@ -178,9 +161,9 @@ export default class NewVisitModel {
                     this.traumaticEvent.traumaticEvent + '\n' + this.traumaticEvent.traumaticEventDate
                 )
             case 'joints':
-                let s = 'Sono stati visitati:\n'
+                let s = 'Joints visited:\n'
                 this.joints.forEach(e => {
-                    s += e.jointName + " num ecografie: "
+                    s += e.jointName + " selected images: "
                     if (e.selectedImages != undefined) {
                         s += e.selectedImages.length + '\n'
                     } else {

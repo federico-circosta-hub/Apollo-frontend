@@ -20,16 +20,37 @@ export default function FollowUp(props) {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1%' }}>
             <div>
-                <h1>Risposta al trattamento</h1>
+                <h1>Treatment response</h1>
             </div>
 
             <div>
                 <h3>Coming soon</h3>
             </div>
-
+            <div style={{ display: 'flex', marginBottom: '1.5%', justifyContent: 'space-between', width: '95%' }}>
+                <div>
+                    <Link to={'/visit/newVisitInPresence/jointSelection'} class="btn btn-primary btn-lg">Back</Link>
+                </div>
+                <div>
+                    <Link to={'/visit/newVisitInPresence/drug'} style={style.forwardButton} class="btn btn-success btn-lg">Forward</Link>
+                </div>
+            </div>
         </div>
     )
 
+}
+const style = {
+    buttons: {
+        width: '47%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'right',
+        justifyContent: 'space-around',
+        marginBottom: '5%',
+        border: '1px solid black',
+        borderRadius: '20px',
+        padding: '4%'
+    },
 }
 /* 
     const { newVisit, setNewVisit } = useContext(NewVisitContext)

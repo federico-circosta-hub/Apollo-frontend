@@ -15,7 +15,7 @@ export default function FormModal(props) {
     return (
         <Modal show={props.formModal} animation={true}>
             <Modal.Header >
-                <Modal.Title>Attenzione! Ricontrolla i campi</Modal.Title>
+                <Modal.Title>Attention! Correct the fields</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {displayErrors()}

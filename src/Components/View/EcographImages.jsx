@@ -20,8 +20,8 @@ const EcographImages = (props) => {
         <div className="photo-gallery">
             <div style={style.photoContainer} className="photo-container">
                 {props.photos.map((photo, index) => (
-                    <div key={index} style={{ padding: '1%', display: 'flex', flexDirection: 'column', margin: '0 10px', background: props.selectedImages.includes(photo) ? '#90ee90' : '' }}>
-                        <img onClick={props.handleClick} src={photo.link} alt={`Photo ${index}`} style={{ maxHeight: '29vh' }} />
+                    <div key={index} style={{ padding: '1%', display: 'flex', flexDirection: 'column', margin: '0 10px', background: props.selectedImages.includes(photo) ? '#90ee90' : '', borderRadius: '5px' }}>
+                        <img onClick={props.handleClick} src={photo.link} alt={`Photo ${index}`} style={{ maxHeight: '28vh', borderRadius: '5px' }} />
                         <Checkbox checked={props.selectedImages.includes(photo)} onChange={(e) => handleSelect(e, photo)} ></Checkbox>
                     </div>
                 ))}
@@ -35,9 +35,10 @@ export default EcographImages;
 
 const style = {
     photoContainer: {
+        padding: 10,
         display: 'flex',
         overflowX: 'scroll',
-        height: '35vh',
+        height: '37vh',
         width: '100%',
     }
 }

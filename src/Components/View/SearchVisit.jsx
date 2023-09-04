@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import newFile from '../img/icon/new-file.png'
 import newEvent from '../img/icon/add-event.png'
 import folder from '../img/icon/folder.png'
@@ -13,11 +13,11 @@ import HeaderPatient from './HeaderPatient';
 export default function SearchVisit() {
 
     const [visitList, setVisitList] = useState([])
-    const [forward, setForward] = useState('none');
-    const [disabledForward, setDisabledForward] = useState('flex');
 
     const { selectedVisit, setSelectedVisit } = useContext(VisitContext);
     const { selectedPatient } = useContext(PatientContext);
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         getVisits()
@@ -29,8 +29,9 @@ export default function SearchVisit() {
     }
 
     const handleSelect = () => {
-        setForward('flex')
-        setDisabledForward('none')
+        setTimeout(() => {
+            navigate('/visit/seeVisit')
+        }, 200)
     }
 
 
@@ -41,16 +42,18 @@ export default function SearchVisit() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div style={style.box}>
-                    <button className="btn btn-secondary btn-lg" disabled>
-                        <label >Consulta visita passata  <img src={folder} alt="search" width={40} style={{ filter: `invert(100%)` }} /></label>
-                    </button>
 
                     <Link to={'/visit/newVisitInPresence'} className="btn btn-primary btn-lg" >
                         <label >Nuova visita  <img src={newFile} alt="search" width={40} style={{ filter: `invert(100%)` }} /></label>
                     </Link>
+                    <button className="btn btn-secondary btn-lg" disabled>
+                        <label >Visite precedenti  <img src={folder} alt="search" width={40} style={{ filter: `invert(100%)` }} /></label>
+                    </button>
+
+
 
                     <Link to={'/visit/searchVisit/newVisitPast'} className="btn btn-primary btn-lg">
-                        <label >Inserisci visita passata  <img src={newEvent} alt="search" width={40} style={{ filter: `invert(100%)` }} /></label>
+                        <label >Trascrivi visita  <img src={newEvent} alt="search" width={40} style={{ filter: `invert(100%)` }} /></label>
                     </Link>
                 </div>
 
@@ -65,12 +68,7 @@ export default function SearchVisit() {
                             ))}
                         </div>
                     </div>
-                    <div style={{ display: forward }}>
-                        <Link to={'/visit/seeVisit'} style={{ margin: 20 }} class="btn btn-success btn-lg" >Prosegui</Link>
-                    </div>
-                    <div style={{ display: disabledForward }}>
-                        <button style={{ margin: 20 }} class="btn btn-success btn-lg" disabled>Prosegui</button>
-                    </div>
+
                 </div>
 
 

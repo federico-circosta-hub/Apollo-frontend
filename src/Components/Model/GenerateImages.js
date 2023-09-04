@@ -1,4 +1,4 @@
-export default async function GenerateImages() {
+export default async function GenerateImages(s) {
     const images = [];
 
     let imagesCount = Math.floor(Math.random() * 10);
@@ -8,7 +8,7 @@ export default async function GenerateImages() {
 
 
     for (let i = 0; i < imagesCount; i++) {
-        let link = 'https://dummyimage.com/1280x720/000/fff.jpg&text=image' + i
+        let link = 'https://dummyimage.com/1024x768/000/fff.jpg&text=' + s + i
         images.push({ 'link': link });
     }
     return images
