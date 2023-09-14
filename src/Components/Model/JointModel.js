@@ -9,13 +9,13 @@ export default class JointModel {
     jointDifficulty = false
     pain = false
     lastBleed = ''
-    synovitis = ''
-    articularCartilage = ''
-    subchondralBone = ''
-    distension = ''
+    synovitis = 'Absent/low'
+    cartilage = 'Normal'
+    subchondralBone = 'Normal'
+    distension = 'Absent'
     distensionCause = ''
 
-    constructor(jointName, images, selectedImages, indexJoint, jointDifficulty, pain, lastBleed, synovitis, articularCartilage, subchondralBone, distension, distensionCause) {
+    constructor(jointName, images, selectedImages, indexJoint, jointDifficulty, pain, lastBleed, synovitis, cartilage, subchondralBone, distension, distensionCause) {
         this.jointName = jointName
         this.images = images
         this.selectedImages = selectedImages
@@ -24,7 +24,7 @@ export default class JointModel {
         this.pain = pain
         this.lastBleed = lastBleed
         this.synovitis = synovitis
-        this.articularCartilage = articularCartilage
+        this.cartilage = cartilage
         this.subchondralBone = subchondralBone
         this.distension = distension
         this.distensionCause = distensionCause
@@ -60,5 +60,21 @@ export default class JointModel {
 
     setSynovitis(s) {
         this.synovitis = s
+    }
+
+    setCartilage(s) {
+        this.cartilage = s
+    }
+
+    setSubchondralBone(s) {
+        this.subchondralBone = s
+    }
+
+    setDistension(s) {
+        this.distension = s
+    }
+
+    setDistensionCause(s) {
+        this.distensionCause = s
     }
 }

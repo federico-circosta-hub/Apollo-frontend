@@ -4,10 +4,10 @@ import PatientModel from "./PatientModel";
 export default function GeneratePatients() {
     const patients = [];
 
-    const names = ["Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Hannah", "Isaac", "Julia"];
-    const surnames = ["Smith", "Johnson", "Brown", "Lee", "Garcia", "Davis", "Wilson", "Martinez", "Anderson", "Taylor"];
+    const names = ["Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Hannah", "Isaac", "Julia", "Oliver", "Sophia", "Liam", "Olivia", "Noah", "Ava", "Ethan", "Mia", "Mason", "Lily", "Lucas", "Chloe", "Elijah", "Charlotte", "Logan", "Ella", "Aiden", "Harper", "Carter", "Scarlett", "Jackson", "Zoe", "Michael", "Madison", "James", "Abigail", "Benjamin", "Emily", "Henry"];
+    const surnames = ["Smith", "Johnson", "Brown", "Lee", "Garcia", "Davis", "Wilson", "Martinez", "Anderson", "Taylor", "Jones", "Miller", "Williams", "Jackson", "Harris", "Clark", "Lewis", "Walker", "White", "Moore", "Hall", "Allen", "Young", "Turner", "Thomas", "Baker", "Green", "Hill", "King", "Scott", "Evans", "Wright", "Perez", "Robinson", "Stewart", "Cook", "Murphy", "Rogers", "Adams"];
     const genders = ["M", "F"];
-    const prothesisOptions = ["Gin-sx", "Gin-dx", "Gom-sx", "Gom-dx", "Cav-sx", "Cav-dx"];
+    const prothesisOptions = ["Left knee", "Right knee", "Left elbow", "Right elbow", "Left ankle", "Right ankle"];
 
     const getRandomElement = (array) => {
         return array[Math.floor(Math.random() * array.length)];
@@ -19,7 +19,7 @@ export default function GeneratePatients() {
         return new Date(timestamp);
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 50; i++) {
         const name = getRandomElement(names);
         const surname = getRandomElement(surnames);
         const birthdate = getRandomDate()

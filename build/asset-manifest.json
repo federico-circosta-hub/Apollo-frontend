@@ -1,16 +1,21 @@
 {
   "files": {
-    "main.css": "/static/css/main.39cd1d45.css",
-    "main.js": "/static/js/main.6ff6c64b.js",
+    "main.css": "/static/css/main.d4003174.css",
+    "main.js": "/static/js/main.5d2433cb.js",
     "static/js/787.37a04fc0.chunk.js": "/static/js/787.37a04fc0.chunk.js",
     "static/media/stetoscopio.jpeg": "/static/media/stetoscopio.cc7a3e5be26954afe850.jpeg",
     "static/media/ospedale-loghi.jpeg": "/static/media/ospedale-loghi.22a575159c9ad8a81833.jpeg",
     "static/media/scientist.jpeg": "/static/media/scientist.74ae401300f210ecc2a4.jpeg",
     "static/media/male.png": "/static/media/male.db61fc44b31bb2d71e41.png",
+    "static/media/1.jpg": "/static/media/1.457112448c7ed1331195.jpg",
+    "static/media/3.jpg": "/static/media/3.e71195807861c6130974.jpg",
+    "static/media/2.jpg": "/static/media/2.7bb42b73132e26e698f5.jpg",
     "static/media/logo_unimi.png": "/static/media/logo_unimi.157c3ad59611f1b71daa.png",
     "static/media/add-event.png": "/static/media/add-event.0ef711848d6ba5344592.png",
     "static/media/reload.png": "/static/media/reload.1d20ad2c000428c53081.png",
+    "static/media/view.png": "/static/media/view.c19b9e3590579a3ec888.png",
     "static/media/question.png": "/static/media/question.a97e45146636971d8892.png",
+    "static/media/hydrotherapy.png": "/static/media/hydrotherapy.2feb94e989f29e298808.png",
     "static/media/padlock.png": "/static/media/padlock.ab1ad7788ea6d15208ed.png",
     "static/media/recycle-bin.png": "/static/media/recycle-bin.201b5c153498691194ac.png",
     "static/media/add-user.png": "/static/media/add-user.a5c6ae51810f726594ac.png",
@@ -20,12 +25,12 @@
     "static/media/search.png": "/static/media/search.a27091ef0c45faf8a66e.png",
     "static/media/a_drugs.png": "/static/media/a_drugs.10c1f25ee3bc367125b8.png",
     "index.html": "/index.html",
-    "main.39cd1d45.css.map": "/static/css/main.39cd1d45.css.map",
-    "main.6ff6c64b.js.map": "/static/js/main.6ff6c64b.js.map",
+    "main.d4003174.css.map": "/static/css/main.d4003174.css.map",
+    "main.5d2433cb.js.map": "/static/js/main.5d2433cb.js.map",
     "787.37a04fc0.chunk.js.map": "/static/js/787.37a04fc0.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.39cd1d45.css",
-    "static/js/main.6ff6c64b.js"
+    "static/css/main.d4003174.css",
+    "static/js/main.5d2433cb.js"
   ]
 }

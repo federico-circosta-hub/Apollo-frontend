@@ -1,11 +1,15 @@
 import { useState, useContext } from "react";
-import GenerateVisits from "../Model/GenerateVisits";
+import eye from './../img/icon/view.png'
 import format from "date-fns/format";
 import { Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { VisitContext } from "../Model/VisitContext";
+import { NewVisitContext } from "../Model/NewVisitContext";
 
 export default function FollowUpHelper(props) {
+
+    const { setSelectedVisit } = useContext(VisitContext);
+    const { newVisit } = useContext(NewVisitContext);
 
     function dateDiffInDays(a, b) {
         const _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -15,36 +19,29 @@ export default function FollowUpHelper(props) {
     }
 
     const checkDate = () => {
-        let d = dateDiffInDays(dates[0], new Date())
-        console.log(format(dates[0], 'dd-MM-y'), format(new Date(), 'dd-MM-y'), d > 30)
+        let d = dateDiffInDays(newVisit.previousVisit, new Date())
+        console.log(format(newVisit.previousVisit, 'dd-MM-y'), format(new Date(), 'dd-MM-y'), d > 30)
         return d > 30
     }
 
-    const [dates, setDates] = useState(GenerateVisits())
-    //const [visible, setVisible] = useState(false)
     const [showModal, setShowModal] = useState(checkDate())
 
-    const { setSelectedVisit } = useContext(VisitContext);
-
-
     return !showModal ? (
-        <Link onClick={() => setSelectedVisit(dates[0])} to={'/visit/seeVisit'} class="btn btn-info">Visualizza ultima visita del {format(dates[0], 'dd-MM-y')}</Link>
+        <Link onClick={() => { setSelectedVisit(newVisit.previousVisit); props.seeVisit() }} to={'/visit/seeVisit'} class="btn btn-info"><img width={22} src={eye} alt="" /> {format(newVisit.previousVisit, 'dd-MM-y')}</Link>
     )
         :
         (
             <Modal show={showModal} animation={true}>
-                {console.log(dates)}
                 <Modal.Header >
                     <Modal.Title>Confermare visita di follow up?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>
-                        La data dell'ultima visita è antecedente i 30 giorni, {format(dates[0], 'dd-MM-y')}
+                        La data dell'ultima visita è antecedente i 30 giorni, {format(newVisit.previousVisit, 'dd-MM-y')}
                         <br />
                         confermi che l'attuale visita sia di follow up?
                     </p>
                 </Modal.Body>
-
 
                 <Modal.Footer>
                     <button class="btn btn-secondary" onClick={() => { setShowModal(false); props.onCancel() }}>
@@ -56,5 +53,4 @@ export default function FollowUpHelper(props) {
                 </Modal.Footer>
             </Modal>
         )
-
 }

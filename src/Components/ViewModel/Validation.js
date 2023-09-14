@@ -15,15 +15,15 @@ export const validateForm = (formName, formData) => {
         case 'newVisit':
             if (formData.physicalActivity.physicalActivity) {
                 if (formData.physicalActivity.physicalActivityDate == '') {
-                    errors.physicalActivityDate = 'Insert physical activity date'
+                    errors.physicalActivityDate = 'Inserisci data attività fisica'
                 }
                 if (formData.physicalActivity.physicalActivityType == '') {
-                    errors.physicalActivityType = 'Insert physical activity type'
+                    errors.physicalActivityType = 'Inserisci tipo di attività fisica'
                 }
             }
-            if (formData.traumaticEvent.traumaticEvent != 'None') {
+            if (formData.traumaticEvent.traumaticEvent != 'Nessuno') {
                 if (formData.traumaticEvent.traumaticEventDate == '') {
-                    errors.traumaticEvent = 'Insert traumatic event date'
+                    errors.traumaticEvent = 'Inserisci data evento traumatico'
                 }
             }
             return errors

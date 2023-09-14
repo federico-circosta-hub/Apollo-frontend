@@ -13,7 +13,7 @@ export default class NewVisitModel {
     };
 
     traumaticEvent = {
-        'traumaticEvent': 'None',
+        'traumaticEvent': 'Nessuno',
         'traumaticEventDate': ''
     };
     followUp = {
@@ -30,21 +30,21 @@ export default class NewVisitModel {
     };
 
     prophylacticDrug = {
-        'drug': 'None',
+        'drug': 'Nessuna',
         'unit': '',
         'dose': '',
         'frequency': ''
     }
 
     acuteDrug = {
-        'drug': 'None',
+        'drug': 'Nessuna',
         'unit': '',
         'dose': '',
     }
 
-    currentJoint;
+    previousVisit
 
-
+    isInPresence
 
     constructor() {
 
@@ -140,6 +140,14 @@ export default class NewVisitModel {
     deleteJoint(s) {
         console.log('elimino', s)
         this.joints = this.joints.filter(joint => joint.jointName != s)
+    }
+
+    setPreviousVisit(d) {
+        this.previousVisit = d
+    }
+
+    setIsInPresence(b) {
+        this.isInPresence = b
     }
 
     toString(f) {

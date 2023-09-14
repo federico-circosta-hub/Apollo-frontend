@@ -20,10 +20,10 @@ export default function JointSelectionButtonVisualizer(props) {
     }, [])
 
     return edit ? (
-        <button onClick={() => props.click(true)} class="btn btn-success btn-lg">{props.name}<img src={editText} alt="edit" width={27} style={{ filter: `invert(100%)` }} /></button>
+        <button onClick={() => props.click()} class="btn btn-success btn-lg">{props.name}<img src={editText} alt="edit" width={22} style={{ filter: `invert(100%)` }} /></button>
     )
         :
         (
-            <button onClick={() => props.click(false)} class="btn btn-primary btn-lg">{props.name}</button>
+            <button onClick={() => props.click()} class="btn btn-primary btn-lg">{props.name}</button>
         )
 }

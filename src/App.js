@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
 import './App.css';
-import Login from './Components/View/Login';
-import Header from './Components/View/Header';
+import Login from './Components/View/Panels/Login';
+import Header from './Components/View/OtherComponents/Header';
 import { Route, Routes } from 'react-router-dom';
-import Home from './Components/View/Home';
-import NewPatient from './Components/View/NewPatient';
-import SearchPatient from './Components/View/SearchPatient';
-import Visit from './Components/View/Visit';
-import SearchVisit from './Components/View/SearchVisit';
-import NewVisit from './Components/View/NewVisit'
+import NewPatient from './Components/View/Panels/NewPatient';
+import SearchPatient from './Components/View/Panels/SearchPatient';
+import SearchVisit from './Components/View/Panels/SearchVisit';
+import NewVisit from './Components/View/Panels/NewVisit'
 import { PatientProvider } from './Components/Model/PatientContext';
 import { VisitProvider } from './Components/Model/VisitContext';
-import NewVisitPast from './Components/View/NewVisitPast';
-import SeeVisit from './Components/View/SeeVisit';
+import SeeVisit from './Components/View/Panels/SeeVisit';
 import { NewVisitProvider } from './Components/Model/NewVisitContext';
-import JointSelection from './Components/View/JointSelection';
-import Joint from './Components/View/Joint';
-import Drug from './Components/View/Drug';
-import FollowUp from './Components/View/FollowUp';
-import EndVisit from './Components/View/EndVisit';
+import JointSelection from './Components/View/Panels/JointSelection';
+import Joint from './Components/View/Panels/Joint';
+import Drug from './Components/View/Panels/Drug';
+import EndVisit from './Components/View/Panels/EndVisit';
+import { CurrentJointProvider } from './Components/Model/CurrentJointContext';
 
 function App() {
 
@@ -27,28 +24,26 @@ function App() {
   return (name != null) ?
     (
       <>
-        <Header data={name} logout={() => setName(null)} />
         <PatientProvider>
           <VisitProvider>
             <NewVisitProvider>
-              <Routes>
-                <Route index element={<Home />} />
-                <Route path='/newPatient' element={<NewPatient />} />
-                <Route path='/searchPatient' element={<SearchPatient />} />
+              <CurrentJointProvider>
+                <Header data={name} logout={() => setName(null)} />
 
-                <Route path='/visit' element={<Visit />} />
-                <Route path='/visit/newVisitInPresence' element={<NewVisit />} />
-                <Route path='/visit/newVisitInPresence/jointSelection' element={<JointSelection />} />
-                <Route path='/visit/newVisitInPresence/jointSelection/joint' element={<Joint />} />
-                <Route path='/visit/newVisitInPresence/drug' element={<Drug />} />
-                <Route path='/visit/newVisitInPresence/followUp' element={<FollowUp />} />
-                <Route path='/visit/newVisitPast' element={<NewVisitPast />} />
-                <Route path='/visit/searchVisit' element={<SearchVisit />} />
-                <Route path='/visit/seeVisit' element={<SeeVisit />} />
-                <Route path='/visit/newVisitInPresence/endVisit' element={<EndVisit />} />
+                <Routes>
+                  <Route path='/newPatient' element={<NewPatient />} />
+                  <Route index element={<SearchPatient />} />
+                  <Route path='/newVisit' element={<NewVisit />} />
+                  <Route path='/newVisit/jointSelection' element={<JointSelection />} />
+                  <Route path='/newVisit/jointSelection/joint' element={<Joint />} />
+                  <Route path='/newVisit/drug' element={<Drug />} />
+                  <Route path='/searchVisit' element={<SearchVisit />} />
+                  <Route path='/seeVisit' element={<SeeVisit />} />
+                  <Route path='/newVisit/endVisit' element={<EndVisit />} />
 
 
-              </Routes >
+                </Routes >
+              </CurrentJointProvider>
             </NewVisitProvider>
           </VisitProvider>
         </PatientProvider>
