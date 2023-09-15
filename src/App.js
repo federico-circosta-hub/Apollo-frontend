@@ -17,6 +17,7 @@ import Drug from "./MedicComponents/View/Panels/Drug";
 import EndVisit from "./MedicComponents/View/Panels/EndVisit";
 import { CurrentJointProvider } from "./MedicComponents/Model/CurrentJointContext";
 import AdminHome from "./AdminComponents/View/AdminHome";
+import Annotations from './Annotations_Components/View/Annotations';
 
 function App() {
     const [name, setName] = useState(null);
@@ -63,6 +64,7 @@ function App() {
                                         path="/newVisit/endVisit"
                                         element={<EndVisit />}
                                     />
+									<Route path='/annotations' element={<Annotations />} />
                                 </Routes>
                             </CurrentJointProvider>
                         </NewVisitProvider>

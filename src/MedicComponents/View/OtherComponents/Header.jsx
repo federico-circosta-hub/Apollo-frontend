@@ -5,37 +5,35 @@ import padlock from '../../img/icon/padlock.png'
 import heartbeat from '../../img/icon/heartbeat.png'
 import joints from '../../img/icon/joints.png'
 import { PatientContext } from '../../Model/PatientContext';
-import { NewVisitContext } from '../../Model/NewVisitContext';
 import { CurrentJointContext } from '../../Model/CurrentJointContext';
 import StopPatientProcessModal from '../Modals/StopPatientProcessModal';
 
 export default function Header(props) {
 
     const { selectedPatient } = useContext(PatientContext);
-    const { newVisit } = useContext(NewVisitContext);
-    const { currentJoint, setCurrentJoint } = useContext(CurrentJointContext)
+    const { currentJoint } = useContext(CurrentJointContext)
 
     const [showModal, setShowModal] = useState(false)
 
     const joint = () => {
         console.log(currentJoint)
         return (
-            (currentJoint != null && currentJoint != '') ? <h5><img src={joints} width={30} style={{ marginRight: 5 }} />{currentJoint}</h5> : ''
+            (currentJoint != null && currentJoint != '') ? <label><img src={joints} width={25} style={{ marginRight: 5 }} />{currentJoint}</label> : ''
         )
     }
 
     return (<>
         <nav class="navbar bg-body-tertiary" >
-            <div class="container-fluid" style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingLeft: '1%', paddingRight: '1%' }}>
                 <div>
                     {selectedPatient != null && <button class="btn btn-primary" onClick={() => setShowModal(true)}> {"< Esci"} </button>}
                 </div>
-                <div style={{ display: 'flex' }}>
-                    {selectedPatient != null ? (<h6><img src={heartbeat} width={30} style={{ marginRight: 5 }} />{selectedPatient.name + " " + selectedPatient.surname + " " + format(selectedPatient.birthdate, '(dd/MM/y)')}</h6>) : ""}
+                <div style={{ display: 'flex', }}>
+                    {selectedPatient != null ? (<label><img src={heartbeat} width={30} style={{ marginRight: 5 }} />{selectedPatient.name + " " + selectedPatient.surname + " " + format(selectedPatient.birthdate, '(dd/MM/y)')}</label>) : ""}
                     {joint()}
                 </div>
                 <div style={{ display: 'flex' }}>
-                    <img src={padlock} width={30} style={{ marginRight: 5 }} />
+                    <img src={padlock} width={22} style={{ marginRight: 5 }} />
                     <NavDropdown
                         title={props.data}
 
