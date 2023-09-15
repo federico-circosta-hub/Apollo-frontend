@@ -156,10 +156,10 @@ export default function Drug() {
         <div>
             <div className="box-bianco" style={style.box}>
 
-                <div style={{ display: 'flex', width: '95%', alignItems: "center", justifyContent: 'space-between', marginTop: '1.5%' }}>
+                <div style={{ display: 'flex', width: '95%', alignItems: "center", justifyContent: 'space-around', marginTop: '1.5%' }}>
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', }}>
-                        <div style={{ width: '45vw', display: 'flex', flexDirection: 'column', justifyContent: 'left', gap: '4vh', border: '1px solid black', borderRadius: '20px', padding: '4%', height: '45vh', margin: '1%', opacity: newVisit.followUp.followUp ? '100%' : '40%' }}>
+                        <div style={{ width: '40vw', display: newVisit.followUp.followUp ? 'flex' : 'none', flexDirection: 'column', justifyContent: 'left', gap: '4vh', border: '1px solid black', borderRadius: '20px', padding: '4%', height: '45vh', margin: '1%' }}>
                             <div>
                                 <h4><img src={response} width={50} alt="" />Treatment response</h4>
                             </div>
@@ -190,7 +190,7 @@ export default function Drug() {
                                     <InputLabel id="demo-simple-select-label" style={{ width: '80%' }}>Which <strong>was</strong> the most likely cause of the distension?</InputLabel>
                                     <Select style={{ fontSize: 15 }}
                                         id="demo-simple-select"
-                                        label='Which was the most likely cause of the distension?'
+                                        label='Which was the most likely cause of the distension?...'
                                     >
                                         {displayDistensionCauses()}
                                     </Select>
@@ -306,7 +306,7 @@ export default function Drug() {
 
 const style = {
     needFollowUpButtons: {
-        width: '45vw',
+        width: '40vw',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -319,20 +319,7 @@ const style = {
 
     prophylacticButtons: {
         background: `#fffacd`,
-        width: '45vw',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        border: '1px solid black',
-        borderRadius: '20px',
-        padding: '4%',
-        height: '35vh',
-        margin: '1%'
-    },
-
-    acuteButtons: {
-        background: `#ffe4e1`,
-        width: '45vw',
+        width: '40vw',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -343,10 +330,23 @@ const style = {
         margin: '1%'
     },
 
+    acuteButtons: {
+        background: `#ffe4e1`,
+        width: '40vw',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        border: '1px solid black',
+        borderRadius: '20px',
+        padding: '4%',
+        height: '30vh',
+        margin: '1%'
+    },
+
 
     box: {
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         width: '98%',
         height: '90vh',
         borderRadius: '15px',
