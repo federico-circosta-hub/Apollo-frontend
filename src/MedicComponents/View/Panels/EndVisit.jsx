@@ -4,7 +4,6 @@ import { PatientContext } from "../../Model/PatientContext"
 import { Link } from "react-router-dom"
 import 'dayjs/locale/it';
 import MyDocument from "../../ViewModel/PdfCreator"
-import HeaderPatient from "../deprecated/HeaderPatient";
 import { useReactToPrint } from 'react-to-print';
 
 export default function EndVisit() {
