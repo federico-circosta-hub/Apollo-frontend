@@ -66,7 +66,6 @@ export default function JointVisitQuestions(props) {
                 console.log('case synovitis')
                 if (props.joint.synovitis != undefined) {
                     let synovitis = synovitisValues.find(element => element.label == props.joint.synovitis)
-                    console.log('valueResolver synovitis value', synovitis.value)
                     n = synovitis.value
                 }
                 return n
@@ -89,7 +88,6 @@ export default function JointVisitQuestions(props) {
                 }
                 return n
         }
-        console.log('in fondo allo switch s=', s)
         return n
     }
 
@@ -102,15 +100,15 @@ export default function JointVisitQuestions(props) {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '37%' }}>
                 <label style={{ fontSize: 20 }}>Index Joint</label>
-                <Switch checked={props.joint.indexJoint} onChange={(e) => modifyJoint(e, 'index')} />
+                <Switch defaultChecked={props.joint.indexJoint} onChange={(e) => modifyJoint(e, 'index')} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '37%' }}>
                 <label style={{ fontSize: 20 }}>Difficulty moving</label>
-                <Switch checked={props.joint.jointDifficulty} onChange={(e) => modifyJoint(e, 'difficulty')} />
+                <Switch defaultChecked={props.joint.jointDifficulty} onChange={(e) => modifyJoint(e, 'difficulty')} />
             </div >
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '37%' }}>
                 <label style={{ fontSize: 20 }}>Pain</label>
-                <Switch checked={props.joint.pain} onChange={(e) => modifyJoint(e, 'pain')} />
+                <Switch defaultChecked={props.joint.pain} onChange={(e) => modifyJoint(e, 'pain')} />
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '95%', alignItems: 'center' }} >
