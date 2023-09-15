@@ -17,12 +17,11 @@ import Drug from "./MedicComponents/View/Panels/Drug";
 import EndVisit from "./MedicComponents/View/Panels/EndVisit";
 import { CurrentJointProvider } from "./MedicComponents/Model/CurrentJointContext";
 import AdminHome from "./AdminComponents/View/AdminHome";
-import Annotations from "./Annotations_Components/View/Annotations";
-import PhysicianHeader from "./MedicComponents/View/OtherComponents/PhysicianHeader";
+import Annotations from './MedicComponents/View/Panels/Annotations';
 
 function App() {
-    const [name, setName] = useState(null);
-    let type = "physician"; // operator / admin
+  const [name, setName] = useState(null);
+  let type = "physician"; // operator / admin / physician
 
     return name != null ? (
         <>
