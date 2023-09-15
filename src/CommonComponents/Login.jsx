@@ -1,7 +1,7 @@
 import { useState } from "react"
 import PropTypes from "prop-types"
-import unimi from '../../img/logo_unimi.png';
-import ospedale from '../../img/ospedale-loghi.jpeg';
+import unimi from './img/logo_unimi.png';
+import ospedale from './img/ospedale-loghi.jpeg';
 
 export default function Login({ setName }) {
 
