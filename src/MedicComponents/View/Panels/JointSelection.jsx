@@ -73,10 +73,10 @@ export default function JointSelection() {
                 </div>
                 <div style={{ display: 'flex', marginBottom: '1.5%', justifyContent: 'space-between', width: '95%' }}>
                     <div >
-                        <Link class="btn btn-danger btn-lg" to={'/newVisit/'} >Back</Link>
+                        <Link class="btn btn-danger btn-lg" to={'/newVisit/'} >Indietro</Link>
                     </div>
                     <div >
-                        <button class="btn btn-warning btn-lg" onClick={() => setShowEndingModal(true)} >Visit conclusion</button>
+                        <button class="btn btn-warning btn-lg" onClick={() => setShowEndingModal(true)} >Concludi visita</button>
                     </div>
                 </div>
             </div>
