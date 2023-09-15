@@ -121,12 +121,12 @@ export default function NewPatient() {
             <div className="fascia centrale" style={{
                 display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'center',
-                textAlign: 'center'
+                justifyContent: 'space-between',
+                width: '95%'
             }}>
                 <div style={style.leftButtons}>
                     <div >
-                        <label style={{ fontSize: 25 }} >Data di nascita:</label>
+                        <label style={{ fontSize: 22 }} >Data di nascita:</label>
                         <br />
                         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='it'>
                             <DatePicker onChange={modifyPatientBirthdate} />
@@ -151,66 +151,74 @@ export default function NewPatient() {
                         <button onClick={() => handleDisplayProthesis()} type="button" class={protButtonClass}>Protesi <img src={question} alt="question mark" width={'10%'} /></button>
                     </div>
                 </div>
+                <div style={{ display: 'flex', width: '50%', justifyContent: 'center', }}>
+                    <div style={{ width: '3%' }}>
 
-                <div style={style.protLeft} >
-                    <div style={{ display: showProthesis }}>
-                        <label >
-                            <Checkbox
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-                                name="Gom-dx"
-                                onChange={handleProthesis}
-                            />Gom dx</label>
                     </div>
-                    <div style={{ display: showProthesis }} >
-                        <label >
-                            <Checkbox
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-                                name="Gin-dx"
-                                onChange={handleProthesis}
-                            />Gin dx</label>
+
+
+                    <div style={{ width: '80%', display: 'flex', justifyContent: "center" }}>
+                        <div style={style.protLeft} >
+                            <div style={{ display: showProthesis }}>
+                                <label >
+                                    <Checkbox
+                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+                                        name="Gom-dx"
+                                        onChange={handleProthesis}
+                                    />Gom dx</label>
+                            </div>
+                            <div style={{ display: showProthesis }} >
+                                <label >
+                                    <Checkbox
+                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+                                        name="Gin-dx"
+                                        onChange={handleProthesis}
+                                    />Gin dx</label>
+                            </div>
+                            <div style={{ display: showProthesis }}>
+                                <label >
+                                    <Checkbox
+                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+                                        name="Cav-dx"
+                                        onChange={handleProthesis}
+                                    />Cav dx</label>
+                            </div>
+                        </div>
+                        <img src={male} alt="male human silhouette" width={'45%'} style={{ maxHeight: '70vh' }} />
+                        <div style={style.prot}>
+
+                            <div style={{ display: showProthesis }}>
+                                <label >
+                                    <Checkbox
+                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+                                        name="Gom-sx"
+                                        onChange={handleProthesis}
+                                    />Gom sx</label>
+                            </div>
+                            <div style={{ display: showProthesis }}>
+                                <label >
+                                    <Checkbox
+                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+                                        name="Gin-sx"
+                                        onChange={handleProthesis}
+                                    />Gin sx</label>
+                            </div>
+                            <div style={{ display: showProthesis }}>
+                                <label >
+                                    <Checkbox
+                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+                                        name="Cav-sx"
+                                        onChange={handleProthesis}
+                                    />Cav sx</label>
+                            </div>
+                        </div>
                     </div>
-                    <div style={{ display: showProthesis }}>
-                        <label >
-                            <Checkbox
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-                                name="Cav-dx"
-                                onChange={handleProthesis}
-                            />Cav dx</label>
+                    <div style={{ width: '3%' }}>
+
                     </div>
                 </div>
 
-                <div style={{ width: '33%' }}>
-                    <img src={male} alt="male human silhouette" style={{ width: '60%', position: 'relative', margin: 'auto' }} />
-                </div>
-                <div style={style.prot}>
-
-                    <div style={{ display: showProthesis }}>
-                        <label >
-                            <Checkbox
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-                                name="Gom-sx"
-                                onChange={handleProthesis}
-                            />Gom sx</label>
-                    </div>
-                    <div style={{ display: showProthesis }}>
-                        <label >
-                            <Checkbox
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-                                name="Gin-sx"
-                                onChange={handleProthesis}
-                            />Gin sx</label>
-                    </div>
-                    <div style={{ display: showProthesis }}>
-                        <label >
-                            <Checkbox
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-                                name="Cav-sx"
-                                onChange={handleProthesis}
-                            />Cav sx</label>
-                    </div>
-                </div>
-
-                <div style={{ width: '25%' }} >
+                <div style={{ width: '25%', display: "flex", justifyContent: "center", }} >
                     <Slider name="height"
                         disabled={false}
                         marks={marksH}
@@ -223,7 +231,7 @@ export default function NewPatient() {
                     />
                 </div>
 
-            </div>
+            </div >
             <div style={{ width: '50%' }} >
                 <Slider name="weight"
                     disabled={false}
@@ -238,11 +246,11 @@ export default function NewPatient() {
 
             <div style={{ display: 'flex', marginBottom: '1.5%', justifyContent: 'space-between', width: '90%' }}>
                 <div>
-                    <Link class="btn btn-danger btn-lg" to={'/'}>Annulla</Link>
+                    <Link class="btn btn-danger " to={'/'}>Annulla</Link>
                 </div>
 
                 <div>
-                    <button class="btn btn-success btn-lg" onClick={() => add()} >Aggiungi paziente</button>
+                    <button class="btn btn-success " onClick={() => add()} >Aggiungi paziente</button>
                 </div>
             </div>
 
@@ -250,41 +258,41 @@ export default function NewPatient() {
             < div >
                 {formModal && <FormModal formModal={formModal} setFormModal={setFormModal} errors={errors} />}
             </div >
-        </div>
+        </div >
     )
 }
 
 const style = {
     leftButtons: {
+        border: '1px solid lightgray',
         width: '25%',
+        borderRadius: '15px',
+        padding: '1%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         marginBottom: '10%',
-        marginLeft: '3.5%'
+        alignItems: 'left'
     },
     prot: {
-        width: '3%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        marginTop: '17%',
-        marginRight: 'auto',
-
+        marginTop: '26%',
+        width: '3%',
     },
     protLeft: {
-        width: '3%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        marginTop: '17%',
-        marginLeft: 'auto',
-
+        marginTop: '26%',
+        width: '3%',
+        marginRight: 50
     },
     box: {
         justifyContent: 'space-between',
-        width: '90%',
-        height: '85vh',
+        width: '95%',
+        height: '90vh',
         borderRadius: '15px',
         background: 'white',
         margin: 'auto',

@@ -16,6 +16,7 @@ import Joint from './Components/View/Panels/Joint';
 import Drug from './Components/View/Panels/Drug';
 import EndVisit from './Components/View/Panels/EndVisit';
 import { CurrentJointProvider } from './Components/Model/CurrentJointContext';
+import Annotations from './Annotations_Components/View/Annotations';
 
 function App() {
 
@@ -41,6 +42,8 @@ function App() {
                   <Route path='/seeVisit' element={<SeeVisit />} />
                   <Route path='/newVisit/endVisit' element={<EndVisit />} />
 
+
+                  <Route path='/annotations' element={<Annotations />} />
 
                 </Routes >
               </CurrentJointProvider>
