@@ -1,6 +1,6 @@
 import NavDropdown from "react-bootstrap/NavDropdown";
 import format from "date-fns/format";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import padlock from "../../img/icon/padlock.png";
 import heartbeat from "../../img/icon/heartbeat.png";
 import joints from "../../img/icon/joints.png";
@@ -13,46 +13,48 @@ export default function PhysicianHeader(props) {
     const { selectedPatient } = useContext(PatientContext);
     const { currentJoint } = useContext(CurrentJointContext);
 
+    const [title, setTitle] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
-    const joint = () => {
-        return currentJoint != null && currentJoint != "" ? (
-            <label>
-                <img src={joints} width={25} style={{ marginRight: 5 }} />
-                {currentJoint}
-            </label>
-        ) : (
-            ""
-        );
-    };
-
-    const title = () => {
-        <>
-            {selectedPatient != null ? (
+    useEffect(() => {
+        const joint = () => {
+            return currentJoint != null && currentJoint != "" ? (
                 <label>
-                    <img
-                        src={heartbeat}
-                        width={30}
-                        style={{ marginRight: 5 }}
-                    />
-                    {selectedPatient.name +
-                        " " +
-                        selectedPatient.surname +
-                        " " +
-                        format(selectedPatient.birthdate, "(dd/MM/y)")}
+                    <img src={joints} width={25} style={{ marginRight: 5 }} />
+                    {currentJoint}
                 </label>
             ) : (
                 ""
-            )}
-            {joint()}
-        </>;
-    };
+            );
+        };
+
+        setTitle(() => {
+            return (
+                selectedPatient != null && (
+                    <>
+                        <label>
+                            <img
+                                src={heartbeat}
+                                width={30}
+                                style={{ marginRight: 5 }}
+                            />
+                            {selectedPatient.name +
+                                " " +
+                                selectedPatient.surname +
+                                " " +
+                                format(selectedPatient.birthdate, "(dd/MM/y)")}
+                        </label>
+                        {joint()}
+                    </>
+                )
+            );
+        });
+    }, [selectedPatient, currentJoint]);
 
     return (
         <>
             <Header
                 {...props}
-                showBack={selectedPatient != null}
                 title={title}
                 leftButton={
                     selectedPatient != null ? (

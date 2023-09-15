@@ -1,9 +1,7 @@
 import NavDropdown from "react-bootstrap/NavDropdown";
-import padlock from "../img/icon/padlock.png";
+import padlock from "./img/icon/padlock.png";
 
 export default function Header({ name, title, logout, leftButton }) {
-    const [showModal, setShowModal] = useState(false);
-
     return (
         <>
             <nav class="navbar bg-body-tertiary">
