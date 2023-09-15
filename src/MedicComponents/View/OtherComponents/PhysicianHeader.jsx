@@ -63,7 +63,7 @@ export default function PhysicianHeader(props) {
                             onClick={() => setShowModal(true)}
                         >
                             {" "}
-                            {"< Esci"}{" "}
+                            {"< Exit"}{" "}
                         </button>
                     ) : null
                 }

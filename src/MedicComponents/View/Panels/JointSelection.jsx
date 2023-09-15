@@ -48,7 +48,7 @@ export default function JointSelection() {
                             <JointSelectionButtonVisualizer click={() => { handleJoint('Gomito dx') }} name={'Gomito dx'} />
                         </div>
                         <div  >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Ginocchio dx',)} name={'Ginocchio dx'} />
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Right knee',)} name={'Ginocchio dx'} />
                         </div>
                         <div >
                             <JointSelectionButtonVisualizer click={() => handleJoint('Caviglia dx',)} name={'Caviglia dx'} />

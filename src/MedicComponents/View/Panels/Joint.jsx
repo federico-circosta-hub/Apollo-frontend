@@ -64,7 +64,7 @@ export default function Joint(props) {
         let images = []
         let selectedImages = []
         if (j.images == undefined) {
-            if (j.jointName == 'Ginocchio dx') {
+            if (j.jointName == 'Right knee') {
                 images.push({ link: 'https://dummyimage.com/1024x768/000/fff.jpg&text=RightKnee0' })
                 images.push({ link: a })
                 images.push({ link: b })
@@ -108,13 +108,18 @@ export default function Joint(props) {
         <div>
             <div className="box-bianco" style={style.box}>
                 <div style={{ display: "flex", justifyContent: 'space-between', width: '99%' }}>
-                    <div style={{ position: "absolute", top: '10%', right: '4%' }} >
-                        <RefreshButton onClick={handleRefresh} loading={isLoading} />
+
+                    <div style={{ display: 'flex', flexDirection: 'column', width: '35%' }}>
+
+                        <div style={{ overflow: 'auto', height: '75vh', width: '100%', textAlign: 'center', border: '1px solid black', borderRadius: '20px', }}>
+                            <div style={{ position: 'sticky', top: '0', zIndex: '1', background: 'white', borderStartEndRadius: '20px', borderStartStartRadius: '20px', }} >
+                                <RefreshButton onClick={handleRefresh} loading={isLoading} />
+                            </div>
+                            <EcographImages handleClick={(e) => openModal(e)} selectedImages={selectedImages} setSelectedImages={setSelectedImages} photos={photos} joint={{ joint, setJoint }} />
+                        </div>
                     </div>
-                    <div style={{ overflow: 'auto', height: '77vh', width: '40%', textAlign: 'center', border: '1px solid black', borderRadius: '20px', }}>
-                        <EcographImages handleClick={(e) => openModal(e)} selectedImages={selectedImages} setSelectedImages={setSelectedImages} photos={photos} joint={{ joint, setJoint }} />
-                    </div>
-                    <div style={{ height: '77vh', width: '58%', }}>
+
+                    <div style={{ height: '77vh', width: '63%', }}>
                         {joint != null ? <JointVisitQuestions joint={joint} setJoint={setJoint} /> : 'Caricamento...'}
                     </div>
 

@@ -10,7 +10,7 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material"
 export default function JointVisitQuestions(props) {
 
     const synovitisValues = [{ value: 10, label: 'Absent/low' }, { value: 20, label: 'Mid' }, { value: 30, label: 'Severe' }]
-    const cartilageValues = [{ value: 10, label: 'Normal' }, { value: 20, label: '<25% depletion' }, { value: 30, label: '<50% depletion' }, { value: 40, label: '>50% depletion' }, { value: 50, label: 'Full destruction' }]
+    const cartilageValues = [{ value: 10, label: 'Normal' }, { value: 20, label: '<25% loss' }, { value: 30, label: '<50% loss' }, { value: 40, label: '>50% loss' }, { value: 50, label: 'Full destruction' }]
     const subchondralValues = [{ value: 10, label: 'Normal' }, { value: 20, label: 'Minor irregularities' }, { value: 30, label: 'Osteophytes' }]
     const distensionValues = [{ value: 10, label: 'Absent' }, { value: 20, label: 'Minor' }, { value: 30, label: 'Moderate' }, { value: 40, label: 'Severe' }]
     const distensionCauseValues = ['Unclear', 'Synovial Effusion', 'Synovial Effusion + Synovial Hyperplasia', 'Vacuum', 'Vacuum + Synovial Hyperplasia', 'Synovial Hyperplasia']
@@ -99,23 +99,23 @@ export default function JointVisitQuestions(props) {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'space-between', width: '100%', height: '100%' }}>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '37%' }}>
-                <label style={{ fontSize: 20 }}>Index Joint</label>
+                <label style={{ fontSize: 22 }}>Index Joint</label>
                 <Switch defaultChecked={props.joint.indexJoint} onChange={(e) => modifyJoint(e, 'index')} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '37%' }}>
-                <label style={{ fontSize: 20 }}>Difficulty moving</label>
+                <label style={{ fontSize: 22 }}>Difficulty moving</label>
                 <Switch defaultChecked={props.joint.jointDifficulty} onChange={(e) => modifyJoint(e, 'difficulty')} />
             </div >
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '37%' }}>
-                <label style={{ fontSize: 20 }}>Pain</label>
+                <label style={{ fontSize: 22 }}>Pain</label>
                 <Switch defaultChecked={props.joint.pain} onChange={(e) => modifyJoint(e, 'pain')} />
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '95%', alignItems: 'center' }} >
                 <div>
-                    <label style={{ fontSize: 20 }} >Last bleeding:</label>
+                    <label style={{ fontSize: 22 }} >Last bleeding:</label>
                 </div>
-                <div style={{ width: '70%' }}>
+                <div style={{ width: '68%' }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='it'>
                         <DatePicker label={props.joint.lastBleed != undefined ? format(props.joint.lastBleed, 'dd-MM-y') : 'DD-MM-YYYY'} onChange={(newValue) => lastBleed(newValue.$d)} />
                     </LocalizationProvider >
@@ -126,10 +126,10 @@ export default function JointVisitQuestions(props) {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '95%' }}>
                 <div>
-                    <label style={{ fontSize: 20 }}>Synovitis</label>
+                    <label style={{ fontSize: 22 }}>Synovitis</label>
                 </div>
 
-                <div style={{ width: '70%' }}>
+                <div style={{ width: '68%' }}>
                     <Slider name="synovitis"
                         disabled={false}
                         marks={synovitisValues}
@@ -144,10 +144,10 @@ export default function JointVisitQuestions(props) {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '95%' }}>
                 <div>
-                    <label style={{ fontSize: 20 }}>Cartilage</label>
+                    <label style={{ fontSize: 22 }}>Cartilage</label>
                 </div>
 
-                <div style={{ width: '70%' }}>
+                <div style={{ width: '68%' }}>
                     <Slider name="cartilage"
                         disabled={false}
                         marks={cartilageValues}
@@ -164,10 +164,10 @@ export default function JointVisitQuestions(props) {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2vw', width: '95%' }}>
                 <div>
-                    <label style={{ fontSize: 20 }}>Subchondral bone</label>
+                    <label style={{ fontSize: 22 }}>Subchondral bone</label>
                 </div>
 
-                <div style={{ width: '70%' }}>
+                <div style={{ width: '68%' }}>
                     <Slider name="subchondral"
                         disabled={false}
                         marks={subchondralValues}
@@ -181,10 +181,10 @@ export default function JointVisitQuestions(props) {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', width: '95%' }}>
                 <div>
-                    <label style={{ fontSize: 20 }}>Distension level</label>
+                    <label style={{ fontSize: 22 }}>Distension level</label>
                 </div>
 
-                <div style={{ width: '70%' }}>
+                <div style={{ width: '68%' }}>
                     <Slider name="distension"
                         disabled={false}
                         marks={distensionValues}
@@ -199,7 +199,7 @@ export default function JointVisitQuestions(props) {
 
 
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '60%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '68%' }}>
                 <FormControl fullWidth disabled={disableDistensionCauses} size="small">
                     <InputLabel id="demo-simple-select-label" style={{ width: '100%' }} size="small">Which is the most likely cause of the distension?</InputLabel>
                     <Select style={{ fontSize: 20 }}
