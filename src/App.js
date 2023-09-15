@@ -17,71 +17,71 @@ import Drug from "./MedicComponents/View/Panels/Drug";
 import EndVisit from "./MedicComponents/View/Panels/EndVisit";
 import { CurrentJointProvider } from "./MedicComponents/Model/CurrentJointContext";
 import AdminHome from "./AdminComponents/View/AdminHome";
-import Annotations from './Annotations_Components/View/Annotations';
+import Annotations from './MedicComponents/View/Panels/Annotations';
 
 function App() {
-    const [name, setName] = useState(null);
-    let type = "admin"; // operator / admin
+  const [name, setName] = useState(null);
+  let type = "physician"; // operator / admin / physician
 
-    return name != null ? (
+  return name != null ? (
+    <>
+      {type == "physician" ? (
+        <PatientProvider>
+          <VisitProvider>
+            <NewVisitProvider>
+              <CurrentJointProvider>
+                <Routes>
+                  <Route
+                    path="/newPatient"
+                    element={<NewPatient />}
+                  />
+                  <Route index element={<SearchPatient />} />
+                  <Route
+                    path="/newVisit"
+                    element={<NewVisit />}
+                  />
+                  <Route
+                    path="/newVisit/jointSelection"
+                    element={<JointSelection />}
+                  />
+                  <Route
+                    path="/newVisit/jointSelection/joint"
+                    element={<Joint />}
+                  />
+                  <Route
+                    path="/newVisit/drug"
+                    element={<Drug />}
+                  />
+                  <Route
+                    path="/searchVisit"
+                    element={<SearchVisit />}
+                  />
+                  <Route
+                    path="/seeVisit"
+                    element={<SeeVisit />}
+                  />
+                  <Route
+                    path="/newVisit/endVisit"
+                    element={<EndVisit />}
+                  />
+                  <Route path='/annotations' element={<Annotations />} />
+                </Routes>
+              </CurrentJointProvider>
+            </NewVisitProvider>
+          </VisitProvider>
+        </PatientProvider>
+      ) : null}
+      {type == "admin" ? (
         <>
-            {type == "physician" ? (
-                <PatientProvider>
-                    <VisitProvider>
-                        <NewVisitProvider>
-                            <CurrentJointProvider>
-                                <Routes>
-                                    <Route
-                                        path="/newPatient"
-                                        element={<NewPatient />}
-                                    />
-                                    <Route index element={<SearchPatient />} />
-                                    <Route
-                                        path="/newVisit"
-                                        element={<NewVisit />}
-                                    />
-                                    <Route
-                                        path="/newVisit/jointSelection"
-                                        element={<JointSelection />}
-                                    />
-                                    <Route
-                                        path="/newVisit/jointSelection/joint"
-                                        element={<Joint />}
-                                    />
-                                    <Route
-                                        path="/newVisit/drug"
-                                        element={<Drug />}
-                                    />
-                                    <Route
-                                        path="/searchVisit"
-                                        element={<SearchVisit />}
-                                    />
-                                    <Route
-                                        path="/seeVisit"
-                                        element={<SeeVisit />}
-                                    />
-                                    <Route
-                                        path="/newVisit/endVisit"
-                                        element={<EndVisit />}
-                                    />
-									<Route path='/annotations' element={<Annotations />} />
-                                </Routes>
-                            </CurrentJointProvider>
-                        </NewVisitProvider>
-                    </VisitProvider>
-                </PatientProvider>
-            ) : null}
-            {type == "admin" ? (
-                <>
-                    <Routes>
-                        <Route index element={<AdminHome />} />
-                    </Routes>
-                </>
-            ) : null}
+          <Routes>
+            <Route index element={<AdminHome />} />
+          </Routes>
         </>
-    ) : (
-        <Login setName={setName} />
-    );
+      ) : null}
+    </>
+  ) : (
+    <Login setName={setName} />
+  );
 }
 
 export default App;
