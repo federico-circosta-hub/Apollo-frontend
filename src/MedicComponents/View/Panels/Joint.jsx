@@ -107,11 +107,11 @@ export default function Joint(props) {
     return (selectedPatient !== null) ? (
         <div>
             <div className="box-bianco" style={style.box}>
-                <div style={{ display: "flex", justifyContent: 'space-between', width: '99%' }}>
+                <div style={{ display: "flex", justifyContent: 'space-between', width: '95%' }}>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', width: '35%' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', flex: '1' }}>
 
-                        <div style={{ overflow: 'auto', height: '75vh', width: '100%', textAlign: 'center', border: '1px solid black', borderRadius: '20px', }}>
+                        <div style={{ overflow: 'auto', height: '78vh', width: '100%', textAlign: 'center', border: '1px solid #c0c0c0', borderRadius: '20px', }}>
                             <div style={{ position: 'sticky', top: '0', zIndex: '1', background: 'white', borderStartEndRadius: '20px', borderStartStartRadius: '20px', }} >
                                 <RefreshButton onClick={handleRefresh} loading={isLoading} />
                             </div>
@@ -119,7 +119,7 @@ export default function Joint(props) {
                         </div>
                     </div>
 
-                    <div style={{ height: '77vh', width: '63%', }}>
+                    <div style={{ height: '78vh', flex: 2, }}>
                         {joint != null ? <JointVisitQuestions joint={joint} setJoint={setJoint} /> : 'Caricamento...'}
                     </div>
 
@@ -168,16 +168,17 @@ const style = {
 
     box: {
         width: '98%',
-        height: '90vh',
+        height: '91vh',
         borderRadius: '15px',
         background: 'white',
         margin: 'auto',
-        marginTop: '1%',
+        marginTop: '0.5%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '2%'
+        paddingTop: '1.5%',
+        paddingBottom: '1.5%'
     },
     horizontalLine: {
         height: 1,
