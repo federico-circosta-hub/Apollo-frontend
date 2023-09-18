@@ -55,7 +55,7 @@ export default function JointSelection() {
                         </div>
                     </div>
 
-                    <div style={{ width: '35%' }}>
+                    <div style={{ width: '35%', }}>
                         <img src={male} alt="male human silhouette" style={{ maxWidth: '100%', maxHeight: '110vh', position: 'relative', margin: 'auto' }} />
                     </div>
                     <div style={style.prot}>

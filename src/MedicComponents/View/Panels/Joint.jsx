@@ -132,7 +132,7 @@ export default function Joint(props) {
                         <button style={style.forwardButton} class="btn btn-danger btn-lg" onClick={() => deleteJoint()}>Cancel</button>
                     </div>
                     <div>
-                        <Link to={'/newVisit/jointSelection'} style={style.forwardButton} class="btn btn-success btn-lg" onClick={end}>End</Link>
+                        <Link to={'/newVisit/jointSelection'} style={style.forwardButton} class="btn btn-success btn-lg" onClick={end}>Forward</Link>
                     </div>
                 </div>
 

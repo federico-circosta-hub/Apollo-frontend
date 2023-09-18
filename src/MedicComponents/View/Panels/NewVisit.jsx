@@ -231,7 +231,7 @@ export default function NewVisit(props) {
 
 const style = {
     monoButtons: {
-        display: 'flex', flexDirection: 'row', width: '47%', height: '10vh', padding: '1.5%', justifyContent: 'space-between', alignItems: 'center', border: '1px solid black', borderRadius: '20px',
+        display: 'flex', flexDirection: 'row', width: '47%', height: '10vh', padding: '1.5%', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #dcdcdc', borderRadius: '20px', boxShadow: '1px 2px 6px #dcdcdc',
     },
 
     buttons: {
@@ -240,8 +240,9 @@ const style = {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
-        border: '1px solid black',
+        border: '1px solid #dcdcdc',
         borderRadius: '20px',
+        boxShadow: '1px 2px 6px #dcdcdc',
         padding: '1.5%'
     },
 
