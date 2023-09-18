@@ -111,7 +111,7 @@ export default function Joint(props) {
 
                     <div style={{ display: 'flex', flexDirection: 'column', flex: '1' }}>
 
-                        <div style={{ overflow: 'auto', height: '78vh', width: '100%', textAlign: 'center', border: '1px solid #c0c0c0', borderRadius: '20px', }}>
+                        <div style={{ overflow: 'auto', height: '78vh', width: '100%', textAlign: 'center', border: '1px solid #dcdcdc', boxShadow: '1px 2px 6px #dcdcdc', borderRadius: '20px', }}>
                             <div style={{ position: 'sticky', top: '0', zIndex: '1', background: 'white', borderStartEndRadius: '20px', borderStartStartRadius: '20px', }} >
                                 <RefreshButton onClick={handleRefresh} loading={isLoading} />
                             </div>
