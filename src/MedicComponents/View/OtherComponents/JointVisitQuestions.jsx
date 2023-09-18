@@ -96,122 +96,122 @@ export default function JointVisitQuestions(props) {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'space-between', width: '100%', height: '100%', padding: '1%', }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'space-between', width: '100%', height: '100%', paddingLeft: '1%', }}>
 
-            <div style={{ display: 'flex', justifyContent: 'start', borderBottom: '1px solid #dcdcdc', width: '100%' }}>
-                <label style={{ fontSize: 20, flex: '1' }}>Index Joint</label>
-                <div style={{ flex: '3' }}><Switch defaultChecked={props.joint.indexJoint} onChange={(e) => modifyJoint(e, 'index')} /></div>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'start', borderBottom: '1px solid #dcdcdc', width: '100%' }}>
-                <label style={{ fontSize: 20, flex: '1' }}>Difficulty moving</label>
-                <div style={{ flex: '3' }}><Switch defaultChecked={props.joint.jointDifficulty} onChange={(e) => modifyJoint(e, 'difficulty')} /></div>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', width: '100%', border: '1px solid #dcdcdc', boxShadow: '1px 2px 6px #dcdcdc', borderRadius: '15px', padding: 10, height: '16vh' }}>
+                <div style={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
+                    <label style={{ fontSize: 20, flex: '1' }}>Index Joint</label>
+                    <div style={{ flex: '1' }}><Switch defaultChecked={props.joint.indexJoint} onChange={(e) => modifyJoint(e, 'index')} /></div>
+                    <label style={{ fontSize: 20, flex: '1' }}>Difficulty moving</label>
+                    <div style={{ flex: '1' }}><Switch defaultChecked={props.joint.jointDifficulty} onChange={(e) => modifyJoint(e, 'difficulty')} /></div>
+                </div>
 
-            </div >
-            <div style={{ display: 'flex', justifyContent: 'start', borderBottom: '1px solid #dcdcdc', width: '100%' }}>
-                <label style={{ fontSize: 20, flex: '1' }}>Pain</label>
-                <div style={{ flex: '3' }}><Switch defaultChecked={props.joint.pain} onChange={(e) => modifyJoint(e, 'pain')} /></div>
-            </div>
+                <div style={{ display: 'flex', justifyContent: 'start', paddingBottom: '10px', width: '100%' }}>
+                    <label style={{ fontSize: 20, flex: '1' }}>Pain</label>
+                    <div style={{ flex: '1' }}><Switch defaultChecked={props.joint.pain} onChange={(e) => modifyJoint(e, 'pain')} /></div>
 
-            <div style={{ display: 'flex', justifyContent: 'start', borderBottom: '1px solid #dcdcdc', width: '100%', alignItems: 'center', paddingBottom: 10 }} >
-
-                <label style={{ fontSize: 20, flex: '1' }} >Last bleeding:</label>
-
-                <div style={{ flex: '3', }}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='it'>
-                        <DatePicker label={props.joint.lastBleed != undefined ? format(props.joint.lastBleed, 'dd-MM-y') : 'DD-MM-YYYY'} onChange={(newValue) => lastBleed(newValue.$d)} />
-                    </LocalizationProvider >
+                    <label style={{ fontSize: 20, flex: '1' }} >Last bleeding:</label>
+                    <div style={{ flex: '1', }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='it'>
+                            <DatePicker slotProps={{ textField: { size: 'small' } }} label={props.joint.lastBleed != undefined ? format(props.joint.lastBleed, 'dd-MM-y') : 'DD-MM-YYYY'} onChange={(newValue) => lastBleed(newValue.$d)} />
+                        </LocalizationProvider >
+                    </div>
                 </div>
 
             </div>
 
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', width: '100%', border: '1px solid #dcdcdc', boxShadow: '1px 2px 6px #dcdcdc', borderRadius: '15px', padding: 10, height: '35vh' }}>
+                <div style={{ display: 'flex', justifyContent: 'start', width: '96%', paddingRight: '1vw' }}>
 
-            <div style={{ display: 'flex', justifyContent: 'start', borderBottom: '1px solid #dcdcdc', width: '97%', paddingRight: '1vw' }}>
-
-                <label style={{ fontSize: 20, flex: '1' }}>Synovitis</label>
+                    <label style={{ fontSize: 20, flex: '1' }}>Synovitis</label>
 
 
-                <div style={{ flex: '2.5' }}>
-                    <Slider name="synovitis"
-                        disabled={false}
-                        marks={synovitisValues}
-                        min={10}
-                        max={30}
-                        step={10}
-                        defaultValue={() => valueResolver('synovitis')}
-                        className='MuiSlider-markLabel'
-                        onChange={(e) => modifyPatientSliders(e)}
-                    />
+                    <div style={{ flex: '2.5' }}>
+                        <Slider name="synovitis"
+                            disabled={false}
+                            marks={synovitisValues}
+                            min={10}
+                            max={30}
+                            step={10}
+                            defaultValue={() => valueResolver('synovitis')}
+                            className='MuiSlider-markLabel'
+                            onChange={(e) => modifyPatientSliders(e)}
+                        />
+                    </div>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'start', width: '96%', paddingRight: '1vw' }}>
+
+                    <label style={{ fontSize: 20, flex: '1' }}>Cartilage</label>
+
+
+                    <div style={{ flex: '2.5' }}>
+                        <Slider name="cartilage"
+                            disabled={false}
+                            marks={cartilageValues}
+                            min={10}
+                            max={50}
+                            step={10}
+                            defaultValue={() => valueResolver('cartilage')}
+                            onChange={(e) => modifyPatientSliders(e)}
+                        />
+                    </div>
+
+
+
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'start', width: '96%', paddingRight: '1vw' }}>
+
+                    <label style={{ fontSize: 20, flex: '1' }}>Subchondral bone</label>
+
+
+                    <div style={{ flex: '2.5' }}>
+                        <Slider name="subchondral"
+                            disabled={false}
+                            marks={subchondralValues}
+                            min={10}
+                            max={30}
+                            step={10}
+                            defaultValue={() => valueResolver('subchondral')}
+                            onChange={(e) => modifyPatientSliders(e)}
+                        />
+                    </div>
                 </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'start', borderBottom: '1px solid #dcdcdc', width: '97%', paddingRight: '1vw' }}>
 
-                <label style={{ fontSize: 20, flex: '1' }}>Cartilage</label>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', width: '100%', border: '1px solid #dcdcdc', boxShadow: '1px 2px 6px #dcdcdc', borderRadius: '15px', padding: 10, height: '20vh' }}>
+                <div style={{ display: 'flex', justifyContent: 'start', width: '96%', paddingRight: '1vw' }}>
+
+                    <label style={{ fontSize: 20, flex: '1' }}>Distension level</label>
 
 
-                <div style={{ flex: '2.5' }}>
-                    <Slider name="cartilage"
-                        disabled={false}
-                        marks={cartilageValues}
-                        min={10}
-                        max={50}
-                        step={10}
-                        defaultValue={() => valueResolver('cartilage')}
-                        onChange={(e) => modifyPatientSliders(e)}
-                    />
+                    <div style={{ flex: '2.5' }}>
+                        <Slider name="distension"
+                            disabled={false}
+                            marks={distensionValues}
+                            min={10}
+                            max={40}
+                            step={10}
+                            defaultValue={() => valueResolver('distension')}
+                            onChange={(e) => modifyPatientSliders(e)}
+                        />
+                    </div>
+
+
+
                 </div>
-
-
-
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'start', borderBottom: '1px solid #dcdcdc', width: '97%', paddingRight: '1vw' }}>
-
-                <label style={{ fontSize: 20, flex: '1' }}>Subchondral bone</label>
-
-
-                <div style={{ flex: '2.5' }}>
-                    <Slider name="subchondral"
-                        disabled={false}
-                        marks={subchondralValues}
-                        min={10}
-                        max={30}
-                        step={10}
-                        defaultValue={() => valueResolver('subchondral')}
-                        onChange={(e) => modifyPatientSliders(e)}
-                    />
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '68%' }}>
+                    <FormControl fullWidth disabled={disableDistensionCauses} size="small">
+                        <InputLabel id="demo-simple-select-label" style={{ width: '100%' }} size="small">Which is the most likely cause of the distension?</InputLabel>
+                        <Select style={{ fontSize: 20 }}
+                            id="demo-simple-select"
+                            label="Which is the most likely cause of the..."
+                        >
+                            {displayDistensionCauses()}
+                        </Select>
+                    </FormControl>
                 </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'start', borderBottom: '1px solid #dcdcdc', width: '97%', paddingRight: '1vw' }}>
-
-                <label style={{ fontSize: 20, flex: '1' }}>Distension level</label>
-
-
-                <div style={{ flex: '2.5' }}>
-                    <Slider name="distension"
-                        disabled={false}
-                        marks={distensionValues}
-                        min={10}
-                        max={40}
-                        step={10}
-                        defaultValue={() => valueResolver('distension')}
-                        onChange={(e) => modifyPatientSliders(e)}
-                    />
-                </div>
-
-
-
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '68%' }}>
-                <FormControl fullWidth disabled={disableDistensionCauses} size="small">
-                    <InputLabel id="demo-simple-select-label" style={{ width: '100%' }} size="small">Which is the most likely cause of the distension?</InputLabel>
-                    <Select style={{ fontSize: 20 }}
-                        id="demo-simple-select"
-                        label="Which is the most likely cause of the..."
-                    >
-                        {displayDistensionCauses()}
-                    </Select>
-                </FormControl>
-            </div>
-        </div>
+        </div >
 
     )
 }
