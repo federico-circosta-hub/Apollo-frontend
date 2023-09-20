@@ -7,8 +7,7 @@ import { NewVisitContext } from "../../Model/NewVisitContext";
 import EndingJointModal from "../Modals/EndingJointModal";
 import JointSelectionButtonVisualizer from "../../ViewModel/JointSelectionButtonVisualizer";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
-import DeleteJointModal from "../Modals/DeleteJointModal";
-
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function JointSelection() {
 
@@ -16,7 +15,7 @@ export default function JointSelection() {
     const { setCurrentJoint } = useContext(CurrentJointContext)
 
     const [showEndingModal, setShowEndingModal] = useState(false)
-    //const [showDeleteJointModal, setShowDeleteJointModal] = useState(false)
+    const [imgLoaded, setImgLoaded] = useState(false)
 
 
     const navigate = useNavigate()
@@ -65,7 +64,8 @@ export default function JointSelection() {
                     </div>
 
                     <div style={{ width: '30%', }}>
-                        <img src={male} alt="male human silhouette" style={{ maxWidth: '100%', maxHeight: '70vh', position: 'relative', margin: 'auto' }} />
+                        {!imgLoaded && <CircularProgress />}
+                        <img onLoad={() => setImgLoaded(true)} src={male} alt="male human silhouette" style={{ maxWidth: '100%', maxHeight: '70vh', position: 'relative', margin: 'auto', display: imgLoaded ? 'block' : 'none' }} />
                     </div>
                     <div style={style.prot}>
 

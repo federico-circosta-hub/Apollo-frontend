@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import Login from "./CommonComponents/Login";
 import PhysicianHeader from "./MedicComponents/View/OtherComponents/PhysicianHeader";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import NewPatient from "./MedicComponents/View/Panels/NewPatient";
 import SearchPatient from "./MedicComponents/View/Panels/SearchPatient";
 import SearchVisit from "./MedicComponents/View/Panels/SearchVisit";
@@ -20,6 +20,8 @@ import AdminHome from "./AdminComponents/View/AdminHome";
 import Annotations from "./MedicComponents/View/Panels/Annotations";
 
 function App() {
+
+    const navigate = useNavigate()
     const [name, setName] = useState(null);
     let type = "physician"; // operator / admin / physician
 
@@ -33,7 +35,7 @@ function App() {
                                 <CurrentJointProvider>
                                     <PhysicianHeader
                                         name={name}
-                                        logout={() => setName(null)}
+                                        logout={() => { setName(null); navigate('/') }}
                                     />
                                     <Routes>
                                         <Route

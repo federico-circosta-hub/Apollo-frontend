@@ -26,6 +26,9 @@ export const validateForm = (formName, formData) => {
                     errors.traumaticEvent = 'Inserisci data evento traumatico'
                 }
             }
+            if (formData.visitDate == null) {
+                errors.visitDate = 'Inserisci data della visita'
+            }
             return errors
         case 'drugs':
             if (formData.needFollowUp.needFollowUp) {

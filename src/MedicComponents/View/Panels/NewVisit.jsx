@@ -24,7 +24,7 @@ export default function NewVisit(props) {
     const activities = ['Bicicletta', 'Camminata', 'Corsa', 'Nuoto',]
     const traumaticEvents = ['Nessuno', 'Operazione', 'Caduta', 'Incidente',]
 
-    const [visitDate, setVisitDate] = useState(new Date())
+    const [visitDate, setVisitDate] = useState(newVisit.isInPresence ? new Date() : null)
     const [isFollowUp, setIsFollowUp] = useState(newVisit.followUp.followUp)
     const [disabledLeft, setDisabledLeft] = useState(!newVisit.physicalActivity.physicalActivity)
     const [physicalActivity, setPhysicalActivity] = useState(newVisit.physicalActivity)
@@ -44,6 +44,7 @@ export default function NewVisit(props) {
         let o = {}
         o.traumaticEvent = traumaticEvent
         o.physicalActivity = physicalActivity
+        o.visitDate = visitDate
         let e = (validateForm('newVisit', o))
         console.log(Object.keys(e))
         if (Object.keys(e).length == 0) {
@@ -108,9 +109,9 @@ export default function NewVisit(props) {
 
     const datePickerResolver = (b, s) => {
         if (b) {
-            return <DatePicker disabled />
+            return <DatePicker slotProps={{ textField: { size: 'small' } }} disabled />
         } else {
-            return <DatePicker onChange={(newValue) => modifyDate(newValue.$d, s)} label={s == 'traumaDate' ? traumaticEvent.traumaticEventDate : physicalActivity.physicalActivityDate} />
+            return <DatePicker slotProps={{ textField: { size: 'small' } }} onChange={(newValue) => modifyDate(newValue.$d, s)} label={s == 'traumaDate' ? traumaticEvent.traumaticEventDate : physicalActivity.physicalActivityDate} />
         }
     }
 
@@ -131,7 +132,7 @@ export default function NewVisit(props) {
             <div className="box-bianco" style={style.box}>
                 <div style={style.monoButtons}>
                     <div style={{ alignItems: 'center', display: 'flex', }}>
-                        <label style={{ fontSize: 25 }}>È una visita di follow-up?</label>
+                        <label style={{ fontSize: 24 }}>È una visita di follow-up?</label>
                         <Switch checked={isFollowUp} onChange={followUp} />
                     </div>
                     <div >
@@ -142,21 +143,19 @@ export default function NewVisit(props) {
                 {
                     !newVisit.isInPresence && <div style={style.monoButtons}>
                         <div>
-                            <label style={{ fontSize: 25 }}>Qual è la data della visita?</label>
+                            <label style={{ fontSize: 24 }}>Qual è la data della visita?</label>
                         </div>
                         <div>
                             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='it'>
-                                <DatePicker onChange={(newValue) => modifyDate(newValue.$d, 'visitDate')} label={newVisit.visitDate != undefined ? format(newVisit.visitDate, 'dd-MM-Y') : 'DD-MM-YYYY'} />
+                                <DatePicker slotProps={{ textField: { size: 'small' } }} onChange={(newValue) => modifyDate(newValue.$d, 'visitDate')} label={newVisit.visitDate != undefined ? format(newVisit.visitDate, 'dd-MM-Y') : 'DD-MM-YYYY'} />
                             </LocalizationProvider >
                         </div>
                     </div>
                 }
 
-
-
                 <div style={style.buttons}>
                     <div style={{ display: 'flex' }}>
-                        <label style={{ fontSize: 26 }} >Il paziente ha svolto attività fisica?</label>
+                        <label style={{ fontSize: 24 }} >Il paziente ha svolto attività fisica?</label>
                         <Switch defaultChecked={newVisit === null ? false : newVisit.physicalActivity.physicalActivity} onChange={handleChange} />
 
                     </div>
@@ -168,7 +167,7 @@ export default function NewVisit(props) {
                     <div >
                         <FormControl fullWidth disabled={disabledLeft} style={{ minWidth: 120, fontSize: 28 }}>
                             <InputLabel id="demo-simple-select-label">Attività fisica</InputLabel>
-                            <Select style={{ fontSize: 26 }}
+                            <Select style={{ fontSize: 22 }}
                                 id="demo-simple-select"
                                 label="esercizio"
                                 value={physicalActivity.physicalActivityType}
@@ -178,18 +177,16 @@ export default function NewVisit(props) {
                         </FormControl>
                     </div>
                 </div>
-                {/* <div style={style.verticalLine}>
 
-                    </div> */}
                 <div style={style.buttons}>
                     <div>
-                        <label style={{ fontSize: 26 }} >Indicare evento traumatico, se presente</label>
+                        <label style={{ fontSize: 24 }} >Indicare evento traumatico, se presente</label>
                     </div>
                     <div >
 
                         <FormControl fullWidth >
                             <InputLabel id="demo-simple-select-label" style={{ width: 160 }}>Evento</InputLabel>
-                            <Select style={{ fontSize: 28 }}
+                            <Select style={{ fontSize: 22 }}
                                 id="demo-simple-select"
                                 label="event"
                                 value={traumaticEvent.traumaticEvent}
@@ -250,7 +247,7 @@ const style = {
     box: {
         justifyContent: 'space-around',
         width: '98%',
-        height: '92vh',
+        height: '90vh',
         borderRadius: '15px',
         background: 'white',
         margin: 'auto',

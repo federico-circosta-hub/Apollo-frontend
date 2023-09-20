@@ -82,8 +82,8 @@ export default function SearchPatient() {
 const style = {
     box: {
         width: '95%',
-        height: '92vh',
-        gap: '5%',
+        height: '90vh',
+        gap: '4%',
         borderRadius: '15px',
         background: 'white',
         margin: 'auto',
