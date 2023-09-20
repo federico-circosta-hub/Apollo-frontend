@@ -26,9 +26,10 @@ export default function Joint(props) {
     const [joint, setJoint] = useState(null)
     const [photos, setPhotos] = useState([]);
     const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-    const [showModal, setShowModal] = useState(false)
+    const [showPhotoModal, setShowPhotoModal] = useState(false)
     const [selectedImages, setSelectedImages] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
+    const [clear, setClear] = useState(true)
 
     const navigate = useNavigate()
 
@@ -36,6 +37,9 @@ export default function Joint(props) {
         loadJoint();
     }, [])
 
+    const clearAll = () => {
+
+    }
 
     const end = () => {
         if (newVisit.jointPresence(joint.jointName)) {
@@ -48,14 +52,6 @@ export default function Joint(props) {
         setNewVisit(newVisit)
         setCurrentJoint('')
         console.log(newVisit)
-    }
-
-    const deleteJoint = () => {
-        console.log('Joint', 'deleteJoint', 'currentJoint =', currentJoint)
-        setCurrentJoint('')
-        newVisit.deleteJoint(joint.jointName)
-        setNewVisit(newVisit)
-        navigate('/newVisit/jointSelection')
     }
 
     const loadJoint = async () => {
@@ -83,16 +79,9 @@ export default function Joint(props) {
 
     const openModal = (e) => {
         let index = Number(e.target.alt.substring(e.target.alt.length - 1, e.target.alt.length))
-        console.log(photos[index])
         setCurrentPhotoIndex(index);
-        setShowModal(true);
+        setShowPhotoModal(true);
     };
-
-    const closeModal = () => {
-        setShowModal(false);
-    };
-
-
 
     const handleRefresh = async () => {
         setIsLoading(true)
@@ -129,7 +118,7 @@ export default function Joint(props) {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '95%', alignItems: "center" }}>
                     <div>
-                        <button style={style.forwardButton} class="btn btn-danger btn-lg" onClick={() => deleteJoint()}>Cancel</button>
+                        <Link to={'/newVisit/jointSelection'} style={style.forwardButton} class="btn btn-danger btn-lg">Cancel</Link>
                     </div>
                     <div>
                         <Link to={'/newVisit/jointSelection'} style={style.forwardButton} class="btn btn-success btn-lg" onClick={end}>Forward</Link>
@@ -137,7 +126,7 @@ export default function Joint(props) {
                 </div>
 
             </div>
-            <Modal size="sm" show={showModal} onHide={closeModal} centered >
+            <Modal size="sm" show={showPhotoModal} onHide={() => setShowPhotoModal(false)} centered >
                 <Modal.Body>
                     <img src={photos[currentPhotoIndex] != undefined ? photos[currentPhotoIndex].link : null} alt={`Photo ${currentPhotoIndex}`} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
                 </Modal.Body>

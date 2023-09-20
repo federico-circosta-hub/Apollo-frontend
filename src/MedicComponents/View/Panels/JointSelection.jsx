@@ -1,4 +1,4 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import male from '../../img/male.png'
 import "react-day-picker/dist/style.css";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import { NewVisitContext } from "../../Model/NewVisitContext";
 import EndingJointModal from "../Modals/EndingJointModal";
 import JointSelectionButtonVisualizer from "../../ViewModel/JointSelectionButtonVisualizer";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
+import DeleteJointModal from "../Modals/DeleteJointModal";
 
 
 export default function JointSelection() {
@@ -15,6 +16,8 @@ export default function JointSelection() {
     const { setCurrentJoint } = useContext(CurrentJointContext)
 
     const [showEndingModal, setShowEndingModal] = useState(false)
+    //const [showDeleteJointModal, setShowDeleteJointModal] = useState(false)
+
 
     const navigate = useNavigate()
 
@@ -25,10 +28,15 @@ export default function JointSelection() {
         navigate('/newVisit/jointSelection/joint')
     }
 
+    const deleteJoint = (s) => {
+        newVisit.deleteJoint(s)
+        setNewVisit(newVisit)
+    }
+
     return (
         <div>
             <div className="box-bianco" style={style.box}>
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'left', padding: '1%' }}>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'left', paddingLeft: '1%', paddingTop: '1%' }}>
                     <div >
                         <h3 >Seleziona l'articolazione da visitare: </h3>
                     </div>
@@ -36,38 +44,39 @@ export default function JointSelection() {
                 </div>
 
                 <div className="fascia centrale" style={{
+                    width: '100%',
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'center',
                     textAlign: 'center',
-                    margin: '1%'
+                    margin: '0.5%'
                 }}>
 
                     <div style={style.protLeft} >
                         <div >
-                            <JointSelectionButtonVisualizer click={() => { handleJoint('Gomito dx') }} name={'Gomito dx'} />
+                            <JointSelectionButtonVisualizer click={() => { handleJoint('Gomito dx') }} deleteJoint={(s) => deleteJoint(s)} name={'Gomito dx'} />
                         </div>
                         <div  >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Right knee',)} name={'Ginocchio dx'} />
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Right knee',)} deleteJoint={(s) => deleteJoint(s)} name={'Ginocchio dx'} />
                         </div>
                         <div >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Caviglia dx',)} name={'Caviglia dx'} />
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Caviglia dx',)} deleteJoint={(s) => deleteJoint(s)} name={'Caviglia dx'} />
                         </div>
                     </div>
 
-                    <div style={{ width: '35%', }}>
-                        <img src={male} alt="male human silhouette" style={{ maxWidth: '100%', maxHeight: '110vh', position: 'relative', margin: 'auto' }} />
+                    <div style={{ width: '30%', }}>
+                        <img src={male} alt="male human silhouette" style={{ maxWidth: '100%', maxHeight: '70vh', position: 'relative', margin: 'auto' }} />
                     </div>
                     <div style={style.prot}>
 
                         <div >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Gomito sx',)} name={'Gomito sx'} />
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Gomito sx',)} deleteJoint={(s) => deleteJoint(s)} name={'Gomito sx'} />
                         </div>
                         <div >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Ginocchio sx',)} name={'Ginocchio sx'} />
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Ginocchio sx',)} deleteJoint={(s) => deleteJoint(s)} name={'Ginocchio sx'} />
                         </div>
                         <div >
-                            <JointSelectionButtonVisualizer click={() => handleJoint('Caviglia sx',)} name={'Caviglia sx'} />
+                            <JointSelectionButtonVisualizer click={() => handleJoint('Caviglia sx',)} deleteJoint={(s) => deleteJoint(s)} name={'Caviglia sx'} />
                         </div>
                     </div>
                 </div>
@@ -81,6 +90,7 @@ export default function JointSelection() {
                 </div>
             </div>
             <EndingJointModal objectData={newVisit} show={{ showEndingModal, setShowEndingModal }} />
+
         </div>
     )
 }
@@ -88,16 +98,18 @@ export default function JointSelection() {
 const style = {
 
     prot: {
-        width: 'fit-content',
+        width: '30%',
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'start',
         justifyContent: 'space-between',
         marginTop: '22%',
     },
     protLeft: {
-        width: 'fit-content',
+        width: '30%',
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'end',
         justifyContent: 'space-between',
         marginTop: '22%',
     },
@@ -108,7 +120,7 @@ const style = {
         borderRadius: '15px',
         background: 'white',
         margin: 'auto',
-        marginTop: '1.5%',
+        marginTop: '1%',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
