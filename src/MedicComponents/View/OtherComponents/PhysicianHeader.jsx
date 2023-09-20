@@ -8,27 +8,16 @@ import { PatientContext } from "../../Model/PatientContext";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import StopPatientProcessModal from "../Modals/StopPatientProcessModal";
 import Header from "../../../CommonComponents/Header";
+import PositionedMenu from "./PositionedMenu";
+import { useLocation } from 'react-router-dom';
 
 export default function PhysicianHeader(props) {
     const { selectedPatient } = useContext(PatientContext);
     const { currentJoint } = useContext(CurrentJointContext);
+    const location = useLocation();
 
     const [title, setTitle] = useState(null);
     const [showModal, setShowModal] = useState(false);
-
-    const leftButton = () => {
-        return (
-            selectedPatient != null ? (
-                <button
-                    class="btn btn-primary"
-                    onClick={() => setShowModal(true)}
-                >
-                    {" "}
-                    {"< Exit"}{" "}
-                </button>
-            ) : null
-        )
-    }
 
     useEffect(() => {
         const joint = () => {
@@ -43,8 +32,10 @@ export default function PhysicianHeader(props) {
         };
 
         setTitle(() => {
-            return (
-                selectedPatient != null && (
+            if (location.pathname == '/annotations') {
+                return 'Annotazioni'
+            } else if (selectedPatient != null) {
+                return (
                     <>
                         <label>
                             <img
@@ -61,16 +52,19 @@ export default function PhysicianHeader(props) {
                         {joint()}
                     </>
                 )
-            );
+            } else {
+                return 'Elenco pazienti'
+            }
         });
-    }, [selectedPatient, currentJoint]);
+
+    }, [selectedPatient, currentJoint, location]);
 
     return (
         <>
             <Header
                 {...props}
                 title={title}
-                leftButton={leftButton()}
+                leftButton={<PositionedMenu setShowModal={setShowModal} />}
                 ExitModal={StopPatientProcessModal}
             />
             <StopPatientProcessModal show={{ showModal, setShowModal }} />

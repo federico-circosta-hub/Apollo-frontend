@@ -49,31 +49,25 @@ export default function SearchPatient() {
         <div style={{ display: 'flex', flexDirection: 'row' }}>
 
             <div style={style.box}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}> <img src={search} width={30} height={30} /><input style={{ width: '60%', fontSize: 24 }} type="text" name="name" placeholder='cerca per nome o cognome...' onChange={(event) => research(event)} /></div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: '2%' }}>
-                    <div>
-                        <h2 >Elenco pazienti:</h2>
-                    </div>
+                <div style={{ display: 'flex', alignItems: 'center', }}>
+                    <img src={search} width={30} height={30} /><input style={{ width: '45%', fontSize: 24 }} type="text" name="name" placeholder='cerca per nome o cognome...' onChange={(event) => research(event)} />
 
-                    <div>
-                        <div style={{ display: 'flex', gap: 20 }}>
-                            <div >
-                                <Link to={'/newPatient'} className="btn btn-primary btn-lg" >
-                                    Nuovo paziente  <img src={add} alt="search" width={40} style={{ filter: `invert(100%)` }} />
-                                </Link>
-                            </div>
-                            <div>
-                                <Link to={'/annotations'} className="btn btn-warning btn-lg" >
-                                    Servizio di annotazione  <img src={note} alt="search" width={40} />
-                                </Link>
-                            </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: '2%' }}>
 
+                        <div >
+                            <Link to={'/newPatient'} className="btn btn-primary btn-lg" >
+                                Nuovo paziente  <img src={add} alt="search" width={40} style={{ filter: `invert(100%)` }} />
+                            </Link>
                         </div>
+
+
+
 
                     </div>
                 </div>
 
-                <div style={{ width: '100%', height: '65vh', overflow: 'auto', textAlign: 'left', borderRadius: '15px', border: '0.5px solid black' }}>
+
+                <div style={{ width: '100%', height: '72vh', overflow: 'auto', textAlign: 'left', borderRadius: '15px', border: '0.5px solid black' }}>
                     {patientListToShow.map((patient, index) => (
                         <PatientLine key={index} patient={patient} isSelected={patient === selectedPatient} onSelectPatient={() => { setSelectedPatient(patient); handleSelect() }} />
                     ))}
@@ -89,6 +83,7 @@ const style = {
     box: {
         width: '95%',
         height: '92vh',
+        gap: '5%',
         borderRadius: '15px',
         background: 'white',
         margin: 'auto',
@@ -97,9 +92,9 @@ const style = {
         flexDirection: 'column',
         alignText: 'left',
         alignItems: 'left',
-        padding: '3%',
+        padding: '2%',
         overflow: 'auto',
-        justifyContent: 'space-around',
+        justifyContent: 'start',
 
     }
 }
