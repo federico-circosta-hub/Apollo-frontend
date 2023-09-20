@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.96ced37b.css",
-    "main.js": "/static/js/main.b9840437.js",
+    "main.js": "/static/js/main.472adf0d.js",
     "static/js/787.37a04fc0.chunk.js": "/static/js/787.37a04fc0.chunk.js",
     "static/media/ospedale-loghi.jpeg": "/static/media/ospedale-loghi.22a575159c9ad8a81833.jpeg",
     "static/media/male.png": "/static/media/male.db61fc44b31bb2d71e41.png",
@@ -25,11 +25,11 @@
     "static/media/a_drugs.png": "/static/media/a_drugs.10c1f25ee3bc367125b8.png",
     "index.html": "/index.html",
     "main.96ced37b.css.map": "/static/css/main.96ced37b.css.map",
-    "main.b9840437.js.map": "/static/js/main.b9840437.js.map",
+    "main.472adf0d.js.map": "/static/js/main.472adf0d.js.map",
     "787.37a04fc0.chunk.js.map": "/static/js/787.37a04fc0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.96ced37b.css",
-    "static/js/main.b9840437.js"
+    "static/js/main.472adf0d.js"
   ]
 }
