@@ -1,5 +1,4 @@
-import NavDropdown from "react-bootstrap/NavDropdown";
-import padlock from "./img/icon/padlock.png";
+import AccountMenu from "./AccountMenu";
 
 export default function Header({ name, title, logout, leftButton }) {
     return (
@@ -20,20 +19,7 @@ export default function Header({ name, title, logout, leftButton }) {
                         {title != null ? title : null}
                     </div>
                     <div style={{ display: "flex" }}>
-                        <img
-                            src={padlock}
-                            width={22}
-                            style={{ marginRight: 5 }}
-                        />
-                        <NavDropdown title={name}>
-                            <button
-                                onClick={logout}
-                                style={{ margin: "auto" }}
-                                class="btn btn-danger"
-                            >
-                                Logout
-                            </button>
-                        </NavDropdown>
+                        <AccountMenu name={name} logout={logout} />
                     </div>
                 </div>
             </nav>

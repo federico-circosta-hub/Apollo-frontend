@@ -16,6 +16,20 @@ export default function PhysicianHeader(props) {
     const [title, setTitle] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
+    const leftButton = () => {
+        return (
+            selectedPatient != null ? (
+                <button
+                    class="btn btn-primary"
+                    onClick={() => setShowModal(true)}
+                >
+                    {" "}
+                    {"< Exit"}{" "}
+                </button>
+            ) : null
+        )
+    }
+
     useEffect(() => {
         const joint = () => {
             return currentJoint != null && currentJoint != "" ? (
@@ -56,17 +70,7 @@ export default function PhysicianHeader(props) {
             <Header
                 {...props}
                 title={title}
-                leftButton={
-                    selectedPatient != null ? (
-                        <button
-                            class="btn btn-primary"
-                            onClick={() => setShowModal(true)}
-                        >
-                            {" "}
-                            {"< Exit"}{" "}
-                        </button>
-                    ) : null
-                }
+                leftButton={leftButton()}
                 ExitModal={StopPatientProcessModal}
             />
             <StopPatientProcessModal show={{ showModal, setShowModal }} />
