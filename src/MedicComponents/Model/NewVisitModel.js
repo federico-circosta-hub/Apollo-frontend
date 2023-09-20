@@ -120,7 +120,7 @@ export default class NewVisitModel {
     getJoint(s) {
         let joint = this.joints.find(e => e.jointName == s)
         if (joint == undefined) {
-            joint = new JointModel()
+            joint = new JointModel(s, undefined, undefined, false, false, false, undefined, 'Absent/low', 'Normal', 'Normal', 'Absent', '')
             joint.setName(s)
         }
         return joint

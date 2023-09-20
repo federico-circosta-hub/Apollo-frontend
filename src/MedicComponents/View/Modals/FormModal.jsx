@@ -15,7 +15,7 @@ export default function FormModal(props) {
     return (
         <Modal show={props.formModal} animation={true}>
             <Modal.Header >
-                <Modal.Title>Attention! Correct the fields</Modal.Title>
+                <Modal.Title>Attentione! Ricontrolla i campi</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {displayErrors()}
@@ -23,7 +23,7 @@ export default function FormModal(props) {
 
             <Modal.Footer>
                 <button class="btn btn-warning" onClick={() => props.setFormModal(false)}>
-                    Okay
+                    Ok
                 </button>
             </Modal.Footer>
         </Modal>

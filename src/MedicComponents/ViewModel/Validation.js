@@ -54,5 +54,13 @@ export const validateForm = (formName, formData) => {
 
             }
             return errors
+        case 'jointVisit':
+            if ((formData.distension == 'Moderate' || formData.distension == 'Severe') && (formData.distensionCause == undefined || formData.distensionCause == '')) {
+                errors.distension = 'Inserisci una causa per la distensione'
+            }
+            if (formData.selectedImages == undefined || formData.selectedImages.length == 0) {
+                errors.images = `Selezionare almeno un'immagine dell'articolazione`
+            }
+            return errors
     }
-};
+}

@@ -103,7 +103,7 @@ const style = {
         flexDirection: 'column',
         alignItems: 'start',
         justifyContent: 'space-between',
-        marginTop: '22%',
+        marginTop: '12%',
     },
     protLeft: {
         width: '30%',
@@ -111,7 +111,7 @@ const style = {
         flexDirection: 'column',
         alignItems: 'end',
         justifyContent: 'space-between',
-        marginTop: '22%',
+        marginTop: '12%',
     },
     box: {
         justifyContent: 'space-between',

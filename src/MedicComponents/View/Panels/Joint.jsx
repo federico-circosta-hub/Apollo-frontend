@@ -3,19 +3,18 @@ import { NewVisitContext } from "../../Model/NewVisitContext"
 import { PatientContext } from "../../Model/PatientContext"
 import NoContextModal from "../Modals/NoContextModal"
 import 'dayjs/locale/it';
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import EcographImages from "../OtherComponents/EcographImages"
 import GenerateImages from "../../Model/GenerateImages"
 import { Modal } from "react-bootstrap"
 import { RefreshButton } from "../../View/OtherComponents/RefreshButton"
 import JointVisitQuestions from "../../View/OtherComponents/JointVisitQuestions"
-import { useNavigate } from "react-router-dom"
+import FormModal from "../Modals/FormModal";
 import a from '../../img/example_gin/1.jpg'
 import b from '../../img/example_gin/2.jpg'
 import c from '../../img/example_gin/3.jpg'
 import { CurrentJointContext } from "../../Model/CurrentJointContext"
-
-
+import { validateForm } from "../../ViewModel/Validation";
 
 export default function Joint(props) {
 
@@ -29,7 +28,8 @@ export default function Joint(props) {
     const [showPhotoModal, setShowPhotoModal] = useState(false)
     const [selectedImages, setSelectedImages] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
-    const [clear, setClear] = useState(true)
+    const [formModal, setFormModal] = useState(false)
+    const [errors, setErrors] = useState({ none: 'none' })
 
     const navigate = useNavigate()
 
@@ -37,21 +37,25 @@ export default function Joint(props) {
         loadJoint();
     }, [])
 
-    const clearAll = () => {
-
-    }
-
     const end = () => {
-        if (newVisit.jointPresence(joint.jointName)) {
-            newVisit.deleteJoint(joint.jointName)
-        }
         joint.setImages(photos)
         joint.setSelectedImages(selectedImages)
         setJoint(joint)
-        newVisit.addJoint(joint)
-        setNewVisit(newVisit)
-        setCurrentJoint('')
-        console.log(newVisit)
+        let e = (validateForm('jointVisit', joint))
+        console.log(Object.keys(e))
+        if (Object.keys(e).length == 0) {
+            if (newVisit.jointPresence(joint.jointName)) {
+                newVisit.deleteJoint(joint.jointName)
+            }
+            newVisit.addJoint(joint)
+            setNewVisit(newVisit)
+            setCurrentJoint('')
+            console.log(newVisit)
+            navigate('/newVisit/jointSelection')
+        } else {
+            setErrors(e)
+            setFormModal(true)
+        }
     }
 
     const loadJoint = async () => {
@@ -121,7 +125,7 @@ export default function Joint(props) {
                         <Link to={'/newVisit/jointSelection'} style={style.forwardButton} class="btn btn-danger btn-lg">Cancel</Link>
                     </div>
                     <div>
-                        <Link to={'/newVisit/jointSelection'} style={style.forwardButton} class="btn btn-success btn-lg" onClick={end}>Forward</Link>
+                        <button style={style.forwardButton} class="btn btn-success btn-lg" onClick={end}>Forward</button>
                     </div>
                 </div>
 
@@ -131,6 +135,9 @@ export default function Joint(props) {
                     <img src={photos[currentPhotoIndex] != undefined ? photos[currentPhotoIndex].link : null} alt={`Photo ${currentPhotoIndex}`} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
                 </Modal.Body>
             </Modal>
+            < div >
+                {formModal && <FormModal formModal={formModal} setFormModal={setFormModal} errors={errors} />}
+            </div >
         </div>
     )
         :

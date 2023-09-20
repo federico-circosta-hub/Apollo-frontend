@@ -3,6 +3,7 @@ import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined
 import editText from '../img/icon/edit-text.png'
 import { NewVisitContext } from "../Model/NewVisitContext";
 import DeleteJointModal from "../View/Modals/DeleteJointModal";
+import { Button } from "@mui/material";
 
 export default function JointSelectionButtonVisualizer(props) {
 
@@ -18,12 +19,18 @@ export default function JointSelectionButtonVisualizer(props) {
 
     useEffect(() => {
         checkJoint()
-    }, [newVisit])
+    }, [])
 
     return edit ? (
         <div>
             <button onClick={() => props.click()} class="btn btn-success btn-lg">{props.name}<img src={editText} alt="edit" width={22} style={{ filter: `invert(100%)` }} /></button>
-            <button onClick={() => { setJointToDelete(props.name); }} class="btn btn-danger" ><DeleteForeverOutlinedIcon /></button>
+            <Button
+                variant="outlined"
+                color="warning"
+                onClick={() => { setJointToDelete(props.name); }}
+                style={{ margin: '10px' }}
+            ><DeleteForeverOutlinedIcon /></Button>
+
             {jointToDelete != null && <DeleteJointModal joint={{ jointToDelete, setJointToDelete }} deleteJoint={() => { props.deleteJoint(jointToDelete); setEdit(false); setJointToDelete() }} />}
         </div>
     )

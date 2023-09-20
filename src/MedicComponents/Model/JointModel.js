@@ -2,18 +2,18 @@
 
 export default class JointModel {
 
-    jointName = ''
+    jointName
     images = []
     selectedImages = []
-    indexJoint = false
-    jointDifficulty = false
-    pain = false
-    lastBleed = ''
-    synovitis = 'Absent/low'
-    cartilage = 'Normal'
-    subchondralBone = 'Normal'
-    distension = 'Absent'
-    distensionCause = ''
+    indexJoint
+    jointDifficulty
+    pain
+    lastBleed
+    synovitis
+    cartilage
+    subchondralBone
+    distension
+    distensionCause
 
     constructor(jointName, images, selectedImages, indexJoint, jointDifficulty, pain, lastBleed, synovitis, cartilage, subchondralBone, distension, distensionCause) {
         this.jointName = jointName

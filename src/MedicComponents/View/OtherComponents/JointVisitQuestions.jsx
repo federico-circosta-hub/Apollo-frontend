@@ -196,8 +196,6 @@ export default function JointVisitQuestions(props) {
                         />
                     </div>
 
-
-
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '68%' }}>
                     <FormControl fullWidth disabled={disableDistensionCauses} size="small">
@@ -205,6 +203,7 @@ export default function JointVisitQuestions(props) {
                         <Select style={{ fontSize: 20 }}
                             id="demo-simple-select"
                             label="Which is the most likely cause of the..."
+                            onChange={(e) => { props.joint.setDistensionCause(e.target.value); props.setJoint(props.joint) }}
                         >
                             {displayDistensionCauses()}
                         </Select>
