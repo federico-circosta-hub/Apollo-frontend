@@ -15,7 +15,6 @@ export default function Login({ setName }) {
         e.preventDefault()
         setTimeout(() => {
             if (username == 'Federico' && password == '123') {
-                console.log('vero, username = ' + username + " password = " + password)
                 setName('Roberta Gualtierotti (physician)')
             } else {
                 setDisplay({ "display": "block" })
