@@ -18,6 +18,7 @@ import EndVisit from "./physician/View/Panels/EndVisit";
 import { CurrentJointProvider } from "./physician/Model/CurrentJointContext";
 import AdminHome from "./admin/View/AdminHome";
 import Annotations from "./physician/View/Panels/Annotations";
+import { UserType } from "./common/Model/User";
 
 function App() {
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ function App() {
 
     return name != null ? (
         <>
-            {type === "physician" ? (
+            {type === UserType.PHYSICIAN ? (
                 <>
                     <PatientProvider>
                         <VisitProvider>
@@ -87,7 +88,7 @@ function App() {
                     </PatientProvider>
                 </>
             ) : null}
-            {type === "admin" ? (
+            {type === UserType.ADMIN ? (
                 <>
                     <Routes>
                         <Route index element={<AdminHome />} />

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import unimi from "./img/logo_unimi.png";
-import ospedale from "./img/ospedale-loghi.jpeg";
+import unimi from "../img/logo_unimi.png";
+import ospedale from "../img/ospedale-loghi.jpeg";
 
 export default function Login({ setName }) {
     const [username, setUsername] = useState();
@@ -10,8 +10,9 @@ export default function Login({ setName }) {
     const [disabled, setDisabled] = useState(false);
 
     const handleSubmit = async (e) => {
-        setDisabled(true);
         e.preventDefault();
+        setDisabled(true);
+
         setTimeout(() => {
             if (username === "Federico" && password === "123") {
                 setName("Roberta Gualtierotti (physician)");
@@ -89,7 +90,7 @@ export default function Login({ setName }) {
                         </button>
                     </div>
                     <div
-                        class="alert alert-warning"
+                        className="alert alert-warning"
                         role="alert"
                         style={display}
                     >
