@@ -3,7 +3,7 @@ import AccountMenu from "./AccountMenu";
 export default function Header({ name, title, logout, leftButton }) {
     return (
         <>
-            <nav class="navbar bg-body-tertiary">
+            <nav className="navbar bg-body-tertiary">
                 <div
                     style={{
                         display: "flex",

@@ -7,9 +7,9 @@ import joints from "../../img/icon/joints.png";
 import { PatientContext } from "../../Model/PatientContext";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import StopPatientProcessModal from "../Modals/StopPatientProcessModal";
-import Header from "../../../CommonComponents/Header";
+import Header from "../../../common/View/Header";
 import PositionedMenu from "./PositionedMenu";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 export default function PhysicianHeader(props) {
     const { selectedPatient } = useContext(PatientContext);
@@ -32,8 +32,8 @@ export default function PhysicianHeader(props) {
         };
 
         setTitle(() => {
-            if (location.pathname == '/annotations') {
-                return 'Annotazioni'
+            if (location.pathname == "/annotations") {
+                return "Annotazioni";
             } else if (selectedPatient != null) {
                 return (
                     <>
@@ -51,12 +51,11 @@ export default function PhysicianHeader(props) {
                         </label>
                         {joint()}
                     </>
-                )
+                );
             } else {
-                return 'Elenco pazienti'
+                return "Elenco pazienti";
             }
         });
-
     }, [selectedPatient, currentJoint, location]);
 
     return (
@@ -70,5 +69,4 @@ export default function PhysicianHeader(props) {
             <StopPatientProcessModal show={{ showModal, setShowModal }} />
         </>
     );
-
 }
