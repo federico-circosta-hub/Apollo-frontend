@@ -1,56 +1,61 @@
 {
-  "name": "medical-platform",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.9",
-    "@mui/material": "^5.14.10",
-    "@mui/styled-engine-sc": "^5.12.0",
-    "@mui/x-date-pickers": "^6.11.2",
-    "@react-pdf/renderer": "^3.1.12",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "bootstrap": "^5.3.1",
-    "date-fns": "^2.30.0",
-    "dayjs": "^1.11.9",
-    "file-saver": "^2.0.5",
-    "jspdf": "^2.5.1",
-    "pdf-lib": "^1.17.1",
-    "react": "^18.2.0",
-    "react-bootstrap": "^2.8.0",
-    "react-day-picker": "^8.8.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.14.2",
-    "react-scripts": "5.0.1",
-    "react-to-print": "^2.14.13",
-    "styled-components": "^5.3.11",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "medical-platform",
+    "version": "0.1.0",
+    "private": true,
+    "homepage": "https://develop.ewlab.di.unimi.it/apolloWebAppTest/",
+    "dependencies": {
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "@mui/icons-material": "^5.14.9",
+        "@mui/material": "^5.14.10",
+        "@mui/styled-engine-sc": "^5.12.0",
+        "@mui/x-date-pickers": "^6.11.2",
+        "@react-pdf/renderer": "^3.1.12",
+        "@testing-library/jest-dom": "^5.17.0",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/user-event": "^13.5.0",
+        "@types/node": "^20.6.3",
+        "@types/react": "^18.2.22",
+        "@types/react-dom": "^18.2.7",
+        "bootstrap": "^5.3.1",
+        "date-fns": "^2.30.0",
+        "dayjs": "^1.11.9",
+        "file-saver": "^2.0.5",
+        "jspdf": "^2.5.1",
+        "pdf-lib": "^1.17.1",
+        "react": "^18.2.0",
+        "react-bootstrap": "^2.8.0",
+        "react-day-picker": "^8.8.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.14.2",
+        "react-scripts": "5.0.1",
+        "react-to-print": "^2.14.13",
+        "styled-components": "^5.3.11",
+        "typescript": "^5.2.2",
+        "web-vitals": "^2.1.4"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
 }

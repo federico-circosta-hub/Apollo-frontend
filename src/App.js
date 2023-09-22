@@ -20,14 +20,13 @@ import AdminHome from "./AdminComponents/View/AdminHome";
 import Annotations from "./MedicComponents/View/Panels/Annotations";
 
 function App() {
-
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [name, setName] = useState(null);
     let type = "physician"; // operator / admin / physician
 
     return name != null ? (
         <>
-            {type == "physician" ? (
+            {type === "physician" ? (
                 <>
                     <PatientProvider>
                         <VisitProvider>
@@ -35,7 +34,10 @@ function App() {
                                 <CurrentJointProvider>
                                     <PhysicianHeader
                                         name={name}
-                                        logout={() => { setName(null); navigate('/') }}
+                                        logout={() => {
+                                            setName(null);
+                                            navigate("/");
+                                        }}
                                     />
                                     <Routes>
                                         <Route
@@ -85,7 +87,7 @@ function App() {
                     </PatientProvider>
                 </>
             ) : null}
-            {type == "admin" ? (
+            {type === "admin" ? (
                 <>
                     <Routes>
                         <Route index element={<AdminHome />} />
