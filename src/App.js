@@ -19,6 +19,8 @@ import { CurrentJointProvider } from "./physician/Model/CurrentJointContext";
 import AdminHome from "./admin/View/AdminHome";
 import Annotations from "./physician/View/Panels/Annotations";
 import { UserType } from "./common/Model/User";
+import theme from "./common/Theme";
+import { ThemeProvider } from "@mui/material";
 
 function App() {
     const navigate = useNavigate();
@@ -26,7 +28,7 @@ function App() {
     let type = "physician"; // operator / admin / physician
 
     return name != null ? (
-        <>
+        <ThemeProvider theme={theme}>
             {type === UserType.PHYSICIAN ? (
                 <>
                     <PatientProvider>
@@ -95,7 +97,7 @@ function App() {
                     </Routes>
                 </>
             ) : null}
-        </>
+        </ThemeProvider>
     ) : (
         <Login setName={setName} />
     );

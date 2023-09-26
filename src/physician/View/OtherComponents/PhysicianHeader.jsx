@@ -32,8 +32,8 @@ export default function PhysicianHeader(props) {
         };
 
         setTitle(() => {
-            if (location.pathname == "/annotations") {
-                return "Annotazioni";
+            if (location.pathname === "/annotations") {
+                return "Task di annotazione";
             } else if (selectedPatient != null) {
                 return (
                     <>
