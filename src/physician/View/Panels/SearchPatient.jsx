@@ -6,8 +6,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { PatientContext } from "../../Model/PatientContext";
 import PatientLine from "../OtherComponents/PatientLine";
 import GeneratePatients from "../../Model/GeneratePatients";
+import Communication from '../../../common/Model/Communication'
 
 export default function SearchPatient() {
+
     const [patientList, setPatientList] = useState([]);
     const [patientListToShow, setPatientListToShow] = useState([]);
 
@@ -19,12 +21,15 @@ export default function SearchPatient() {
         getPatients();
     }, []);
 
-    const getPatients = () => {
-        console.log("chiamo getPatients");
-        let arr = GeneratePatients();
-        arr.sort((a, b) => a.surname.localeCompare(b.surname));
-        setPatientList(arr);
-        setPatientListToShow(arr);
+    const getPatients = async () => {
+        /* let arr = GeneratePatients(); */
+        let patientArray = await Communication.get('patient', '')
+        for (let i = 0; i < patientArray.length; i++) {
+            patientArray[i].birthdate = new Date('1963', i.toString(), (i + 1).toString());
+        }
+        patientArray.sort((a, b) => a.pid.localeCompare(b.pid));
+        setPatientList(patientArray);
+        setPatientListToShow(patientArray);
     };
 
     const handleSelect = () => {
