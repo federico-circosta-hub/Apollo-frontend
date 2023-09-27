@@ -1,35 +1,40 @@
 import { Link, useNavigate } from "react-router-dom";
 import search from "../../img/icon/search.png";
 import add from "../../img/icon/add-user.png";
-import note from "../../img/icon/note.png";
+import CircularProgress from "@mui/material/CircularProgress";
 import React, { useContext, useEffect, useState } from "react";
 import { PatientContext } from "../../Model/PatientContext";
 import PatientLine from "../OtherComponents/PatientLine";
 import GeneratePatients from "../../Model/GeneratePatients";
 import Communication from '../../../common/Model/Communication'
+import FakeSecurityModule from './../../Model/FakeSecurityModule'
 
 export default function SearchPatient() {
 
-    const [patientList, setPatientList] = useState([]);
+    const [patientList, setPatientList] = useState(null);
     const [patientListToShow, setPatientListToShow] = useState([]);
+    const [loadingPatients, setLoadingPatients] = useState(false)
 
     const navigate = useNavigate();
 
     const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
 
     useEffect(() => {
-        getPatients();
+        setLoadingPatients(true)
+        setTimeout(() => {
+            getPatients();
+        }, 2500)
+
     }, []);
 
     const getPatients = async () => {
         /* let arr = GeneratePatients(); */
-        let patientArray = await Communication.get('patient', '')
-        for (let i = 0; i < patientArray.length; i++) {
-            patientArray[i].birthdate = new Date('1963', i.toString(), (i + 1).toString());
-        }
-        patientArray.sort((a, b) => a.pid.localeCompare(b.pid));
+        const idArray = await Communication.get('patient', '')
+        const patientArray = FakeSecurityModule.decriptPatients(idArray)
+        patientArray.sort((a, b) => a.surname.localeCompare(b.surname));
         setPatientList(patientArray);
         setPatientListToShow(patientArray);
+        setLoadingPatients(false)
     };
 
     const handleSelect = () => {
@@ -97,12 +102,12 @@ export default function SearchPatient() {
                         width: "100%",
                         height: "72vh",
                         overflow: "auto",
-                        textAlign: "left",
+                        textAlign: loadingPatients ? 'center' : "left",
                         borderRadius: "15px",
                         border: "0.5px solid black",
                     }}
                 >
-                    {patientListToShow.map((patient, index) => (
+                    {loadingPatients ? <CircularProgress /> : patientListToShow.map((patient, index) => (
                         <PatientLine
                             key={index}
                             patient={patient}
