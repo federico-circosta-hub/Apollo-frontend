@@ -21,7 +21,7 @@ class Communication {
         headers: { "Content-Type": "application/json" },
     });
 
-    signalController = new AbortController();
+    signalController?: AbortController;
 
     private endpoints = {
         GET_PHYSICIANS: "/user/physician",
@@ -37,6 +37,8 @@ class Communication {
         console.log(`Axios call: ${method} ${endpoint}`);
 
         endpoint = endpoint + "/" + this.formatGetData(data);
+
+        this.signalController = new AbortController();
         const config = { signal: this.signalController.signal };
 
         let fn = this.getFunctionByHttpMethod(method);
@@ -58,8 +60,6 @@ class Communication {
                 console.error(`Response error: ${err.response.data.message}`);
             } else if (err.request) {
                 console.error(`Request error: no response received`);
-            } else {
-                console.error(`Unknown error: ${err.message}`);
             }
             throw err;
         }
@@ -85,11 +85,11 @@ class Communication {
         return this.baseCall(HttpMethod.DELETE, endpoint, data);
     };
 
-    abortAll = () => {
-        this.signalController.abort();
+    abortLast = () => {
+        this.signalController?.abort();
     };
 
-    getPhysicians = async (id?: number): Promise<Result & { data: User[] }> => {
+    getPhysicians = async (id?: number): Promise<User[]> => {
         const users = await this.get(this.endpoints.GET_PHYSICIANS, {
             id,
             includeDisabled: false,
@@ -98,14 +98,15 @@ class Communication {
         return users.map((user: User) => new User(user));
     };
 
-    login = async (email: string, password: string): Promise<Result> => {
-        return this.post(this.endpoints.LOGIN, { email, password });
+    login = async (email: string, password: string): Promise<User> => {
+        const user = await this.post(this.endpoints.LOGIN, { email, password });
+        return new User(user);
     };
 
     getPhysicianTasks = async (
         id: number,
         includeCompleted: boolean = false
-    ): Promise<Result> => {
+    ): Promise<PhysicianTask[]> => {
         const tasks = await this.get(this.endpoints.GET_TASKS, {
             physician: id,
             includeCompleted,

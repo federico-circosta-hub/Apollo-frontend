@@ -1,6 +1,14 @@
 import React, { useEffect, useContext, useState, useCallback } from "react";
 import AnnotationTask from "../OtherComponents/AnnotationTask";
-import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    CircularProgress,
+    FormControlLabel,
+    Grid,
+    Switch,
+    Typography,
+} from "@mui/material";
 import PhysicianTask from "../../../common/Model/PhysicianTask";
 import CommunicationController from "../../../common/Model/Communication";
 import UserContext from "../../../common/Model/UserContext";
@@ -8,33 +16,35 @@ import UserContext from "../../../common/Model/UserContext";
 export default function Annotations() {
     const [user] = useContext(UserContext);
     const [tasks, setTasks] = useState<PhysicianTask[]>([]);
+
     const [status, setStatus] = useState<"loaded" | "loading" | "error">(
         "loading"
     );
-    const includeCompleted = false;
+
+    const [includeCompleted, setIncludeCompleted] = useState<boolean>(false);
+    const toggleInclude = () => setIncludeCompleted(!includeCompleted);
 
     const fetchData = useCallback(async () => {
         setStatus("loading");
-        const res = await CommunicationController.getPhysicianTasks(
-            user.id,
-            includeCompleted
-        );
 
-        console.log(`${res.length} task recevied`);
-        setTasks(res);
-        setStatus("loaded");
-    }, [user.id, includeCompleted]);
-
-    useEffect(() => {
         try {
-            fetchData();
+            const res = await CommunicationController.getPhysicianTasks(
+                user.id,
+                includeCompleted
+            );
+
+            console.log(`${res.length} task recevied`);
+            setTasks(res);
+            setStatus("loaded");
         } catch (err: any) {
             setStatus("error");
         }
+    }, [user.id, includeCompleted]);
 
-        return () => {
-            CommunicationController.abortAll();
-        };
+    useEffect(() => {
+        fetchData();
+
+        return () => CommunicationController.abortLast();
     }, [fetchData]);
 
     return (
@@ -44,19 +54,11 @@ export default function Annotations() {
             ) : status === "error" ? (
                 <Error onRetry={fetchData} />
             ) : (
-                <Box style={style.scrollable}>
-                    <Grid
-                        alignItems="top"
-                        justifyContent="left"
-                        container
-                        spacing={2}
-                        style={style.grid}
-                    >
-                        {tasks.map((task: PhysicianTask) => (
-                            <GridElement task={task} />
-                        ))}
-                    </Grid>
-                </Box>
+                <AnnotationGrid
+                    tasks={tasks}
+                    includeCompleted={includeCompleted}
+                    onToogleInclude={toggleInclude}
+                />
             )}
         </div>
     );
@@ -88,6 +90,44 @@ const Error = ({ onRetry }: { onRetry: () => Promise<void> }) => {
     );
 };
 
+const AnnotationGrid = ({
+    tasks,
+    includeCompleted,
+    onToogleInclude,
+}: {
+    tasks: PhysicianTask[];
+    includeCompleted: boolean;
+    onToogleInclude: () => void;
+}) => {
+    return (
+        <>
+            <FormControlLabel
+                style={{ margin: "auto" }}
+                control={
+                    <Switch
+                        checked={includeCompleted}
+                        onChange={onToogleInclude}
+                    />
+                }
+                label="Includi task completati"
+            />
+            <Box style={style.scrollable}>
+                <Grid
+                    alignItems="top"
+                    justifyContent="left"
+                    container
+                    spacing={2}
+                    style={style.grid}
+                >
+                    {tasks.map((task: PhysicianTask) => (
+                        <GridElement key={task.id} task={task} />
+                    ))}
+                </Grid>
+            </Box>
+        </>
+    );
+};
+
 const GridElement = (props: any) => (
     <Grid item xs={12} sm={6} md={4} lg={3}>
         <AnnotationTask {...props} />
@@ -112,9 +152,9 @@ const style = {
         maxHeight: "100vh",
         width: "100%",
         overflow: "auto",
+        flex: 1,
     },
     grid: {
-        flex: 1,
         padding: "16px",
     },
     error: {
