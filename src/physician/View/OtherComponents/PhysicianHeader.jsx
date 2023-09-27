@@ -1,7 +1,5 @@
-import NavDropdown from "react-bootstrap/NavDropdown";
 import format from "date-fns/format";
 import { useContext, useEffect, useState } from "react";
-import padlock from "../../img/icon/padlock.png";
 import heartbeat from "../../img/icon/heartbeat.png";
 import joints from "../../img/icon/joints.png";
 import { PatientContext } from "../../Model/PatientContext";
@@ -21,7 +19,7 @@ export default function PhysicianHeader(props) {
 
     useEffect(() => {
         const joint = () => {
-            return currentJoint != null && currentJoint != "" ? (
+            return currentJoint != null && currentJoint !== "" ? (
                 <label>
                     <img src={joints} width={25} style={{ marginRight: 5 }} />
                     {currentJoint}

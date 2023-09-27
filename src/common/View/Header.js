@@ -1,6 +1,6 @@
 import AccountMenu from "./AccountMenu";
 
-export default function Header({ name, title, logout, leftButton }) {
+export default function Header({ title, onLogout, leftButton }) {
     return (
         <>
             <nav className="navbar bg-body-tertiary" style={{ height: "9vh" }}>
@@ -19,7 +19,7 @@ export default function Header({ name, title, logout, leftButton }) {
                         {title != null ? title : null}
                     </div>
                     <div style={{ display: "flex" }}>
-                        <AccountMenu name={name} logout={logout} />
+                        <AccountMenu onLogout={onLogout} />
                     </div>
                 </div>
             </nav>

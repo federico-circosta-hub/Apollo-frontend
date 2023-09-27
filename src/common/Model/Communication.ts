@@ -22,6 +22,8 @@ class Communication {
 
     private endpoints = {
         GET_PHYSICIANS: "/user/physician",
+        LOGIN: "/user/login",
+        GET_TASKS: "/task",
     };
 
     private baseCall = async (
@@ -86,7 +88,17 @@ class Communication {
     };
 
     login = async (email: string, password: string): Promise<Result> => {
-        return this.post("/user/login", { email, password });
+        return this.post(this.endpoints.LOGIN, { email, password });
+    };
+
+    getPhysicianTasks = async (
+        id: number,
+        includeCompleted: boolean = false
+    ): Promise<Result> => {
+        return this.get(this.endpoints.GET_TASKS, {
+            physician: id,
+            includeCompleted,
+        });
     };
 
     private formatGetData = (data: Params): string => {
