@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "../../config";
 import User from "./User";
+import PhysicianTask from "./PhysicianTask";
 
 type Params = { [key: string]: any };
 type Result = any;
@@ -16,9 +17,11 @@ enum HttpMethod {
 class Communication {
     controller = axios.create({
         baseURL: config.API_URL,
-        timeout: 1000,
+        timeout: 5000,
         headers: { "Content-Type": "application/json" },
     });
+
+    signalController = new AbortController();
 
     private endpoints = {
         GET_PHYSICIANS: "/user/physician",
@@ -34,14 +37,18 @@ class Communication {
         console.log(`Axios call: ${method} ${endpoint}`);
 
         endpoint = endpoint + "/" + this.formatGetData(data);
+        const config = { signal: this.signalController.signal };
 
         let fn = this.getFunctionByHttpMethod(method);
 
         try {
             let res: any;
             if (method === HttpMethod.GET)
-                res = await fn(endpoint + +"/" + this.formatGetData(data));
-            else res = await fn(endpoint, data);
+                res = await fn(
+                    endpoint + +"/" + this.formatGetData(data),
+                    config
+                );
+            else res = await fn(endpoint, data, config);
 
             return res.data;
         } catch (err: any) {
@@ -78,6 +85,10 @@ class Communication {
         return this.baseCall(HttpMethod.DELETE, endpoint, data);
     };
 
+    abortAll = () => {
+        this.signalController.abort();
+    };
+
     getPhysicians = async (id?: number): Promise<Result & { data: User[] }> => {
         const users = await this.get(this.endpoints.GET_PHYSICIANS, {
             id,
@@ -95,10 +106,14 @@ class Communication {
         id: number,
         includeCompleted: boolean = false
     ): Promise<Result> => {
-        return this.get(this.endpoints.GET_TASKS, {
+        const tasks = await this.get(this.endpoints.GET_TASKS, {
             physician: id,
             includeCompleted,
         });
+
+        return tasks.map(
+            (task: any) => new PhysicianTask(task, task.physician)
+        );
     };
 
     private formatGetData = (data: Params): string => {

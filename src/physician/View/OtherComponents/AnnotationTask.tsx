@@ -20,7 +20,7 @@ const AnnotationTask = ({ task }: { task: PhysicianTask }) => {
             <CardActionArea onClick={openTask}>
                 <CardContent>
                     <Typography variant="h6" component="div" sx={style.title}>
-                        {task.name}
+                        {task.name()}
                     </Typography>
                     <Typography sx={{ fontSize: 18 }} gutterBottom>
                         Deadline: {task.deadline}
