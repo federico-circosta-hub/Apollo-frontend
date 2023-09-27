@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "../../config";
 import User from "./User";
+import PhysicianTask from "./PhysicianTask";
 
 type Params = { [key: string]: any };
 type Result = any;
@@ -16,12 +17,16 @@ enum HttpMethod {
 class Communication {
     controller = axios.create({
         baseURL: config.API_URL,
-        timeout: 1000,
+        timeout: 5000,
         headers: { "Content-Type": "application/json" },
     });
 
+    signalController?: AbortController;
+
     private endpoints = {
         GET_PHYSICIANS: "/user/physician",
+        LOGIN: "/user/login",
+        GET_TASKS: "/task",
     };
 
     private baseCall = async (
@@ -33,13 +38,19 @@ class Communication {
 
         endpoint = endpoint + "/" + this.formatGetData(data);
 
+        this.signalController = new AbortController();
+        const config = { signal: this.signalController.signal };
+
         let fn = this.getFunctionByHttpMethod(method);
 
         try {
             let res: any;
             if (method === HttpMethod.GET)
-                res = await fn(endpoint + +"/" + this.formatGetData(data));
-            else res = await fn(endpoint, data);
+                res = await fn(
+                    endpoint + +"/" + this.formatGetData(data),
+                    config
+                );
+            else res = await fn(endpoint, data, config);
 
             return res.data;
         } catch (err: any) {
@@ -49,8 +60,6 @@ class Communication {
                 console.error(`Response error: ${err.response.data.message}`);
             } else if (err.request) {
                 console.error(`Request error: no response received`);
-            } else {
-                console.error(`Unknown error: ${err.message}`);
             }
             throw err;
         }
@@ -76,7 +85,11 @@ class Communication {
         return this.baseCall(HttpMethod.DELETE, endpoint, data);
     };
 
-    getPhysicians = async (id?: number): Promise<Result & { data: User[] }> => {
+    abortLast = () => {
+        this.signalController?.abort();
+    };
+
+    getPhysicians = async (id?: number): Promise<User[]> => {
         const users = await this.get(this.endpoints.GET_PHYSICIANS, {
             id,
             includeDisabled: false,
@@ -85,8 +98,23 @@ class Communication {
         return users.map((user: User) => new User(user));
     };
 
-    login = async (email: string, password: string): Promise<Result> => {
-        return this.post("/user/login", { email, password });
+    login = async (email: string, password: string): Promise<User> => {
+        const user = await this.post(this.endpoints.LOGIN, { email, password });
+        return new User(user);
+    };
+
+    getPhysicianTasks = async (
+        id: number,
+        includeCompleted: boolean = false
+    ): Promise<PhysicianTask[]> => {
+        const tasks = await this.get(this.endpoints.GET_TASKS, {
+            physician: id,
+            includeCompleted,
+        });
+
+        return tasks.map(
+            (task: any) => new PhysicianTask(task, task.physician)
+        );
     };
 
     private formatGetData = (data: Params): string => {

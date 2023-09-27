@@ -5,13 +5,14 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import Fade from "@mui/material/Fade";
 import { ListItemIcon } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { PatientContext } from "../../Model/PatientContext";
 import NoteAltOutlinedIcon from "@mui/icons-material/NoteAltOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import Divider from "@mui/material/Divider";
 
 export default function PositionedMenu(props) {
+    const route = useLocation();
     const { selectedPatient } = React.useContext(PatientContext);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -24,7 +25,7 @@ export default function PositionedMenu(props) {
     };
 
     return (
-        <div>
+        <>
             <Button
                 id="fade-button"
                 aria-controls={open ? "fade-menu" : undefined}
@@ -44,13 +45,6 @@ export default function PositionedMenu(props) {
                 onClose={handleClose}
                 TransitionComponent={Fade}
             >
-                <MenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                        <NoteAltOutlinedIcon />
-                    </ListItemIcon>
-                    <Link to={"/annotations"}>Annotazioni</Link>
-                </MenuItem>
-                <Divider />
                 {selectedPatient != null ? (
                     <MenuItem
                         onClick={() => {
@@ -64,8 +58,24 @@ export default function PositionedMenu(props) {
                         Termina con {selectedPatient.name}{" "}
                         {selectedPatient.surname}
                     </MenuItem>
-                ) : null}
+                ) : route.pathname === "/annotations" ? (
+                    <MenuItem onClick={handleClose}>
+                        <ListItemIcon>
+                            <HomeOutlinedIcon />
+                        </ListItemIcon>
+                        <Link to={"/"}>Home</Link>
+                    </MenuItem>
+                ) : (
+                    route.pathname === "/" && (
+                        <MenuItem onClick={handleClose}>
+                            <ListItemIcon>
+                                <NoteAltOutlinedIcon />
+                            </ListItemIcon>
+                            <Link to={"/annotations"}>Annotazioni</Link>
+                        </MenuItem>
+                    )
+                )}
             </Menu>
-        </div>
+        </>
     );
 }
