@@ -7,6 +7,7 @@ import { PatientContext } from "../../Model/PatientContext";
 import PatientLine from "../OtherComponents/PatientLine";
 import GeneratePatients from "../../Model/GeneratePatients";
 import Communication from '../../../common/Model/Communication'
+import Table from '@mui/joy/Table';
 import FakeSecurityModule from './../../Model/FakeSecurityModule'
 
 export default function SearchPatient() {
@@ -107,17 +108,37 @@ export default function SearchPatient() {
                         border: "0.5px solid black",
                     }}
                 >
-                    {loadingPatients ? <CircularProgress /> : patientListToShow.map((patient, index) => (
-                        <PatientLine
-                            key={index}
-                            patient={patient}
-                            isSelected={patient === selectedPatient}
-                            onSelectPatient={() => {
-                                setSelectedPatient(patient);
-                                handleSelect();
-                            }}
-                        />
-                    ))}
+                    {loadingPatients ? <CircularProgress /> : (
+                        <table className='table table-primary table-striped table-hover'>
+                            <thead style={{ position: "sticky", top: 0, height: '6vh', }}>
+                                <tr  >
+                                    <th style={{ background: 'white' }}>id</th>
+                                    <th style={{ background: 'white' }}>Cognome</th>
+                                    <th style={{ background: 'white' }}>Nome</th>
+                                    <th style={{ background: 'white' }}>Data di nascita</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody >
+
+                                {patientListToShow.map((patient, index) => (
+                                    <PatientLine
+                                        key={index}
+                                        patient={patient}
+                                        isSelected={patient === selectedPatient}
+                                        onSelectPatient={() => {
+                                            setSelectedPatient(patient);
+                                            handleSelect();
+                                        }}
+                                    />
+                                ))}
+
+                            </tbody>
+                        </table>
+                    )
+                    }
                 </div>
             </div>
         </div>

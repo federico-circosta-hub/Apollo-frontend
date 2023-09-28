@@ -7,12 +7,19 @@ export default function PatientLine(props) {
     }
 
     return (
-        <div style={{ borderBottom: '0.5px solid lightgray', padding: 30, background: props.isSelected ? 'lightgreen' : 'white' }} onClick={() => select()} >
-
-            <h5>
-                {props.patient.pid}, {props.patient.surname} {props.patient.name}, {format(props.patient.birthdate, 'y-MM-dd')}
-            </h5>
-
-        </div>
+        <tr className='tr-lg' style={{/*  borderBottom: '0.5px solid lightgray', */ padding: 30, background: props.isSelected ? 'lightgreen' : 'white' }} onClick={() => select()}>
+            <td>
+                {props.patient.pid}
+            </td>
+            <td>
+                {props.patient.surname}
+            </td>
+            <td>
+                {props.patient.name}
+            </td>
+            <td>
+                {format(props.patient.birthdate, 'y-MM-dd')}
+            </td>
+        </tr>
     )
 }

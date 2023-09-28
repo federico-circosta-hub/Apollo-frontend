@@ -39,13 +39,17 @@ class FakeSecurityModule {
         ]
     ])
 
-
     decriptPatients(idArray) {
         let patients = []
         idArray.forEach(id => {
             patients.push(this.data.get(id.pid))
         });
         return patients
+    }
+
+    encryptAndStorePatient(patientObj) {
+        let id = ''
+        return id
     }
 }
 

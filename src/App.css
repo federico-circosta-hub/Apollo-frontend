@@ -466,15 +466,22 @@ th {
   text-align: -webkit-match-parent
 }
 
-tbody,
+tbody {
+  font-size: large;
+}
+
 td,
 tfoot,
 th,
-thead,
+thead {
+  font-size: x-large;
+}
+
 tr {
   border-color: inherit;
   border-style: solid;
-  border-width: 0
+  border-width: 0;
+  padding: '2%';
 }
 
 label {
@@ -2154,7 +2161,9 @@ progress {
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
   --bs-table-color: var(--bs-body-color);
-  --bs-table-bg: var(--bs-body-bg);
+  --bs-table-bg:
+    /* var(--bs-body-bg) */
+    white;
   --bs-table-border-color: var(--bs-border-color);
   --bs-table-accent-bg: transparent;
   --bs-table-striped-color: var(--bs-body-color);
@@ -2178,11 +2187,12 @@ progress {
 }
 
 .table>tbody {
-  vertical-align: inherit
+  vertical-align: center;
 }
 
 .table>thead {
-  vertical-align: bottom
+  vertical-align: center;
+  color: whitesmoke !important
 }
 
 .table-group-divider {
@@ -2235,13 +2245,13 @@ progress {
 
 .table-primary {
   --bs-table-color: #000;
-  --bs-table-bg: #cfe2ff;
+  --bs-table-bg: #e1edfe;
   --bs-table-border-color: #bacbe6;
-  --bs-table-striped-bg: #c5d7f2;
+  --bs-table-striped-bg: #f1f7ff;
   --bs-table-striped-color: #000;
-  --bs-table-active-bg: #bacbe6;
+  --bs-table-active-bg: #115bd2;
   --bs-table-active-color: #000;
-  --bs-table-hover-bg: #bfd1ec;
+  --bs-table-hover-bg: #92c0ff;
   --bs-table-hover-color: #000;
   color: var(--bs-table-color);
   border-color: var(--bs-table-border-color)
