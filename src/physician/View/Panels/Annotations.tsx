@@ -123,7 +123,7 @@ const AnnotationGrid = ({
                     {tasks.map((task: PhysicianTask) => (
                         <GridElement key={task.id} task={task} />
                     ))}
-                </Grid>
+                </Grid>	
             </Box>
         </>
     );
