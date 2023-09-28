@@ -31,7 +31,8 @@ export default function SearchPatient() {
     const getPatients = async () => {
         /* let arr = GeneratePatients(); */
         const idArray = await Communication.get('patient', '')
-        const patientArray = FakeSecurityModule.decriptPatients(idArray)
+        console.log(idArray)
+        const patientArray = await FakeSecurityModule.decriptPatients(idArray)
         patientArray.sort((a, b) => a.surname.localeCompare(b.surname));
         setPatientList(patientArray);
         setPatientListToShow(patientArray);

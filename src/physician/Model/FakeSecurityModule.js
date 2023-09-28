@@ -1,45 +1,28 @@
+const BASE_URL = "https://jsonbin.org/federico-circosta/patients"
+
 class FakeSecurityModule {
 
-    data = new Map([
-        [
-            'paziente1', {
-                'pid': 'paziente1',
-                'name': 'Mario',
-                'surname': 'Rossi',
-                'birthdate': new Date('1970', '3', '1'),
-                'gender': 'M',
-                'height': 180,
-                'weight': 75,
-                'prothesis': null
-            }
-        ],
-        [
-            'paziente2', {
-                'pid': 'paziente2',
-                'name': 'Luca',
-                'surname': 'Bianchi',
-                'birthdate': new Date('1980', '8', '1'),
-                'gender': 'M',
-                'height': 185,
-                'weight': 89,
-                'prothesis': 'Gin sx'
-            }
-        ],
-        [
-            'a1b2c3', {
-                'pid': 'a1b2c3',
-                'name': 'Anna',
-                'surname': 'Verdi',
-                'birthdate': new Date('1990', '1', '1'),
-                'gender': 'M',
-                'height': 165,
-                'weight': 54,
-                'prothesis': null
-            }
-        ]
-    ])
+    data = null;
 
-    decriptPatients(idArray) {
+    setData(d) {
+        this.data = d
+    }
+
+    async getPlainData() {
+        let patientsArrayObject = await this.communication("GET")
+        const resultMap = new Map();
+        await patientsArrayObject.forEach(item => {
+            const key = Object.keys(item)[0];
+            const patient = item[key];
+            const birthdateParts = patient.birthdate.split('-');
+            patient.birthdate = new Date(birthdateParts[0], birthdateParts[1] - 1, birthdateParts[2]);
+            resultMap.set(key, patient);
+        });
+        this.setData(resultMap)
+    }
+
+    async decriptPatients(idArray) {
+        await this.getPlainData()
         let patients = []
         idArray.forEach(id => {
             patients.push(this.data.get(id.pid))
@@ -50,6 +33,25 @@ class FakeSecurityModule {
     encryptAndStorePatient(patientObj) {
         let id = ''
         return id
+    }
+
+    async communication(method, parameters) {
+        let httpResponse = await fetch(BASE_URL, {
+            method: method,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization": "token 4b23e270-5dd7-45ac-aa1e-753e490ff18f"
+            },
+            body: JSON.stringify(parameters)
+        });
+        const status = httpResponse.status;
+        try {
+            let deserializedObject = await httpResponse.json();
+            return deserializedObject;
+        } catch (err) {
+            console.log(status + " An error occurred")
+        }
     }
 }
 
