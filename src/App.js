@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./App.css";
 import Login from "./common/View/Login";
 import PhysicianHeader from "./physician/View/OtherComponents/PhysicianHeader";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import NewPatient from "./physician/View/Panels/NewPatient";
 import SearchPatient from "./physician/View/Panels/SearchPatient";
 import SearchVisit from "./physician/View/Panels/SearchVisit";
@@ -21,86 +21,85 @@ import Annotations from "./physician/View/Panels/Annotations";
 import { UserType } from "./common/Model/User";
 import theme from "./common/Theme";
 import { ThemeProvider } from "@mui/material";
+import UserContext from "./common/Model/UserContext";
+import Header from "./common/View/Header";
 
 function App() {
-    const navigate = useNavigate();
-    const [name, setName] = useState(null);
-    let type = "physician"; // operator / admin / physician
+    const [user, setUser] = useState(null);
 
-    return name != null ? (
+    return (
         <ThemeProvider theme={theme}>
-            {type === UserType.PHYSICIAN ? (
-                <>
-                    <PatientProvider>
-                        <VisitProvider>
-                            <NewVisitProvider>
-                                <CurrentJointProvider>
-                                    <PhysicianHeader
-                                        name={name}
-                                        logout={() => {
-                                            setName(null);
-                                            navigate("/");
-                                        }}
-                                    />
-                                    <Routes>
-                                        <Route
-                                            path="/newPatient"
-                                            element={<NewPatient />}
-                                        />
-                                        <Route
-                                            index
-                                            element={<SearchPatient />}
-                                        />
-                                        <Route
-                                            path="/newVisit"
-                                            element={<NewVisit />}
-                                        />
-                                        <Route
-                                            path="/newVisit/jointSelection"
-                                            element={<JointSelection />}
-                                        />
-                                        <Route
-                                            path="/newVisit/jointSelection/joint"
-                                            element={<Joint />}
-                                        />
-                                        <Route
-                                            path="/newVisit/drug"
-                                            element={<Drug />}
-                                        />
-                                        <Route
-                                            path="/searchVisit"
-                                            element={<SearchVisit />}
-                                        />
-                                        <Route
-                                            path="/seeVisit"
-                                            element={<SeeVisit />}
-                                        />
-                                        <Route
-                                            path="/newVisit/endVisit"
-                                            element={<EndVisit />}
-                                        />
-                                        <Route
-                                            path="/annotations"
-                                            element={<Annotations />}
-                                        />
-                                    </Routes>
-                                </CurrentJointProvider>
-                            </NewVisitProvider>
-                        </VisitProvider>
-                    </PatientProvider>
-                </>
-            ) : null}
-            {type === UserType.ADMIN ? (
-                <>
-                    <Routes>
-                        <Route index element={<AdminHome />} />
-                    </Routes>
-                </>
-            ) : null}
+            <UserContext.Provider value={[user, setUser]}>
+                {user ? <UserRoutes /> : <Login />}
+            </UserContext.Provider>
         </ThemeProvider>
-    ) : (
-        <Login setName={setName} />
     );
 }
+
+const UserRoutes = () => {
+    const [user, ] = useContext(UserContext);
+
+    if (user.type === UserType.PHYSICIAN) {
+        return (
+            <PatientProvider>
+                <VisitProvider>
+                    <NewVisitProvider>
+                        <CurrentJointProvider>
+                            <PhysicianHeader />
+                            <Routes>
+                                <Route
+                                    path="/newPatient"
+                                    element={<NewPatient />}
+                                />
+                                <Route index element={<SearchPatient />} />
+                                <Route
+                                    path="/newVisit"
+                                    element={<NewVisit />}
+                                />
+                                <Route
+                                    path="/newVisit/jointSelection"
+                                    element={<JointSelection />}
+                                />
+                                <Route
+                                    path="/newVisit/jointSelection/joint"
+                                    element={<Joint />}
+                                />
+                                <Route
+                                    path="/newVisit/drug"
+                                    element={<Drug />}
+                                />
+                                <Route
+                                    path="/searchVisit"
+                                    element={<SearchVisit />}
+                                />
+                                <Route
+                                    path="/seeVisit"
+                                    element={<SeeVisit />}
+                                />
+                                <Route
+                                    path="/newVisit/endVisit"
+                                    element={<EndVisit />}
+                                />
+                                <Route
+                                    path="/annotations"
+                                    element={<Annotations />}
+                                />
+                            </Routes>
+                        </CurrentJointProvider>
+                    </NewVisitProvider>
+                </VisitProvider>
+            </PatientProvider>
+        );
+    } else if (user.type === UserType.ADMIN) {
+        return (
+            <>
+			<Header title="Admin"/>
+                <Routes>
+                    <Route index element={<AdminHome />} />
+                </Routes>
+            </>
+        );
+    }
+};
 
 export default App;

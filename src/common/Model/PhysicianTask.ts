@@ -1,18 +1,28 @@
 import Task from "./Task";
 
 export default class PhysicianTask extends Task {
+    physician: number;
     url: string;
     deadline: string;
-    annotation_cnt: number;
+    annotated_media: number;
 
-    constructor(obj: any) {
-        super(obj);
-        this.url = obj.url;
-        this.deadline = obj.deadline;
-        this.annotation_cnt = obj.annotation_cnt;
+    constructor(
+        task: Task,
+        physician: {
+            user: number;
+            task_url: string;
+            deadline: string;
+            annotated_media: number;
+        }
+    ) {
+        super(task);
+        this.physician = physician.user;
+        this.annotated_media = physician.annotated_media;
+        this.deadline = physician.deadline;
+        this.url = physician.task_url;
     }
 
     progress = () => {
-        return this.annotation_cnt / this.media_cnt;
+        return this.annotated_media / this.media_count;
     };
 }

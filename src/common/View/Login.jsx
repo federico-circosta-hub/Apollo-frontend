@@ -1,13 +1,16 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
+import { useContext, useState } from "react";
 import unimi from "../img/logo_unimi.png";
 import ospedale from "../img/ospedale-loghi.jpeg";
+import UserContext from "../Model/UserContext";
+import User, { UserType } from "../Model/User";
 
-export default function Login({ setName }) {
+export default function Login() {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const [display, setDisplay] = useState({ display: "none" });
     const [disabled, setDisabled] = useState(false);
+
+    const [, setUser] = useContext(UserContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,7 +18,16 @@ export default function Login({ setName }) {
 
         setTimeout(() => {
             if (username === "Federico" && password === "123") {
-                setName("Roberta Gualtierotti (physician)");
+                setUser(
+                    new User({
+                        name: "Roberta",
+                        surname: "Gualtierotti",
+                        type: UserType.ADMIN,
+                        id: 23,
+                        email: "test@test.it",
+                        enabled: true,
+                    })
+                );
             } else {
                 setDisplay({ display: "block" });
             }
@@ -102,10 +114,6 @@ export default function Login({ setName }) {
     );
 }
 
-Login.propTypes = {
-    setName: PropTypes.func.isRequired,
-};
-
 const style = {
     box: {
         width: "40%",
@@ -117,7 +125,6 @@ const style = {
         display: "flex",
         flexDirection: "column",
         alignText: "center",
-        //justifyContent: 'center',
         alignItems: "center",
     },
 };

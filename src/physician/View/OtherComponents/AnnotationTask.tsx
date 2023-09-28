@@ -16,11 +16,11 @@ const AnnotationTask = ({ task }: { task: PhysicianTask }) => {
     };
 
     return (
-        <Card style={style.card} variant="outlined" raised>
+        <Card style={style.card} raised>
             <CardActionArea onClick={openTask}>
                 <CardContent>
                     <Typography variant="h6" component="div" sx={style.title}>
-                        {task.name}
+                        {task.name()}
                     </Typography>
                     <Typography sx={{ fontSize: 18 }} gutterBottom>
                         Deadline: {task.deadline}

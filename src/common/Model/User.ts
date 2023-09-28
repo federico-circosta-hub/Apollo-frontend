@@ -12,13 +12,12 @@ export default class User {
     type: UserType;
     enabled: boolean;
 
-    // copy costructor
-    constructor(obj: User) {
-        this.id = obj.id;
-        this.name = obj.name;
-        this.email = obj.email;
-        this.surname = obj.surname;
-        this.type = obj.type;
-        this.enabled = obj.enabled;
+    constructor(obj: User | any = {}) {
+        this.id = obj.id ?? 0;
+        this.name = obj.name ?? "";
+        this.email = obj.email ?? "";
+        this.surname = obj.surname ?? "";
+        this.type = obj.type ?? UserType.PHYSICIAN;
+        this.enabled = obj.enabled ?? false;
     }
 }
