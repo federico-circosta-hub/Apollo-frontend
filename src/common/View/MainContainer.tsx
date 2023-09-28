@@ -1,12 +1,20 @@
-export default function MainContainer({ children }: { children: any }) {
+import Box from "@mui/material/Box";
+
+export default function MainContainer({
+    children,
+    style,
+}: {
+    children: any;
+    style?: any;
+}) {
     return (
-        <div className="box-bianco" style={style.box}>
+        <Box className="box-bianco" sx={{ ...baseStyle.box, ...style }}>
             {children}
-        </div>
+        </Box>
     );
 }
 
-const style = {
+const baseStyle = {
     box: {
         width: "95%",
         height: "88vh",

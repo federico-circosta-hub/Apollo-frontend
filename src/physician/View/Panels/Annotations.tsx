@@ -123,7 +123,7 @@ const AnnotationGrid = ({
                     {tasks.map((task: PhysicianTask) => (
                         <GridElement key={task.id} task={task} />
                     ))}
-                </Grid>	
+                </Grid>
             </Box>
         </>
     );
@@ -137,7 +137,7 @@ const GridElement = (props: any) => (
 
 const style = {
     scrollable: {
-        maxHeight: "100vh",
+        maxHeight: "100%",
         width: "100%",
         overflow: "auto",
         flex: 1,
