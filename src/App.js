@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import "./App.css";
 import Login from "./common/View/Login";
 import PhysicianHeader from "./physician/View/OtherComponents/PhysicianHeader";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import NewPatient from "./physician/View/Panels/NewPatient";
 import SearchPatient from "./physician/View/Panels/SearchPatient";
 import SearchVisit from "./physician/View/Panels/SearchVisit";
@@ -22,6 +22,7 @@ import { UserType } from "./common/Model/User";
 import theme from "./common/Theme";
 import { ThemeProvider } from "@mui/material";
 import UserContext from "./common/Model/UserContext";
+import Header from "./common/View/Header";
 
 function App() {
     const [user, setUser] = useState(null);
@@ -36,8 +37,7 @@ function App() {
 }
 
 const UserRoutes = () => {
-    const navigate = useNavigate();
-    const [user, setUser] = useContext(UserContext);
+    const [user, ] = useContext(UserContext);
 
     if (user.type === UserType.PHYSICIAN) {
         return (
@@ -45,12 +45,7 @@ const UserRoutes = () => {
                 <VisitProvider>
                     <NewVisitProvider>
                         <CurrentJointProvider>
-                            <PhysicianHeader
-                                onLogout={() => {
-                                    setUser(null);
-                                    navigate("/");
-                                }}
-                            />
+                            <PhysicianHeader />
                             <Routes>
                                 <Route
                                     path="/newPatient"
@@ -97,9 +92,12 @@ const UserRoutes = () => {
         );
     } else if (user.type === UserType.ADMIN) {
         return (
-            <Routes>
-                <Route index element={<AdminHome />} />
-            </Routes>
+            <>
+			<Header title="Admin"/>
+                <Routes>
+                    <Route index element={<AdminHome />} />
+                </Routes>
+            </>
         );
     }
 };

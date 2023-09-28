@@ -12,6 +12,7 @@ import {
 import PhysicianTask from "../../../common/Model/PhysicianTask";
 import CommunicationController from "../../../common/Model/Communication";
 import UserContext from "../../../common/Model/UserContext";
+import MainContainer from "../../../common/View/MainContainer";
 
 export default function Annotations() {
     const [user] = useContext(UserContext);
@@ -48,7 +49,7 @@ export default function Annotations() {
     }, [fetchData]);
 
     return (
-        <div className="box-bianco" style={style.box}>
+        <MainContainer>
             {status === "loading" ? (
                 <Loading />
             ) : status === "error" ? (
@@ -60,7 +61,7 @@ export default function Annotations() {
                     onToogleInclude={toggleInclude}
                 />
             )}
-        </div>
+        </MainContainer>
     );
 }
 
@@ -135,19 +136,6 @@ const GridElement = (props: any) => (
 );
 
 const style = {
-    box: {
-        width: "95%",
-        height: "88vh",
-        borderRadius: "15px",
-        backgroundColor: "white",
-        margin: "auto",
-        marginTop: "1.5vh",
-        marginBottom: "1.5vh",
-        display: "flex",
-        flexDirection: "column" as "column",
-        alignItems: "center",
-        padding: "5vh",
-    },
     scrollable: {
         maxHeight: "100vh",
         width: "100%",
