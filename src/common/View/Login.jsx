@@ -22,7 +22,7 @@ export default function Login() {
                     new User({
                         name: "Roberta",
                         surname: "Gualtierotti",
-                        type: UserType.PHYSICIAN,
+                        type: UserType.ADMIN,
                         id: 23,
                         email: "test@test.it",
                         enabled: true,
