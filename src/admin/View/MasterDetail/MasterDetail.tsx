@@ -2,10 +2,12 @@ import { ComponentType, useCallback, useState } from "react";
 import Box from "@mui/material/Box";
 import MasterComponent from "./MasterComponent";
 import Divider from "@mui/material/Divider";
-import MainContainer from "../../common/View/MainContainer";
-import Loading from "../../common/View/Loading";
+import MainContainer from "../../../common/View/MainContainer";
+import Loading from "../../../common/View/Loading";
 import DetailComponent from "./DetailComponent";
 import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 export type MasterItemProps = {
     key: number;
@@ -17,7 +19,11 @@ export type DetailItemProps = {
     item: any;
 };
 
-export type Status = "loaded" | "loading" | "error";
+export enum Status {
+    LOADED,
+    LOADING,
+    ERROR,
+}
 
 export default function MasterDetail({
     items,
@@ -26,6 +32,7 @@ export default function MasterDetail({
     MasterItem,
     DetailItem,
     status,
+    onRetry,
 }: {
     items: any[];
     itemName: string;
@@ -33,6 +40,7 @@ export default function MasterDetail({
     MasterItem: ComponentType<MasterItemProps>;
     DetailItem: ComponentType<DetailItemProps>;
     status: Status;
+    onRetry: () => Promise<void>;
 }) {
     const navigate = useNavigate();
     const [selected, setSelected] = useState<number>(-1);
@@ -41,10 +49,17 @@ export default function MasterDetail({
         navigate(addRoute);
     }, [navigate, addRoute]);
 
+    if (status === Status.ERROR)
+        return (
+            <MainContainer style={style.outerBox}>
+                <ErrorScreen onRetry={onRetry} />
+            </MainContainer>
+        );
+
     return (
         <MainContainer style={style.outerBox}>
             <Box sx={style.listBox}>
-                {status === "loaded" ? (
+                {status === Status.LOADED ? (
                     <MasterComponent
                         items={items}
                         itemName={itemName}
@@ -66,6 +81,28 @@ export default function MasterDetail({
         </MainContainer>
     );
 }
+
+const ErrorScreen = ({ onRetry }: { onRetry: () => Promise<void> }) => {
+    return (
+        <Box sx={style.errorScreen}>
+            <Typography
+                variant="h4"
+                color="red"
+                fontWeight="bold"
+                align="center"
+            >
+                ERRORE!
+            </Typography>
+            <Typography variant="h6" align="center">
+                Errore di carimento
+            </Typography>
+            <Box sx={{ m: 2 }} />
+            <Button variant="contained" color="primary" onClick={onRetry}>
+                Riprova
+            </Button>
+        </Box>
+    );
+};
 
 const style = {
     outerBox: {
@@ -89,5 +126,12 @@ const style = {
     },
     divider: {
         backgroundColor: "black",
+    },
+    errorScreen: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column" as "column",
+        margin: "auto",
     },
 };

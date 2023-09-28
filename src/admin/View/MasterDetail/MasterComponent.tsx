@@ -47,7 +47,7 @@ export default function MasterComponent({
                                 item={item}
                                 onClick={() => onItemClick(index)}
                             />
-                            <Divider />
+                            <Divider sx={style.divider} />
                         </>
                     ))}
                 </List>
@@ -105,5 +105,8 @@ const style = {
     },
     addButton: {
         marginTop: { xs: "16px", lg: "0px" },
+    },
+    divider: {
+        backgroundColor: "black",
     },
 };
