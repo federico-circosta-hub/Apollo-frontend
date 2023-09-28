@@ -30,8 +30,14 @@ class FakeSecurityModule {
         return patients
     }
 
-    encryptAndStorePatient(patientObj) {
-        let id = ''
+    async encryptAndStorePatient(patientObj) {
+        await this.getPlainData()
+        let id = Math.random().toString(36).substring(2, 8);
+        while (Array.from(this.data.keys()).includes(id)) { id = Math.random().toString(36).substring(2, 8); }
+        patientObj.pid = id
+        let o = {}
+        o[id] = patientObj
+        await this.communication("PATCH", o)
         return id
     }
 
