@@ -8,9 +8,9 @@ import DetailComponent from "./DetailComponent";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Status from "../../../common/Model/Status";
 
 export type MasterItemProps = {
-    key: number;
     item: any;
     onClick: () => void;
 };
@@ -18,12 +18,6 @@ export type MasterItemProps = {
 export type DetailItemProps = {
     item: any;
 };
-
-export enum Status {
-    LOADED,
-    LOADING,
-    ERROR,
-}
 
 export default function MasterDetail({
     items,
@@ -59,7 +53,7 @@ export default function MasterDetail({
     return (
         <MainContainer style={style.outerBox}>
             <Box sx={style.listBox}>
-                {status === Status.LOADED ? (
+                {status === Status.IDLE ? (
                     <MasterComponent
                         items={items}
                         itemName={itemName}

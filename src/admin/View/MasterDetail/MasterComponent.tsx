@@ -41,14 +41,13 @@ export default function MasterComponent({
             <Box sx={style.scrollable}>
                 <List sx={{ width: "100%" }}>
                     {filteredItems.map((item, index) => (
-                        <>
+                        <Box key={index}>
                             <Item
-                                key={index}
                                 item={item}
                                 onClick={() => onItemClick(index)}
                             />
                             <Divider sx={style.divider} />
-                        </>
+                        </Box>
                     ))}
                 </List>
             </Box>

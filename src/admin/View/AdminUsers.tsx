@@ -6,11 +6,9 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
 import CommunicationController from "../../common/Model/Communication";
 import User from "../../common/Model/User";
-import MasterDetail, {
-    MasterItemProps,
-    Status,
-} from "./MasterDetail/MasterDetail";
+import MasterDetail, { MasterItemProps } from "./MasterDetail/MasterDetail";
 import UserDetails from "./UserDetails";
+import Status from "../../common/Model/Status";
 
 export default function AdminUsers() {
     const [, setTitle] = useContext(HeaderContext);
@@ -30,7 +28,7 @@ export default function AdminUsers() {
 
             console.log(`${res.length} users recevied`);
             setUsers(res);
-            setStatus(Status.LOADED);
+            setStatus(Status.IDLE);
         } catch (err: any) {
             setStatus(Status.ERROR);
         }
@@ -54,11 +52,11 @@ export default function AdminUsers() {
     );
 }
 
-const UserItem = ({ key, item, onClick }: MasterItemProps) => {
+const UserItem = ({ item, onClick }: MasterItemProps) => {
     const user = item as User;
 
     return (
-        <ListItemButton key={key} onClick={onClick}>
+        <ListItemButton onClick={onClick}>
             <ListItemAvatar>
                 <Avatar
                     sx={{

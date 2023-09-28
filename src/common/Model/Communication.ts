@@ -27,6 +27,8 @@ class Communication {
         GET_PHYSICIANS: "/user/physician",
         LOGIN: "/user/login",
         GET_TASKS: "/task",
+        RESET_PASSWORD: "/user/resetPassword",
+        TOGGLE_ENABLE: "/user/enable",
     };
 
     private baseCall = async (
@@ -115,6 +117,29 @@ class Communication {
         return tasks.map(
             (task: any) => new PhysicianTask(task, task.physician)
         );
+    };
+
+    generateNewPassword = async (email: string): Promise<string> => {
+        const res = await this.post(this.endpoints.RESET_PASSWORD, { email });
+        return res.password;
+    };
+
+    resetPassword = async (
+        email: string,
+        oldPassword: string,
+        newPassword: string
+    ): Promise<string> => {
+        const res = await this.post(this.endpoints.RESET_PASSWORD, {
+            email,
+            oldPassword,
+            newPassword,
+        });
+        return res.password;
+    };
+
+    toggleEnable = async (id: number): Promise<boolean> => {
+        const res = await this.patch(this.endpoints.TOGGLE_ENABLE, { id });
+        return res.enabled;
     };
 
     private formatGetData = (data: Params): string => {
