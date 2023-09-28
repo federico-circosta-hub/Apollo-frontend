@@ -2,8 +2,8 @@ import "./App.css";
 import React, { useContext, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "./common/View/Login";
-import Header from "./common/View/Header";
 import PhysicianHeader from "./physician/View/OtherComponents/PhysicianHeader";
+import AdminHeader from "./admin/View/AdminHeader";
 import theme from "./common/Theme";
 import { ThemeProvider } from "@mui/material";
 import UserContext from "./common/Model/UserContext";
@@ -109,8 +109,7 @@ const UserRoutes = () => {
         );
     } else if (user.type === UserType.ADMIN) {
         return (
-            <>
-                <Header title="Admin" />
+            <AdminHeader>
                 <Routes>
                     <Route index element={<AdminHome />} />
                     <Route path="/users" element={<AdminUsers />} />
@@ -118,7 +117,7 @@ const UserRoutes = () => {
                     <Route path="/tools" element={<AdminTools />} />
                     <Route path="/tasks" element={<AdminTasks />} />
                 </Routes>
-            </>
+            </AdminHeader>
         );
     }
 };

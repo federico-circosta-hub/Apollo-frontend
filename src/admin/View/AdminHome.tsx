@@ -1,9 +1,17 @@
+import { useContext, useEffect } from "react";
 import MainContainer from "../../common/View/MainContainer";
 import Grid from "@mui/material/Grid";
 import NavigationCard from "../Components/NavigationCard";
 import Box from "@mui/material/Box";
+import { HeaderContext } from "./AdminHeader";
 
 export default function AdminHome() {
+    const [, setTitle] = useContext(HeaderContext);
+
+    useEffect(() => {
+        setTitle("Admin");
+    }, [setTitle]);
+
     return (
         <MainContainer>
             <Box sx={style.scrollable}>
