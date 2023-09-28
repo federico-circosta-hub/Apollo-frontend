@@ -16,6 +16,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "dayjs/locale/it";
 import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
+import FakeSecurityModule from './../../Model/FakeSecurityModule'
 
 export default function NewPatient() {
     const marksH = [
@@ -52,10 +53,9 @@ export default function NewPatient() {
     const handleNew = async () => {
         setDisabled(true);
         setSendingButton("Inviando...");
-        setTimeout(() => {
-            patient.register();
-            setShowAlert(true);
-        }, 3000);
+        let pid = await FakeSecurityModule.encryptAndStorePatient(patient)
+        await patient.register(pid);
+        setShowAlert(true);
     };
 
     const add = () => {

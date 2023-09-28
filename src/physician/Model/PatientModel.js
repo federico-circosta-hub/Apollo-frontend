@@ -1,3 +1,5 @@
+import Communication from './../../common/Model/Communication'
+
 export default class PatientModel {
 
     name;
@@ -73,7 +75,7 @@ export default class PatientModel {
         );
     }
 
-    async register() {
-        console.log('inviando al server')
+    async register(pid) {
+        await Communication.post('patient', { "pid": pid })
     }
 }
