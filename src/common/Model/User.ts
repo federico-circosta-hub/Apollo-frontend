@@ -20,4 +20,18 @@ export default class User {
         this.type = obj.type ?? UserType.PHYSICIAN;
         this.enabled = obj.enabled ?? false;
     }
+
+    getInitials = (): string => {
+        return this.surname
+            ? this.name[0].toUpperCase() + this.surname[0].toUpperCase()
+            : this.name[0].toUpperCase();
+    };
+
+    fullName = (): string => {
+        return this.surname ? `${this.name} ${this.surname}` : this.name;
+    };
+
+    filter = (search: string): boolean => {
+        return this.fullName().toLowerCase().includes(search.toLowerCase());
+    };
 }

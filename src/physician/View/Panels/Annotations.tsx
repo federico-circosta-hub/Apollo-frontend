@@ -3,7 +3,6 @@ import AnnotationTask from "../OtherComponents/AnnotationTask";
 import {
     Box,
     Button,
-    CircularProgress,
     FormControlLabel,
     Grid,
     Switch,
@@ -13,6 +12,7 @@ import PhysicianTask from "../../../common/Model/PhysicianTask";
 import CommunicationController from "../../../common/Model/Communication";
 import UserContext from "../../../common/Model/UserContext";
 import MainContainer from "../../../common/View/MainContainer";
+import Loading from "../../../common/View/Loading";
 
 export default function Annotations() {
     const [user] = useContext(UserContext);
@@ -30,7 +30,7 @@ export default function Annotations() {
 
         try {
             const res = await CommunicationController.getPhysicianTasks(
-                user.id,
+                user!.id,
                 includeCompleted
             );
 
@@ -40,7 +40,7 @@ export default function Annotations() {
         } catch (err: any) {
             setStatus("error");
         }
-    }, [user.id, includeCompleted]);
+    }, [user, includeCompleted]);
 
     useEffect(() => {
         fetchData();
@@ -64,10 +64,6 @@ export default function Annotations() {
         </MainContainer>
     );
 }
-
-const Loading = () => {
-    return <CircularProgress style={{ margin: "auto" }} size={60} />;
-};
 
 const Error = ({ onRetry }: { onRetry: () => Promise<void> }) => {
     return (

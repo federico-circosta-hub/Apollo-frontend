@@ -8,7 +8,7 @@ export default function MainContainer({
     style?: any;
 }) {
     return (
-        <Box className="box-bianco" sx={{ ...baseStyle.box, ...style }}>
+        <Box className="box-bianco" sx={[baseStyle.box, style]}>
             {children}
         </Box>
     );
