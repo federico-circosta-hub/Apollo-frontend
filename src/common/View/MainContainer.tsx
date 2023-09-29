@@ -18,6 +18,7 @@ const style = {
         display: "flex",
         flexDirection: "column" as "column",
         alignItems: "center",
+        gap: '1vh',
         padding: "5vh",
     },
 };

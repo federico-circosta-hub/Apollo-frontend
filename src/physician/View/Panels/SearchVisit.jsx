@@ -9,11 +9,13 @@ import { VisitContext } from "../../Model/VisitContext";
 import { PatientContext } from "../../Model/PatientContext";
 import NoContextModal from "../Modals/NoContextModal";
 import { NewVisitContext } from "../../Model/NewVisitContext";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
+import Communication from '../../../common/Model/Communication'
+import CircularProgress from "@mui/material/CircularProgress";
+import MainContainer from "../../../common/View/MainContainer";
 
 export default function SearchVisit() {
     const [visitList, setVisitList] = useState([]);
+    const [loadingVisits, setLoadingVisits] = useState(false)
 
     const { selectedVisit, setSelectedVisit } = useContext(VisitContext);
     const { selectedPatient } = useContext(PatientContext);
@@ -23,12 +25,15 @@ export default function SearchVisit() {
     const { setNewVisit } = useContext(NewVisitContext);
 
     useEffect(() => {
+        setLoadingVisits(true)
         getVisits();
     }, []);
 
-    const getVisits = () => {
-        let arr = GenerateVisits();
-        setVisitList(arr);
+    const getVisits = async () => {
+        //let visitsArray = GenerateVisits();
+        let visitsArray = await Communication.get('visit', { patient: selectedPatient.pid })
+        setVisitList(visitsArray);
+        setLoadingVisits(false)
     };
 
     const handleSelect = () => {
@@ -48,7 +53,7 @@ export default function SearchVisit() {
 
     return selectedPatient !== null ? (
         <div>
-            <div style={style.box}>
+            <MainContainer>
                 <div
                     style={{
                         display: "flex",
@@ -66,8 +71,8 @@ export default function SearchVisit() {
                         <div>
                             <Link
                                 to={"/newVisit"}
-                                className="btn btn-primary btn-lg"
-                                style={{ fontSize: 30 }}
+                                className="btn btn-primary"
+                                style={{ fontSize: 24 }}
                                 onClick={() => createNewVisit(true)}
                             >
                                 Nuova visita{" "}
@@ -82,8 +87,8 @@ export default function SearchVisit() {
                         <div>
                             <Link
                                 to={"/newVisit"}
-                                className="btn btn-primary btn-lg"
-                                style={{ fontSize: 30 }}
+                                className="btn btn-primary"
+                                style={{ fontSize: 24 }}
                                 onClick={() => createNewVisit(false)}
                             >
                                 Trascrivi visita{" "}
@@ -100,26 +105,55 @@ export default function SearchVisit() {
 
                 <div
                     style={{
+                        width: '100%',
                         height: "70vh",
                         overflow: "auto",
-                        textAlign: "left",
+                        textAlign: loadingVisits || visitList.length === 0 ? "center" : "left",
                         borderRadius: "15px",
-                        border: "0.5px solid black",
+                        background: visitList.length === 0 ? "#e8e8e8" : "white",
+                        border: visitList.length === 0 ? "1px 2px 6px grey" : "1px 2px 6px #56AEC9",
+                        boxShadow: visitList.length === 0 ? "1px 2px 6px #000000" : "1px 2px 6px #56AEC9",
                     }}
                 >
-                    {visitList.map((visit, index) => (
-                        <VisitLine
-                            key={index}
-                            visit={visit}
-                            isSelected={visit === selectedVisit}
-                            onSelectVisit={() => {
-                                setSelectedVisit(visit);
-                                handleSelect();
-                            }}
-                        />
-                    ))}
+                    {loadingVisits ? <CircularProgress /> : (
+                        <div>
+                            {(visitList.length !== 0) ? (
+                                <table className='table table-primary table-striped table-hover'>
+                                    <thead style={{ position: "sticky", top: 0, height: '6vh', }}>
+                                        <tr  >
+                                            <th style={{ background: 'white' }}>Id visita</th>
+                                            <th style={{ background: 'white' }}>Data</th>
+                                            <th style={{ background: 'white' }}>Medico</th>
+                                            <th style={{ background: 'white' }}>Tipo visita</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody >
+                                        {visitList.map((visit, index) => (
+                                            <VisitLine
+                                                key={index}
+                                                visit={visit}
+                                                isSelected={visit === selectedVisit}
+                                                onSelectVisit={() => {
+                                                    setSelectedVisit(visit);
+                                                    handleSelect();
+                                                }}
+                                            />
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) :
+                                (
+                                    <h6>Non sono presenti visite</h6>
+                                )
+                            }
+                        </div>
+                    )}
                 </div>
-            </div>
+
+            </MainContainer>
         </div>
     ) : (
         <NoContextModal what={" un paziente "} service={" ricerca visita "} />
@@ -141,5 +175,6 @@ const style = {
         padding: "1.5%",
         overflow: "auto",
         justifyContent: "space-around",
+        boxShadow: "1px 2px 6px #4169e1",
     },
 };

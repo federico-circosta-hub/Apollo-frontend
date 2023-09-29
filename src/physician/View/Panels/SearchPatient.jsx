@@ -9,6 +9,7 @@ import GeneratePatients from "../../Model/GeneratePatients";
 import Communication from '../../../common/Model/Communication'
 import Table from '@mui/joy/Table';
 import FakeSecurityModule from './../../Model/FakeSecurityModule'
+import MainContainer from "../../../common/View/MainContainer";
 
 export default function SearchPatient() {
 
@@ -62,8 +63,8 @@ export default function SearchPatient() {
 
     return (
         <div style={{ display: "flex", flexDirection: "row" }}>
-            <div style={style.box}>
-                <div style={{ display: "flex", alignItems: "center" }}>
+            <MainContainer>
+                <div style={{ width: '100%', display: "flex", justifyContent: "left", alignItems: "center" }}>
                     <img src={search} width={30} height={30} />
                     <input
                         style={{ width: "45%", fontSize: 24 }}
@@ -85,7 +86,8 @@ export default function SearchPatient() {
                         <div>
                             <Link
                                 to={"/newPatient"}
-                                className="btn btn-primary btn-lg"
+                                className="btn btn-primary"
+                                style={{ fontSize: 24 }}
                             >
                                 Nuovo paziente{" "}
                                 <img
@@ -106,7 +108,8 @@ export default function SearchPatient() {
                         overflow: "auto",
                         textAlign: loadingPatients ? 'center' : "left",
                         borderRadius: "15px",
-                        border: "0.5px solid black",
+                        border: "0.5px solid #56AEC9",
+                        boxShadow: "1px 2px 6px #56AEC9",
                     }}
                 >
                     {loadingPatients ? <CircularProgress /> : (
@@ -141,7 +144,7 @@ export default function SearchPatient() {
                     )
                     }
                 </div>
-            </div>
+            </MainContainer>
         </div>
     );
 }
@@ -162,5 +165,6 @@ const style = {
         padding: "2%",
         overflow: "auto",
         justifyContent: "start",
+        boxShadow: "1px 2px 6px #4169e1",
     },
 };

@@ -14,7 +14,11 @@ export default function GenerateVisits() {
 
 
     for (let i = 0; i < visitCount; i++) {
-        const visit = getRandomDate()
+        let visit = {}
+        visit.date = getRandomDate()
+        visit.physician = Math.floor(Math.random() * 10)
+        visit.type = Math.random() < 0.5 ? 'live' : 'expost'
+        visit.id = Math.floor(Math.random() * 100)
         visits.push(visit);
     }
 
