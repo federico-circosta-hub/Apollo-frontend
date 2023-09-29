@@ -1,8 +1,17 @@
+import CommunicationController from "./Communication";
+
 export enum UserType {
     ADMIN = "admin",
     PHYSICIAN = "physician",
     OPERATOR = "operator",
 }
+
+export type AnnotationToolAccess = {
+    id: number;
+    name: string;
+    endpoint: string;
+    access: boolean;
+};
 
 export default class User {
     id: number;
@@ -33,5 +42,17 @@ export default class User {
 
     filter = (search: string): boolean => {
         return this.fullName().toLowerCase().includes(search.toLowerCase());
+    };
+
+    toggleEnabled = async (): Promise<boolean> => {
+        const enabled = await CommunicationController.toggleUserEnabled(
+            this.id
+        );
+        this.enabled = enabled;
+        return this.enabled;
+    };
+
+    annotationTools = async (): Promise<AnnotationToolAccess[]> => {
+        return await CommunicationController.getUserAnnotationTool(this.id);
     };
 }

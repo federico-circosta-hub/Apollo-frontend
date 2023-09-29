@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../../config";
-import User from "./User";
+import User, { AnnotationToolAccess } from "./User";
 import PhysicianTask from "./PhysicianTask";
 
 type Params = { [key: string]: any };
@@ -29,6 +29,7 @@ class Communication {
         GET_TASKS: "/task",
         RESET_PASSWORD: "/user/resetPassword",
         TOGGLE_ENABLE: "/user/enable",
+        USER_TOOL_ACCESS: "/annotationTool/access",
     };
 
     private baseCall = async (
@@ -138,9 +139,26 @@ class Communication {
         return res.password;
     };
 
-    toggleEnable = async (id: number): Promise<boolean> => {
+    toggleUserEnabled = async (id: number): Promise<boolean> => {
         const res = await this.patch(this.endpoints.TOGGLE_ENABLE, { id });
         return res.enabled;
+    };
+
+    getUserAnnotationTool = async (
+        physician: number
+    ): Promise<AnnotationToolAccess[]> => {
+        const res = await this.get(this.endpoints.USER_TOOL_ACCESS, {
+            physician,
+        });
+
+        return res.map((access: any) => {
+            return {
+                id: access.annotation_tool,
+                name: access.annotation_tool_name,
+                endpoint: access.endpoint,
+                access: access.access,
+            };
+        });
     };
 
     private formatGetData = (data: Params): string => {

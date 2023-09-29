@@ -37,7 +37,7 @@ const Annotations = React.lazy(() =>
 );
 
 const AdminHome = React.lazy(() => import("./admin/View/AdminHome"));
-const AdminUsers = React.lazy(() => import("./admin/View/AdminUsers"));
+const AdminUsers = React.lazy(() => import("./admin/View/Users/AdminUsers"));
 const AdminDatasets = React.lazy(() => import("./admin/View/AdminDatasets"));
 const AdminTasks = React.lazy(() => import("./admin/View/AdminTasks"));
 const AdminTools = React.lazy(() => import("./admin/View/AdminTools"));

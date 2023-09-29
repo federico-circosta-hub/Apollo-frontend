@@ -1,15 +1,15 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { HeaderContext } from "./AdminHeader";
+import { HeaderContext } from "../AdminHeader";
 import ListItemText from "@mui/material/ListItemText";
 import Avatar from "@mui/material/Avatar";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
-import CommunicationController from "../../common/Model/Communication";
-import User from "../../common/Model/User";
-import MasterDetail, { MasterItemProps } from "./MasterDetail/MasterDetail";
+import CommunicationController from "../../../common/Model/Communication";
+import User from "../../../common/Model/User";
+import MasterDetail, { MasterItemProps } from "../MasterDetail/MasterDetail";
 import UserDetails from "./UserDetails";
-import Status from "../../common/Model/Status";
-import { UsersContext } from "../ViewModel/UsersProvider";
+import Status from "../../../common/Model/Status";
+import { UsersContext } from "../../ViewModel/UsersProvider";
 
 export default function AdminUsers() {
     const [, setTitle] = useContext(HeaderContext);
