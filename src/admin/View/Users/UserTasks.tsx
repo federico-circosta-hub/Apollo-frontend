@@ -65,7 +65,7 @@ export default function UserTasks({ user }: { user: User }) {
     }
 
     return (
-        <>
+        <Box sx={style.box}>
             <Box sx={style.headerBox}>
                 <Typography variant="h5">
                     Task di annotazione assegnati:
@@ -91,22 +91,20 @@ export default function UserTasks({ user }: { user: User }) {
             ) : (
                 <TasksList tasks={tasks} />
             )}
-        </>
+        </Box>
     );
 }
 
 const TasksList = ({ tasks }: { tasks: PhysicianTask[] }) => {
     return (
-        <Box sx={style.scrollable}>
-            <List>
-                {tasks.map((task) => (
-                    <Box key={task.id}>
-                        <TaskItem task={task} />
-                        <Divider sx={{ backgroundColor: "black" }} />
-                    </Box>
-                ))}
-            </List>
-        </Box>
+        <List sx={style.scrollable}>
+            {tasks.map((task) => (
+                <Box key={task.id}>
+                    <TaskItem task={task} />
+                    <Divider sx={{ backgroundColor: "black" }} />
+                </Box>
+            ))}
+        </List>
     );
 };
 
@@ -132,6 +130,11 @@ const TaskItem = ({ task }: { task: PhysicianTask }) => {
 };
 
 const style = {
+    box: {
+        maxHeight: "35%",
+        display: "flex",
+        flexDirection: "column" as "column",
+    },
     scrollable: {
         maxHeight: "100%",
         width: "100%",
@@ -141,6 +144,7 @@ const style = {
         flexDirection: "column" as "column",
     },
     headerBox: {
+        flex: 1,
         display: "flex",
         flexDirection: "row" as "row",
     },
