@@ -21,6 +21,7 @@ import FormModal from "../Modals/FormModal";
 import { useNavigate } from "react-router-dom";
 import Communication from '../../../common/Model/Communication'
 import CircularProgress from "@mui/material/CircularProgress";
+import MainContainer from "../../../common/View/MainContainer";
 
 export default function NewVisit(props) {
     const nav = useNavigate();
@@ -28,11 +29,8 @@ export default function NewVisit(props) {
     const { newVisit, setNewVisit } = useContext(NewVisitContext);
     const { selectedPatient } = useContext(PatientContext);
 
-    //const activities = ["ciao"]
-    //const traumaticEvents = ["ciao"]
-
-    const [activities, setActivities] = useState([]);
-    const [traumaticEvents, setTraumaticEvents] = useState([]);
+    const [activities, setActivities] = useState([""]);
+    const [traumaticEvents, setTraumaticEvents] = useState([""]);
     const [visitDate, setVisitDate] = useState(
         newVisit.isInPresence ? new Date() : null
     );
@@ -57,12 +55,14 @@ export default function NewVisit(props) {
     }, [])
 
     const getTraumaticEventAndActivitiesFromServer = async () => {
+        setActivities([""])
+        setTraumaticEvents([""])
         let acts = await Communication.get('exercise', '')
         let trauma = await Communication.get('traumaEvent', '')
         acts = acts.map(item => item.name)
         trauma = trauma.map(item => item.name)
-        setActivities(acts)
-        setTraumaticEvents(trauma)
+        setActivities(prevState => [...prevState, ...acts])
+        setTraumaticEvents(prevState => [...prevState, ...trauma])
     }
 
     const handleChange = (e) => {
@@ -186,10 +186,10 @@ export default function NewVisit(props) {
 
     return selectedPatient !== null ? (
         <div>
-            <div className="box-bianco" style={style.box}>
+            <MainContainer>
                 <div style={style.monoButtons}>
                     <div style={{ alignItems: "center", display: "flex" }}>
-                        <label style={{ fontSize: 24 }}>
+                        <label style={{ fontSize: 22 }}>
                             È una visita di follow-up?
                         </label>
                         <Switch checked={isFollowUp} onChange={followUp} />
@@ -207,7 +207,7 @@ export default function NewVisit(props) {
                 {!newVisit.isInPresence && (
                     <div style={style.monoButtons}>
                         <div>
-                            <label style={{ fontSize: 24 }}>
+                            <label style={{ fontSize: 22 }}>
                                 Qual è la data della visita?
                             </label>
                         </div>
@@ -237,7 +237,7 @@ export default function NewVisit(props) {
 
                 <div style={style.buttons}>
                     <div style={{ display: "flex" }}>
-                        <label style={{ fontSize: 24 }}>
+                        <label style={{ fontSize: 22 }}>
                             Il paziente ha svolto attività fisica?
                         </label>
                         <Switch
@@ -264,7 +264,7 @@ export default function NewVisit(props) {
                         <FormControl
                             fullWidth
                             disabled={disabledLeft}
-                            style={{ minWidth: 120, fontSize: 28 }}
+                            style={{ minWidth: 120, fontSize: 22 }}
                         >
                             <InputLabel id="demo-simple-select-label">
                                 Attività fisica
@@ -286,7 +286,7 @@ export default function NewVisit(props) {
 
                 <div style={style.buttons}>
                     <div>
-                        <label style={{ fontSize: 24 }}>
+                        <label style={{ fontSize: 22 }}>
                             Indicare evento traumatico, se presente
                         </label>
                     </div>
@@ -323,7 +323,8 @@ export default function NewVisit(props) {
                 <div
                     style={{
                         display: "flex",
-                        marginBottom: "1.5%",
+                        height: '15vh',
+                        alignItems: "flex-end",
                         justifyContent: "space-between",
                         width: "95%",
                     }}
@@ -332,7 +333,7 @@ export default function NewVisit(props) {
                         <Link
                             onClick={() => setNewVisit(null)}
                             to={"/searchVisit/"}
-                            className="btn btn-danger btn-lg"
+                            className="btn btn-danger"
                         >
                             Annulla
                         </Link>
@@ -340,14 +341,14 @@ export default function NewVisit(props) {
                     <div>
                         <button
                             style={style.forwardButton}
-                            className="btn btn-success btn-lg"
+                            className="btn btn-success"
                             onClick={forward}
                         >
                             Prosegui
                         </button>
                     </div>
                 </div>
-            </div>
+            </MainContainer>
 
             <div>
                 {formModal && (

@@ -8,6 +8,7 @@ import EndingJointModal from "../Modals/EndingJointModal";
 import JointSelectionButtonVisualizer from "../../ViewModel/JointSelectionButtonVisualizer";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import CircularProgress from "@mui/material/CircularProgress";
+import MainContainer from "../../../common/View/MainContainer";
 
 export default function JointSelection() {
     const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -32,14 +33,14 @@ export default function JointSelection() {
 
     return (
         <div>
-            <div className="box-bianco" style={style.box}>
+            <MainContainer>
+
                 <div
                     style={{
                         width: "100%",
                         display: "flex",
                         justifyContent: "left",
-                        paddingLeft: "1%",
-                        paddingTop: "1%",
+
                     }}
                 >
                     <div>
@@ -55,7 +56,7 @@ export default function JointSelection() {
                         flexDirection: "row",
                         justifyContent: "center",
                         textAlign: "center",
-                        margin: "0.5%",
+
                     }}
                 >
                     <div style={style.protLeft}>
@@ -92,7 +93,7 @@ export default function JointSelection() {
                             alt="male human silhouette"
                             style={{
                                 maxWidth: "100%",
-                                maxHeight: "70vh",
+                                maxHeight: "60vh",
                                 position: "relative",
                                 margin: "auto",
                                 display: imgLoaded ? "block" : "none",
@@ -126,14 +127,15 @@ export default function JointSelection() {
                 <div
                     style={{
                         display: "flex",
-                        marginBottom: "1.5%",
+                        height: "15vh",
+                        alignItems: "flex-end",
                         justifyContent: "space-between",
                         width: "95%",
                     }}
                 >
                     <div>
                         <Link
-                            className="btn btn-danger btn-lg"
+                            className="btn btn-danger"
                             to={"/newVisit/"}
                         >
                             Indietro
@@ -141,14 +143,15 @@ export default function JointSelection() {
                     </div>
                     <div>
                         <button
-                            className="btn btn-warning btn-lg"
+                            className="btn btn-warning"
                             onClick={() => setShowEndingModal(true)}
                         >
                             Concludi visita
                         </button>
                     </div>
                 </div>
-            </div>
+
+            </MainContainer>
             <EndingJointModal
                 objectData={newVisit}
                 show={{ showEndingModal, setShowEndingModal }}

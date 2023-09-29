@@ -180,6 +180,7 @@ export default function Joint(props) {
                             to={"/newVisit/jointSelection"}
                             style={style.forwardButton}
                             className="btn btn-danger btn-lg"
+                            onClick={() => setCurrentJoint("")}
                         >
                             Cancel
                         </Link>

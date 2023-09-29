@@ -21,7 +21,7 @@ export const validateForm = (formName, formData) => {
                     errors.physicalActivityType = 'Inserisci tipo di attività fisica'
                 }
             }
-            if (formData.traumaticEvent.traumaticEvent != 'Nessuno') {
+            if (formData.traumaticEvent.traumaticEvent != '') {
                 if (formData.traumaticEvent.traumaticEventDate == '') {
                     errors.traumaticEvent = 'Inserisci data evento traumatico'
                 }
@@ -36,7 +36,7 @@ export const validateForm = (formName, formData) => {
                     errors.needFollowUp = 'Insert follow up date'
                 }
             }
-            if (formData.prophylacticDrug.drug != 'None') {
+            if (formData.prophylacticDrug.drug != '') {
                 if (formData.prophylacticDrug.unit == '') {
                     errors.prophylacticDrugUnit = 'Insert prophylactic drug unit'
                 }
@@ -47,7 +47,7 @@ export const validateForm = (formName, formData) => {
                     errors.prophylacticDrugDose = 'Insert valid prophylactic drug dose'
                 }
             }
-            if (formData.acuteDrug.drug != 'None') {
+            if (formData.acuteDrug.drug != '') {
                 if (formData.acuteDrug.unit < 1) {
                     errors.acuteDrugUnit = 'Insert acute drug unit'
                 }
