@@ -1,15 +1,18 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./App.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+import LoadingScreen from "./common/View/LoadingScreen";
 import config from "./config";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <BrowserRouter basename={config.ENDPOINT}>
-        <App />
+        <Suspense fallback={<LoadingScreen />}>
+            <App />
+        </Suspense>
     </BrowserRouter>
 );
 
