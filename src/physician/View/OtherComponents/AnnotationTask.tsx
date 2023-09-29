@@ -58,6 +58,7 @@ const style = {
     },
     title: {
         overflow: "hidden",
+        textOverflow: "ellipsis",
         display: "-webkit-box",
         WebkitBoxOrient: "vertical",
         WebkitLineClamp: 1,

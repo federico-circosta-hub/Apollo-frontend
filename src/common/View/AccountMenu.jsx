@@ -47,10 +47,7 @@ export default function AccountMenu(props) {
                                 background: "#4169e1",
                             }}
                         >
-                            {user.surname
-                                ? user.name[0].toUpperCase() +
-                                  user.surname[0].toUpperCase()
-                                : user.name[0].toUpperCase()}
+                            {user.getInitials()}
                         </Avatar>
                     </IconButton>
                 </Tooltip>

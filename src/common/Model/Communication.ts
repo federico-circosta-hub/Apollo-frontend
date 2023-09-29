@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../../config";
-import User from "./User";
+import User, { AnnotationToolAccess } from "./User";
 import PhysicianTask from "./PhysicianTask";
 
 type Params = { [key: string]: any };
@@ -27,6 +27,9 @@ class Communication {
         GET_PHYSICIANS: "/user/physician",
         LOGIN: "/user/login",
         GET_TASKS: "/task",
+        RESET_PASSWORD: "/user/resetPassword",
+        TOGGLE_ENABLE: "/user/enable",
+        USER_TOOL_ACCESS: "/annotationTool/access",
     };
 
     private baseCall = async (
@@ -35,8 +38,6 @@ class Communication {
         data: Params
     ): Promise<Result> => {
         console.log(`Axios call: ${method} ${endpoint}`);
-
-        endpoint = endpoint + "/" + this.formatGetData(data);
 
         this.signalController = new AbortController();
         const config = { signal: this.signalController.signal };
@@ -47,7 +48,7 @@ class Communication {
             let res: any;
             if (method === HttpMethod.GET)
                 res = await fn(
-                    endpoint + +"/" + this.formatGetData(data),
+                    endpoint + "/" + this.formatGetData(data),
                     config
                 );
             else res = await fn(endpoint, data, config);
@@ -89,10 +90,13 @@ class Communication {
         this.signalController?.abort();
     };
 
-    getPhysicians = async (id?: number): Promise<User[]> => {
+    getPhysicians = async (
+        includeDisabled: boolean = false,
+        id?: number
+    ): Promise<User[]> => {
         const users = await this.get(this.endpoints.GET_PHYSICIANS, {
+            includeDisabled,
             id,
-            includeDisabled: false,
         });
 
         return users.map((user: User) => new User(user));
@@ -115,6 +119,46 @@ class Communication {
         return tasks.map(
             (task: any) => new PhysicianTask(task, task.physician)
         );
+    };
+
+    generateNewPassword = async (email: string): Promise<string> => {
+        const res = await this.post(this.endpoints.RESET_PASSWORD, { email });
+        return res.password;
+    };
+
+    resetPassword = async (
+        email: string,
+        oldPassword: string,
+        newPassword: string
+    ): Promise<string> => {
+        const res = await this.post(this.endpoints.RESET_PASSWORD, {
+            email,
+            oldPassword,
+            newPassword,
+        });
+        return res.password;
+    };
+
+    toggleUserEnabled = async (id: number): Promise<boolean> => {
+        const res = await this.patch(this.endpoints.TOGGLE_ENABLE, { id });
+        return res.enabled;
+    };
+
+    getUserAnnotationTool = async (
+        physician: number
+    ): Promise<AnnotationToolAccess[]> => {
+        const res = await this.get(this.endpoints.USER_TOOL_ACCESS, {
+            physician,
+        });
+
+        return res.map((access: any) => {
+            return {
+                id: access.annotation_tool,
+                name: access.annotation_tool_name,
+                endpoint: access.endpoint,
+                access: access.access,
+            };
+        });
     };
 
     private formatGetData = (data: Params): string => {

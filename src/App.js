@@ -1,28 +1,46 @@
-import React, { useContext, useState } from "react";
 import "./App.css";
+import React, { useContext, useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import Login from "./common/View/Login";
 import PhysicianHeader from "./physician/View/OtherComponents/PhysicianHeader";
-import { Route, Routes } from "react-router-dom";
-import NewPatient from "./physician/View/Panels/NewPatient";
-import SearchPatient from "./physician/View/Panels/SearchPatient";
-import SearchVisit from "./physician/View/Panels/SearchVisit";
-import NewVisit from "./physician/View/Panels/NewVisit";
-import { PatientProvider } from "./physician/Model/PatientContext";
-import { VisitProvider } from "./physician/Model/VisitContext";
-import SeeVisit from "./physician/View/Panels/SeeVisit";
-import { NewVisitProvider } from "./physician/Model/NewVisitContext";
-import JointSelection from "./physician/View/Panels/JointSelection";
-import Joint from "./physician/View/Panels/Joint";
-import Drug from "./physician/View/Panels/Drug";
-import EndVisit from "./physician/View/Panels/EndVisit";
-import { CurrentJointProvider } from "./physician/Model/CurrentJointContext";
-import AdminHome from "./admin/View/AdminHome";
-import Annotations from "./physician/View/Panels/Annotations";
-import { UserType } from "./common/Model/User";
+import AdminHeader from "./admin/View/AdminHeader";
 import theme from "./common/Theme";
 import { ThemeProvider } from "@mui/material";
 import UserContext from "./common/Model/UserContext";
-import Header from "./common/View/Header";
+
+import { PatientProvider } from "./physician/Model/PatientContext";
+import { VisitProvider } from "./physician/Model/VisitContext";
+import { NewVisitProvider } from "./physician/Model/NewVisitContext";
+import { CurrentJointProvider } from "./physician/Model/CurrentJointContext";
+import { UserType } from "./common/Model/User";
+import UsersProvider from "./admin/ViewModel/UsersProvider";
+
+const NewPatient = React.lazy(() =>
+    import("./physician/View/Panels/NewPatient")
+);
+const SearchPatient = React.lazy(() =>
+    import("./physician/View/Panels/SearchPatient")
+);
+const SearchVisit = React.lazy(() =>
+    import("./physician/View/Panels/SearchVisit")
+);
+const NewVisit = React.lazy(() => import("./physician/View/Panels/NewVisit"));
+const SeeVisit = React.lazy(() => import("./physician/View/Panels/SeeVisit"));
+const JointSelection = React.lazy(() =>
+    import("./physician/View/Panels/JointSelection")
+);
+const Joint = React.lazy(() => import("./physician/View/Panels/Joint"));
+const Drug = React.lazy(() => import("./physician/View/Panels/Drug"));
+const EndVisit = React.lazy(() => import("./physician/View/Panels/EndVisit"));
+const Annotations = React.lazy(() =>
+    import("./physician/View/Panels/Annotations")
+);
+
+const AdminHome = React.lazy(() => import("./admin/View/AdminHome"));
+const AdminUsers = React.lazy(() => import("./admin/View/Users/AdminUsers"));
+const AdminDatasets = React.lazy(() => import("./admin/View/AdminDatasets"));
+const AdminTasks = React.lazy(() => import("./admin/View/AdminTasks"));
+const AdminTools = React.lazy(() => import("./admin/View/AdminTools"));
 
 function App() {
     const [user, setUser] = useState(null);
@@ -37,7 +55,7 @@ function App() {
 }
 
 const UserRoutes = () => {
-    const [user, ] = useContext(UserContext);
+    const [user] = useContext(UserContext);
 
     if (user.type === UserType.PHYSICIAN) {
         return (
@@ -92,12 +110,17 @@ const UserRoutes = () => {
         );
     } else if (user.type === UserType.ADMIN) {
         return (
-            <>
-			<Header title="Admin"/>
-                <Routes>
-                    <Route index element={<AdminHome />} />
-                </Routes>
-            </>
+            <AdminHeader>
+                <UsersProvider>
+                    <Routes>
+                        <Route index element={<AdminHome />} />
+                        <Route path="/users" element={<AdminUsers />} />
+                        <Route path="/datasets" element={<AdminDatasets />} />
+                        <Route path="/tools" element={<AdminTools />} />
+                        <Route path="/tasks" element={<AdminTasks />} />
+                    </Routes>
+                </UsersProvider>
+            </AdminHeader>
         );
     }
 };
