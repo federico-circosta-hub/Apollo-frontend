@@ -12,21 +12,6 @@ export default function Login() {
 
     const [, setUser] = useContext(UserContext);
 
-    useEffect(
-        () =>
-            setUser(
-                new User({
-                    name: "Roberta",
-                    surname: "Gualtierotti",
-                    type: UserType.ADMIN,
-                    id: 23,
-                    email: "test@test.it",
-                    enabled: true,
-                })
-            ),
-        []
-    );
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setDisabled(true);
