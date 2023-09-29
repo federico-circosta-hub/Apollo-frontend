@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NewVisitContext } from "../../Model/NewVisitContext";
 import notification from "../../img/icon/notification.png";
 import {
@@ -22,19 +22,11 @@ import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
 import Slider from "@mui/material/Slider";
 import MainContainer from "../../../common/View/MainContainer";
+import Communication from '../../../common/Model/Communication'
 
 export default function Drug() {
     const { newVisit, setNewVisit } = useContext(NewVisitContext);
 
-    const prophylacticDrugs = [
-        "None",
-        "Artiflexinol",
-        "FlexiRelieve",
-        "JointEasePro",
-        "CartiFlexaMax",
-        "SynoFlexitron",
-    ];
-    const acuteDrugs = ["None", "PainXcel", "ReliefFast", "AcuPainGone"];
     const treatmentResponses = [
         { value: 10, label: "Low/absent" },
         { value: 20, label: "Discrete" },
@@ -50,13 +42,12 @@ export default function Drug() {
         "Synovial Hyperplasia",
     ];
 
-    const units = ["Pills", "Drops", "Grams", "Milligrams"];
-
+    const [drugs, setDrugs] = useState([{ name: "", unit: "" }])
     const [disabledProphylactic, setDisabledProphylactic] = useState(
-        newVisit.prophylacticDrug.drug == "None" ? true : false
+        newVisit.prophylacticDrug.drug == "" ? true : false
     );
     const [disabledAcute, setDisabledAcute] = useState(
-        newVisit.acuteDrug.drug == "None" ? true : false
+        newVisit.acuteDrug.drug == "" ? true : false
     );
     const [needFollowUp, setNeedFollowUp] = useState(
         newVisit.needFollowUp == undefined
@@ -71,6 +62,16 @@ export default function Drug() {
     const [errors, setErrors] = useState({ none: "none" });
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        getDrugsFromServer()
+    }, [])
+
+    const getDrugsFromServer = async () => {
+        setDrugs([{ name: "", unit: "" }])
+        let d = await Communication.get('drug', {})
+        setDrugs(prevState => [...prevState, ...d])
+    }
 
     const datePickerResolver = (b, s) => {
         if (b) {
@@ -97,8 +98,9 @@ export default function Drug() {
 
     const handleProphylacticDrug = (e) => {
         let pd = { ...prophylacticDrug };
-        pd.drug = e.target.value;
-        if (pd.drug == "None") {
+        pd.drug = e.target.value.name;
+        pd.unit = e.target.value.unit;
+        if (pd.drug == "") {
             pd.dose = "";
             pd.unit = "";
             pd.frequency = "";
@@ -115,12 +117,6 @@ export default function Drug() {
         setProphylacticDrug(pd);
     };
 
-    const handleProphylacticDrugUnit = (e) => {
-        let pd = { ...prophylacticDrug };
-        pd.unit = e.target.value;
-        setProphylacticDrug(pd);
-    };
-
     const handleProphylacticDrugFrequency = (e) => {
         let pd = { ...prophylacticDrug };
         pd.frequency = Number(e.target.value);
@@ -128,9 +124,11 @@ export default function Drug() {
     };
 
     const handleAcuteDrug = (e) => {
+        console.log(e.target)
         let ad = { ...acuteDrug };
-        ad.drug = e.target.value;
-        if (ad.drug == "None") {
+        ad.drug = e.target.value.name;
+        ad.unit = e.target.value.unit;
+        if (ad.drug == "") {
             ad.dose = "";
             ad.unit = "";
             setDisabledAcute(true);
@@ -143,12 +141,6 @@ export default function Drug() {
     const handleAcuteDrugDose = (e) => {
         let ad = { ...acuteDrug };
         ad.dose = Number(e.target.value);
-        setAcuteDrug(ad);
-    };
-
-    const handleAcuteDrugUnit = (e) => {
-        let ad = { ...acuteDrug };
-        ad.unit = e.target.value;
         setAcuteDrug(ad);
     };
 
@@ -185,7 +177,7 @@ export default function Drug() {
         } else {
             return (
                 <button disabled className="btn btn-info">
-                    <img width={22} src={eye} alt="" /> Previous visit
+                    <img width={22} src={eye} alt="" /> Visita precedente
                 </button>
             );
         }
@@ -205,7 +197,8 @@ export default function Drug() {
                         display: "flex",
                         width: "95%",
                         alignItems: "center",
-                        justifyContent: "space-around",
+                        justifyContent: "center",
+                        gap: "2vw"
                     }}
                 >
                     <div
@@ -234,7 +227,7 @@ export default function Drug() {
                             <div>
                                 <h4>
                                     <img src={response} width={50} alt="" />
-                                    Treatment response
+                                    Risposta al trattamento
                                 </h4>
                             </div>
                             <div
@@ -247,7 +240,7 @@ export default function Drug() {
                             >
                                 <div>
                                     <label style={{ fontSize: 15 }}>
-                                        Previous visit
+                                        Visita precedente
                                     </label>
                                 </div>
                                 <div>{visitButtonResolver()}</div>
@@ -262,7 +255,7 @@ export default function Drug() {
                             >
                                 <div>
                                     <label style={{ fontSize: 15 }}>
-                                        Treatment response
+                                        Risposta al trattamento
                                     </label>
                                 </div>
                                 <Slider
@@ -303,64 +296,99 @@ export default function Drug() {
                                 </FormControl>
                             </div>
                         </div>
-                        <div style={style.needFollowUpButtons}>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    width: "70%",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <label style={{ fontSize: 22 }}>
-                                    <img src={notification} width={50} alt="" />
-                                    Need follow up?
-                                </label>
-                                <Switch
-                                    checked={
-                                        needFollowUp == null
-                                            ? false
-                                            : needFollowUp.needFollowUp
-                                    }
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <LocalizationProvider
-                                    dateAdapter={AdapterDayjs}
-                                    adapterLocale="it"
+                        {newVisit.followUp.followup && (
+                            <div style={style.needFollowUpButtons}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        width: "70%",
+                                        alignItems: "center",
+                                    }}
                                 >
-                                    {datePickerResolver(
-                                        !needFollowUp.needFollowUp,
-                                        "followUpDate"
-                                    )}
-                                </LocalizationProvider>
+                                    <label style={{ fontSize: 22 }}>
+                                        <img src={notification} width={50} alt="" />
+                                        Ha bisogno di follow up?
+                                    </label>
+                                    <Switch
+                                        checked={
+                                            needFollowUp == null
+                                                ? false
+                                                : needFollowUp.needFollowUp
+                                        }
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div>
+                                    <LocalizationProvider
+                                        dateAdapter={AdapterDayjs}
+                                        adapterLocale="it"
+                                    >
+                                        {datePickerResolver(
+                                            !needFollowUp.needFollowUp,
+                                            "followUpDate"
+                                        )}
+                                    </LocalizationProvider>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
-
-                    <div style={style.verticalLine}></div>
+                    {newVisit.followUp.followup && (
+                        <div style={style.verticalLine}></div>
+                    )}
 
                     <div
                         style={{
+                            width: "45%",
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
                         }}
                     >
+                        {!newVisit.followUp.followup && (
+                            <div style={style.needFollowUpButtonsOnTop}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        width: "95%",
+                                        alignItems: "center",
+                                        gap: "3vw"
+                                    }}
+                                >
+                                    <div>
+                                        <label style={{ fontSize: 22 }}>
+                                            <img src={notification} width={50} alt="" />
+                                            Ha bisogno di follow up?
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <Switch
+                                            checked={needFollowUp == null ? false : needFollowUp.needFollowUp}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it" >
+                                            {datePickerResolver(!needFollowUp.needFollowUp, "followUpDate")}
+                                        </LocalizationProvider>
+                                    </div>
+
+                                </div>
+                            </div>
+                        )}
                         <div style={style.prophylacticButtons}>
                             <div>
                                 <label style={{ fontSize: 22 }}>
                                     <img src={p_drugs} width={50} alt="" />
-                                    Prophylactic Drug
+                                    Medicinale di profilassi
                                 </label>
                             </div>
                             <div>
                                 <FormControl fullWidth>
                                     <InputLabel
                                         id="demo-simple-select-label"
-                                        style={{ maxWidth: "fit-content" }}
+                                        style={{ width: 'fit-content' }}
                                     >
-                                        Prophylactic drug
+                                        Medicinale di profilassi
                                     </InputLabel>
                                     <Select
                                         style={{ fontSize: 15 }}
@@ -371,45 +399,18 @@ export default function Drug() {
                                         onChange={(e) =>
                                             handleProphylacticDrug(e)
                                         }
-                                        label="Prophylactic drug"
+                                        label="Medicinale di profilassi "
                                     >
-                                        {prophylacticDrugs.map((element) => (
+                                        {drugs.map((element) => (
                                             <MenuItem value={element}>
-                                                {element}
+                                                {element.name}
                                             </MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
                             </div>
                             <div style={{ display: "flex" }}>
-                                <div style={{ width: "30%" }}>
-                                    <FormControl
-                                        disabled={disabledProphylactic}
-                                        fullWidth
-                                    >
-                                        <InputLabel id="demo-simple-select-label">
-                                            Unit
-                                        </InputLabel>
-                                        <Select
-                                            style={{ fontSize: 15 }}
-                                            id="demo-simple-select"
-                                            onChange={
-                                                handleProphylacticDrugUnit
-                                            }
-                                            defaultValue={
-                                                newVisit.prophylacticDrug.unit
-                                            }
-                                            label="Unit"
-                                        >
-                                            {units.map((element) => (
-                                                <MenuItem value={element}>
-                                                    {element}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </div>
-
+                                <input disabled placeholder={prophylacticDrug.unit !== '' ? prophylacticDrug.unit : "Unità"} style={{ background: `#fffacd` }} />
                                 <input
                                     placeholder="Dose"
                                     defaultValue={
@@ -424,7 +425,7 @@ export default function Drug() {
                             </div>
                             <div>
                                 <input
-                                    placeholder="Frequency"
+                                    placeholder="Frequenza"
                                     defaultValue={
                                         newVisit.prophylacticDrug.frequency
                                     }
@@ -441,7 +442,7 @@ export default function Drug() {
                             <div>
                                 <label style={{ fontSize: 22 }}>
                                     <img src={a_drugs} width={50} alt="" />
-                                    Acute Drug
+                                    Medicinale acuto
                                 </label>
                             </div>
                             <div>
@@ -450,52 +451,25 @@ export default function Drug() {
                                         id="demo-simple-select-label"
                                         style={{ maxWidth: "fit-content" }}
                                     >
-                                        Acute drug
+                                        Medicinale acuto
                                     </InputLabel>
                                     <Select
                                         style={{ fontSize: 15 }}
                                         id="demo-simple-select"
                                         defaultValue={newVisit.acuteDrug.drug}
                                         onChange={(e) => handleAcuteDrug(e)}
-                                        label="Acute drug"
+                                        label="Medicinale acuto"
                                     >
-                                        {acuteDrugs.map((element) => (
+                                        {drugs.map((element) => (
                                             <MenuItem value={element}>
-                                                {element}
+                                                {element.name}
                                             </MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
                             </div>
                             <div style={{ display: "flex" }}>
-                                <div style={{ width: "30%" }}>
-                                    <FormControl
-                                        disabled={disabledAcute}
-                                        fullWidth
-                                    >
-                                        <InputLabel
-                                            id="demo-simple-select-label"
-                                            style={{}}
-                                        >
-                                            Unit
-                                        </InputLabel>
-                                        <Select
-                                            style={{ fontSize: 15 }}
-                                            id="demo-simple-select"
-                                            label="Unit"
-                                            defaultValue={
-                                                newVisit.acuteDrug.unit
-                                            }
-                                            onChange={handleAcuteDrugUnit}
-                                        >
-                                            {units.map((element) => (
-                                                <MenuItem value={element}>
-                                                    {element}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </div>
+                                <input disabled placeholder={acuteDrug.unit !== '' ? acuteDrug.unit : "Unità"} style={{ background: `#ffe4e1` }} />
                                 <input
                                     placeholder="Dose"
                                     style={{ background: `#ffe4e1` }}
@@ -512,7 +486,6 @@ export default function Drug() {
                 <div
                     style={{
                         display: "flex",
-                        marginBottom: "1.5%",
                         justifyContent: "space-between",
                         width: "75%",
                     }}
@@ -522,7 +495,7 @@ export default function Drug() {
                             onClick={() => navigate(-1)}
                             className="btn btn-primary btn-lg"
                         >
-                            Back
+                            Indietro
                         </button>
                     </div>
                     <div>
@@ -531,7 +504,7 @@ export default function Drug() {
                             className="btn btn-success btn-lg"
                             onClick={forward}
                         >
-                            End visit
+                            Invia visita
                         </button>
                     </div>
                 </div>
@@ -551,6 +524,18 @@ export default function Drug() {
 }
 
 const style = {
+    needFollowUpButtonsOnTop: {
+        width: "40vw",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        borderRadius: "20px",
+        padding: "4%",
+        height: "9vh",
+        margin: "1%",
+        border: "0.5px solid #56AEC9",
+        boxShadow: "2px 2px 4px #56AEC9"
+    },
     needFollowUpButtons: {
         width: "40vw",
         display: "flex",
@@ -561,6 +546,8 @@ const style = {
         padding: "4%",
         height: "22vh",
         margin: "1%",
+        border: "0.5px solid #56AEC9",
+        boxShadow: "2px 2px 4px #56AEC9"
     },
 
     prophylacticButtons: {
@@ -569,11 +556,12 @@ const style = {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        border: "1px solid black",
         borderRadius: "20px",
         padding: "4%",
         height: "32vh",
         margin: "1%",
+        border: "0.5px solid #daa520",
+        boxShadow: "2px 2px 4px #daa520"
     },
 
     acuteButtons: {
@@ -582,25 +570,14 @@ const style = {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        border: "1px solid black",
         borderRadius: "20px",
         padding: "4%",
         height: "30vh",
         margin: "1%",
+        border: "1px solid #b22222",
+        boxShadow: "2px 2px 4px #b22222"
     },
 
-    box: {
-        display: "flex",
-        justifyContent: "space-around",
-        width: "98%",
-        height: "90vh",
-        borderRadius: "15px",
-        background: "white",
-        margin: "auto",
-        marginTop: "1.5%",
-        flexDirection: "column",
-        alignItems: "center",
-    },
     verticalLine: {
         width: 1,
         backgroundColor: "black",
