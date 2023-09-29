@@ -16,10 +16,10 @@ export default function MainContainer({
 
 const baseStyle = {
     box: {
+        backgroundColor: "white",
         width: "95%",
         height: "88vh",
         borderRadius: "15px",
-        backgroundColor: "white",
         margin: "auto",
         marginTop: "1.5vh",
         marginBottom: "1.5vh",

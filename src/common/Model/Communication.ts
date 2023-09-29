@@ -29,7 +29,8 @@ class Communication {
         GET_TASKS: "/task",
         RESET_PASSWORD: "/user/resetPassword",
         TOGGLE_ENABLE: "/user/enable",
-        USER_TOOL_ACCESS: "/annotationTool/access",
+        ANNOTATION_TOOL_ACCESS: "/annotationTool/access",
+        USER_TOOL_TOGGLE_ACCESS: "/user/physician/annotationTool",
     };
 
     private baseCall = async (
@@ -147,7 +148,7 @@ class Communication {
     getUserAnnotationTool = async (
         physician: number
     ): Promise<AnnotationToolAccess[]> => {
-        const res = await this.get(this.endpoints.USER_TOOL_ACCESS, {
+        const res = await this.get(this.endpoints.ANNOTATION_TOOL_ACCESS, {
             physician,
         });
 
@@ -155,10 +156,25 @@ class Communication {
             return {
                 id: access.annotation_tool,
                 name: access.annotation_tool_name,
-                endpoint: access.endpoint,
+                endpoint: access.endpoint ?? "",
                 access: access.access,
             };
         });
+    };
+
+    toggleUserAnnotationToolAccess = async (
+        physician: number,
+        annotationTool: number,
+        access: boolean,
+        endpoint?: string
+    ): Promise<string> => {
+        const res = await this.patch(this.endpoints.USER_TOOL_TOGGLE_ACCESS, {
+            physician,
+            id: annotationTool,
+            grant: access,
+            endpoint,
+        });
+        return res.instructions ?? "";
     };
 
     private formatGetData = (data: Params): string => {
