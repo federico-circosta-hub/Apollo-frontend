@@ -13,6 +13,7 @@ import { VisitProvider } from "./physician/Model/VisitContext";
 import { NewVisitProvider } from "./physician/Model/NewVisitContext";
 import { CurrentJointProvider } from "./physician/Model/CurrentJointContext";
 import { UserType } from "./common/Model/User";
+import UsersProvider from "./admin/ViewModel/UsersProvider";
 
 const NewPatient = React.lazy(() =>
     import("./physician/View/Panels/NewPatient")
@@ -110,13 +111,15 @@ const UserRoutes = () => {
     } else if (user.type === UserType.ADMIN) {
         return (
             <AdminHeader>
-                <Routes>
-                    <Route index element={<AdminHome />} />
-                    <Route path="/users" element={<AdminUsers />} />
-                    <Route path="/datasets" element={<AdminDatasets />} />
-                    <Route path="/tools" element={<AdminTools />} />
-                    <Route path="/tasks" element={<AdminTasks />} />
-                </Routes>
+                <UsersProvider>
+                    <Routes>
+                        <Route index element={<AdminHome />} />
+                        <Route path="/users" element={<AdminUsers />} />
+                        <Route path="/datasets" element={<AdminDatasets />} />
+                        <Route path="/tools" element={<AdminTools />} />
+                        <Route path="/tasks" element={<AdminTasks />} />
+                    </Routes>
+                </UsersProvider>
             </AdminHeader>
         );
     }

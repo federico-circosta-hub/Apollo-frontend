@@ -38,8 +38,6 @@ class Communication {
     ): Promise<Result> => {
         console.log(`Axios call: ${method} ${endpoint}`);
 
-        endpoint = endpoint + "/" + this.formatGetData(data);
-
         this.signalController = new AbortController();
         const config = { signal: this.signalController.signal };
 
@@ -49,7 +47,7 @@ class Communication {
             let res: any;
             if (method === HttpMethod.GET)
                 res = await fn(
-                    endpoint + +"/" + this.formatGetData(data),
+                    endpoint + "/" + this.formatGetData(data),
                     config
                 );
             else res = await fn(endpoint, data, config);
@@ -91,10 +89,13 @@ class Communication {
         this.signalController?.abort();
     };
 
-    getPhysicians = async (id?: number): Promise<User[]> => {
+    getPhysicians = async (
+        includeDisabled: boolean = false,
+        id?: number
+    ): Promise<User[]> => {
         const users = await this.get(this.endpoints.GET_PHYSICIANS, {
+            includeDisabled,
             id,
-            includeDisabled: false,
         });
 
         return users.map((user: User) => new User(user));

@@ -9,6 +9,7 @@ import User from "../../common/Model/User";
 import MasterDetail, { MasterItemProps } from "./MasterDetail/MasterDetail";
 import UserDetails from "./UserDetails";
 import Status from "../../common/Model/Status";
+import { UsersContext } from "../ViewModel/UsersProvider";
 
 export default function AdminUsers() {
     const [, setTitle] = useContext(HeaderContext);
@@ -18,13 +19,14 @@ export default function AdminUsers() {
 
     const [status, setStatus] = useState<Status>(Status.LOADING);
 
+    const getUsers = useContext(UsersContext);
     const [users, setUsers] = useState<User[]>([]);
 
     const fetchData = useCallback(async () => {
         setStatus(Status.LOADING);
 
         try {
-            const res = await CommunicationController.getPhysicians();
+            const res = await getUsers();
 
             console.log(`${res.length} users recevied`);
             setUsers(res);
@@ -32,7 +34,7 @@ export default function AdminUsers() {
         } catch (err: any) {
             setStatus(Status.ERROR);
         }
-    }, []);
+    }, [getUsers]);
 
     useEffect(() => {
         fetchData();
