@@ -13,32 +13,28 @@ import CommunicationController from "../../../common/Model/Communication";
 import UserContext from "../../../common/Model/UserContext";
 import MainContainer from "../../../common/View/MainContainer";
 import Loading from "../../../common/View/Loading";
+import Status from "../../../common/Model/Status";
 
 export default function Annotations() {
     const [user] = useContext(UserContext);
     const [tasks, setTasks] = useState<PhysicianTask[]>([]);
 
-    const [status, setStatus] = useState<"loaded" | "loading" | "error">(
-        "loading"
-    );
+    const [status, setStatus] = useState<Status>(Status.LOADING);
 
     const [includeCompleted, setIncludeCompleted] = useState<boolean>(false);
     const toggleInclude = () => setIncludeCompleted(!includeCompleted);
 
     const fetchData = useCallback(async () => {
-        setStatus("loading");
+        setStatus(Status.LOADING);
 
         try {
-            const res = await CommunicationController.getPhysicianTasks(
-                user!.id,
-                includeCompleted
-            );
+            const res = await user!.tasks(includeCompleted);
 
             console.log(`${res.length} task recevied`);
             setTasks(res);
-            setStatus("loaded");
+            setStatus(Status.IDLE);
         } catch (err: any) {
-            setStatus("error");
+            setStatus(Status.ERROR);
         }
     }, [user, includeCompleted]);
 
@@ -50,9 +46,9 @@ export default function Annotations() {
 
     return (
         <MainContainer>
-            {status === "loading" ? (
+            {status === Status.LOADING ? (
                 <Loading />
-            ) : status === "error" ? (
+            ) : status === Status.ERROR ? (
                 <Error onRetry={fetchData} />
             ) : (
                 <AnnotationGrid

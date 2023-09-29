@@ -1,4 +1,5 @@
 import CommunicationController from "./Communication";
+import PhysicianTask from "./PhysicianTask";
 
 export enum UserType {
     ADMIN = "admin",
@@ -66,6 +67,15 @@ export default class User {
             annotationToolId,
             access,
             endpoint
+        );
+    };
+
+    tasks = async (
+        includeCompleted: boolean = false
+    ): Promise<PhysicianTask[]> => {
+        return await CommunicationController.getPhysicianTasks(
+            this.id,
+            includeCompleted
         );
     };
 }
