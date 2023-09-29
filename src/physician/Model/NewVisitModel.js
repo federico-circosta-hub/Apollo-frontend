@@ -13,7 +13,7 @@ export default class NewVisitModel {
     };
 
     traumaticEvent = {
-        'traumaticEvent': 'Nessuno',
+        'traumaticEvent': '',
         'traumaticEventDate': ''
     };
     followUp = {
@@ -30,14 +30,14 @@ export default class NewVisitModel {
     };
 
     prophylacticDrug = {
-        'drug': 'Nessuna',
+        'drug': '',
         'unit': '',
         'dose': '',
         'frequency': ''
     }
 
     acuteDrug = {
-        'drug': 'Nessuna',
+        'drug': '',
         'unit': '',
         'dose': '',
     }
