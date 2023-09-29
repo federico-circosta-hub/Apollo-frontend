@@ -55,4 +55,17 @@ export default class User {
     annotationTools = async (): Promise<AnnotationToolAccess[]> => {
         return await CommunicationController.getUserAnnotationTool(this.id);
     };
+
+    toggleAnnotationToolAccess = async (
+        annotationToolId: number,
+        access: boolean,
+        endpoint?: string
+    ): Promise<string> => {
+        return await CommunicationController.toggleUserAnnotationToolAccess(
+            this.id,
+            annotationToolId,
+            access,
+            endpoint
+        );
+    };
 }
