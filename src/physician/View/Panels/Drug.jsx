@@ -21,6 +21,7 @@ import "dayjs/locale/it";
 import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
 import Slider from "@mui/material/Slider";
+import MainContainer from "../../../common/View/MainContainer";
 
 export default function Drug() {
     const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -198,14 +199,13 @@ export default function Drug() {
 
     return (
         <div>
-            <div className="box-bianco" style={style.box}>
+            <MainContainer>
                 <div
                     style={{
                         display: "flex",
                         width: "95%",
                         alignItems: "center",
                         justifyContent: "space-around",
-                        marginTop: "1.5%",
                     }}
                 >
                     <div
@@ -274,9 +274,9 @@ export default function Drug() {
                                     step={10}
                                     defaultValue={
                                         newVisit.followUp.treatmentResponse !=
-                                        ""
+                                            ""
                                             ? newVisit.followUp
-                                                  .treatmentResponse
+                                                .treatmentResponse
                                             : 10
                                     }
                                 />
@@ -311,7 +311,7 @@ export default function Drug() {
                                     alignItems: "center",
                                 }}
                             >
-                                <label style={{ fontSize: 26 }}>
+                                <label style={{ fontSize: 22 }}>
                                     <img src={notification} width={50} alt="" />
                                     Need follow up?
                                 </label>
@@ -349,10 +349,10 @@ export default function Drug() {
                     >
                         <div style={style.prophylacticButtons}>
                             <div>
-                                <h4>
+                                <label style={{ fontSize: 22 }}>
                                     <img src={p_drugs} width={50} alt="" />
                                     Prophylactic Drug
-                                </h4>
+                                </label>
                             </div>
                             <div>
                                 <FormControl fullWidth>
@@ -439,10 +439,10 @@ export default function Drug() {
 
                         <div style={style.acuteButtons}>
                             <div>
-                                <h4>
+                                <label style={{ fontSize: 22 }}>
                                     <img src={a_drugs} width={50} alt="" />
                                     Acute Drug
-                                </h4>
+                                </label>
                             </div>
                             <div>
                                 <FormControl fullWidth>
@@ -535,7 +535,8 @@ export default function Drug() {
                         </button>
                     </div>
                 </div>
-            </div>
+
+            </MainContainer>
             <div>
                 {formModal && (
                     <FormModal
