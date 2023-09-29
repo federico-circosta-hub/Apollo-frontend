@@ -22,6 +22,8 @@ import { useNavigate } from "react-router-dom";
 import Communication from '../../../common/Model/Communication'
 import CircularProgress from "@mui/material/CircularProgress";
 import MainContainer from "../../../common/View/MainContainer";
+import { Modal } from "react-bootstrap";
+import NoPreviousVisit from "../Modals/NoPreviousVisit";
 
 export default function NewVisit(props) {
     const nav = useNavigate();
@@ -195,12 +197,20 @@ export default function NewVisit(props) {
                         <Switch checked={isFollowUp} onChange={followUp} />
                     </div>
                     <div>
-                        {isFollowUp && (
-                            <FollowUpHelper
-                                onCancel={handleCancel}
-                                seeVisit={saveInfo}
-                            />
-                        )}
+                        {isFollowUp ? (
+                            (newVisit.previousVisit !== undefined) ? (
+                                <FollowUpHelper
+                                    onCancel={handleCancel}
+                                    seeVisit={saveInfo}
+                                />
+                            )
+                                :
+                                <NoPreviousVisit setIsFollowUp={() => setIsFollowUp(false)} />
+
+                        )
+                            :
+                            <></>
+                        }
                     </div>
                 </div>
 

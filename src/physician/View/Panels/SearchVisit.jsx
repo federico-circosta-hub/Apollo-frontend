@@ -39,8 +39,8 @@ export default function SearchVisit() {
 
     const createNewVisit = (b) => {
         let nv = new NewVisitModel();
-        let dates = GenerateVisits();
-        nv.setPreviousVisit(dates[0]);
+        let pv = visitList.length > 0 ? visitList[0] : undefined
+        nv.setPreviousVisit(pv);
         nv.setIsInPresence(b);
         nv.setPatient(selectedPatient.pid);
         setNewVisit(nv);
