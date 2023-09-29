@@ -42,7 +42,7 @@ export default function SearchVisit() {
         let dates = GenerateVisits();
         nv.setPreviousVisit(dates[0]);
         nv.setIsInPresence(b);
-        nv.setPatient(selectedPatient.surname);
+        nv.setPatient(selectedPatient.pid);
         setNewVisit(nv);
     };
 
