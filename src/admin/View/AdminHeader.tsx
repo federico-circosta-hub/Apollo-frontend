@@ -1,9 +1,12 @@
 import { Dispatch, SetStateAction, createContext, useState } from "react";
 import Header from "../../common/View/Header";
 
-export const HeaderContext = createContext<
+export const HeaderContext: React.Context<
     [string, Dispatch<SetStateAction<string>>]
->(["Admin", () => ""]);
+> = createContext<[string, Dispatch<SetStateAction<string>>]>([
+    "Admin",
+    () => "",
+]);
 
 export default function AdminHeader({
     children,
