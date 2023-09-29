@@ -2,6 +2,7 @@ import axios from "axios";
 import config from "../../config";
 import User, { AnnotationToolAccess } from "./User";
 import PhysicianTask from "./PhysicianTask";
+import Dataset from "./Dataset";
 
 type Params = { [key: string]: any };
 type Result = any;
@@ -31,6 +32,7 @@ class Communication {
         TOGGLE_ENABLE: "/user/enable",
         ANNOTATION_TOOL_ACCESS: "/annotationTool/access",
         USER_TOOL_TOGGLE_ACCESS: "/user/physician/annotationTool",
+        GET_DATASET: "/dataset",
     };
 
     private baseCall = async (
@@ -67,23 +69,23 @@ class Communication {
         }
     };
 
-    private get = (endpoint: string, data: Params): Promise<Result> => {
+    private get = (endpoint: string, data: Params = {}): Promise<Result> => {
         return this.baseCall(HttpMethod.GET, endpoint, data);
     };
 
-    private post = (endpoint: string, data: Params): Promise<Result> => {
+    private post = (endpoint: string, data: Params = {}): Promise<Result> => {
         return this.baseCall(HttpMethod.POST, endpoint, data);
     };
 
-    private put = (endpoint: string, data: Params): Promise<Result> => {
+    private put = (endpoint: string, data: Params = {}): Promise<Result> => {
         return this.baseCall(HttpMethod.PUT, endpoint, data);
     };
 
-    private patch = (endpoint: string, data: Params): Promise<Result> => {
+    private patch = (endpoint: string, data: Params = {}): Promise<Result> => {
         return this.baseCall(HttpMethod.PATCH, endpoint, data);
     };
 
-    private delete = (endpoint: string, data: Params): Promise<Result> => {
+    private delete = (endpoint: string, data: Params = {}): Promise<Result> => {
         return this.baseCall(HttpMethod.DELETE, endpoint, data);
     };
 
@@ -175,6 +177,12 @@ class Communication {
             endpoint,
         });
         return res.instructions ?? "";
+    };
+
+    getDatasets = async (): Promise<any[]> => {
+        const datasets = await this.get(this.endpoints.GET_DATASET);
+
+        return datasets.map((dataset: Dataset) => new Dataset(dataset));
     };
 
     private formatGetData = (data: Params): string => {
