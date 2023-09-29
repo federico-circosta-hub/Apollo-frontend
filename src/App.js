@@ -14,6 +14,7 @@ import { NewVisitProvider } from "./physician/Model/NewVisitContext";
 import { CurrentJointProvider } from "./physician/Model/CurrentJointContext";
 import { UserType } from "./common/Model/User";
 import UsersProvider from "./admin/ViewModel/UsersProvider";
+import DatasetsProvider from "./admin/ViewModel/DatasetsProvider";
 
 const NewPatient = React.lazy(() =>
     import("./physician/View/Panels/NewPatient")
@@ -38,7 +39,9 @@ const Annotations = React.lazy(() =>
 
 const AdminHome = React.lazy(() => import("./admin/View/AdminHome"));
 const AdminUsers = React.lazy(() => import("./admin/View/Users/AdminUsers"));
-const AdminDatasets = React.lazy(() => import("./admin/View/AdminDatasets"));
+const AdminDatasets = React.lazy(() =>
+    import("./admin/View/Datasets/AdminDatasets")
+);
 const AdminTasks = React.lazy(() => import("./admin/View/AdminTasks"));
 const AdminTools = React.lazy(() => import("./admin/View/AdminTools"));
 
@@ -112,13 +115,18 @@ const UserRoutes = () => {
         return (
             <AdminHeader>
                 <UsersProvider>
-                    <Routes>
-                        <Route index element={<AdminHome />} />
-                        <Route path="/users" element={<AdminUsers />} />
-                        <Route path="/datasets" element={<AdminDatasets />} />
-                        <Route path="/tools" element={<AdminTools />} />
-                        <Route path="/tasks" element={<AdminTasks />} />
-                    </Routes>
+                    <DatasetsProvider>
+                        <Routes>
+                            <Route index element={<AdminHome />} />
+                            <Route path="/users" element={<AdminUsers />} />
+                            <Route
+                                path="/datasets"
+                                element={<AdminDatasets />}
+                            />
+                            <Route path="/tools" element={<AdminTools />} />
+                            <Route path="/tasks" element={<AdminTasks />} />
+                        </Routes>
+                    </DatasetsProvider>
                 </UsersProvider>
             </AdminHeader>
         );

@@ -1,23 +1,13 @@
 import { ComponentType, useCallback, useState } from "react";
 import Box from "@mui/material/Box";
-import MasterComponent from "./MasterComponent";
+import MasterComponent, { MasterItemProps } from "./MasterComponent";
 import Divider from "@mui/material/Divider";
 import MainContainer from "../../../common/View/MainContainer";
 import Loading from "../../../common/View/Loading";
-import DetailComponent from "./DetailComponent";
+import DetailComponent, { DetailItemProps } from "./DetailComponent";
 import { useNavigate } from "react-router-dom";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Status from "../../../common/Model/Status";
-
-export type MasterItemProps = {
-    item: any;
-    onClick: () => void;
-};
-
-export type DetailItemProps = {
-    item: any;
-};
+import ErrorScreen from "./ErrorScreen";
 
 export default function MasterDetail({
     items,
@@ -43,12 +33,7 @@ export default function MasterDetail({
         navigate(addRoute);
     }, [navigate, addRoute]);
 
-    if (status === Status.ERROR)
-        return (
-            <MainContainer style={style.outerBox}>
-                <ErrorScreen onRetry={onRetry} />
-            </MainContainer>
-        );
+    if (status === Status.ERROR) return <ErrorScreen onRetry={onRetry} />;
 
     return (
         <MainContainer style={style.outerBox}>
@@ -76,28 +61,6 @@ export default function MasterDetail({
     );
 }
 
-const ErrorScreen = ({ onRetry }: { onRetry: () => Promise<void> }) => {
-    return (
-        <Box sx={style.errorScreen}>
-            <Typography
-                variant="h4"
-                color="red"
-                fontWeight="bold"
-                align="center"
-            >
-                ERRORE!
-            </Typography>
-            <Typography variant="h6" align="center">
-                Errore di carimento
-            </Typography>
-            <Box sx={{ m: 2 }} />
-            <Button variant="contained" color="primary" onClick={onRetry}>
-                Riprova
-            </Button>
-        </Box>
-    );
-};
-
 const style = {
     outerBox: {
         display: "flex",
@@ -110,7 +73,6 @@ const style = {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        flexDirection: "column" as "column",
     },
     detailsBox: {
         height: "100%",
@@ -120,12 +82,5 @@ const style = {
     },
     divider: {
         backgroundColor: "black",
-    },
-    errorScreen: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column" as "column",
-        margin: "auto",
     },
 };

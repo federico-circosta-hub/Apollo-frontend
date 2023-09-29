@@ -1,10 +1,11 @@
 import Box from "@mui/material/Box";
 import User from "../../../common/Model/User";
-import { DetailItemProps } from "../MasterDetail/MasterDetail";
 import { useCallback, useState } from "react";
 import ResultSnackar from "../../../common/View/ResultSnackbar";
 import UserButtons from "./UserButtons";
 import UserToolAccess from "./UserToolAccess";
+import UserTasks from "./UserTasks";
+import { DetailItemProps } from "../MasterDetail/DetailComponent";
 
 export default function UserDetails({ item }: DetailItemProps) {
     const user = item as User;
@@ -22,6 +23,8 @@ export default function UserDetails({ item }: DetailItemProps) {
     return (
         <Box sx={style.box}>
             <UserToolAccess user={user} />
+            <Box sx={{ m: 1 }} />
+            <UserTasks user={user} />
             <Box sx={{ flex: 1 }} />
             <UserButtons
                 user={user}
@@ -29,6 +32,7 @@ export default function UserDetails({ item }: DetailItemProps) {
                 onEnabledToggled={onEnabledToggled}
             />
             <ResultSnackar
+                show={snackbarText !== ""}
                 text={snackbarText}
                 onClose={() => setSnackbarText("")}
             />

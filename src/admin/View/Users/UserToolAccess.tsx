@@ -57,12 +57,18 @@ export default function UserToolAccess({ user }: { user: User }) {
         );
     }
 
-    if (tools.length === 0) return <></>;
-
     return (
         <Box sx={style.box}>
-            <Typography variant="h5">Grant access to:</Typography>
-            <AnnotationToolsForm tools={tools} user={user} />
+            <Typography sx={{ flex: 1 }} variant="h5">
+                Grant access to:
+            </Typography>
+            {tools.length === 0 ? (
+                <Typography variant="h6">
+                    Nessun task di annotazione assegnato
+                </Typography>
+            ) : (
+                <AnnotationToolsForm tools={tools} user={user} />
+            )}
         </Box>
     );
 }
@@ -92,22 +98,26 @@ const AnnotationToolsForm = ({
     }, []);
 
     return (
-        <Box sx={style.scrollable}>
-            <FormGroup>
-                {tools.map((tool) => (
-                    <Box key={tool.id}>
-                        <ToolAccess
-                            tool={tool}
-                            user={user}
-                            onSave={showInstructions}
-                            onError={showError}
-                        />
-                        <Divider sx={style.checkboxDivider} />
-                    </Box>
-                ))}
-            </FormGroup>
-            <Typography variant="subtitle1">{instructions}</Typography>
-        </Box>
+        <>
+            <Box sx={style.scrollable}>
+                <FormGroup>
+                    {tools.map((tool) => (
+                        <Box key={tool.id}>
+                            <ToolAccess
+                                tool={tool}
+                                user={user}
+                                onSave={showInstructions}
+                                onError={showError}
+                            />
+                            <Divider sx={style.checkboxDivider} />
+                        </Box>
+                    ))}
+                </FormGroup>
+            </Box>
+            <Typography variant="subtitle1" sx={{ flex: 1 }}>
+                {instructions}
+            </Typography>
+        </>
     );
 };
 
@@ -189,6 +199,8 @@ const ToolAccess = ({
 
 const style = {
     box: {
+        display: "flex",
+        flexDirection: "column" as "column",
         maxHeight: "50%",
     },
     checkbox: {
@@ -204,8 +216,8 @@ const style = {
         maxHeight: "100%",
         width: "100%",
         overflow: "auto",
-		margin :"auto",
-		display: "flex",
-		flexDirection: "column" as "column",
+        margin: "auto",
+        display: "flex",
+        flexDirection: "column" as "column",
     },
 };

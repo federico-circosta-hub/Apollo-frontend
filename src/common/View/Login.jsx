@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import unimi from "../img/logo_unimi.png";
 import ospedale from "../img/ospedale-loghi.jpeg";
 import UserContext from "../Model/UserContext";
@@ -11,6 +11,21 @@ export default function Login() {
     const [disabled, setDisabled] = useState(false);
 
     const [, setUser] = useContext(UserContext);
+
+    useEffect(
+        () =>
+            setUser(
+                new User({
+                    name: "Roberta",
+                    surname: "Gualtierotti",
+                    type: UserType.ADMIN,
+                    id: 23,
+                    email: "test@test.it",
+                    enabled: true,
+                })
+            ),
+        []
+    );
 
     const handleSubmit = async (e) => {
         e.preventDefault();
