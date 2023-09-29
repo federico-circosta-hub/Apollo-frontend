@@ -1,7 +1,10 @@
 import React, { ComponentType } from "react";
-import { DetailItemProps } from "./MasterDetail";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+
+export type DetailItemProps = {
+    item: any;
+};
 
 export default function DetailComponent({
     item,

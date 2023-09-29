@@ -1,6 +1,5 @@
 import List from "@mui/material/List";
 import React, { ComponentType, useCallback, useState } from "react";
-import { MasterItemProps } from "./MasterDetail";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
@@ -8,6 +7,11 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
+
+export type MasterItemProps = {
+    item: any;
+    onClick: () => void;
+};
 
 export default function MasterComponent({
     items,
@@ -19,8 +23,8 @@ export default function MasterComponent({
     items: any[];
     Item: ComponentType<MasterItemProps>;
     itemName: string;
-    onItemClick: (index: number) => void;
-    onAddClick: () => void;
+    onItemClick?: (index: number) => void;
+    onAddClick?: () => void;
 }) {
     const [filteredItems, setFilteredItems] = useState(items);
     const [selected, setSelected] = useState(-1);
@@ -33,11 +37,13 @@ export default function MasterComponent({
     );
 
     return (
-        <>
+        <Box sx={style.box}>
             <Box sx={style.topBar}>
                 <Search onChange={filterItems} />
-                <Box sx={{ flex: 1 }} />
-                <AddButton itemName={itemName} onClick={onAddClick} />
+                <Box sx={{ flex: 1, height: 0 }} />
+                {onAddClick && (
+                    <AddButton itemName={itemName} onClick={onAddClick} />
+                )}
             </Box>
             <Box sx={style.scrollable}>
                 <List sx={{ width: "100%" }}>
@@ -56,7 +62,7 @@ export default function MasterComponent({
                                 item={item}
                                 onClick={() => {
                                     setSelected(index);
-                                    onItemClick(index);
+                                    onItemClick && onItemClick(index);
                                 }}
                             />
                             <Divider sx={style.divider} />
@@ -64,7 +70,7 @@ export default function MasterComponent({
                     ))}
                 </List>
             </Box>
-        </>
+        </Box>
     );
 }
 
@@ -105,12 +111,19 @@ const AddButton = ({
 };
 
 const style = {
+    box: {
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column" as "column",
+    },
     scrollable: {
+        maxHeight: "100%",
         width: "100%",
         overflow: "auto",
-        flex: 1,
     },
     topBar: {
+        height: "fit-content",
         width: "100%",
         display: "flex",
         flexDirection: { xs: "column", lg: "row" },
