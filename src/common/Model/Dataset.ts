@@ -1,6 +1,6 @@
 export enum MediaType {
-    IMAGE,
-    VIDEO,
+    IMAGE = "image",
+    VIDEO = "video",
 }
 
 export default class Dataset {

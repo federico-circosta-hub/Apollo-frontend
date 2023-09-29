@@ -23,6 +23,7 @@ export default function MasterComponent({
     onAddClick: () => void;
 }) {
     const [filteredItems, setFilteredItems] = useState(items);
+    const [selected, setSelected] = useState(-1);
 
     const filterItems = useCallback(
         (text: string) => {
@@ -41,10 +42,22 @@ export default function MasterComponent({
             <Box sx={style.scrollable}>
                 <List sx={{ width: "100%" }}>
                     {filteredItems.map((item, index) => (
-                        <Box key={index}>
+                        <Box
+                            key={index}
+                            sx={
+                                index === selected
+                                    ? {
+                                          backgroundColor: "#DDDDDD",
+                                      }
+                                    : undefined
+                            }
+                        >
                             <Item
                                 item={item}
-                                onClick={() => onItemClick(index)}
+                                onClick={() => {
+                                    setSelected(index);
+                                    onItemClick(index);
+                                }}
                             />
                             <Divider sx={style.divider} />
                         </Box>
