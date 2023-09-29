@@ -23,9 +23,7 @@ export default function SearchPatient() {
 
     useEffect(() => {
         setLoadingPatients(true)
-        setTimeout(() => {
-            getPatients();
-        }, 2500)
+        getPatients();
 
     }, []);
 

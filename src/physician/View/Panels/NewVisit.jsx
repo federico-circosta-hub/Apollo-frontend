@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NewVisitContext } from "../../Model/NewVisitContext";
 import { PatientContext } from "../../Model/PatientContext";
 import NoContextModal from "../Modals/NoContextModal";
@@ -19,6 +19,8 @@ import FollowUpHelper from "../../ViewModel/FollowUpHelper";
 import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
 import { useNavigate } from "react-router-dom";
+import Communication from '../../../common/Model/Communication'
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function NewVisit(props) {
     const nav = useNavigate();
@@ -26,9 +28,11 @@ export default function NewVisit(props) {
     const { newVisit, setNewVisit } = useContext(NewVisitContext);
     const { selectedPatient } = useContext(PatientContext);
 
-    const activities = ["Bicicletta", "Camminata", "Corsa", "Nuoto"];
-    const traumaticEvents = ["Nessuno", "Operazione", "Caduta", "Incidente"];
+    //const activities = ["ciao"]
+    //const traumaticEvents = ["ciao"]
 
+    const [activities, setActivities] = useState([]);
+    const [traumaticEvents, setTraumaticEvents] = useState([]);
     const [visitDate, setVisitDate] = useState(
         newVisit.isInPresence ? new Date() : null
     );
@@ -47,6 +51,19 @@ export default function NewVisit(props) {
     );
     const [formModal, setFormModal] = useState(false);
     const [errors, setErrors] = useState({ none: "none" });
+
+    useEffect(() => {
+        getTraumaticEventAndActivitiesFromServer()
+    }, [])
+
+    const getTraumaticEventAndActivitiesFromServer = async () => {
+        let acts = await Communication.get('exercise', '')
+        let trauma = await Communication.get('traumaEvent', '')
+        acts = acts.map(item => item.name)
+        trauma = trauma.map(item => item.name)
+        setActivities(acts)
+        setTraumaticEvents(trauma)
+    }
 
     const handleChange = (e) => {
         physicalActivity.physicalActivity = e.target.checked;
@@ -207,9 +224,9 @@ export default function NewVisit(props) {
                                     label={
                                         newVisit.visitDate != undefined
                                             ? format(
-                                                  newVisit.visitDate,
-                                                  "dd-MM-Y"
-                                              )
+                                                newVisit.visitDate,
+                                                "dd-MM-Y"
+                                            )
                                             : "DD-MM-YYYY"
                                     }
                                 />
@@ -252,6 +269,7 @@ export default function NewVisit(props) {
                             <InputLabel id="demo-simple-select-label">
                                 Attività fisica
                             </InputLabel>
+
                             <Select
                                 style={{ fontSize: 22 }}
                                 id="demo-simple-select"
@@ -259,8 +277,9 @@ export default function NewVisit(props) {
                                 value={physicalActivity.physicalActivityType}
                                 onChange={handleActivity}
                             >
-                                {displayActivityItems()}
+                                {activities.length > 0 ? displayActivityItems() : <CircularProgress style={{ padding: 2 }} color="info" size={25} />}
                             </Select>
+
                         </FormControl>
                     </div>
                 </div>
@@ -279,6 +298,7 @@ export default function NewVisit(props) {
                             >
                                 Evento
                             </InputLabel>
+
                             <Select
                                 style={{ fontSize: 22 }}
                                 id="demo-simple-select"
@@ -286,8 +306,9 @@ export default function NewVisit(props) {
                                 value={traumaticEvent.traumaticEvent}
                                 onChange={handleTrauma}
                             >
-                                {displayTraumaticItems()}
+                                {traumaticEvents.length > 0 ? displayTraumaticItems() : <CircularProgress style={{ padding: 2 }} color="info" size={25} />}
                             </Select>
+
                         </FormControl>
                     </div>
                     <div>
