@@ -33,6 +33,7 @@ class Communication {
         ANNOTATION_TOOL_ACCESS: "/annotationTool/access",
         USER_TOOL_TOGGLE_ACCESS: "/user/physician/annotationTool",
         GET_DATASET: "/dataset",
+        COMPLETE_DATASET: "/dataset/complete",
     };
 
     private baseCall = async (
@@ -183,6 +184,14 @@ class Communication {
         const datasets = await this.get(this.endpoints.GET_DATASET);
 
         return datasets.map((dataset: Dataset) => new Dataset(dataset));
+    };
+
+    setDatasetCompleted = async (dataset: number): Promise<boolean> => {
+        const res = await this.patch(this.endpoints.COMPLETE_DATASET, {
+            id: dataset,
+        });
+
+        return res.completed;
     };
 
     private formatGetData = (data: Params): string => {

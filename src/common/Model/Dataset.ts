@@ -1,3 +1,5 @@
+import CommunicationController from "./Communication";
+
 export enum MediaType {
     IMAGE = "image",
     VIDEO = "video",
@@ -10,6 +12,7 @@ export default class Dataset {
     end_date?: string;
     type: MediaType;
     media_count: number;
+    completed: boolean;
 
     constructor(obj: Dataset | any = {}) {
         this.id = obj.id ?? 0;
@@ -18,7 +21,12 @@ export default class Dataset {
         this.end_date = obj.end_date;
         this.type = obj.type ?? MediaType.IMAGE;
         this.media_count = obj.media_count ?? false;
+        this.completed = obj.completed;
     }
+
+    isEmpty = (): boolean => {
+        return this.media_count === 0;
+    };
 
     typeStr = () => {
         switch (this.type) {
@@ -33,5 +41,13 @@ export default class Dataset {
 
     filter = (filter: string): boolean => {
         return this.name.toLowerCase().includes(filter.toLowerCase());
+    };
+
+    setCompleted = async (): Promise<boolean> => {
+        const completed = await CommunicationController.setDatasetCompleted(
+            this.id
+        );
+        this.completed = completed;
+        return this.completed;
     };
 }
