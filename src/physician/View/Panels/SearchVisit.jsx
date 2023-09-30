@@ -179,33 +179,38 @@ export default function SearchVisit() {
                                         </tr>
                                     </thead>
 
-                                    <tbody>
-                                        {visitList.map((visit, index) => (
-                                            <VisitLine
-                                                key={index}
-                                                visit={visit}
-                                                isSelected={
-                                                    visit === selectedVisit
-                                                }
-                                                onSelectVisit={() => {
-                                                    setSelectedVisit(visit);
-                                                    handleSelect();
-                                                }}
-                                            />
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )}
-                        {!loadingVisits &&
-                            networkError === null &&
-                            visitList.length === 0 && (
-                                <h6>Non sono presenti visite</h6>
-                            )}
-                    </div>
-                </div>
-            </MainContainer>
+                  <tbody>
+                    {visitList.map((visit, index) => (
+                      <VisitLine
+                        key={index}
+                        visit={visit}
+                        isSelected={visit === selectedVisit}
+                        onSelectVisit={() => {
+                          setSelectedVisit(visit);
+                          handleSelect();
+                        }}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            {!loadingVisits &&
+              networkError === null &&
+              visitList.length === 0 && (
+                <h6 style={{ marginTop: "2%" }}>
+                  <em>
+                    Non sono presenti visite per il paziente{" "}
+                    <strong>
+                      {selectedPatient.name} {selectedPatient.surname}
+                    </strong>
+                  </em>
+                </h6>
+              )}
+          </div>
         </div>
-    ) : (
-        <NoContextModal what={" un paziente "} service={" ricerca visita "} />
-    );
+      </MainContainer>
+    </div>
+  ) : (
+    <NoContextModal what={" un paziente "} service={" ricerca visita "} />
+  );
 }
