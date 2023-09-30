@@ -74,11 +74,12 @@ export default function SearchPatient() {
             display: "flex",
             justifyContent: "left",
             alignItems: "center",
+            gap: "1vw",
           }}
         >
           <img src={search} width={30} height={30} />
           <input
-            style={{ width: "45%", fontSize: 24 }}
+            style={{ width: "65%", fontSize: 24 }}
             type="text"
             name="name"
             placeholder="cerca per nome o cognome..."
@@ -91,7 +92,7 @@ export default function SearchPatient() {
               alignItems: "center",
               justifyContent: "space-between",
               width: "100%",
-              paddingLeft: "2%",
+              paddingLeft: "1%",
             }}
           >
             <div>
@@ -140,7 +141,14 @@ export default function SearchPatient() {
             networkError === null &&
             patientListToShow.length > 0 && (
               <table className="table table-primary table-striped table-hover">
-                <thead style={{ position: "sticky", top: 0, height: "6vh" }}>
+                <thead
+                  style={{
+                    position: "sticky",
+                    top: 0,
+                    height: "6vh",
+                    textAlign: "center",
+                  }}
+                >
                   <tr>
                     <th style={{ background: "white" }}>id</th>
                     <th style={{ background: "white" }}>Cognome</th>
@@ -148,7 +156,7 @@ export default function SearchPatient() {
                     <th style={{ background: "white" }}>Data di nascita</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style={{ textAlign: "center" }}>
                   {patientListToShow.map((patient, index) => (
                     <PatientLine
                       key={index}
