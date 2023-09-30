@@ -180,7 +180,16 @@ export default function SearchVisit() {
               )}
             {!loadingVisits &&
               networkError === null &&
-              visitList.length === 0 && <h6>Non sono presenti visite</h6>}
+              visitList.length === 0 && (
+                <h6 style={{ marginTop: "2%" }}>
+                  <em>
+                    Non sono presenti visite per il paziente{" "}
+                    <strong>
+                      {selectedPatient.name} {selectedPatient.surname}
+                    </strong>
+                  </em>
+                </h6>
+              )}
           </div>
         </div>
       </MainContainer>
