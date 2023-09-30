@@ -15,6 +15,7 @@ import { CurrentJointProvider } from "./physician/Model/CurrentJointContext";
 import { UserType } from "./common/Model/User";
 import UsersProvider from "./admin/ViewModel/UsersProvider";
 import DatasetsProvider from "./admin/ViewModel/DatasetsProvider";
+import AnnotationToolsProvider from "./admin/ViewModel/AnnotationToolsProvider";
 
 const NewPatient = React.lazy(() =>
     import("./physician/View/Panels/NewPatient")
@@ -43,7 +44,9 @@ const AdminDatasets = React.lazy(() =>
     import("./admin/View/Datasets/AdminDatasets")
 );
 const AdminTasks = React.lazy(() => import("./admin/View/AdminTasks"));
-const AdminTools = React.lazy(() => import("./admin/View/AdminTools"));
+const AdminTools = React.lazy(() =>
+    import("./admin/View/AnnotationTools/AdminTools")
+);
 
 function App() {
     const [user, setUser] = useState(null);
@@ -116,16 +119,18 @@ const UserRoutes = () => {
             <AdminHeader>
                 <UsersProvider>
                     <DatasetsProvider>
-                        <Routes>
-                            <Route index element={<AdminHome />} />
-                            <Route path="/users" element={<AdminUsers />} />
-                            <Route
-                                path="/datasets"
-                                element={<AdminDatasets />}
-                            />
-                            <Route path="/tools" element={<AdminTools />} />
-                            <Route path="/tasks" element={<AdminTasks />} />
-                        </Routes>
+                        <AnnotationToolsProvider>
+                            <Routes>
+                                <Route index element={<AdminHome />} />
+                                <Route path="/users" element={<AdminUsers />} />
+                                <Route
+                                    path="/datasets"
+                                    element={<AdminDatasets />}
+                                />
+                                <Route path="/tools" element={<AdminTools />} />
+                                <Route path="/tasks" element={<AdminTasks />} />
+                            </Routes>
+                        </AnnotationToolsProvider>
                     </DatasetsProvider>
                 </UsersProvider>
             </AdminHeader>

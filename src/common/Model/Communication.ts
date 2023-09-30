@@ -3,6 +3,7 @@ import config from "../../config";
 import User, { AnnotationToolAccess } from "./User";
 import PhysicianTask from "./PhysicianTask";
 import Dataset from "./Dataset";
+import AnnotationTool from "./AnnotationTool";
 
 type Params = { [key: string]: any };
 type Result = any;
@@ -28,12 +29,13 @@ class Communication {
         GET_PHYSICIANS: "/user/physician",
         LOGIN: "/user/login",
         GET_TASKS: "/task",
-        RESET_PASSWORD: "/user/resetPassword",
-        TOGGLE_ENABLE: "/user/enable",
+        RESET_USER_PASSWORD: "/user/resetPassword",
+        TOGGLE_USER_ENABLED: "/user/enable",
         ANNOTATION_TOOL_ACCESS: "/annotationTool/access",
-        USER_TOOL_TOGGLE_ACCESS: "/user/physician/annotationTool",
+        TOGGLE_USER_TOOL_ACCESS: "/user/physician/annotationTool",
         GET_DATASET: "/dataset",
         COMPLETE_DATASET: "/dataset/complete",
+        GET_ANNOTATION_TOOLS: "/annotationTool",
     };
 
     private baseCall = async (
@@ -126,7 +128,7 @@ class Communication {
     };
 
     generateNewPassword = async (email: string): Promise<string> => {
-        const res = await this.post(this.endpoints.RESET_PASSWORD, { email });
+        const res = await this.post(this.endpoints.RESET_USER_PASSWORD, { email });
         return res.password;
     };
 
@@ -135,7 +137,7 @@ class Communication {
         oldPassword: string,
         newPassword: string
     ): Promise<string> => {
-        const res = await this.post(this.endpoints.RESET_PASSWORD, {
+        const res = await this.post(this.endpoints.RESET_USER_PASSWORD, {
             email,
             oldPassword,
             newPassword,
@@ -144,7 +146,7 @@ class Communication {
     };
 
     toggleUserEnabled = async (id: number): Promise<boolean> => {
-        const res = await this.patch(this.endpoints.TOGGLE_ENABLE, { id });
+        const res = await this.patch(this.endpoints.TOGGLE_USER_ENABLED, { id });
         return res.enabled;
     };
 
@@ -171,7 +173,7 @@ class Communication {
         access: boolean,
         endpoint?: string
     ): Promise<string> => {
-        const res = await this.patch(this.endpoints.USER_TOOL_TOGGLE_ACCESS, {
+        const res = await this.patch(this.endpoints.TOGGLE_USER_TOOL_ACCESS, {
             physician,
             id: annotationTool,
             grant: access,
@@ -193,6 +195,14 @@ class Communication {
 
         return res.completed;
     };
+
+    getAnnotationTools = async (): Promise<AnnotationTool[]> => {
+		const annotationTools = await this.get(this.endpoints.GET_ANNOTATION_TOOLS);
+
+		return annotationTools.map((annotationTool: AnnotationTool) => {
+			return new AnnotationTool(annotationTool);
+		});
+	};
 
     private formatGetData = (data: Params): string => {
         let result = "?";
