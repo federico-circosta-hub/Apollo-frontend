@@ -1,5 +1,5 @@
-import CircularProgress from "@mui/material/CircularProgress";
 import MainContainer from "./MainContainer";
+import Loading from "./Loading";
 
 export default function LoadingScreen() {
     return (
@@ -9,7 +9,7 @@ export default function LoadingScreen() {
                 style={{ height: "9vh" }}
             />
             <MainContainer>
-                <CircularProgress style={{ margin: "auto" }} size={60} />
+                <Loading />
             </MainContainer>
         </>
     );

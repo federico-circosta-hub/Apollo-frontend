@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import User, { AnnotationToolAccess } from "../../../common/Model/User";
 import { useCallback, useEffect, useState } from "react";
 import CommunicationController from "../../../common/Model/Communication";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import Typography from "@mui/material/Typography";
 import Status from "../../../common/Model/Status";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -12,6 +11,7 @@ import FormGroup from "@mui/material/FormGroup";
 import CheckIcon from "@mui/icons-material/Check";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
+import LoadingError from "../../../common/View/LoadingError";
 
 export default function UserToolAccess({ user }: { user: User }) {
     const [status, setStatus] = useState<Status>(Status.IDLE);
@@ -36,31 +36,18 @@ export default function UserToolAccess({ user }: { user: User }) {
 
     if (status !== Status.IDLE) {
         return (
-            <Box>
-                <Typography variant="h6">
-                    {status === Status.LOADING
-                        ? "Caricamento in corso..."
-                        : "Errore nel caricamento dei tool di annotazione"}
-                </Typography>
-
-                <LoadingButton
-                    loading={status === Status.LOADING}
-                    loadingPosition="start"
-                    startIcon={<RefreshIcon />}
-                    variant="contained"
-                    color="error"
-                    onClick={fetchData}
-                >
-                    Ricarica
-                </LoadingButton>
-            </Box>
+            <LoadingError
+                status={status}
+                errorMsg="Errore nel caricamento dei tool di annotazione"
+                onReload={fetchData}
+            />
         );
     }
 
     return (
         <Box sx={style.box}>
             <Typography sx={{ flex: 1 }} variant="h5">
-                Grant access to:
+                Concedo accesso a:
             </Typography>
             {tools.length === 0 ? (
                 <Typography variant="h6">

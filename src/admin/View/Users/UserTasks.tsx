@@ -12,8 +12,7 @@ import CommunicationController from "../../../common/Model/Communication";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Divider from "@mui/material/Divider";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import LoadingButton from "@mui/lab/LoadingButton";
+import LoadingError from "../../../common/View/LoadingError";
 
 export default function UserTasks({ user }: { user: User }) {
     const [tasks, setTasks] = useState<PhysicianTask[]>([]);
@@ -43,24 +42,11 @@ export default function UserTasks({ user }: { user: User }) {
 
     if (status !== Status.IDLE) {
         return (
-            <Box>
-                <Typography variant="h6">
-                    {status === Status.LOADING
-                        ? "Caricamento in corso..."
-                        : "Errore nel caricamento dei task di annotazione"}
-                </Typography>
-
-                <LoadingButton
-                    loading={status === Status.LOADING}
-                    loadingPosition="start"
-                    startIcon={<RefreshIcon />}
-                    variant="contained"
-                    color="error"
-                    onClick={fetchData}
-                >
-                    Ricarica
-                </LoadingButton>
-            </Box>
+            <LoadingError
+                status={status}
+                errorMsg="Errore nel caricamento dei task di annotazione"
+                onReload={fetchData}
+            />
         );
     }
 

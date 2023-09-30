@@ -4,6 +4,7 @@ import User, { AnnotationToolAccess } from "./User";
 import PhysicianTask from "./PhysicianTask";
 import Dataset from "./Dataset";
 import AnnotationTool from "./AnnotationTool";
+import AnnotationType from "./AnnotationType";
 
 type Params = { [key: string]: any };
 type Result = any;
@@ -16,7 +17,7 @@ enum HttpMethod {
     PATCH = "PATCH",
 }
 
-class Communication {
+class CommunicationController {
     controller = axios.create({
         baseURL: config.API_URL,
         timeout: 5000,
@@ -36,6 +37,7 @@ class Communication {
         GET_DATASET: "/dataset",
         COMPLETE_DATASET: "/dataset/complete",
         GET_ANNOTATION_TOOLS: "/annotationTool",
+        GET_ANNOTATION_TYPES: "/annotationType",
     };
 
     private baseCall = async (
@@ -128,7 +130,9 @@ class Communication {
     };
 
     generateNewPassword = async (email: string): Promise<string> => {
-        const res = await this.post(this.endpoints.RESET_USER_PASSWORD, { email });
+        const res = await this.post(this.endpoints.RESET_USER_PASSWORD, {
+            email,
+        });
         return res.password;
     };
 
@@ -146,7 +150,9 @@ class Communication {
     };
 
     toggleUserEnabled = async (id: number): Promise<boolean> => {
-        const res = await this.patch(this.endpoints.TOGGLE_USER_ENABLED, { id });
+        const res = await this.patch(this.endpoints.TOGGLE_USER_ENABLED, {
+            id,
+        });
         return res.enabled;
     };
 
@@ -197,12 +203,27 @@ class Communication {
     };
 
     getAnnotationTools = async (): Promise<AnnotationTool[]> => {
-		const annotationTools = await this.get(this.endpoints.GET_ANNOTATION_TOOLS);
+        const annotationTools = await this.get(
+            this.endpoints.GET_ANNOTATION_TOOLS
+        );
 
-		return annotationTools.map((annotationTool: AnnotationTool) => {
-			return new AnnotationTool(annotationTool);
-		});
-	};
+        return annotationTools.map((annotationTool: AnnotationTool) => {
+            return new AnnotationTool(annotationTool);
+        });
+    };
+
+    getAnnotationTypes = async (
+        annotationTool: number
+    ): Promise<AnnotationType[]> => {
+        const annotationTypes = await this.get(
+            this.endpoints.GET_ANNOTATION_TYPES,
+            { annotation_tool: annotationTool }
+        );
+
+        return annotationTypes.map((annotationType: AnnotationType) => {
+            return new AnnotationType(annotationType);
+        });
+    };
 
     private formatGetData = (data: Params): string => {
         let result = "?";
@@ -232,6 +253,6 @@ class Communication {
     };
 }
 
-const instance = new Communication();
+const instance = new CommunicationController();
 
 export default instance;

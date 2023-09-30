@@ -2,9 +2,9 @@ import { createContext, useCallback, useRef } from "react";
 import AnnotationTool from "../../common/Model/AnnotationTool";
 import CommunicationController from "../../common/Model/Communication";
 
-export const AnnotationToolsContext = createContext<() => Promise<AnnotationTool[]>>(
-    async () => []
-);
+export const AnnotationToolsContext = createContext<
+    () => Promise<AnnotationTool[]>
+>(async () => []);
 
 export default function AnnotationToolsProvider({
     children,

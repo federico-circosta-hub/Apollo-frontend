@@ -16,7 +16,6 @@ export default function AdminTools() {
     useEffect(() => {
         setTitle("Tool di annotazione");
     }, [setTitle]);
-	
 
     const [status, setStatus] = useState<Status>(Status.LOADING);
 

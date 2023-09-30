@@ -1,3 +1,6 @@
+import AnnotationType from "./AnnotationType";
+import CommunicationController from "./Communication";
+
 export default class AnnotationTool {
     id: number;
     name: string;
@@ -12,6 +15,7 @@ export default class AnnotationTool {
     add_webhook_endpoint: string;
     update_annotation_endpoint: string;
     edit_annotation_endpoint: string;
+    private annotationTypes: AnnotationType[] = [];
 
     constructor(obj: AnnotationTool) {
         this.id = obj.id;
@@ -31,5 +35,13 @@ export default class AnnotationTool {
 
     filter = (filter: string): boolean => {
         return this.name.toLowerCase().includes(filter.toLowerCase());
+    };
+
+    types = async (): Promise<AnnotationType[]> => {
+        if (this.annotationTypes.length === 0) {
+            this.annotationTypes =
+                await CommunicationController.getAnnotationTypes(this.id);
+        }
+        return this.annotationTypes;
     };
 }

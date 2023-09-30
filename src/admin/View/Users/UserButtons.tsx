@@ -27,7 +27,7 @@ export default function UserButtons({
     }, [user.email, onPasswordResetted]);
 
     const toggleEnabled = useCallback(async () => {
-        const enabled = await user.toggleEnabled()
+        const enabled = await user.toggleEnabled();
         onEnabledToggled(enabled);
     }, [user, onEnabledToggled]);
 
