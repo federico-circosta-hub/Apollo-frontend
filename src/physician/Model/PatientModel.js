@@ -1,7 +1,6 @@
-import Communication from './../../common/Model/Communication'
+import Communication from "../../common/Model/CommunicationController";
 
 export default class PatientModel {
-
     name;
     surname;
     birthdate;
@@ -11,56 +10,59 @@ export default class PatientModel {
     prothesis;
 
     constructor(name, surname, birthdate, gender, height, weight, prothesis) {
-        this.name = name
-        this.surname = surname
-        this.birthdate = birthdate
-        this.gender = gender
-        this.height = height
-        this.weight = weight
-        this.prothesis = prothesis
+        this.name = name;
+        this.surname = surname;
+        this.birthdate = birthdate;
+        this.gender = gender;
+        this.height = height;
+        this.weight = weight;
+        this.prothesis = prothesis;
     }
 
     setName(s) {
-        this.name = s
+        this.name = s;
     }
 
     setSurname(s) {
-        this.surname = s
+        this.surname = s;
     }
 
     setBirthdate(d) {
-        this.birthdate = d
+        this.birthdate = d;
     }
 
     setGender(s) {
-        this.gender = s
+        this.gender = s;
     }
 
     setHeight(h) {
-        this.height = h
+        this.height = h;
     }
 
     setWeight(w) {
-        this.weight = w
+        this.weight = w;
     }
 
     addProthesis(p) {
-        this.prothesis.push(p)
+        this.prothesis.push(p);
     }
 
     deleteProthesis(p) {
-        let i = this.prothesis.indexOf(p)
-        this.prothesis.splice(i, 1)
+        let i = this.prothesis.indexOf(p);
+        this.prothesis.splice(i, 1);
     }
 
     toString() {
-        console.log("My name is %s %s I was born in %s, I'm %s, my height is %d and my weight is %d, I've %s prothesis", this.name,
+        console.log(
+            "My name is %s %s I was born in %s, I'm %s, my height is %d and my weight is %d, I've %s prothesis",
+            this.name,
             this.surname,
             this.birthdate,
             this.gender,
             this.height,
             this.weight,
-            this.prothesis.toString())
+            this.prothesis.toString()
+        );
     }
 
     clone() {
@@ -76,6 +78,6 @@ export default class PatientModel {
     }
 
     async register(pid) {
-        await Communication.post('patient', { "pid": pid })
+        await Communication.post("patient", { pid: pid });
     }
 }

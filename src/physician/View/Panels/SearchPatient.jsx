@@ -5,7 +5,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import React, { useContext, useEffect, useState } from "react";
 import { PatientContext } from "../../Model/PatientContext";
 import PatientLine from "../OtherComponents/PatientLine";
-import Communication from "../../../common/Model/Communication";
+import CommunicationController from "../../../common/Model/CommunicationController";
 import FakeSecurityModule from "./../../Model/FakeSecurityModule";
 import MainContainer from "../../../common/View/MainContainer";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
@@ -34,7 +34,7 @@ export default function SearchPatient() {
     clearAll();
     setLoadingPatients(true);
     try {
-      const idList = await Communication.get("patient", {});
+      const idList = await CommunicationController.get("patient", {});
       const namedList = await FakeSecurityModule.decriptPatients(idList);
       namedList.sort((a, b) => a.surname.localeCompare(b.surname));
       setPatientListToShow(namedList);

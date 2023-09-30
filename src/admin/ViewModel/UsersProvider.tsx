@@ -1,6 +1,6 @@
 import { createContext, useCallback, useRef } from "react";
 import User from "../../common/Model/User";
-import CommunicationController from "../../common/Model/Communication";
+import CommunicationController from "../../common/Model/CommunicationController";
 
 export const UsersContext = createContext<() => Promise<User[]>>(
     async () => []

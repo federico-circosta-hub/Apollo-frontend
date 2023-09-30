@@ -3,6 +3,8 @@ import config from "../../config";
 import User, { AnnotationToolAccess } from "./User";
 import PhysicianTask from "./PhysicianTask";
 import Dataset from "./Dataset";
+import AnnotationTool, { AnnotationToolEndpoints } from "./AnnotationTool";
+import AnnotationType from "./AnnotationType";
 
 type Params = { [key: string]: any };
 type Result = any;
@@ -15,7 +17,7 @@ enum HttpMethod {
     PATCH = "PATCH",
 }
 
-class Communication {
+class CommunicationController {
     controller = axios.create({
         baseURL: config.API_URL,
         timeout: 5000,
@@ -28,12 +30,20 @@ class Communication {
         GET_PHYSICIANS: "/user/physician",
         LOGIN: "/user/login",
         GET_TASKS: "/task",
-        RESET_PASSWORD: "/user/resetPassword",
-        TOGGLE_ENABLE: "/user/enable",
+        RESET_USER_PASSWORD: "/user/resetPassword",
+        TOGGLE_USER_ENABLED: "/user/enable",
         ANNOTATION_TOOL_ACCESS: "/annotationTool/access",
-        USER_TOOL_TOGGLE_ACCESS: "/user/physician/annotationTool",
+        TOGGLE_USER_TOOL_ACCESS: "/user/physician/annotationTool",
         GET_DATASET: "/dataset",
         COMPLETE_DATASET: "/dataset/complete",
+        GET_ANNOTATION_TOOLS: "/annotationTool",
+        GET_ANNOTATION_TYPES: "/annotationType",
+        UPDATE_ANNOTATION_TOOL: "/annotationTool",
+        GET_PRINT_FUNCTIONS: "/annotationType/printFunctions",
+        GET_CONFLICT_FUNCTIONS: "/annotationType/conflictFunctions",
+        NEW_ANNOTATION_TYPE: "/annotationType",
+        UPDATE_ANNOTATION_TYPE: "/annotationType",
+        DELETE_DATASET: "/dataset",
     };
 
     private baseCall = async (
@@ -55,6 +65,8 @@ class Communication {
                     endpoint + "/" + this.formatGetData(data),
                     config
                 );
+            else if (method === HttpMethod.DELETE)
+                res = await fn(endpoint, { ...config, data: data });
             else res = await fn(endpoint, data, config);
 
             return res.data;
@@ -126,7 +138,9 @@ class Communication {
     };
 
     generateNewPassword = async (email: string): Promise<string> => {
-        const res = await this.post(this.endpoints.RESET_PASSWORD, { email });
+        const res = await this.post(this.endpoints.RESET_USER_PASSWORD, {
+            email,
+        });
         return res.password;
     };
 
@@ -135,7 +149,7 @@ class Communication {
         oldPassword: string,
         newPassword: string
     ): Promise<string> => {
-        const res = await this.post(this.endpoints.RESET_PASSWORD, {
+        const res = await this.post(this.endpoints.RESET_USER_PASSWORD, {
             email,
             oldPassword,
             newPassword,
@@ -144,7 +158,9 @@ class Communication {
     };
 
     toggleUserEnabled = async (id: number): Promise<boolean> => {
-        const res = await this.patch(this.endpoints.TOGGLE_ENABLE, { id });
+        const res = await this.patch(this.endpoints.TOGGLE_USER_ENABLED, {
+            id,
+        });
         return res.enabled;
     };
 
@@ -171,7 +187,7 @@ class Communication {
         access: boolean,
         endpoint?: string
     ): Promise<string> => {
-        const res = await this.patch(this.endpoints.USER_TOOL_TOGGLE_ACCESS, {
+        const res = await this.patch(this.endpoints.TOGGLE_USER_TOOL_ACCESS, {
             physician,
             id: annotationTool,
             grant: access,
@@ -192,6 +208,95 @@ class Communication {
         });
 
         return res.completed;
+    };
+
+    getAnnotationTools = async (): Promise<AnnotationTool[]> => {
+        const annotationTools = await this.get(
+            this.endpoints.GET_ANNOTATION_TOOLS
+        );
+
+        return annotationTools.map((annotationTool: AnnotationTool) => {
+            return new AnnotationTool(annotationTool);
+        });
+    };
+
+    getAnnotationTypes = async (
+        annotationTool: number
+    ): Promise<AnnotationType[]> => {
+        const annotationTypes = await this.get(
+            this.endpoints.GET_ANNOTATION_TYPES,
+            { annotation_tool: annotationTool }
+        );
+
+        return annotationTypes.map((annotationType: AnnotationType) => {
+            return new AnnotationType(annotationType);
+        });
+    };
+
+    updateAnnotationTool = async (
+        annotationTool: number,
+        data: {
+            base_url: string;
+            authorization_header: string;
+            new_instance_instructions: string;
+            endpoints: AnnotationToolEndpoints;
+        }
+    ): Promise<AnnotationTool> => {
+        const res = await this.patch(this.endpoints.UPDATE_ANNOTATION_TOOL, {
+            id: annotationTool,
+            ...data,
+        });
+
+        return new AnnotationTool(res);
+    };
+
+    getPrintFunctions = async (): Promise<string[]> => {
+        return this.get(this.endpoints.GET_PRINT_FUNCTIONS);
+    };
+
+    getConflictFunctions = async (): Promise<string[]> => {
+        return this.get(this.endpoints.GET_CONFLICT_FUNCTIONS);
+    };
+
+    newAnnotationType = async (
+        annotation_tool: number,
+        name: string,
+        annotation_instructions: string,
+        annotation_interface: string,
+        print_function: string,
+        conflict_function: string
+    ): Promise<AnnotationType> => {
+        const res = await this.post(this.endpoints.NEW_ANNOTATION_TYPE, {
+            annotation_tool,
+            name,
+            annotation_instructions,
+            annotation_interface,
+            print_function,
+            conflict_function,
+        });
+
+        return new AnnotationType(res);
+    };
+
+    updateAnnotationType = async (
+        annotationType: number,
+        data: {
+            name: string;
+            annotation_instructions: string;
+            annotation_interface: string;
+            print_function: string;
+            conflict_function: string;
+        }
+    ) => {
+        const res = await this.patch(this.endpoints.UPDATE_ANNOTATION_TYPE, {
+            id: annotationType,
+            ...data,
+        });
+        return new AnnotationType(res);
+    };
+
+    deleteDataset = async (dataset: number): Promise<Dataset> => {
+        return this.delete(this.endpoints.DELETE_DATASET, { id: dataset });
     };
 
     private formatGetData = (data: Params): string => {
@@ -222,6 +327,6 @@ class Communication {
     };
 }
 
-const instance = new Communication();
+const instance = new CommunicationController();
 
 export default instance;

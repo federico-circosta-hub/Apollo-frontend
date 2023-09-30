@@ -22,7 +22,7 @@ import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
 import Slider from "@mui/material/Slider";
 import MainContainer from "../../../common/View/MainContainer";
-import Communication from "../../../common/Model/Communication";
+import CommunicationController from "../../../common/Model/CommunicationController";
 
 export default function Drug() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -69,7 +69,7 @@ export default function Drug() {
 
   const getDrugsFromServer = async () => {
     setDrugs([{ name: "", unit: "" }]);
-    let d = await Communication.get("drug", {});
+    let d = await CommunicationController.get("drug", {});
     setDrugs((prevState) => [...prevState, ...d]);
   };
 

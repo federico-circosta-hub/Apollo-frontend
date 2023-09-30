@@ -1,4 +1,4 @@
-import CommunicationController from "./Communication";
+import CommunicationController from "./CommunicationController";
 
 export enum MediaType {
     IMAGE = "image",
@@ -14,7 +14,7 @@ export default class Dataset {
     media_count: number;
     completed: boolean;
 
-    constructor(obj: Dataset | any = {}) {
+    constructor(obj: Dataset) {
         this.id = obj.id ?? 0;
         this.name = obj.name ?? "";
         this.start_date = obj.start_date;

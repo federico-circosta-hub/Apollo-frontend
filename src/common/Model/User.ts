@@ -1,4 +1,4 @@
-import CommunicationController from "./Communication";
+import CommunicationController from "./CommunicationController";
 import PhysicianTask from "./PhysicianTask";
 
 export enum UserType {

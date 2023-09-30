@@ -19,7 +19,7 @@ import FollowUpHelper from "../../ViewModel/FollowUpHelper";
 import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
 import { useNavigate } from "react-router-dom";
-import Communication from "../../../common/Model/Communication";
+import CommunicationController from "../../../common/Model/CommunicationController";
 import CircularProgress from "@mui/material/CircularProgress";
 import MainContainer from "../../../common/View/MainContainer";
 import NoPreviousVisit from "../Modals/NoPreviousVisit";
@@ -62,8 +62,8 @@ export default function NewVisit() {
     setTraumaticEvents([{ name: "" }]);
     setNetworkError(null);
     try {
-      const acts = await Communication.get("exercise", {});
-      const trauma = await Communication.get("traumaEvent", {});
+      const acts = await CommunicationController.get("exercise", {});
+      const trauma = await CommunicationController.get("traumaEvent", {});
       setActivities((prevState) => [...prevState, ...acts]);
       setTraumaticEvents((prevState) => [...prevState, ...trauma]);
     } catch (err) {
