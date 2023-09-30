@@ -8,7 +8,7 @@ export default function ResultSnackar({
     severity = "success",
     vertical = "bottom",
     horizontal = "left",
-    duration = 10000,
+    duration = 5000,
 }: {
     show: boolean;
     text: string;

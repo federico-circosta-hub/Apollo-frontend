@@ -3,7 +3,7 @@ import config from "../../config";
 import User, { AnnotationToolAccess } from "./User";
 import PhysicianTask from "./PhysicianTask";
 import Dataset from "./Dataset";
-import AnnotationTool from "./AnnotationTool";
+import AnnotationTool, { AnnotationToolEndpoints } from "./AnnotationTool";
 import AnnotationType from "./AnnotationType";
 
 type Params = { [key: string]: any };
@@ -38,6 +38,7 @@ class CommunicationController {
         COMPLETE_DATASET: "/dataset/complete",
         GET_ANNOTATION_TOOLS: "/annotationTool",
         GET_ANNOTATION_TYPES: "/annotationType",
+        UPDATE_ANNOTATION_TOOL: "/annotationTool",
     };
 
     private baseCall = async (
@@ -223,6 +224,23 @@ class CommunicationController {
         return annotationTypes.map((annotationType: AnnotationType) => {
             return new AnnotationType(annotationType);
         });
+    };
+
+    updateAnnotationTool = async (
+        annotationTool: number,
+        data: {
+            base_url: string;
+            authorization_header: string;
+            new_instance_instructions: string;
+            endpoints: AnnotationToolEndpoints;
+        }
+    ): Promise<AnnotationTool> => {
+        const res = await this.patch(this.endpoints.UPDATE_ANNOTATION_TOOL, {
+            id: annotationTool,
+            ...data,
+        });
+        console.log(res);
+        return new AnnotationTool(res);
     };
 
     private formatGetData = (data: Params): string => {

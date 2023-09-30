@@ -13,9 +13,11 @@ import AddIcon from "@mui/icons-material/Add";
 export default function AnnotationTypesButtons({
     tool,
     onTypeSelected,
+    style,
 }: {
     tool: AnnotationTool;
     onTypeSelected: (type?: AnnotationType) => void;
+    style?: any;
 }) {
     const [status, setStatus] = useState<Status>(Status.LOADING);
 
@@ -49,12 +51,12 @@ export default function AnnotationTypesButtons({
     }
 
     return (
-        <Box sx={style.box}>
-            <Typography sx={{ flex: 1 }} variant="h5">
+        <Box sx={[baseStyle.box, style]}>
+            <Typography variant="h5">
                 Tipi di annotazione supportati:
             </Typography>
-            <Box sx={style.scrollable}>
-                <Grid container spacing={2} sx={style.grid}>
+            <Box sx={baseStyle.scrollable}>
+                <Grid container spacing={2} sx={baseStyle.grid}>
                     {types.map((type) => (
                         <AnnotationTypeItem
                             type={type}
@@ -62,7 +64,11 @@ export default function AnnotationTypesButtons({
                         />
                     ))}
                     <Grid item>
-                        <Button variant="outlined" startIcon={<AddIcon />} onClick={() => onTypeSelected()}>
+                        <Button
+                            variant="outlined"
+                            startIcon={<AddIcon />}
+                            onClick={() => onTypeSelected()}
+                        >
                             Nuovo tipo
                         </Button>
                     </Grid>
@@ -83,7 +89,7 @@ const AnnotationTypeItem = ({
         <Grid item>
             <Button
                 variant="contained"
-                sx={style.button}
+                sx={baseStyle.button}
                 onClick={() => onTypeSelected(type)}
             >
                 {type.name}
@@ -92,9 +98,8 @@ const AnnotationTypeItem = ({
     );
 };
 
-const style = {
+const baseStyle = {
     box: {
-        maxHeight: "30%",
         display: "flex",
         flexDirection: "column" as "column",
     },
@@ -102,7 +107,6 @@ const style = {
         maxHeight: "100%",
         width: "100%",
         overflow: "auto",
-        margin: "auto",
     },
     grid: {
         padding: "4px",
