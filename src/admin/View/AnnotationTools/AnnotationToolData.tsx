@@ -25,7 +25,7 @@ const ENDPOINT_NAMES = {
 
 type ENamesKeys = keyof typeof ENDPOINT_NAMES;
 
-export default function AnnotationToolForm({
+export default function AnnotationToolData({
     tool,
     style,
 }: {

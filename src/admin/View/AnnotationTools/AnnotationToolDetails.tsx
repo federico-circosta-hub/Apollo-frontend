@@ -3,7 +3,9 @@ import AnnotationTool from "../../../common/Model/AnnotationTool";
 import { useEffect, useState } from "react";
 import AnnotationType from "../../../common/Model/AnnotationType";
 import AnnotationTypeDetails from "./AnnotationTypeDetails";
-import AnnotationToolDetailsForm from "./AnnotationToolDetailsForm";
+import Box from "@mui/material/Box";
+import AnnotationToolData from "./AnnotationToolData";
+import AnnotationToolTypes from "./AnnotationToolTypes";
 
 export default function AnnotationToolDetails({ item }: DetailItemProps) {
     const tool = item as AnnotationTool;
@@ -23,7 +25,7 @@ export default function AnnotationToolDetails({ item }: DetailItemProps) {
             onExit={() => setShowType(false)}
         />
     ) : (
-        <AnnotationToolDetailsForm
+        <AnnotationToolDetailsPage
             tool={tool}
             onTypeSelected={(selected) => {
                 setShowType(true);
@@ -32,3 +34,32 @@ export default function AnnotationToolDetails({ item }: DetailItemProps) {
         />
     );
 }
+
+const AnnotationToolDetailsPage = ({
+    tool,
+    onTypeSelected,
+}: {
+    tool: AnnotationTool;
+    onTypeSelected: (type?: AnnotationType) => void;
+}) => {
+    return (
+        <Box sx={style.box}>
+            <AnnotationToolData tool={tool} style={{ height: "75%" }} />
+            <Box sx={{ m: 1 }} />
+            <AnnotationToolTypes
+                tool={tool}
+                onTypeSelected={onTypeSelected}
+                style={{ flex: 1 }}
+            />
+        </Box>
+    );
+};
+
+const style = {
+    box: {
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        height: "100%",
+    },
+};

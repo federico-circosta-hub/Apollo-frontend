@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 
-export default function AnnotationTypesButtons({
+export default function AnnotationToolTypes({
     tool,
     onTypeSelected,
     style,

@@ -1,4 +1,3 @@
-import { type } from "os";
 import AnnotationType from "./AnnotationType";
 import CommunicationController from "./CommunicationController";
 
