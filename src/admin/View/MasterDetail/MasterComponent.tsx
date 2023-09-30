@@ -7,10 +7,12 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
+import ConfirmActionModal from "../../../common/View/Modal/ConfirmActionModal";
 
 export type MasterItemProps = {
     item: any;
     onClick: () => void;
+    onDelete?: () => void;
 };
 
 export default function MasterComponent({
@@ -18,45 +20,39 @@ export default function MasterComponent({
     Item,
     itemName,
     onItemClick,
-    onAddClick,
+    onAdd,
+    onDelete,
 }: {
     items: any[];
     Item: ComponentType<MasterItemProps>;
     itemName: string;
     onItemClick?: (index: number) => void;
-    onAddClick?: () => void;
+    onAdd?: () => void;
+    onDelete?: (item: any) => Promise<any>;
 }) {
-    const [filteredItems, setFilteredItems] = useState(items);
+    const [filter, setFilter] = useState<string>("");
     const [selected, setSelected] = useState(-1);
+    const [showDelete, setShowDelete] = useState(false);
 
-    const filterItems = useCallback(
-        (text: string) => {
-            setFilteredItems(items.filter((item) => item.filter(text)));
-        },
-        [items]
-    );
+    const filterItems = useCallback(() => {
+        return items.filter((item) => item.filter(filter));
+    }, [items, filter]);
+
+    const filteredItems = filterItems();
 
     return (
         <Box sx={style.box}>
             <Box sx={style.topBar}>
-                <Search onChange={filterItems} />
+                <Search onChange={(text) => setFilter(text)} />
                 <Box sx={{ flex: 1, height: 0 }} />
-                {onAddClick && (
-                    <AddButton itemName={itemName} onClick={onAddClick} />
-                )}
+                {onAdd && <AddButton itemName={itemName} onClick={onAdd} />}
             </Box>
             <Box sx={style.scrollable}>
                 <List sx={{ width: "100%" }}>
                     {filteredItems.map((item, index) => (
                         <Box
                             key={index}
-                            sx={
-                                index === selected
-                                    ? {
-                                          backgroundColor: "#DDDDDD",
-                                      }
-                                    : undefined
-                            }
+                            sx={index === selected ? style.selected : undefined}
                         >
                             <Item
                                 item={item}
@@ -64,12 +60,23 @@ export default function MasterComponent({
                                     setSelected(index);
                                     onItemClick && onItemClick(index);
                                 }}
+                                onDelete={
+                                    onDelete
+                                        ? () => setShowDelete(true)
+                                        : undefined
+                                }
                             />
                             <Divider sx={style.divider} />
                         </Box>
                     ))}
                 </List>
             </Box>
+            <ConfirmActionModal
+                text="Sei sicuro di voler eliminare questo elemento?"
+                show={showDelete}
+                onConfirm={() => onDelete!(items[0])}
+                onClose={() => setShowDelete(false)}
+            />
         </Box>
     );
 }
@@ -133,5 +140,8 @@ const style = {
     },
     divider: {
         backgroundColor: "black",
+    },
+    selected: {
+        backgroundColor: "#DDDDDD",
     },
 };

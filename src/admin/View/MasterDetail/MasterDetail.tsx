@@ -17,6 +17,7 @@ export default function MasterDetail({
     DetailItem,
     status,
     onRetry,
+    onDelete,
 }: {
     items: any[];
     itemName: string;
@@ -25,11 +26,12 @@ export default function MasterDetail({
     DetailItem: ComponentType<DetailItemProps>;
     status: Status;
     onRetry: () => Promise<void>;
+    onDelete?: (item: any) => Promise<any>;
 }) {
     const navigate = useNavigate();
     const [selected, setSelected] = useState<number>(-1);
 
-    const onAddClick = useCallback(() => {
+    const onAdd = useCallback(() => {
         navigate(addRoute);
     }, [navigate, addRoute]);
 
@@ -44,7 +46,8 @@ export default function MasterDetail({
                         itemName={itemName}
                         Item={MasterItem}
                         onItemClick={(index) => setSelected(index)}
-                        onAddClick={onAddClick}
+                        onAdd={onAdd}
+                        onDelete={onDelete}
                     />
                 ) : (
                     <Loading />

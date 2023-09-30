@@ -43,6 +43,7 @@ class CommunicationController {
         GET_CONFLICT_FUNCTIONS: "/annotationType/conflictFunctions",
         NEW_ANNOTATION_TYPE: "/annotationType",
         UPDATE_ANNOTATION_TYPE: "/annotationType",
+        DELETE_DATASET: "/dataset",
     };
 
     private baseCall = async (
@@ -64,6 +65,8 @@ class CommunicationController {
                     endpoint + "/" + this.formatGetData(data),
                     config
                 );
+            else if (method === HttpMethod.DELETE)
+                res = await fn(endpoint, { ...config, data: data });
             else res = await fn(endpoint, data, config);
 
             return res.data;
@@ -244,25 +247,25 @@ class CommunicationController {
             ...data,
         });
 
-		return new AnnotationTool(res);
+        return new AnnotationTool(res);
     };
 
-    async getPrintFunctions(): Promise<string[]> {
+    getPrintFunctions = async (): Promise<string[]> => {
         return this.get(this.endpoints.GET_PRINT_FUNCTIONS);
-    }
+    };
 
-    async getConflictFunctions(): Promise<string[]> {
+    getConflictFunctions = async (): Promise<string[]> => {
         return this.get(this.endpoints.GET_CONFLICT_FUNCTIONS);
-    }
+    };
 
-    async newAnnotationType(
+    newAnnotationType = async (
         annotation_tool: number,
         name: string,
         annotation_instructions: string,
         annotation_interface: string,
         print_function: string,
         conflict_function: string
-    ): Promise<AnnotationType> {
+    ): Promise<AnnotationType> => {
         const res = await this.post(this.endpoints.NEW_ANNOTATION_TYPE, {
             annotation_tool,
             name,
@@ -273,9 +276,9 @@ class CommunicationController {
         });
 
         return new AnnotationType(res);
-    }
+    };
 
-    async updateAnnotationType(
+    updateAnnotationType = async (
         annotationType: number,
         data: {
             name: string;
@@ -284,13 +287,17 @@ class CommunicationController {
             print_function: string;
             conflict_function: string;
         }
-    ) {
+    ) => {
         const res = await this.patch(this.endpoints.UPDATE_ANNOTATION_TYPE, {
-			id: annotationType,
-			...data,
-		});
-		return new AnnotationType(res);
-    }
+            id: annotationType,
+            ...data,
+        });
+        return new AnnotationType(res);
+    };
+
+    deleteDataset = async (dataset: number): Promise<Dataset> => {
+        return this.delete(this.endpoints.DELETE_DATASET, { id: dataset });
+    };
 
     private formatGetData = (data: Params): string => {
         let result = "?";

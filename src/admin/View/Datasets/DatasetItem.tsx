@@ -6,8 +6,15 @@ import { useCallback, useState } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import ConfirmActionModal from "../../../common/View/Modal/ConfirmActionModal";
+import IconButton from "@mui/material/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-export default function DatasetItem({ item, onClick }: MasterItemProps) {
+export default function DatasetItem({
+    item,
+    onClick,
+    onDelete,
+}: MasterItemProps) {
     const dataset = item as Dataset;
 
     return (
@@ -31,6 +38,13 @@ export default function DatasetItem({ item, onClick }: MasterItemProps) {
                 primaryTypographyProps={{ align: "right" }}
                 secondaryTypographyProps={{ align: "right" }}
             />
+            <ListItemIcon
+                sx={{ display: "flex", flexDirection: "row-reverse" }}
+            >
+                <IconButton onClick={onDelete}>
+                    <DeleteForeverIcon color="error" />
+                </IconButton>
+            </ListItemIcon>
         </ListItemButton>
     );
 }

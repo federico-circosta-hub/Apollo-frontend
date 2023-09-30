@@ -50,6 +50,7 @@ export default function AdminTools() {
             MasterItem={AnnotationToolItem}
             DetailItem={AnnotationToolDetails}
             onRetry={fetchData}
+            onDelete={async (tool: AnnotationTool) => {}}
         />
     );
 }
