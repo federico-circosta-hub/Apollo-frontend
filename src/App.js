@@ -16,6 +16,7 @@ import { UserType } from "./common/Model/User";
 import UsersProvider from "./admin/ViewModel/UsersProvider";
 import DatasetsProvider from "./admin/ViewModel/DatasetsProvider";
 import AnnotationToolsProvider from "./admin/ViewModel/AnnotationToolsProvider";
+import FunctionsProvider from "./admin/ViewModel/FunctionsProvider";
 
 const NewPatient = React.lazy(() =>
     import("./physician/View/Panels/NewPatient")
@@ -120,16 +121,27 @@ const UserRoutes = () => {
                 <UsersProvider>
                     <DatasetsProvider>
                         <AnnotationToolsProvider>
-                            <Routes>
-                                <Route index element={<AdminHome />} />
-                                <Route path="/users" element={<AdminUsers />} />
-                                <Route
-                                    path="/datasets"
-                                    element={<AdminDatasets />}
-                                />
-                                <Route path="/tools" element={<AdminTools />} />
-                                <Route path="/tasks" element={<AdminTasks />} />
-                            </Routes>
+                            <FunctionsProvider>
+                                <Routes>
+                                    <Route index element={<AdminHome />} />
+                                    <Route
+                                        path="/users"
+                                        element={<AdminUsers />}
+                                    />
+                                    <Route
+                                        path="/datasets"
+                                        element={<AdminDatasets />}
+                                    />
+                                    <Route
+                                        path="/tools"
+                                        element={<AdminTools />}
+                                    />
+                                    <Route
+                                        path="/tasks"
+                                        element={<AdminTasks />}
+                                    />
+                                </Routes>
+                            </FunctionsProvider>
                         </AnnotationToolsProvider>
                     </DatasetsProvider>
                 </UsersProvider>

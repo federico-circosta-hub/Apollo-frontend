@@ -119,6 +119,7 @@ export default function AnnotationToolForm({
                     {Object.entries(endpoints).map(
                         ([key, value]: [string, string]) => (
                             <EndpointItem
+                                key={key}
                                 endpoint={value}
                                 endpointName={ENDPOINT_NAMES[key as ENamesKeys]}
                                 onChange={(text) =>

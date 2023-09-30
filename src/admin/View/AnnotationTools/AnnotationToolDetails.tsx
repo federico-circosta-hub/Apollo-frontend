@@ -1,30 +1,34 @@
-import Box from "@mui/material/Box";
 import { DetailItemProps } from "../MasterDetail/DetailComponent";
-import AnnotationTypesButtons from "./AnnotationTypesButtons";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
-import AnnotationToolForm from "./AnnotationToolForm";
+import { useEffect, useState } from "react";
+import AnnotationType from "../../../common/Model/AnnotationType";
+import AnnotationTypeDetails from "./AnnotationTypeDetails";
+import AnnotationToolDetailsForm from "./AnnotationToolDetailsForm";
 
 export default function AnnotationToolDetails({ item }: DetailItemProps) {
     const tool = item as AnnotationTool;
 
-    return (
-        <Box sx={style.box}>
-            <AnnotationToolForm tool={tool} style={{ height: "69%" }} />
-            <Box sx={{ m: 1 }} />
-            <AnnotationTypesButtons
-                tool={tool}
-                onTypeSelected={(type) => {}}
-                style={{ flex: 1 }}
-            />
-        </Box>
+    const [showType, setShowType] = useState<boolean>(false);
+    const [type, setType] = useState<AnnotationType | undefined>(undefined);
+
+    useEffect(() => {
+        setShowType(false);
+        setType(undefined);
+    }, [tool]);
+
+    return showType ? (
+        <AnnotationTypeDetails
+            type={type}
+            tool={tool}
+            onExit={() => setShowType(false)}
+        />
+    ) : (
+        <AnnotationToolDetailsForm
+            tool={tool}
+            onTypeSelected={(selected) => {
+                setShowType(true);
+                setType(selected);
+            }}
+        />
     );
 }
-
-const style = {
-    box: {
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        height: "100%",
-    },
-};

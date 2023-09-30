@@ -1,3 +1,4 @@
+import { type } from "os";
 import AnnotationType from "./AnnotationType";
 import CommunicationController from "./CommunicationController";
 
@@ -57,6 +58,19 @@ export default class AnnotationTool {
         }
         return this.annotationTypes;
     };
+
+	addType = (newType: AnnotationType) => {
+		this.annotationTypes.push(newType)
+	}
+
+	updateType = (updatedType: AnnotationType)=> {
+		this.annotationTypes = this.annotationTypes.map(type => {
+			if (type.id === updatedType.id) {
+				return updatedType
+			}
+			return type
+		})
+	}
 
     update = async (data: {
         base_url: string;

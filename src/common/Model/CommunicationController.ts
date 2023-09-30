@@ -39,6 +39,10 @@ class CommunicationController {
         GET_ANNOTATION_TOOLS: "/annotationTool",
         GET_ANNOTATION_TYPES: "/annotationType",
         UPDATE_ANNOTATION_TOOL: "/annotationTool",
+        GET_PRINT_FUNCTIONS: "/annotationType/printFunctions",
+        GET_CONFLICT_FUNCTIONS: "/annotationType/conflictFunctions",
+        NEW_ANNOTATION_TYPE: "/annotationType",
+        UPDATE_ANNOTATION_TYPE: "/annotationType",
     };
 
     private baseCall = async (
@@ -239,9 +243,54 @@ class CommunicationController {
             id: annotationTool,
             ...data,
         });
-        console.log(res);
-        return new AnnotationTool(res);
+
+		return new AnnotationTool(res);
     };
+
+    async getPrintFunctions(): Promise<string[]> {
+        return this.get(this.endpoints.GET_PRINT_FUNCTIONS);
+    }
+
+    async getConflictFunctions(): Promise<string[]> {
+        return this.get(this.endpoints.GET_CONFLICT_FUNCTIONS);
+    }
+
+    async newAnnotationType(
+        annotation_tool: number,
+        name: string,
+        annotation_instructions: string,
+        annotation_interface: string,
+        print_function: string,
+        conflict_function: string
+    ): Promise<AnnotationType> {
+        const res = await this.post(this.endpoints.NEW_ANNOTATION_TYPE, {
+            annotation_tool,
+            name,
+            annotation_instructions,
+            annotation_interface,
+            print_function,
+            conflict_function,
+        });
+
+        return new AnnotationType(res);
+    }
+
+    async updateAnnotationType(
+        annotationType: number,
+        data: {
+            name: string;
+            annotation_instructions: string;
+            annotation_interface: string;
+            print_function: string;
+            conflict_function: string;
+        }
+    ) {
+        const res = await this.patch(this.endpoints.UPDATE_ANNOTATION_TYPE, {
+			id: annotationType,
+			...data,
+		});
+		return new AnnotationType(res);
+    }
 
     private formatGetData = (data: Params): string => {
         let result = "?";

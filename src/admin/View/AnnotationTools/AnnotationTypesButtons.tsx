@@ -59,6 +59,7 @@ export default function AnnotationTypesButtons({
                 <Grid container spacing={2} sx={baseStyle.grid}>
                     {types.map((type) => (
                         <AnnotationTypeItem
+                            key={type.id}
                             type={type}
                             onTypeSelected={onTypeSelected}
                         />
