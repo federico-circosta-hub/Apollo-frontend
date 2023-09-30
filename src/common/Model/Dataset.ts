@@ -1,4 +1,4 @@
-import CommunicationController from "./Communication";
+import CommunicationController from "./CommunicationController";
 
 export enum MediaType {
     IMAGE = "image",

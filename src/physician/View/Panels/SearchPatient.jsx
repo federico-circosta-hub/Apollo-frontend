@@ -6,34 +6,32 @@ import React, { useContext, useEffect, useState } from "react";
 import { PatientContext } from "../../Model/PatientContext";
 import PatientLine from "../OtherComponents/PatientLine";
 import GeneratePatients from "../../Model/GeneratePatients";
-import Communication from '../../../common/Model/Communication'
-import FakeSecurityModule from './../../Model/FakeSecurityModule'
+import Communication from "../../../common/Model/CommunicationController";
+import FakeSecurityModule from "./../../Model/FakeSecurityModule";
 
 export default function SearchPatient() {
-
     const [patientList, setPatientList] = useState(null);
     const [patientListToShow, setPatientListToShow] = useState([]);
-    const [loadingPatients, setLoadingPatients] = useState(false)
+    const [loadingPatients, setLoadingPatients] = useState(false);
 
     const navigate = useNavigate();
 
     const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
 
     useEffect(() => {
-        setLoadingPatients(true)
+        setLoadingPatients(true);
         getPatients();
-
     }, []);
 
     const getPatients = async () => {
         /* let arr = GeneratePatients(); */
-        const idArray = await Communication.get('patient', '')
-        console.log(idArray)
-        const patientArray = await FakeSecurityModule.decriptPatients(idArray)
+        const idArray = await Communication.get("patient", "");
+        console.log(idArray);
+        const patientArray = await FakeSecurityModule.decriptPatients(idArray);
         patientArray.sort((a, b) => a.surname.localeCompare(b.surname));
         setPatientList(patientArray);
         setPatientListToShow(patientArray);
-        setLoadingPatients(false)
+        setLoadingPatients(false);
     };
 
     const handleSelect = () => {
@@ -101,22 +99,26 @@ export default function SearchPatient() {
                         width: "100%",
                         height: "72vh",
                         overflow: "auto",
-                        textAlign: loadingPatients ? 'center' : "left",
+                        textAlign: loadingPatients ? "center" : "left",
                         borderRadius: "15px",
                         border: "0.5px solid black",
                     }}
                 >
-                    {loadingPatients ? <CircularProgress /> : patientListToShow.map((patient, index) => (
-                        <PatientLine
-                            key={index}
-                            patient={patient}
-                            isSelected={patient === selectedPatient}
-                            onSelectPatient={() => {
-                                setSelectedPatient(patient);
-                                handleSelect();
-                            }}
-                        />
-                    ))}
+                    {loadingPatients ? (
+                        <CircularProgress />
+                    ) : (
+                        patientListToShow.map((patient, index) => (
+                            <PatientLine
+                                key={index}
+                                patient={patient}
+                                isSelected={patient === selectedPatient}
+                                onSelectPatient={() => {
+                                    setSelectedPatient(patient);
+                                    handleSelect();
+                                }}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
         </div>

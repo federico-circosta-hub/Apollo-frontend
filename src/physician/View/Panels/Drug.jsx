@@ -22,7 +22,7 @@ import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
 import Slider from "@mui/material/Slider";
 import MainContainer from "../../../common/View/MainContainer";
-import Communication from '../../../common/Model/Communication'
+import Communication from "../../../common/Model/CommunicationController";
 
 export default function Drug() {
     const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -42,7 +42,7 @@ export default function Drug() {
         "Synovial Hyperplasia",
     ];
 
-    const [drugs, setDrugs] = useState([{ name: "", unit: "" }])
+    const [drugs, setDrugs] = useState([{ name: "", unit: "" }]);
     const [disabledProphylactic, setDisabledProphylactic] = useState(
         newVisit.prophylacticDrug.drug == "" ? true : false
     );
@@ -64,14 +64,14 @@ export default function Drug() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        getDrugsFromServer()
-    }, [])
+        getDrugsFromServer();
+    }, []);
 
     const getDrugsFromServer = async () => {
-        setDrugs([{ name: "", unit: "" }])
-        let d = await Communication.get('drug', {})
-        setDrugs(prevState => [...prevState, ...d])
-    }
+        setDrugs([{ name: "", unit: "" }]);
+        let d = await Communication.get("drug", {});
+        setDrugs((prevState) => [...prevState, ...d]);
+    };
 
     const datePickerResolver = (b, s) => {
         if (b) {
@@ -124,7 +124,7 @@ export default function Drug() {
     };
 
     const handleAcuteDrug = (e) => {
-        console.log(e.target)
+        console.log(e.target);
         let ad = { ...acuteDrug };
         ad.drug = e.target.value.name;
         ad.unit = e.target.value.unit;
@@ -198,7 +198,7 @@ export default function Drug() {
                         width: "95%",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: "2vw"
+                        gap: "2vw",
                     }}
                 >
                     <div
@@ -267,9 +267,9 @@ export default function Drug() {
                                     step={10}
                                     defaultValue={
                                         newVisit.followUp.treatmentResponse !=
-                                            ""
+                                        ""
                                             ? newVisit.followUp
-                                                .treatmentResponse
+                                                  .treatmentResponse
                                             : 10
                                     }
                                 />
@@ -306,7 +306,11 @@ export default function Drug() {
                                     }}
                                 >
                                     <label style={{ fontSize: 22 }}>
-                                        <img src={notification} width={50} alt="" />
+                                        <img
+                                            src={notification}
+                                            width={50}
+                                            alt=""
+                                        />
                                         Ha bisogno di follow up?
                                     </label>
                                     <Switch
@@ -351,27 +355,40 @@ export default function Drug() {
                                         display: "flex",
                                         width: "95%",
                                         alignItems: "center",
-                                        gap: "3vw"
+                                        gap: "3vw",
                                     }}
                                 >
                                     <div>
                                         <label style={{ fontSize: 22 }}>
-                                            <img src={notification} width={50} alt="" />
+                                            <img
+                                                src={notification}
+                                                width={50}
+                                                alt=""
+                                            />
                                             Ha bisogno di follow up?
                                         </label>
                                     </div>
                                     <div>
                                         <Switch
-                                            checked={needFollowUp == null ? false : needFollowUp.needFollowUp}
+                                            checked={
+                                                needFollowUp == null
+                                                    ? false
+                                                    : needFollowUp.needFollowUp
+                                            }
                                             onChange={handleChange}
                                         />
                                     </div>
                                     <div>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it" >
-                                            {datePickerResolver(!needFollowUp.needFollowUp, "followUpDate")}
+                                        <LocalizationProvider
+                                            dateAdapter={AdapterDayjs}
+                                            adapterLocale="it"
+                                        >
+                                            {datePickerResolver(
+                                                !needFollowUp.needFollowUp,
+                                                "followUpDate"
+                                            )}
                                         </LocalizationProvider>
                                     </div>
-
                                 </div>
                             </div>
                         )}
@@ -386,7 +403,7 @@ export default function Drug() {
                                 <FormControl fullWidth>
                                     <InputLabel
                                         id="demo-simple-select-label"
-                                        style={{ width: 'fit-content' }}
+                                        style={{ width: "fit-content" }}
                                     >
                                         Medicinale di profilassi
                                     </InputLabel>
@@ -410,7 +427,15 @@ export default function Drug() {
                                 </FormControl>
                             </div>
                             <div style={{ display: "flex" }}>
-                                <input disabled placeholder={prophylacticDrug.unit !== '' ? prophylacticDrug.unit : "Unità"} style={{ background: `#fffacd` }} />
+                                <input
+                                    disabled
+                                    placeholder={
+                                        prophylacticDrug.unit !== ""
+                                            ? prophylacticDrug.unit
+                                            : "Unità"
+                                    }
+                                    style={{ background: `#fffacd` }}
+                                />
                                 <input
                                     placeholder="Dose"
                                     defaultValue={
@@ -469,7 +494,15 @@ export default function Drug() {
                                 </FormControl>
                             </div>
                             <div style={{ display: "flex" }}>
-                                <input disabled placeholder={acuteDrug.unit !== '' ? acuteDrug.unit : "Unità"} style={{ background: `#ffe4e1` }} />
+                                <input
+                                    disabled
+                                    placeholder={
+                                        acuteDrug.unit !== ""
+                                            ? acuteDrug.unit
+                                            : "Unità"
+                                    }
+                                    style={{ background: `#ffe4e1` }}
+                                />
                                 <input
                                     placeholder="Dose"
                                     style={{ background: `#ffe4e1` }}
@@ -508,7 +541,6 @@ export default function Drug() {
                         </button>
                     </div>
                 </div>
-
             </MainContainer>
             <div>
                 {formModal && (
@@ -534,7 +566,7 @@ const style = {
         height: "9vh",
         margin: "1%",
         border: "0.5px solid #56AEC9",
-        boxShadow: "2px 2px 4px #56AEC9"
+        boxShadow: "2px 2px 4px #56AEC9",
     },
     needFollowUpButtons: {
         width: "40vw",
@@ -547,7 +579,7 @@ const style = {
         height: "22vh",
         margin: "1%",
         border: "0.5px solid #56AEC9",
-        boxShadow: "2px 2px 4px #56AEC9"
+        boxShadow: "2px 2px 4px #56AEC9",
     },
 
     prophylacticButtons: {
@@ -561,7 +593,7 @@ const style = {
         height: "32vh",
         margin: "1%",
         border: "0.5px solid #daa520",
-        boxShadow: "2px 2px 4px #daa520"
+        boxShadow: "2px 2px 4px #daa520",
     },
 
     acuteButtons: {
@@ -575,7 +607,7 @@ const style = {
         height: "30vh",
         margin: "1%",
         border: "1px solid #b22222",
-        boxShadow: "2px 2px 4px #b22222"
+        boxShadow: "2px 2px 4px #b22222",
     },
 
     verticalLine: {

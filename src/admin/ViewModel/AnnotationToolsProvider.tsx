@@ -1,6 +1,6 @@
 import { createContext, useCallback, useRef } from "react";
 import AnnotationTool from "../../common/Model/AnnotationTool";
-import CommunicationController from "../../common/Model/Communication";
+import CommunicationController from "../../common/Model/CommunicationController";
 
 export const AnnotationToolsContext = createContext<
     () => Promise<AnnotationTool[]>

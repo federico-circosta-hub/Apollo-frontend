@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import User, { AnnotationToolAccess } from "../../../common/Model/User";
 import { useCallback, useEffect, useState } from "react";
-import CommunicationController from "../../../common/Model/Communication";
+import CommunicationController from "../../../common/Model/CommunicationController";
 import Typography from "@mui/material/Typography";
 import Status from "../../../common/Model/Status";
 import LoadingButton from "@mui/lab/LoadingButton";

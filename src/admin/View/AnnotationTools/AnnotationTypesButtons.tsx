@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
 import Status from "../../../common/Model/Status";
 import AnnotationType from "../../../common/Model/AnnotationType";
-import CommunicationController from "../../../common/Model/Communication";
+import CommunicationController from "../../../common/Model/CommunicationController";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LoadingError from "../../../common/View/LoadingError";
@@ -15,7 +15,7 @@ export default function AnnotationTypesButtons({
     onTypeSelected,
 }: {
     tool: AnnotationTool;
-    onTypeSelected: (type: AnnotationType) => void;
+    onTypeSelected: (type?: AnnotationType) => void;
 }) {
     const [status, setStatus] = useState<Status>(Status.LOADING);
 
@@ -62,7 +62,7 @@ export default function AnnotationTypesButtons({
                         />
                     ))}
                     <Grid item>
-                        <Button variant="outlined" startIcon={<AddIcon />}>
+                        <Button variant="outlined" startIcon={<AddIcon />} onClick={() => onTypeSelected()}>
                             Nuovo tipo
                         </Button>
                     </Grid>

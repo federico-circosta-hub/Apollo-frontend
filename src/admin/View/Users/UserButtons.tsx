@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import User from "../../../common/Model/User";
 import Button from "@mui/material/Button";
 import ConfirmActionModal from "../../../common/View/Modal/ConfirmActionModal";
-import CommunicationController from "../../../common/Model/Communication";
+import CommunicationController from "../../../common/Model/CommunicationController";
 import { useCallback, useState } from "react";
 
 export default function UserButtons({

@@ -19,7 +19,7 @@ import FollowUpHelper from "../../ViewModel/FollowUpHelper";
 import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
 import { useNavigate } from "react-router-dom";
-import Communication from '../../../common/Model/Communication'
+import Communication from "../../../common/Model/CommunicationController";
 import CircularProgress from "@mui/material/CircularProgress";
 import MainContainer from "../../../common/View/MainContainer";
 import { Modal } from "react-bootstrap";
@@ -53,19 +53,19 @@ export default function NewVisit(props) {
     const [errors, setErrors] = useState({ none: "none" });
 
     useEffect(() => {
-        getTraumaticEventAndActivitiesFromServer()
-    }, [])
+        getTraumaticEventAndActivitiesFromServer();
+    }, []);
 
     const getTraumaticEventAndActivitiesFromServer = async () => {
-        setActivities([""])
-        setTraumaticEvents([""])
-        let acts = await Communication.get('exercise', '')
-        let trauma = await Communication.get('traumaEvent', '')
-        acts = acts.map(item => item.name)
-        trauma = trauma.map(item => item.name)
-        setActivities(prevState => [...prevState, ...acts])
-        setTraumaticEvents(prevState => [...prevState, ...trauma])
-    }
+        setActivities([""]);
+        setTraumaticEvents([""]);
+        let acts = await Communication.get("exercise", "");
+        let trauma = await Communication.get("traumaEvent", "");
+        acts = acts.map((item) => item.name);
+        trauma = trauma.map((item) => item.name);
+        setActivities((prevState) => [...prevState, ...acts]);
+        setTraumaticEvents((prevState) => [...prevState, ...trauma]);
+    };
 
     const handleChange = (e) => {
         physicalActivity.physicalActivity = e.target.checked;
@@ -198,19 +198,19 @@ export default function NewVisit(props) {
                     </div>
                     <div>
                         {isFollowUp ? (
-                            (newVisit.previousVisit !== undefined) ? (
+                            newVisit.previousVisit !== undefined ? (
                                 <FollowUpHelper
                                     onCancel={handleCancel}
                                     seeVisit={saveInfo}
                                 />
+                            ) : (
+                                <NoPreviousVisit
+                                    setIsFollowUp={() => setIsFollowUp(false)}
+                                />
                             )
-                                :
-                                <NoPreviousVisit setIsFollowUp={() => setIsFollowUp(false)} />
-
-                        )
-                            :
+                        ) : (
                             <></>
-                        }
+                        )}
                     </div>
                 </div>
 
@@ -234,9 +234,9 @@ export default function NewVisit(props) {
                                     label={
                                         newVisit.visitDate != undefined
                                             ? format(
-                                                newVisit.visitDate,
-                                                "dd-MM-Y"
-                                            )
+                                                  newVisit.visitDate,
+                                                  "dd-MM-Y"
+                                              )
                                             : "DD-MM-YYYY"
                                     }
                                 />
@@ -287,9 +287,16 @@ export default function NewVisit(props) {
                                 value={physicalActivity.physicalActivityType}
                                 onChange={handleActivity}
                             >
-                                {activities.length > 0 ? displayActivityItems() : <CircularProgress style={{ padding: 2 }} color="info" size={25} />}
+                                {activities.length > 0 ? (
+                                    displayActivityItems()
+                                ) : (
+                                    <CircularProgress
+                                        style={{ padding: 2 }}
+                                        color="info"
+                                        size={25}
+                                    />
+                                )}
                             </Select>
-
                         </FormControl>
                     </div>
                 </div>
@@ -316,9 +323,16 @@ export default function NewVisit(props) {
                                 value={traumaticEvent.traumaticEvent}
                                 onChange={handleTrauma}
                             >
-                                {traumaticEvents.length > 0 ? displayTraumaticItems() : <CircularProgress style={{ padding: 2 }} color="info" size={25} />}
+                                {traumaticEvents.length > 0 ? (
+                                    displayTraumaticItems()
+                                ) : (
+                                    <CircularProgress
+                                        style={{ padding: 2 }}
+                                        color="info"
+                                        size={25}
+                                    />
+                                )}
                             </Select>
-
                         </FormControl>
                     </div>
                     <div>
@@ -333,7 +347,7 @@ export default function NewVisit(props) {
                 <div
                     style={{
                         display: "flex",
-                        height: '15vh',
+                        height: "15vh",
                         alignItems: "flex-end",
                         justifyContent: "space-between",
                         width: "95%",

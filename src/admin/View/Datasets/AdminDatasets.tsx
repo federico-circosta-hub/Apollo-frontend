@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { HeaderContext } from "../AdminHeader";
 import Status from "../../../common/Model/Status";
-import CommunicationController from "../../../common/Model/Communication";
+import CommunicationController from "../../../common/Model/CommunicationController";
 import Dataset from "../../../common/Model/Dataset";
 import { DatasetsContext } from "../../ViewModel/DatasetsProvider";
 import ListItemText from "@mui/material/ListItemText";

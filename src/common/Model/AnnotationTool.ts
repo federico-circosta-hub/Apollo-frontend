@@ -1,5 +1,5 @@
 import AnnotationType from "./AnnotationType";
-import CommunicationController from "./Communication";
+import CommunicationController from "./CommunicationController";
 
 export default class AnnotationTool {
     id: number;

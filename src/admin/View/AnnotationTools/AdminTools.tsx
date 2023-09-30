@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { HeaderContext } from "../AdminHeader";
 import Status from "../../../common/Model/Status";
-import CommunicationController from "../../../common/Model/Communication";
+import CommunicationController from "../../../common/Model/CommunicationController";
 import MasterDetail from "../MasterDetail/MasterDetail";
 import { MasterItemProps } from "../MasterDetail/MasterComponent";
 import ListItemButton from "@mui/material/ListItemButton";
