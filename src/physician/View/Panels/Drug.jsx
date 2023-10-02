@@ -23,6 +23,7 @@ import FormModal from "../Modals/FormModal";
 import Slider from "@mui/material/Slider";
 import MainContainer from "../../../common/View/MainContainer";
 import CommunicationController from "../../../common/Model/CommunicationController";
+import { RefreshButton } from "../OtherComponents/RefreshButton";
 
 export default function Drug() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -44,10 +45,10 @@ export default function Drug() {
 
   const [drugs, setDrugs] = useState([{ name: "Nessuno", unit: "" }]);
   const [disabledProphylactic, setDisabledProphylactic] = useState(
-    newVisit.prophylacticDrug.drug == "Nessuno" ? true : false
+    newVisit.prophylacticDrug.drug.name == "Nessuno" ? true : false
   );
   const [disabledAcute, setDisabledAcute] = useState(
-    newVisit.acuteDrug.drug == "Nessuno" ? true : false
+    newVisit.acuteDrug.drug.name == "Nessuno" ? true : false
   );
   const [needFollowUp, setNeedFollowUp] = useState(
     newVisit.needFollowUp == undefined
@@ -60,6 +61,8 @@ export default function Drug() {
   const [acuteDrug, setAcuteDrug] = useState(newVisit.acuteDrug);
   const [formModal, setFormModal] = useState(false);
   const [errors, setErrors] = useState({ none: "none" });
+  const [loadingOptions, setLoadingOptions] = useState(false);
+  const [networkError, setNetworkError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -69,8 +72,14 @@ export default function Drug() {
 
   const getDrugsFromServer = async () => {
     setDrugs([{ name: "Nessuno", unit: "" }]);
-    let d = await CommunicationController.get("drug", {});
-    setDrugs((prevState) => [...prevState, ...d]);
+    try {
+      const d = await CommunicationController.get("drug", {});
+      setDrugs((prevState) => [...prevState, ...d]);
+    } catch (err) {
+      setNetworkError(err || "Errore inatteso");
+    } finally {
+      setLoadingOptions(false);
+    }
   };
 
   const datePickerResolver = (b, s) => {
@@ -105,9 +114,9 @@ export default function Drug() {
 
   const handleProphylacticDrug = (e) => {
     let pd = { ...prophylacticDrug };
-    pd.drug = e.target.value.name;
+    pd.drug.name = e.target.value.name;
     pd.unit = e.target.value.unit;
-    if (pd.drug == "Nessuno") {
+    if (pd.drug.name == "Nessuno") {
       pd.dose = "";
       pd.unit = "";
       pd.frequency = "";
@@ -133,9 +142,9 @@ export default function Drug() {
   const handleAcuteDrug = (e) => {
     console.log(e.target);
     let ad = { ...acuteDrug };
-    ad.drug = e.target.value.name;
+    ad.drug.name = e.target.value.name;
     ad.unit = e.target.value.unit;
-    if (ad.drug == "Nessuno") {
+    if (ad.drug.name == "Nessuno") {
       ad.dose = "";
       ad.unit = "";
       setDisabledAcute(true);
@@ -395,13 +404,23 @@ export default function Drug() {
                   <Select
                     style={{ fontSize: 15 }}
                     id="demo-simple-select"
-                    defaultValue={newVisit.prophylacticDrug.drug}
+                    defaultValue={newVisit.prophylacticDrug.drug.name}
                     onChange={(e) => handleProphylacticDrug(e)}
                     label="Medicinale di profilassi "
                   >
-                    {drugs.map((element) => (
-                      <MenuItem value={element}>{element.name}</MenuItem>
-                    ))}
+                    {networkError === null ? (
+                      drugs.map((element) => (
+                        <MenuItem value={element}>{element.name}</MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem>
+                        Errore nell'ottenere la lista farmaci
+                        <RefreshButton
+                          onClick={getDrugsFromServer}
+                          loading={loadingOptions}
+                        />
+                      </MenuItem>
+                    )}
                   </Select>
                 </FormControl>
               </div>
@@ -456,13 +475,23 @@ export default function Drug() {
                   <Select
                     style={{ fontSize: 15 }}
                     id="demo-simple-select"
-                    defaultValue={acuteDrug.drug}
+                    defaultValue={acuteDrug.drug.name}
                     onChange={(e) => handleAcuteDrug(e)}
                     label="Medicinale acuto"
                   >
-                    {drugs.map((element) => (
-                      <MenuItem value={element}>{element.name}</MenuItem>
-                    ))}
+                    {networkError === null ? (
+                      drugs.map((element) => (
+                        <MenuItem value={element}>{element.name}</MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem>
+                        Errore nell'ottenere la lista farmaci
+                        <RefreshButton
+                          onClick={getDrugsFromServer}
+                          loading={loadingOptions}
+                        />
+                      </MenuItem>
+                    )}
                   </Select>
                 </FormControl>
               </div>
