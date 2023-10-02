@@ -44,12 +44,12 @@ export default function Drug() {
     "Synovial Hyperplasia",
   ];
 
-  const [drugs, setDrugs] = useState([{ name: "Nessuno", unit: "" }]);
+  const [drugs, setDrugs] = useState(null);
   const [disabledProphylactic, setDisabledProphylactic] = useState(
-    newVisit.prophylacticDrug.drug.name == "Nessuno" ? true : false
+    newVisit.prophylacticDrug.drug.name == "" ? true : false
   );
   const [disabledAcute, setDisabledAcute] = useState(
-    newVisit.acuteDrug.drug.name == "Nessuno" ? true : false
+    newVisit.acuteDrug.drug.name == "" ? true : false
   );
   const [needFollowUp, setNeedFollowUp] = useState(
     newVisit.needFollowUp == undefined
@@ -72,10 +72,9 @@ export default function Drug() {
   }, []);
 
   const getDrugsFromServer = async () => {
-    setDrugs([{ name: "Nessuno", unit: "" }]);
     try {
       const d = await CommunicationController.get("drug", {});
-      setDrugs((prevState) => [...prevState, ...d]);
+      setDrugs(d);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -115,14 +114,14 @@ export default function Drug() {
 
   const handleProphylacticDrug = (e) => {
     let pd = { ...prophylacticDrug };
-    pd.drug.name = e.target.value.name;
-    pd.unit = e.target.value.unit;
-    if (pd.drug.name == "Nessuno") {
+    pd.drug.name = e.target.value;
+    if (e.target.value === "Nessuno") {
       pd.dose = "";
       pd.unit = "";
       pd.frequency = "";
       setDisabledProphylactic(true);
     } else {
+      pd.unit = drugs.find((element) => element.name === e.target.value).unit;
       setDisabledProphylactic(false);
     }
     setProphylacticDrug(pd);
@@ -143,16 +142,17 @@ export default function Drug() {
   const handleAcuteDrug = (e) => {
     console.log(e.target);
     let ad = { ...acuteDrug };
-    ad.drug.name = e.target.value.name;
-    ad.unit = e.target.value.unit;
-    if (ad.drug.name == "Nessuno") {
+    ad.drug.name = e.target.value;
+    if (e.target.value === "Nessuno") {
       ad.dose = "";
       ad.unit = "";
       setDisabledAcute(true);
     } else {
+      ad.unit = drugs.find((element) => element.name === e.target.value).unit;
       setDisabledAcute(false);
     }
     setAcuteDrug(ad);
+    console.log(ad);
   };
 
   const handleAcuteDrugDose = (e) => {
@@ -207,6 +207,14 @@ export default function Drug() {
     return distensionCauseValues.map((element) => (
       <MenuItem value={element}>{element}</MenuItem>
     ));
+  };
+
+  const back = () => {
+    newVisit.setNeedFollowUp(needFollowUp);
+    newVisit.setProphylacticDrug(prophylacticDrug);
+    newVisit.setAcuteDrug(acuteDrug);
+    setNewVisit(newVisit);
+    navigate(-1);
   };
 
   return (
@@ -408,13 +416,20 @@ export default function Drug() {
                   <Select
                     style={{ fontSize: 15 }}
                     id="demo-simple-select"
-                    defaultValue={newVisit.prophylacticDrug.drug.name}
+                    value={
+                      prophylacticDrug.drug.name === ""
+                        ? "Nessuno"
+                        : newVisit.prophylacticDrug.drug.name
+                    }
                     onChange={(e) => handleProphylacticDrug(e)}
                     label="Medicinale di profilassi "
                   >
-                    {networkError === null ? (
+                    <MenuItem value="Nessuno">
+                      <em>Nessuno</em>
+                    </MenuItem>
+                    {networkError === null && drugs !== null ? (
                       drugs.map((element) => (
-                        <MenuItem value={element}>{element.name}</MenuItem>
+                        <MenuItem value={element.name}>{element.name}</MenuItem>
                       ))
                     ) : (
                       <MenuItem>
@@ -440,7 +455,7 @@ export default function Drug() {
                 />
                 <input
                   placeholder="Dose"
-                  defaultValue={newVisit.prophylacticDrug.dose}
+                  defaultValue={prophylacticDrug.dose}
                   onChange={handleProphylacticDrugDose}
                   style={{ background: `#fffacd` }}
                   name="prophylacticDose"
@@ -479,13 +494,20 @@ export default function Drug() {
                   <Select
                     style={{ fontSize: 15 }}
                     id="demo-simple-select"
-                    defaultValue={acuteDrug.drug.name}
+                    value={
+                      acuteDrug.drug.name === ""
+                        ? "Nessuno"
+                        : newVisit.acuteDrug.drug.name
+                    }
                     onChange={(e) => handleAcuteDrug(e)}
                     label="Medicinale acuto"
                   >
-                    {networkError === null ? (
+                    <MenuItem value="Nessuno">
+                      <em>Nessuno</em>
+                    </MenuItem>
+                    {networkError === null && drugs !== null ? (
                       drugs.map((element) => (
-                        <MenuItem value={element}>{element.name}</MenuItem>
+                        <MenuItem value={element.name}>{element.name}</MenuItem>
                       ))
                     ) : (
                       <MenuItem>
@@ -527,7 +549,7 @@ export default function Drug() {
         >
           <div>
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => back()}
               className="btn btn-primary"
               style={{ fontSize: 24 }}
             >

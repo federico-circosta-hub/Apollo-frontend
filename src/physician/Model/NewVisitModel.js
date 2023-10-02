@@ -28,14 +28,14 @@ export default class NewVisitModel {
   };
 
   prophylacticDrug = {
-    drug: { name: "Nessuno" },
+    drug: { name: "" },
     unit: "",
     dose: "",
     frequency: "",
   };
 
   acuteDrug = {
-    drug: { name: "Nessuno" },
+    drug: { name: "" },
     unit: "",
     dose: "",
   };
