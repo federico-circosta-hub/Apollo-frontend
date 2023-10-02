@@ -1,4 +1,4 @@
-export const validateForm = (formName, formData) => {
+export const validateForm = (formName, formData, formData2) => {
   let errors = [];
   switch (formName) {
     case "newPatient":
@@ -69,9 +69,13 @@ export const validateForm = (formName, formData) => {
       ) {
         errors.distension = "Inserisci una causa per la distensione";
       }
-      /*             if (formData.selectedImages == undefined || formData.selectedImages.length == 0) {
-                errors.images = `Selezionare almeno un'immagine dell'articolazione`
-            } */
+      if (
+        formData2.ecographies.find(
+          (el) => el.jointRef === formData.jointName
+        ) === undefined
+      ) {
+        errors.images = `Selezionare almeno un'immagine dell'articolazione`;
+      }
       return errors;
   }
 };

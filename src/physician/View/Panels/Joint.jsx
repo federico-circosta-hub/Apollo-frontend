@@ -45,7 +45,7 @@ export default function Joint(props) {
   };
   const saveAndForward = () => {
     setJoint(joint);
-    let e = validateForm("jointVisit", joint);
+    let e = validateForm("jointVisit", joint, newVisit);
     console.log(Object.keys(e));
     if (Object.keys(e).length == 0) {
       if (newVisit.jointPresence(joint.jointName)) {
@@ -77,7 +77,6 @@ export default function Joint(props) {
 
   const loadJoint = async () => {
     let j = await newVisit.getJoint(currentJoint);
-    console.log("loadJoint, Joint", j);
     setJoint(j);
     photos.length < 6 && (await getNewImages()); //massimo sei immagini
   };

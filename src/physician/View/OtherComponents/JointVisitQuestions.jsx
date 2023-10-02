@@ -102,7 +102,6 @@ export default function JointVisitQuestions(props) {
     let n = 10;
     switch (s) {
       case "synovitis":
-        console.log("case synovitis");
         if (props.joint.synovitis != undefined) {
           let synovitis = synovitisValues.find(
             (element) => element.label == props.joint.synovitis
