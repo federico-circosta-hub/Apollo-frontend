@@ -29,7 +29,7 @@ export default function Joint(props) {
   const [formModal, setFormModal] = useState(false);
   const [errors, setErrors] = useState({ none: "none" });
   const [loadingImages, setLoadingImages] = useState(false);
-  const [refresh, setRefresh] = useState(false);
+  const [forwardClicked, setForwardClicked] = useState(false);
   const [networkError, setNetworkError] = useState(null);
 
   const navigate = useNavigate();
@@ -38,7 +38,12 @@ export default function Joint(props) {
     loadJoint();
   }, []);
 
-  const end = () => {
+  const cancel = () => {
+    setJoint(null);
+    setCurrentJoint("");
+    navigate("/newVisit/jointSelection");
+  };
+  const saveAndForward = () => {
     setJoint(joint);
     let e = validateForm("jointVisit", joint);
     console.log(Object.keys(e));
@@ -71,7 +76,8 @@ export default function Joint(props) {
   };
 
   const loadJoint = async () => {
-    let j = newVisit.getJoint(currentJoint);
+    let j = await newVisit.getJoint(currentJoint);
+    console.log("loadJoint, Joint", j);
     setJoint(j);
     photos.length < 6 && (await getNewImages()); //massimo sei immagini
   };
@@ -129,7 +135,7 @@ export default function Joint(props) {
                   top: "0",
                   zIndex: "1",
                   background: "white",
-                  borderStartEndRadius: "20px",
+                  borderStartsaveAndForwardRadius: "20px",
                   borderStartStartRadius: "20px",
                 }}
               >
@@ -174,20 +180,24 @@ export default function Joint(props) {
           }}
         >
           <div>
-            <Link
+            <button
               to={"/newVisit/jointSelection"}
               style={style.forwardButton}
               className="btn btn-danger btn-lg"
-              onClick={() => setCurrentJoint("")}
+              onClick={() => {
+                cancel();
+              }}
             >
               Cancel
-            </Link>
+            </button>
           </div>
           <div>
             <button
               style={style.forwardButton}
               className="btn btn-success btn-lg"
-              onClick={end}
+              onClick={() => {
+                saveAndForward();
+              }}
             >
               Forward
             </button>

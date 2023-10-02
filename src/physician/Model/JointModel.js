@@ -12,8 +12,6 @@ export default class JointModel {
 
   constructor(
     jointName,
-    images,
-    selectedImages,
     indexJoint,
     jointDifficulty,
     pain,
@@ -25,8 +23,6 @@ export default class JointModel {
     distensionCause
   ) {
     this.jointName = jointName;
-    this.images = images;
-    this.selectedImages = selectedImages;
     this.indexJoint = indexJoint;
     this.jointDifficulty = jointDifficulty;
     this.pain = pain;
@@ -36,6 +32,21 @@ export default class JointModel {
     this.subchondralBone = subchondralBone;
     this.distension = distension;
     this.distensionCause = distensionCause;
+  }
+
+  clone() {
+    return new JointModel(
+      this.jointName,
+      this.indexJoint,
+      this.jointDifficulty,
+      this.pain,
+      this.lastBleed,
+      this.synovitis,
+      this.cartilage,
+      this.subchondralBone,
+      this.distension,
+      this.distensionCause
+    );
   }
 
   setName(s) {

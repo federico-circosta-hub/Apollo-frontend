@@ -120,13 +120,12 @@ export default class NewVisitModel {
     return new NewVisitModel();
   }
 
-  getJoint(s) {
-    let joint = this.joints.find((e) => e.jointName == s);
-    if (joint == undefined) {
+  async getJoint(s) {
+    let jointToClone = this.joints.find((e) => e.jointName == s);
+    let joint;
+    if (jointToClone === undefined) {
       joint = new JointModel(
         s,
-        undefined,
-        undefined,
         false,
         false,
         false,
@@ -138,6 +137,8 @@ export default class NewVisitModel {
         ""
       );
       joint.setName(s);
+    } else {
+      joint = await jointToClone.clone();
     }
     return joint;
   }
