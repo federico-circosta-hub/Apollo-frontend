@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
 import ConfirmActionModal from "../../../common/View/Modal/ConfirmActionModal";
 import StatusLoadingButton from "../../Components/StatusLoadingButton";
+import ButtonsFooter from "../../Components/ButtonsFooter";
 
 export default function AnnotationTypeDetails({
     type,
@@ -208,7 +209,7 @@ const AnnotationTypeDetailsForm = ({
                 />
             </Box>
             <Box sx={{ flex: 1 }} />
-            <Footer
+            <ButtonsFooter
                 saveDisabled={
                     name === "" ||
                     printFunction === "" ||
@@ -218,65 +219,6 @@ const AnnotationTypeDetailsForm = ({
                 onSave={saveData}
                 onDelete={type ? handleDelete : undefined}
                 onExit={onExit}
-            />
-        </Box>
-    );
-};
-
-const Footer = ({
-    saveDisabled,
-    status,
-    onSave,
-    onDelete,
-    onExit,
-}: {
-    saveDisabled: boolean;
-    status: Status;
-    onSave: () => Promise<string>;
-    onDelete?: () => Promise<void>;
-    onExit: () => void;
-}) => {
-    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-    const [snackbarText, setSnackbarText] = useState<string>("");
-
-    const handleSave = useCallback(async () => {
-        const res = await onSave();
-        setSnackbarText(res);
-        setTimeout(() => onExit(), 1000);
-    }, [onSave, onExit]);
-
-    return (
-        <Box sx={style.footer}>
-            <Button variant="contained" color="error" onClick={onExit}>
-                Esci
-            </Button>
-            {onDelete && (
-                <StatusLoadingButton
-                    text="Elimina"
-                    status={status}
-                    variant="outlined"
-                    style={style.footerButton}
-                    onClick={() => setShowDeleteModal(true)}
-                />
-            )}
-            <StatusLoadingButton
-                text={status === Status.ERROR ? "Riprova" : "Salva"}
-                disabled={saveDisabled}
-                status={status}
-                style={style.footerButton}
-                onClick={handleSave}
-            />
-            <ResultSnackar
-                show={snackbarText !== ""}
-                text={snackbarText}
-                onClose={() => setSnackbarText("")}
-                severity={status === Status.ERROR ? "error" : "success"}
-            />
-            <ConfirmActionModal
-                text="Sei sicuro di voler cancellare questo tipo di annotazione e tutti i task collegati?"
-                show={showDeleteModal}
-                onConfirm={onDelete!}
-                onClose={() => setShowDeleteModal(false)}
             />
         </Box>
     );
@@ -296,11 +238,6 @@ const style = {
         display: "flex",
         flexDirection: "column" as "column",
     },
-    footer: {
-        display: "flex",
-        justifyContent: "flex-end",
-        marginTop: "8px",
-    },
     marginSmall: {
         marginTop: "8px",
     },
@@ -312,8 +249,5 @@ const style = {
     },
     endpointField: {
         width: "100%",
-    },
-    footerButton: {
-        marginLeft: "16px",
     },
 };
