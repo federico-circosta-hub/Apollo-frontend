@@ -1,5 +1,4 @@
 import Button from "@mui/material/Button";
-import LoadingButton from "@mui/lab/LoadingButton";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -7,8 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import { useCallback, useState } from "react";
 import Status from "../../Model/Status";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import CheckIcon from "@mui/icons-material/Check";
+import StatusLoadingButton from "../../../admin/Components/StatusLoadingButton";
 
 export default function ConfirmActionModal({
     text,
@@ -51,22 +49,14 @@ export default function ConfirmActionModal({
                 </DialogContent>
             )}
             <DialogActions>
-                <Button onClick={onClose}>Annulla</Button>
-                <LoadingButton
+                <Button onClick={onClose} variant="outlined">
+                    Annulla
+                </Button>
+                <StatusLoadingButton
+                    text={status === Status.IDLE ? "Conferma" : "Riprova"}
+                    status={status}
                     onClick={handleConfirm}
-                    loading={status === Status.LOADING}
-                    startIcon={
-                        status === Status.ERROR ? (
-                            <ErrorOutlineIcon />
-                        ) : (
-                            <CheckIcon />
-                        )
-                    }
-                    loadingPosition="start"
-                    color={status === Status.ERROR ? "error" : "primary"}
-                >
-                    {status === Status.IDLE ? "Conferma" : "Riprova"}
-                </LoadingButton>
+                />
             </DialogActions>
         </Dialog>
     );

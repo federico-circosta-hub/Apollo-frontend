@@ -4,14 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import CommunicationController from "../../../common/Model/CommunicationController";
 import Typography from "@mui/material/Typography";
 import Status from "../../../common/Model/Status";
-import LoadingButton from "@mui/lab/LoadingButton";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
-import CheckIcon from "@mui/icons-material/Check";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import LoadingError from "../../../common/View/LoadingError";
+import StatusLoadingButton from "../../Components/StatusLoadingButton";
 
 export default function UserToolAccess({ user }: { user: User }) {
     const [status, setStatus] = useState<Status>(Status.IDLE);
@@ -167,19 +166,15 @@ const ToolAccess = ({
                 inputProps={{ maxLength: 255 }}
             />
             <Box sx={{ flex: 1 }} />
-            <LoadingButton
+            <StatusLoadingButton
+                status={status}
+                text="Salva"
                 disabled={
                     access === tool.access &&
                     (!access || endpoint === tool.endpoint)
                 }
-                loading={status === Status.LOADING}
-                loadingPosition="start"
-                startIcon={<CheckIcon />}
-                variant="contained"
                 onClick={handleAccessChange}
-            >
-                Salva
-            </LoadingButton>
+            />
         </Box>
     );
 };

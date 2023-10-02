@@ -47,14 +47,14 @@ export default function AdminDatasets() {
     const handleDelete = useCallback(
         async (dataset: Dataset) => {
             await deleteDataset(dataset.id);
-            fetchData();
+            await fetchData();
             return;
         },
         [deleteDataset, fetchData]
     );
 
     if (status === Status.ERROR) return <ErrorScreen onRetry={fetchData} />;
-    
+
     return (
         <MainContainer>
             {status === Status.IDLE ? (

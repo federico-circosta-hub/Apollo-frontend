@@ -44,6 +44,8 @@ class CommunicationController {
         NEW_ANNOTATION_TYPE: "/annotationType",
         UPDATE_ANNOTATION_TYPE: "/annotationType",
         DELETE_DATASET: "/dataset",
+        DELETE_ANNOTATION_TOOL: "/annotationTool",
+        DELETE_ANNOTATION_TYPE: "/annotationType",
     };
 
     private baseCall = async (
@@ -260,19 +262,21 @@ class CommunicationController {
 
     newAnnotationType = async (
         annotation_tool: number,
-        name: string,
-        annotation_instructions: string,
-        annotation_interface: string,
-        print_function: string,
-        conflict_function: string
+        data: {
+            name: string;
+            annotation_instructions: string;
+            annotation_interface: string;
+            print_function: string;
+            conflict_function: string;
+        }
     ): Promise<AnnotationType> => {
         const res = await this.post(this.endpoints.NEW_ANNOTATION_TYPE, {
             annotation_tool,
-            name,
-            annotation_instructions,
-            annotation_interface,
-            print_function,
-            conflict_function,
+            name: data.name,
+            annotation_instructions: data.annotation_instructions,
+            annotation_interface: data.annotation_interface,
+            print_function: data.print_function,
+            conflict_function: data.conflict_function,
         });
 
         return new AnnotationType(res);
@@ -297,6 +301,22 @@ class CommunicationController {
 
     deleteDataset = async (dataset: number): Promise<Dataset> => {
         return this.delete(this.endpoints.DELETE_DATASET, { id: dataset });
+    };
+
+    deleteAnnotationTool = async (
+        annotationTool: number
+    ): Promise<AnnotationTool> => {
+        return this.delete(this.endpoints.DELETE_ANNOTATION_TOOL, {
+            id: annotationTool,
+        });
+    };
+
+    deleteAnnotationType = async (
+        annotationType: number
+    ): Promise<AnnotationTool> => {
+        return this.delete(this.endpoints.DELETE_ANNOTATION_TYPE, {
+            id: annotationType,
+        });
     };
 
     private formatGetData = (data: Params): string => {

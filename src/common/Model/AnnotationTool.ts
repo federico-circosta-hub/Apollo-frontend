@@ -58,18 +58,36 @@ export default class AnnotationTool {
         return this.annotationTypes;
     };
 
-	addType = (newType: AnnotationType) => {
-		this.annotationTypes.push(newType)
-	}
+    addType = async (data: {
+        name: string;
+        annotation_instructions: string;
+        annotation_interface: string;
+        print_function: string;
+        conflict_function: string;
+    }): Promise<AnnotationType> => {
+        const newType = await CommunicationController.newAnnotationType(
+            this.id,
+            data
+        );
+        this.annotationTypes.push(newType);
+        return newType;
+    };
 
-	updateType = (updatedType: AnnotationType)=> {
-		this.annotationTypes = this.annotationTypes.map(type => {
-			if (type.id === updatedType.id) {
-				return updatedType
-			}
-			return type
-		})
-	}
+    updateType = (updatedType: AnnotationType) => {
+        this.annotationTypes = this.annotationTypes.map((type) => {
+            if (type.id === updatedType.id) {
+                return updatedType;
+            }
+            return type;
+        });
+    };
+
+    async deleteType(type: AnnotationType) {
+        await CommunicationController.deleteAnnotationType(type.id);
+        this.annotationTypes = this.annotationTypes.filter(
+            (t) => t.id !== type.id
+        );
+    }
 
     update = async (data: {
         base_url: string;

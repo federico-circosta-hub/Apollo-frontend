@@ -1,11 +1,8 @@
 import Box from "@mui/material/Box";
 import AnnotationType from "../../../common/Model/AnnotationType";
-import LoadingButton from "@mui/lab/LoadingButton";
 import TextField from "@mui/material/TextField";
 import Status from "../../../common/Model/Status";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import SaveIcon from "@mui/icons-material/Save";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import ResultSnackar from "../../../common/View/ResultSnackbar";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -16,6 +13,8 @@ import CommunicationController from "../../../common/Model/CommunicationControll
 import LoadingError from "../../../common/View/LoadingError";
 import Button from "@mui/material/Button";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
+import ConfirmActionModal from "../../../common/View/Modal/ConfirmActionModal";
+import StatusLoadingButton from "../../Components/StatusLoadingButton";
 
 export default function AnnotationTypeDetails({
     type,
@@ -103,57 +102,45 @@ const AnnotationTypeDetailsForm = ({
         type?.conflict_function ?? ""
     );
 
-    const newType = useCallback(async () => {
-        const newType = await CommunicationController.newAnnotationType(
-            tool.id,
-            name,
-            instructions,
-            layout,
-            printFunction,
-            conflictFunction
-        );
-        tool.addType(newType);
-
-        return "Tipo di annotazione creato con successo";
-    }, [tool, name, instructions, layout, printFunction, conflictFunction]);
-
-    const updateType = useCallback(async () => {
-        const updated = await type!.update({
+    const data = useMemo(() => {
+        return {
             name,
             annotation_instructions: instructions,
             annotation_interface: layout,
             print_function: printFunction,
             conflict_function: conflictFunction,
-        });
-        if (updated) tool.updateType(type!);
+        };
+    }, [name, instructions, layout, printFunction, conflictFunction]);
+
+    const newType = useCallback(async () => {
+        await tool.addType(data);
+        return "Tipo di annotazione creato con successo";
+    }, [tool, data]);
+
+    const updateType = useCallback(async () => {
+        const updated = await type!.update(data);
 
         return updated
             ? "Modifiche salvate con successo"
             : "Nessuna modifica da salvare";
-    }, [
-        type,
-        tool,
-        name,
-        instructions,
-        layout,
-        printFunction,
-        conflictFunction,
-    ]);
+    }, [type, data]);
 
     const saveData = useCallback(async () => {
         setStatus(Status.LOADING);
 
         try {
-            let res: string;
-            if (!type) res = await newType();
-            else res = await updateType();
-
-            return res;
+            if (!type) return newType();
+            return updateType();
         } catch (err: any) {
             setStatus(Status.ERROR);
             return "Errore di salvataggio";
         }
     }, [type, newType, updateType]);
+
+    const handleDelete = useCallback(async () => {
+        await tool.deleteType(type!);
+        onExit();
+    }, [tool, type, onExit]);
 
     return (
         <Box sx={style.box}>
@@ -229,6 +216,7 @@ const AnnotationTypeDetailsForm = ({
                 }
                 status={status}
                 onSave={saveData}
+                onDelete={type ? handleDelete : undefined}
                 onExit={onExit}
             />
         </Box>
@@ -239,13 +227,16 @@ const Footer = ({
     saveDisabled,
     status,
     onSave,
+    onDelete,
     onExit,
 }: {
     saveDisabled: boolean;
     status: Status;
     onSave: () => Promise<string>;
+    onDelete?: () => Promise<void>;
     onExit: () => void;
 }) => {
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
     const [snackbarText, setSnackbarText] = useState<string>("");
 
     const handleSave = useCallback(async () => {
@@ -259,29 +250,33 @@ const Footer = ({
             <Button variant="contained" color="error" onClick={onExit}>
                 Esci
             </Button>
-            <LoadingButton
+            {onDelete && (
+                <StatusLoadingButton
+                    text="Elimina"
+                    status={status}
+                    variant="outlined"
+                    style={style.footerButton}
+                    onClick={() => setShowDeleteModal(true)}
+                />
+            )}
+            <StatusLoadingButton
+                text={status === Status.ERROR ? "Riprova" : "Salva"}
                 disabled={saveDisabled}
-                loading={status === Status.LOADING}
-                loadingPosition="start"
-                startIcon={
-                    status === Status.ERROR ? (
-                        <ErrorOutlineIcon />
-                    ) : (
-                        <SaveIcon />
-                    )
-                }
-                variant="contained"
-                color={status === Status.ERROR ? "error" : "primary"}
+                status={status}
+                style={style.footerButton}
                 onClick={handleSave}
-                sx={style.saveButton}
-            >
-                {status === Status.ERROR ? "Riprova" : "Salva"}
-            </LoadingButton>
+            />
             <ResultSnackar
                 show={snackbarText !== ""}
                 text={snackbarText}
                 onClose={() => setSnackbarText("")}
                 severity={status === Status.ERROR ? "error" : "success"}
+            />
+            <ConfirmActionModal
+                text="Sei sicuro di voler cancellare questo tipo di annotazione e tutti i task collegati?"
+                show={showDeleteModal}
+                onConfirm={onDelete!}
+                onClose={() => setShowDeleteModal(false)}
             />
         </Box>
     );
@@ -318,7 +313,7 @@ const style = {
     endpointField: {
         width: "100%",
     },
-    saveButton: {
+    footerButton: {
         marginLeft: "16px",
     },
 };

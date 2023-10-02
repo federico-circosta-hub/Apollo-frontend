@@ -6,11 +6,9 @@ import { useCallback, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import LoadingButton from "@mui/lab/LoadingButton";
 import Status from "../../../common/Model/Status";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import SaveIcon from "@mui/icons-material/Save";
 import ResultSnackar from "../../../common/View/ResultSnackbar";
+import StatusLoadingButton from "../../Components/StatusLoadingButton";
 
 const ENDPOINT_NAMES = {
     add_storage_endpoint: "Creazione import storage",
@@ -134,23 +132,12 @@ export default function AnnotationToolData({
                 </Grid>
             </Box>
             <Box sx={baseStyle.footer}>
-                <LoadingButton
-                    disabled={baseURL === ""}
-                    loading={status === Status.LOADING}
-                    loadingPosition="start"
-                    startIcon={
-                        status === Status.ERROR ? (
-                            <ErrorOutlineIcon />
-                        ) : (
-                            <SaveIcon />
-                        )
-                    }
-                    variant="contained"
-                    color={status === Status.ERROR ? "error" : "primary"}
+                <StatusLoadingButton
+                    text={status === Status.ERROR ? "Riprova" : "Salva"}
                     onClick={saveData}
-                >
-                    {status === Status.ERROR ? "Riprova" : "Salva"}
-                </LoadingButton>
+                    status={status}
+                    disabled={baseURL === ""}
+                />
                 <ResultSnackar
                     show={snackbarText !== ""}
                     text={snackbarText}

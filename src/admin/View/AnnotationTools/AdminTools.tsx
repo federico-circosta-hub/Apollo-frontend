@@ -9,6 +9,9 @@ import ListItemText from "@mui/material/ListItemText";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
 import { AnnotationToolsContext } from "../../ViewModel/AnnotationToolsProvider";
 import AnnotationToolDetails from "./AnnotationToolDetails";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import IconButton from "@mui/material/IconButton";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 export default function AdminTools() {
     const [, setTitle] = useContext(HeaderContext);
@@ -19,7 +22,9 @@ export default function AdminTools() {
 
     const [status, setStatus] = useState<Status>(Status.LOADING);
 
-    const getTools = useContext(AnnotationToolsContext);
+    const { get: getTools, delete: deleteTool } = useContext(
+        AnnotationToolsContext
+    );
     const [tools, setTools] = useState<AnnotationTool[]>([]);
 
     const fetchData = useCallback(async () => {
@@ -41,6 +46,15 @@ export default function AdminTools() {
         return () => CommunicationController.abortLast();
     }, [fetchData]);
 
+    const handleDelete = useCallback(
+        async (tool: AnnotationTool) => {
+            await deleteTool(tool.id);
+            await fetchData();
+            return;
+        },
+        [deleteTool, fetchData]
+    );
+
     return (
         <MasterDetail
             items={tools}
@@ -50,17 +64,24 @@ export default function AdminTools() {
             MasterItem={AnnotationToolItem}
             DetailItem={AnnotationToolDetails}
             onRetry={fetchData}
-            onDelete={async (tool: AnnotationTool) => {}}
+            onDelete={handleDelete}
         />
     );
 }
 
-const AnnotationToolItem = ({ item, onClick }: MasterItemProps) => {
+const AnnotationToolItem = ({ item, onClick, onDelete }: MasterItemProps) => {
     const tool = item as AnnotationTool;
 
     return (
         <ListItemButton onClick={onClick}>
             <ListItemText primary={tool.name} />
+            <ListItemIcon
+                sx={{ display: "flex", flexDirection: "row-reverse" }}
+            >
+                <IconButton onClick={onDelete}>
+                    <DeleteForeverIcon color="error" />
+                </IconButton>
+            </ListItemIcon>
         </ListItemButton>
     );
 };

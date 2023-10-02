@@ -2,9 +2,11 @@ import { createContext, useCallback, useRef } from "react";
 import AnnotationTool from "../../common/Model/AnnotationTool";
 import CommunicationController from "../../common/Model/CommunicationController";
 
-export const AnnotationToolsContext = createContext<
-    () => Promise<AnnotationTool[]>
->(async () => []);
+export const AnnotationToolsContext = createContext<{
+    get: () => Promise<AnnotationTool[]>;
+    delete: (datasetId: number) => Promise<void>;
+    add: (dataset: AnnotationTool) => Promise<void>;
+}>({ get: async () => [], add: async () => {}, delete: async () => {} });
 
 export default function AnnotationToolsProvider({
     children,
@@ -21,8 +23,19 @@ export default function AnnotationToolsProvider({
         return tools.current;
     }, []);
 
+
+    const addTool = useCallback(async (tool: AnnotationTool) => {
+        //const res = await CommunicationController.newDataset(dataset);
+        tools.current.push(tool);
+    }, []);
+
+    const removeTool = useCallback(async (toolId: number) => {
+        await CommunicationController.deleteAnnotationTool(toolId);
+        tools.current = tools.current.filter((at) => at.id !== toolId);
+    }, []);
+
     return (
-        <AnnotationToolsContext.Provider value={getTools}>
+        <AnnotationToolsContext.Provider value={{ get: getTools, add: addTool, delete: removeTool }}>
             {children}
         </AnnotationToolsContext.Provider>
     );
