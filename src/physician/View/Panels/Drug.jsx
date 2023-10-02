@@ -24,6 +24,7 @@ import Slider from "@mui/material/Slider";
 import MainContainer from "../../../common/View/MainContainer";
 import CommunicationController from "../../../common/Model/CommunicationController";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
+import NewVisitToSend from "../../ViewModel/NewVisitToSend";
 
 export default function Drug() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -176,6 +177,9 @@ export default function Drug() {
       setErrors({});
       console.log(newVisit);
       navigate("/newVisit/endVisit");
+      let newVisitToSend = new NewVisitToSend(newVisit);
+      newVisitToSend.setJoints(newVisit);
+      console.log("newVisitToSend", newVisitToSend);
     } else {
       setErrors(e);
       setFormModal(true);
