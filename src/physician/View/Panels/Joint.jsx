@@ -187,7 +187,7 @@ export default function Joint(props) {
                 cancel();
               }}
             >
-              Cancel
+              Annulla
             </button>
           </div>
           <div>
@@ -198,7 +198,7 @@ export default function Joint(props) {
                 saveAndForward();
               }}
             >
-              Forward
+              Salva
             </button>
           </div>
         </div>

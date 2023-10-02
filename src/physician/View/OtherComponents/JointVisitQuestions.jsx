@@ -9,27 +9,27 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 export default function JointVisitQuestions(props) {
   const synovitisValues = [
-    { value: 10, label: "Absent/low" },
-    { value: 20, label: "Mid" },
-    { value: 30, label: "Severe" },
+    { value: 10, label: "Assente/bassa" },
+    { value: 20, label: "Media" },
+    { value: 30, label: "Grave" },
   ];
   const cartilageValues = [
-    { value: 10, label: "Normal" },
-    { value: 20, label: "<25% loss" },
-    { value: 30, label: "<50% loss" },
-    { value: 40, label: ">50% loss" },
-    { value: 50, label: "Total loss" },
+    { value: 10, label: "Normale" },
+    { value: 20, label: "perdita <25%" },
+    { value: 30, label: "perdita <50%" },
+    { value: 40, label: "perdita >50%" },
+    { value: 50, label: "Perdita totale" },
   ];
   const subchondralValues = [
-    { value: 10, label: "Normal" },
-    { value: 20, label: "Minor irregularities" },
-    { value: 30, label: "Osteophytes" },
+    { value: 10, label: "Normale" },
+    { value: 20, label: "Irregolarità medie" },
+    { value: 30, label: "Osteofite" },
   ];
   const distensionValues = [
-    { value: 10, label: "Absent" },
-    { value: 20, label: "Minor" },
-    { value: 30, label: "Moderate" },
-    { value: 40, label: "Severe" },
+    { value: 10, label: "Assente" },
+    { value: 20, label: "Leggera" },
+    { value: 30, label: "Media" },
+    { value: 40, label: "Grave" },
   ];
   const distensionCauseValues = [
     "Unclear",
@@ -90,7 +90,7 @@ export default function JointVisitQuestions(props) {
         let distension = distensionValues.find(
           (element) => element.value == e.target.value
         );
-        if (distension.label == "Moderate" || distension.label == "Severe")
+        if (distension.label == "Media" || distension.label == "Grave")
           setDisableDistensionCauses(false);
         else setDisableDistensionCauses(true);
         props.joint.setDistension(distension.label);
@@ -178,7 +178,9 @@ export default function JointVisitQuestions(props) {
               onChange={(e) => modifyJoint(e, "index")}
             />
           </div>
-          <label style={{ fontSize: 20, flex: "1" }}>Difficulty moving</label>
+          <label style={{ fontSize: 20, flex: "1" }}>
+            Difficoltà movimento
+          </label>
           <div style={{ flex: "1" }}>
             <Switch
               defaultChecked={props.joint.jointDifficulty}
@@ -195,7 +197,7 @@ export default function JointVisitQuestions(props) {
             width: "100%",
           }}
         >
-          <label style={{ fontSize: 20, flex: "1" }}>Pain</label>
+          <label style={{ fontSize: 20, flex: "1" }}>Dolore</label>
           <div style={{ flex: "1" }}>
             <Switch
               defaultChecked={props.joint.pain}
@@ -203,7 +205,9 @@ export default function JointVisitQuestions(props) {
             />
           </div>
 
-          <label style={{ fontSize: 20, flex: "1" }}>Last bleeding:</label>
+          <label style={{ fontSize: 20, flex: "1" }}>
+            Ultimo sanguinamento
+          </label>
           <div style={{ flex: "1" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
@@ -243,7 +247,7 @@ export default function JointVisitQuestions(props) {
             paddingRight: "1vw",
           }}
         >
-          <label style={{ fontSize: 20, flex: "1" }}>Synovitis</label>
+          <label style={{ fontSize: 20, flex: "1" }}>Sinovite</label>
 
           <div style={{ flex: "2.5" }}>
             <Slider
@@ -267,7 +271,7 @@ export default function JointVisitQuestions(props) {
             paddingRight: "1vw",
           }}
         >
-          <label style={{ fontSize: 20, flex: "1" }}>Cartilage</label>
+          <label style={{ fontSize: 20, flex: "1" }}>Cartilagine</label>
 
           <div style={{ flex: "2.5" }}>
             <Slider
@@ -290,7 +294,7 @@ export default function JointVisitQuestions(props) {
             paddingRight: "1vw",
           }}
         >
-          <label style={{ fontSize: 20, flex: "1" }}>Subchondral bone</label>
+          <label style={{ fontSize: 20, flex: "1" }}>Osso subcondrale</label>
 
           <div style={{ flex: "2.5" }}>
             <Slider
@@ -328,7 +332,7 @@ export default function JointVisitQuestions(props) {
             paddingRight: "1vw",
           }}
         >
-          <label style={{ fontSize: 20, flex: "1" }}>Distension level</label>
+          <label style={{ fontSize: 20, flex: "1" }}>Livello distensione</label>
 
           <div style={{ flex: "2.5" }}>
             <Slider
@@ -360,13 +364,13 @@ export default function JointVisitQuestions(props) {
               style={{ width: "100%" }}
               size="small"
             >
-              Which is the most likely cause of the distension?
+              La più probabile causa di distensione?
             </InputLabel>
             <Select
               defaultValue={props.joint.distensionCause}
               style={{ fontSize: 20 }}
               id="demo-simple-select"
-              label="Which is the most likely cause of the..."
+              label="La più probabile causa di d...?"
               onChange={(e) => {
                 props.joint.setDistensionCause(e.target.value);
                 props.setJoint(props.joint);
