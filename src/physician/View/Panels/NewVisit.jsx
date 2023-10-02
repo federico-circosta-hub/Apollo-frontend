@@ -31,8 +31,8 @@ export default function NewVisit() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { selectedPatient } = useContext(PatientContext);
 
-  const [activities, setActivities] = useState([{ name: "" }]);
-  const [traumaticEvents, setTraumaticEvents] = useState([{ name: "" }]);
+  const [activities, setActivities] = useState([{ name: "Nessuna" }]);
+  const [traumaticEvents, setTraumaticEvents] = useState([{ name: "Nessuno" }]);
   const [visitDate, setVisitDate] = useState(
     newVisit.isInPresence ? new Date() : null
   );
@@ -58,8 +58,8 @@ export default function NewVisit() {
 
   const getTraumaticEventAndActivitiesFromServer = async () => {
     setLoadingOptions(true);
-    setActivities([{ name: "" }]);
-    setTraumaticEvents([{ name: "" }]);
+    setActivities([{ name: "Nessuna" }]);
+    setTraumaticEvents([{ name: "Nessuno" }]);
     setNetworkError(null);
     try {
       const acts = await CommunicationController.get("exercise", {});

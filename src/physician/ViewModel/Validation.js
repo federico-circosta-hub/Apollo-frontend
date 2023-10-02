@@ -3,71 +3,65 @@ export const validateForm = (formName, formData, formData2) => {
   switch (formName) {
     case "newPatient":
       if (formData.name.trim().length < 2) {
-        errors.name = "Insert valid name";
+        errors.name = "Insere nome valido";
       }
       if (formData.surname.trim().length < 2) {
-        errors.surname = "Insert valid surname";
+        errors.surname = "Inserire cognome valido";
       }
       if (formData.birthdate == "") {
-        errors.birthdate = "Insert valid birthdate";
+        errors.birthdate = "Inserire data di nascita valida";
       }
       return errors;
     case "newVisit":
       if (formData.physicalActivity.physicalActivity) {
         if (formData.physicalActivity.physicalActivityDate == "") {
-          errors.physicalActivityDate = "Inserisci data attività fisica";
+          errors.physicalActivityDate = "Inserire data attività fisica";
         }
         if (formData.physicalActivity.physicalActivityType == "") {
-          errors.physicalActivityType = "Inserisci tipo di attività fisica";
+          errors.physicalActivityType = "Inserire tipo di attività fisica";
         }
       }
-      if (formData.traumaticEvent.traumaticEvent != "") {
-        if (formData.traumaticEvent.traumaticEventDate == "") {
-          errors.traumaticEvent = "Inserisci data evento traumatico";
+      if (formData.traumaticEvent.traumaticEvent !== "Nessuno") {
+        if (formData.traumaticEvent.traumaticEventDate === "") {
+          errors.traumaticEvent = "Inserire data evento traumatico";
         }
       }
       if (formData.visitDate == null) {
-        errors.visitDate = "Inserisci data della visita";
+        errors.visitDate = "Inserire data della visita";
       }
       return errors;
     case "drugs":
       if (formData.needFollowUp.needFollowUp) {
         if (formData.needFollowUp.followUpDate == "") {
-          errors.needFollowUp = "Insert follow up date";
+          errors.needFollowUp = "Inserire data di follow-up";
         }
       }
-      if (formData.prophylacticDrug.drug != "") {
-        if (formData.prophylacticDrug.unit == "") {
-          errors.prophylacticDrugUnit = "Insert prophylactic drug unit";
-        }
+      if (formData.prophylacticDrug.drug != "Nessuno") {
         if (
           formData.prophylacticDrug.frequency < 1 ||
           formData.prophylacticDrug.frequency == ""
         ) {
           errors.prophylacticDrugFreq =
-            "Insert valid prophylactic drug frequency";
+            "Inserire frequenza medicinale di profilassi valida";
         }
         if (formData.prophylacticDrug.dose < 1) {
-          errors.prophylacticDrugDose = "Insert valid prophylactic drug dose";
+          errors.prophylacticDrugDose =
+            "Inserire dose medicinale di profilassi valida";
         }
       }
-      if (formData.acuteDrug.drug != "") {
-        if (formData.acuteDrug.unit < 1) {
-          errors.acuteDrugUnit = "Insert acute drug unit";
-        }
+      if (formData.acuteDrug.drug != "Nessuno") {
         if (formData.acuteDrug.dose < 1) {
-          errors.acuteDrugDose = "Insert valid acute drug dose";
+          errors.acuteDrugDose = "Inserire dose medicinale acuto valida";
         }
       }
       return errors;
     case "jointVisit":
       if (
-        (formData.distension == "Moderate" ||
-          formData.distension == "Severe") &&
+        (formData.distension == "Media" || formData.distension == "Grave") &&
         (formData.distensionCause == undefined ||
           formData.distensionCause == "")
       ) {
-        errors.distension = "Inserisci una causa per la distensione";
+        errors.distension = "Inserire una causa per la distensione";
       }
       if (
         formData2.ecographies.find(

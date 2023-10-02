@@ -7,11 +7,11 @@ export default class NewVisitModel {
   physicalActivity = {
     physicalActivity: false,
     physicalActivityDate: "",
-    physicalActivityType: "",
+    physicalActivityType: "Nessuna",
   };
 
   traumaticEvent = {
-    traumaticEvent: "",
+    traumaticEvent: "Nessuno",
     traumaticEventDate: "",
   };
   followUp = {
@@ -28,14 +28,14 @@ export default class NewVisitModel {
   };
 
   prophylacticDrug = {
-    drug: "",
+    drug: "Nessuno",
     unit: "",
     dose: "",
     frequency: "",
   };
 
   acuteDrug = {
-    drug: "",
+    drug: "Nessuno",
     unit: "",
     dose: "",
   };

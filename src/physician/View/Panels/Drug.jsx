@@ -42,12 +42,12 @@ export default function Drug() {
     "Synovial Hyperplasia",
   ];
 
-  const [drugs, setDrugs] = useState([{ name: "", unit: "" }]);
+  const [drugs, setDrugs] = useState([{ name: "Nessuno", unit: "" }]);
   const [disabledProphylactic, setDisabledProphylactic] = useState(
-    newVisit.prophylacticDrug.drug == "" ? true : false
+    newVisit.prophylacticDrug.drug == "Nessuno" ? true : false
   );
   const [disabledAcute, setDisabledAcute] = useState(
-    newVisit.acuteDrug.drug == "" ? true : false
+    newVisit.acuteDrug.drug == "Nessuno" ? true : false
   );
   const [needFollowUp, setNeedFollowUp] = useState(
     newVisit.needFollowUp == undefined
@@ -68,7 +68,7 @@ export default function Drug() {
   }, []);
 
   const getDrugsFromServer = async () => {
-    setDrugs([{ name: "", unit: "" }]);
+    setDrugs([{ name: "Nessuno", unit: "" }]);
     let d = await CommunicationController.get("drug", {});
     setDrugs((prevState) => [...prevState, ...d]);
   };
@@ -107,7 +107,7 @@ export default function Drug() {
     let pd = { ...prophylacticDrug };
     pd.drug = e.target.value.name;
     pd.unit = e.target.value.unit;
-    if (pd.drug == "") {
+    if (pd.drug == "Nessuno") {
       pd.dose = "";
       pd.unit = "";
       pd.frequency = "";
@@ -135,7 +135,7 @@ export default function Drug() {
     let ad = { ...acuteDrug };
     ad.drug = e.target.value.name;
     ad.unit = e.target.value.unit;
-    if (ad.drug == "") {
+    if (ad.drug == "Nessuno") {
       ad.dose = "";
       ad.unit = "";
       setDisabledAcute(true);
@@ -428,7 +428,7 @@ export default function Drug() {
               <div>
                 <input
                   placeholder="Frequenza"
-                  defaultValue={newVisit.prophylacticDrug.frequency}
+                  defaultValue={prophylacticDrug.frequency}
                   onChange={handleProphylacticDrugFrequency}
                   style={{ background: `#fffacd` }}
                   name="prophylacticFrequency"
@@ -456,7 +456,7 @@ export default function Drug() {
                   <Select
                     style={{ fontSize: 15 }}
                     id="demo-simple-select"
-                    defaultValue={newVisit.acuteDrug.drug}
+                    defaultValue={acuteDrug.drug}
                     onChange={(e) => handleAcuteDrug(e)}
                     label="Medicinale acuto"
                   >
