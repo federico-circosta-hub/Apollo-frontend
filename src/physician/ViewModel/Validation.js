@@ -36,7 +36,10 @@ export const validateForm = (formName, formData, formData2) => {
           errors.needFollowUp = "Inserire data di follow-up";
         }
       }
-      if (formData.prophylacticDrug.drug.name != "Nessuno") {
+      if (
+        formData.prophylacticDrug.drug.name !== "Nessuno" &&
+        formData.prophylacticDrug.drug.name !== ""
+      ) {
         if (
           formData.prophylacticDrug.frequency < 1 ||
           formData.prophylacticDrug.frequency == ""
@@ -49,7 +52,10 @@ export const validateForm = (formName, formData, formData2) => {
             "Inserire dose medicinale di profilassi valida";
         }
       }
-      if (formData.acuteDrug.drug.name != "Nessuno") {
+      if (
+        formData.acuteDrug.drug.name !== "Nessuno" &&
+        formData.acuteDrug.drug.name !== ""
+      ) {
         if (formData.acuteDrug.dose < 1) {
           errors.acuteDrugDose = "Inserire dose medicinale acuto valida";
         }

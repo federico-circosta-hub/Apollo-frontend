@@ -25,10 +25,12 @@ import MainContainer from "../../../common/View/MainContainer";
 import CommunicationController from "../../../common/Model/CommunicationController";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import NewVisitToSend from "../../ViewModel/NewVisitToSend";
+import EndingVisitModal from "../Modals/EndingVisitModal";
+import { PatientContext } from "../../Model/PatientContext";
 
 export default function Drug() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
-
+  const { selectedPatient } = useContext(PatientContext);
   const treatmentResponses = [
     { value: 10, label: "Low/absent" },
     { value: 20, label: "Discrete" },
@@ -64,6 +66,9 @@ export default function Drug() {
   const [errors, setErrors] = useState({ none: "none" });
   const [loadingOptions, setLoadingOptions] = useState(false);
   const [networkError, setNetworkError] = useState(null);
+  const [endingVisitModal, setEndingVisitModal] = useState(false);
+  const [showFinishAlert, setShowFinishAlert] = useState(null);
+  const [sending, setSending] = useState(false);
 
   const navigate = useNavigate();
 
@@ -161,6 +166,23 @@ export default function Drug() {
     setAcuteDrug(ad);
   };
 
+  const sendsAllAndFinish = () => {
+    setSending(true);
+    console.log("newVisit:", newVisit);
+    let newVisitToSend = new NewVisitToSend(newVisit);
+    newVisitToSend.setJoints(newVisit);
+    console.log("newVisitToSend:", newVisitToSend);
+    let n = Math.random();
+    setTimeout(() => {
+      if (n > 0.5) {
+        setShowFinishAlert(false);
+      } else {
+        setShowFinishAlert(true);
+      }
+      setSending(false);
+    }, 5000);
+  };
+
   const forward = () => {
     let o = {};
     o.needFollowUp = needFollowUp;
@@ -175,11 +197,8 @@ export default function Drug() {
       newVisit.setAcuteDrug(acuteDrug);
       setNewVisit(newVisit);
       setErrors({});
-      console.log(newVisit);
-      navigate("/newVisit/endVisit");
-      let newVisitToSend = new NewVisitToSend(newVisit);
-      newVisitToSend.setJoints(newVisit);
-      console.log("newVisitToSend", newVisitToSend);
+
+      setEndingVisitModal(true);
     } else {
       setErrors(e);
       setFormModal(true);
@@ -573,6 +592,19 @@ export default function Drug() {
             formModal={formModal}
             setFormModal={setFormModal}
             errors={errors}
+          />
+        )}
+        {endingVisitModal && (
+          <EndingVisitModal
+            showAlert={showFinishAlert}
+            setShowAlert={setShowFinishAlert}
+            navigate={navigate}
+            showModal={endingVisitModal}
+            setShowModal={setEndingVisitModal}
+            sends={sendsAllAndFinish}
+            patient={selectedPatient}
+            visit={newVisit}
+            sending={sending}
           />
         )}
       </div>
