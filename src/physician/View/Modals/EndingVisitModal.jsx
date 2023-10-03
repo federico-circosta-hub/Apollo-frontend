@@ -2,19 +2,30 @@ import { Modal, Button } from "react-bootstrap";
 import { Alert, AlertTitle } from "@mui/material";
 import format from "date-fns/format";
 import documentSend from "../../img/icon/document-send.png";
+import { Link } from "react-router-dom";
 
 export default function EndingVisitModal(props) {
   const footer = () => {
     if (props.showAlert) {
       return (
-        <Alert
-          severity="success"
-          onClose={() => props.navigate("/newVisit/endVisit")}
-          variant="filled"
+        <Modal.Footer
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            background: "#f0f8ff",
+          }}
         >
-          <AlertTitle>Visita inviata con successo!</AlertTitle>
-          Chiudi per ottenere documento <strong>head-us</strong>
-        </Alert>
+          <Alert severity="success" variant="filled" style={{ width: "100%" }}>
+            <AlertTitle>Visita inviata con successo!</AlertTitle>
+          </Alert>
+          <Link
+            className="btn btn-outline-success btn-lg"
+            to={"/newVisit/endVisit"}
+          >
+            Report
+          </Link>
+        </Modal.Footer>
       );
     } else if (props.showAlert === null) {
       return (
@@ -53,17 +64,37 @@ export default function EndingVisitModal(props) {
       );
     } else if (!props.showAlert) {
       return (
-        <Alert
-          severity="warning"
-          onClose={() => {
-            props.setShowModal(false);
-            props.setShowAlert(null);
+        <Modal.Footer
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            background: "#f0f8ff",
           }}
-          variant="filled"
         >
-          <AlertTitle>Errore nell'invio</AlertTitle>
-          Chiudi e <strong>riprova</strong>
-        </Alert>
+          <Alert
+            style={{ width: "100%" }}
+            severity="warning"
+            onClose={() => {
+              props.setShowModal(false);
+              props.setShowAlert(null);
+            }}
+            variant="filled"
+          >
+            <AlertTitle>Errore nell'invio</AlertTitle>
+          </Alert>
+          <button
+            className={
+              props.sending
+                ? "btn btn-outline-secondary btn-lg"
+                : "btn btn-outline-danger btn-lg"
+            }
+            disabled={props.sending}
+            onClick={props.sends}
+          >
+            {props.sending ? "Inviando..." : "Riprova"}
+          </button>
+        </Modal.Footer>
       );
     }
   };
