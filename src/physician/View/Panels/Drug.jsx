@@ -581,7 +581,7 @@ export default function Drug() {
               onClick={forward}
               style={{ fontSize: 24 }}
             >
-              Invia visita
+              Termina visita
             </button>
           </div>
         </div>

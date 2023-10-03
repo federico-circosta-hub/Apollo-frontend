@@ -198,17 +198,22 @@ export default function JointSelection() {
           }}
         >
           <div>
-            <Link className="btn btn-danger" to={"/newVisit/"}>
+            <Link
+              className="btn btn-primary"
+              to={"/newVisit/"}
+              style={{ fontSize: 24 }}
+            >
               Indietro
             </Link>
           </div>
           <div>
-            <button
-              className="btn btn-warning"
-              onClick={() => setShowEndingModal(true)}
+            <Link
+              className="btn btn-success"
+              to={"/newVisit/drug"}
+              style={{ fontSize: 24 }}
             >
-              Concludi visita
-            </button>
+              Avanti
+            </Link>
           </div>
         </div>
       </MainContainer>

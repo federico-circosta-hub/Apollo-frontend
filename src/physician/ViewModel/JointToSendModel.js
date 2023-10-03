@@ -33,23 +33,8 @@ export default class JointToSendModel {
   setMediaIds(newVisit) {
     let mediaIds = [];
     newVisit.ecographies.forEach((element) => {
-      console.log(
-        "setMediaIds uguale?",
-        element.jointRef.substring(0, 5),
-        this.name.substring(0, 5),
-        element.jointRef.substring(0, 5) === this.name.substring(0, 5),
-        "e questa?",
-        element.jointRef.substring(
-          element.jointRef.length - 2,
-          element.jointRef.length
-        ),
-        this.name.substring(this.name.length - 2, this.name.length),
-        element.jointRef.substring(
-          element.jointRef.length - 2,
-          element.jointRef.length
-        ) === this.side.toLowerCase()
-      );
       if (
+        element.jointRef !== undefined &&
         element.jointRef.substring(0, 5) === this.name.substring(0, 5) &&
         element.jointRef.substring(
           element.jointRef.length - 2,

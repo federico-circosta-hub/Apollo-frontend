@@ -355,15 +355,16 @@ export default function NewVisit() {
               onClick={() => setNewVisit(null)}
               to={"/searchVisit/"}
               className="btn btn-danger"
+              style={{ fontSize: 24 }}
             >
               Annulla
             </Link>
           </div>
           <div>
             <button
-              style={style.forwardButton}
               className="btn btn-success"
               onClick={forward}
+              style={{ fontSize: 24 }}
             >
               Prosegui
             </button>

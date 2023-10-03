@@ -19,11 +19,16 @@ export default function EndingVisitModal(props) {
     } else if (props.showAlert === null) {
       return (
         <Modal.Footer
-          style={{ display: "flex", justifyContent: "center", gap: "10%" }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "10%",
+            background: "#f0f8ff",
+          }}
         >
           <Button
             disabled={false}
-            variant="secondary"
+            variant="primary"
             onClick={() => props.setShowModal(false)}
             style={{ fontSize: 24 }}
           >
@@ -65,7 +70,7 @@ export default function EndingVisitModal(props) {
 
   return (
     <Modal show={props.showModal} animation={true} scrollable={true} size="lg">
-      <Modal.Header>
+      <Modal.Header style={{ background: "#f0f8ff" }}>
         <Modal.Title>Confermare invio visita</Modal.Title>
       </Modal.Header>
       <Modal.Body style={{ background: "whitesmoke" }}>
