@@ -71,8 +71,8 @@ export default function UserTasks({ user }: { user: User }) {
                 />
             </Box>
             {tasks.length === 0 ? (
-                <Typography variant="h6">
-                    Nessun task di annotazione assegnato
+                <Typography variant="subtitle1">
+                    Nessun task di annotazione ancora assegnato
                 </Typography>
             ) : (
                 <TasksList tasks={tasks} />

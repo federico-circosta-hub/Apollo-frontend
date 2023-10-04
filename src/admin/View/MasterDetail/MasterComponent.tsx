@@ -31,8 +31,8 @@ export default function MasterComponent({
     onDelete?: (item: any) => Promise<any>;
 }) {
     const [filter, setFilter] = useState<string>("");
-    const [selected, setSelected] = useState(-1);
-    const [showDelete, setShowDelete] = useState(false);
+    const [selected, setSelected] = useState<number>(-1);
+    const [deleteIndex, setDeleteIndex] = useState<number>(-1);
 
     const filterItems = useCallback(() => {
         return items.filter((item) => item.filter(filter));
@@ -62,7 +62,7 @@ export default function MasterComponent({
                                 }}
                                 onDelete={
                                     onDelete
-                                        ? () => setShowDelete(true)
+                                        ? () => setDeleteIndex(index)
                                         : undefined
                                 }
                             />
@@ -73,9 +73,9 @@ export default function MasterComponent({
             </Box>
             <ConfirmActionModal
                 text="Sei sicuro di voler eliminare questo elemento?"
-                show={showDelete}
-                onConfirm={() => onDelete!(items[0])}
-                onClose={() => setShowDelete(false)}
+                show={deleteIndex >= 0}
+                onConfirm={() => onDelete!(items[deleteIndex])}
+                onClose={() => setDeleteIndex(-1)}
             />
         </Box>
     );

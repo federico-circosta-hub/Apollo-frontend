@@ -30,6 +30,7 @@ export default function AdminDatasets() {
 
         try {
             const res = await getDatasets();
+			res.sort((a, b) => a.name.localeCompare(b.name));
 
             console.log(`${res.length} datasets recevied`);
             setDatasets(res);
@@ -47,14 +48,14 @@ export default function AdminDatasets() {
     const handleDelete = useCallback(
         async (dataset: Dataset) => {
             await deleteDataset(dataset.id);
-            fetchData();
+            await fetchData();
             return;
         },
         [deleteDataset, fetchData]
     );
 
     if (status === Status.ERROR) return <ErrorScreen onRetry={fetchData} />;
-    
+
     return (
         <MainContainer>
             {status === Status.IDLE ? (

@@ -9,7 +9,7 @@ import User from "../../../common/Model/User";
 import MasterDetail from "../MasterDetail/MasterDetail";
 import UserDetails from "./UserDetails";
 import Status from "../../../common/Model/Status";
-import { UsersContext } from "../../ViewModel/UsersProvider";
+import { PhysiciansContext } from "../../ViewModel/UsersProvider";
 import { MasterItemProps } from "../MasterDetail/MasterComponent";
 
 export default function AdminUsers() {
@@ -20,7 +20,7 @@ export default function AdminUsers() {
 
     const [status, setStatus] = useState<Status>(Status.LOADING);
 
-    const getUsers = useContext(UsersContext);
+    const { get: getUsers } = useContext(PhysiciansContext);
     const [users, setUsers] = useState<User[]>([]);
 
     const fetchData = useCallback(async () => {
@@ -28,6 +28,11 @@ export default function AdminUsers() {
 
         try {
             const res = await getUsers();
+            res.sort(
+                (a, b) =>
+                    a.surname?.localeCompare(b.surname ?? "") ||
+                    a.name.localeCompare(b.name)
+            );
 
             console.log(`${res.length} users recevied`);
             setUsers(res);
