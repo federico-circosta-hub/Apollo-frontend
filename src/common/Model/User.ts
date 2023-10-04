@@ -22,6 +22,7 @@ export const isUserEmailValid = (email: string): boolean => {
 export const isUserValid = (data: UserData): boolean => {
     return (
         data.name.trim() !== "" &&
+        data.surname !== undefined &&
         data.surname.trim() !== "" &&
         isUserEmailValid(data.email)
     );
@@ -32,7 +33,7 @@ export type UserDataKey = keyof UserData;
 export class UserData {
     email: string = "";
     name: string = "";
-    surname: string = "";
+    surname?: string = "";
 }
 
 export default class User {
@@ -51,7 +52,7 @@ export default class User {
         this.surname = obj.surname;
         this.type = obj.type;
         this.enabled = obj.enabled;
-		this.password = obj.password;
+        this.password = obj.password;
     }
 
     getInitials = (): string => {
@@ -100,5 +101,13 @@ export default class User {
             this.id,
             includeCompleted
         );
+    };
+
+    getData = (): UserData => {
+        return {
+            email: this.email,
+            name: this.name,
+            surname: this.surname,
+        };
     };
 }

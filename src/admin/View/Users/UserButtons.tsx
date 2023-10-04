@@ -71,5 +71,6 @@ const style = {
     buttonsBox: {
         display: "flex",
         flexDirection: "row",
+        marginTop: "8px",
     },
 };

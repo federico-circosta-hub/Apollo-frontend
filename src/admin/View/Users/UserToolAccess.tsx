@@ -46,11 +46,11 @@ export default function UserToolAccess({ user }: { user: User }) {
     return (
         <Box sx={style.box}>
             <Typography sx={{ flex: 1 }} variant="h5">
-                Concedo accesso a:
+                Concedi accesso a:
             </Typography>
             {tools.length === 0 ? (
-                <Typography variant="h6">
-                    Nessun task di annotazione assegnato
+                <Typography variant="subtitle1">
+                    Nessun tool di annotazione ancora creato
                 </Typography>
             ) : (
                 <AnnotationToolsForm tools={tools} user={user} />
