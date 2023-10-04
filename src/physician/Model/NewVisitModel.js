@@ -4,6 +4,7 @@ import { format } from "date-fns";
 export default class NewVisitModel {
   patient;
   visitDate;
+  physician;
   physicalActivity = {
     physicalActivity: false,
     physicalActivityDate: "",
@@ -51,6 +52,10 @@ export default class NewVisitModel {
   setEcographies(e) {
     let updatedEcographies = [...this.ecographies, ...e];
     this.ecographies = updatedEcographies;
+  }
+
+  setPhysician(p) {
+    this.physician = p;
   }
 
   setPatient(p) {

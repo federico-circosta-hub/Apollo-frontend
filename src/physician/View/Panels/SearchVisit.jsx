@@ -13,7 +13,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MainContainer from "../../../common/View/MainContainer";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 
-export default function SearchVisit() {
+export default function SearchVisit(props) {
   const [visitList, setVisitList] = useState(null);
   const [loadingVisits, setLoadingVisits] = useState(false);
   const [networkError, setNetworkError] = useState(null);
@@ -59,6 +59,7 @@ export default function SearchVisit() {
   const createNewVisit = (IsInPresence) => {
     let nv = new NewVisitModel();
     let pv = visitList.length > 0 ? visitList[0] : undefined;
+    nv.setPhysician(props.id);
     nv.setPreviousVisit(pv);
     nv.setIsInPresence(IsInPresence);
     nv.setPatient(selectedPatient.pid);
