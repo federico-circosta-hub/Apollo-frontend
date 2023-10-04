@@ -1,11 +1,11 @@
 import { createContext, useCallback, useRef } from "react";
-import Dataset from "../../common/Model/Dataset";
+import Dataset, { DatasetData } from "../../common/Model/Dataset";
 import CommunicationController from "../../common/Model/CommunicationController";
 
 export const DatasetsContext = createContext<{
     get: () => Promise<Dataset[]>;
     delete: (datasetId: number) => Promise<void>;
-    add: (dataset: Dataset) => Promise<void>;
+    add: (dataset: DatasetData) => Promise<void>;
 }>({ get: async () => [], add: async () => {}, delete: async () => {} });
 
 export default function DatasetsProvider({
@@ -25,8 +25,9 @@ export default function DatasetsProvider({
         return datasets.current;
     }, []);
 
-    const addDataset = useCallback(async (dataset: Dataset) => {
-        //const res = await CommunicationController.newDataset(dataset);
+    const addDataset = useCallback(async (data: DatasetData) => {
+        const dataset = await CommunicationController.newDataset(data);
+        console.log(dataset);
         datasets.current.push(dataset);
     }, []);
 

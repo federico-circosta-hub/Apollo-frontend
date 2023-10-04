@@ -2,7 +2,7 @@ import axios from "axios";
 import config from "../../config";
 import User, { AnnotationToolAccess } from "./User";
 import PhysicianTask from "./PhysicianTask";
-import Dataset from "./Dataset";
+import Dataset, { DatasetData } from "./Dataset";
 import AnnotationTool, { AnnotationToolEndpoints } from "./AnnotationTool";
 import AnnotationType from "./AnnotationType";
 
@@ -46,6 +46,7 @@ class CommunicationController {
         DELETE_DATASET: "/dataset",
         DELETE_ANNOTATION_TOOL: "/annotationTool",
         DELETE_ANNOTATION_TYPE: "/annotationType",
+        NEW_DATASET: "/dataset",
     };
 
     private baseCall = async (
@@ -318,6 +319,11 @@ class CommunicationController {
             id: annotationType,
         });
     };
+
+    async newDataset(data: DatasetData): Promise<Dataset> {
+        const res = await this.post(this.endpoints.NEW_DATASET, data);
+        return new Dataset(res);
+    }
 
     private formatGetData = (data: Params): string => {
         let result = "?";

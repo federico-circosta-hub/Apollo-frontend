@@ -4,7 +4,7 @@ export default function MainContainer({
     children,
     style,
 }: {
-    children: any;
+    children?: any;
     style?: any;
 }) {
     return (
