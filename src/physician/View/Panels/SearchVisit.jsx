@@ -42,6 +42,7 @@ export default function SearchVisit(props) {
       const visitsArray = await CommunicationController.get("visit", {
         patient: selectedPatient.pid,
       });
+      console.log(visitsArray);
       setVisitList(visitsArray);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -155,44 +156,56 @@ export default function SearchVisit(props) {
             </div>
           )}
           <div>
-            {!loadingVisits && networkError === null && visitList !== null && (
-              <table className="table table-primary table-striped table-hover">
-                <thead
-                  style={{
-                    position: "sticky",
-                    top: 0,
-                    height: "6vh",
-                  }}
-                >
-                  <tr>
-                    <th style={{ background: "white" }}>Id visita</th>
-                    <th style={{ background: "white" }}>Data</th>
-                    <th style={{ background: "white" }}>Medico</th>
-                    <th style={{ background: "white" }}>Tipo visita</th>
-                  </tr>
-                </thead>
+            {!loadingVisits &&
+              networkError === null &&
+              visitList !== null &&
+              visitList.length !== 0 && (
+                <table className="table table-primary table-striped table-hover">
+                  <thead
+                    style={{
+                      position: "sticky",
+                      top: 0,
+                      height: "6vh",
+                    }}
+                  >
+                    <tr style={{}}>
+                      <th style={{ background: "white", width: "15%" }}>
+                        Id visita
+                      </th>
+                      <th style={{ background: "white", width: "45%" }}>
+                        Data
+                      </th>
+                      <th style={{ background: "white", width: "20%" }}>
+                        Medico
+                      </th>
+                      <th style={{ background: "white", width: "20%" }}>
+                        Tipo visita
+                      </th>
+                    </tr>
+                  </thead>
 
-                <tbody>
-                  {visitList.map((visit, index) => (
-                    <VisitLine
-                      key={index}
-                      visit={visit}
-                      isSelected={visit === selectedVisit}
-                      onSelectVisit={() => {
-                        setSelectedVisit(visit);
-                        handleSelect();
-                      }}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            )}
+                  <tbody>
+                    {visitList.map((visit, index) => (
+                      <VisitLine
+                        key={index}
+                        visit={visit}
+                        isSelected={visit === selectedVisit}
+                        onSelectVisit={() => {
+                          setSelectedVisit(visit);
+                          handleSelect();
+                        }}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              )}
             {!loadingVisits &&
               networkError === null &&
               (visitList === null || visitList.length === 0) && (
                 <h6 style={{ marginTop: "2%" }}>
                   <em>
-                    Non sono presenti visite per il paziente{" "}
+                    Non sono presenti visite per{" "}
+                    {selectedPatient.gender === "M" ? "il" : "la"} paziente{" "}
                     <strong>
                       {selectedPatient.name} {selectedPatient.surname}
                     </strong>
