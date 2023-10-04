@@ -32,6 +32,7 @@ export default function AdminTools() {
 
         try {
             const res = await getTools();
+			res.sort((a, b) => a.name.localeCompare(b.name));
 
             console.log(`${res.length} annotation tools recevied`);
             setTools(res);

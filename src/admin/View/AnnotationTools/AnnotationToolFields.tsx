@@ -4,6 +4,7 @@ import AnnotationTool, {
     AnnotationToolDataKey,
     EndpointsKey,
     isAnnotationToolDataValid,
+    isEndpointValid,
 } from "../../../common/Model/AnnotationTool";
 import { useCallback, useState } from "react";
 import TextField from "@mui/material/TextField";
@@ -180,6 +181,7 @@ const EndpointItem = ({
                 sx={baseStyle.endpointField}
                 onChange={(e) => onChange(e.target.value)}
                 inputProps={{ maxLength: 255 }}
+                error={!isEndpointValid(endpoint)}
             />
         </Grid>
     );

@@ -28,6 +28,11 @@ export default function AdminUsers() {
 
         try {
             const res = await getUsers();
+            res.sort(
+                (a, b) =>
+                    a.surname?.localeCompare(b.surname ?? "") ||
+                    a.name.localeCompare(b.name)
+            );
 
             console.log(`${res.length} users recevied`);
             setUsers(res);

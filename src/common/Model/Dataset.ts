@@ -43,7 +43,7 @@ export default class Dataset {
         this.start_date = obj.start_date;
         this.end_date = obj.end_date;
         this.type = obj.type ?? MediaType.IMAGE;
-        this.media_count = obj.media_count ?? false;
+        this.media_count = obj.media_count ?? 0;
         this.completed = obj.completed;
     }
 

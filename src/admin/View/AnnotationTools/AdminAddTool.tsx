@@ -15,7 +15,7 @@ export default function AdminAddTool() {
 
     const { add: addTool } = useContext(AnnotationToolsContext);
 
-	const navigate = useNavigate();
+    const navigate = useNavigate();
     const exit = useCallback(() => {
         navigate(-1);
     }, [navigate]);
@@ -23,7 +23,7 @@ export default function AdminAddTool() {
     const saveData = useCallback(
         async (data: AnnotationToolData) => {
             await addTool(data);
-			setTimeout(exit, 1000)
+            setTimeout(exit, 1000);
             return "Tool di annotazione aggiunto con successo";
         },
         [addTool, exit]

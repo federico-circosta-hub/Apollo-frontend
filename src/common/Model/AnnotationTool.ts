@@ -14,8 +14,18 @@ export type AnnotationToolEndpoints = {
 
 export type EndpointsKey = keyof AnnotationToolEndpoints;
 
+export const isEndpointValid = (endpoint: string) => {
+    return endpoint.trim() !== "";
+};
+
 export const isAnnotationToolDataValid = (data: AnnotationToolData) => {
-    return data.name.trim() !== "" && data.base_url.trim() !== "";
+    const ok = data.name.trim() !== "" && data.base_url.trim() !== "";
+    if (!ok) return false;
+
+    for (const key in data.endpoints)
+        if (!isEndpointValid(data.endpoints[key as EndpointsKey])) return false;
+
+    return true;
 };
 
 export class AnnotationToolData {

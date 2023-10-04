@@ -19,7 +19,6 @@ import "dayjs/locale/it";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { Dayjs } from "dayjs";
 import { Typography } from "@mui/material";
 
 export default function AdminAddDataset() {
@@ -42,16 +41,17 @@ export default function AdminAddDataset() {
 
     const saveData = useCallback(async () => {
         setStatus(Status.LOADING);
-
+		
         try {
             await addDataset(dataset);
             setStatus(Status.IDLE);
+            setTimeout(exit, 1000);
             return "Dataset aggiunto con successo";
         } catch (err: any) {
             setStatus(Status.ERROR);
             return "Errore nel salvataggio";
         }
-    }, [addDataset, dataset]);
+    }, [addDataset, dataset, exit]);
 
     const updateDataset = useCallback((key: DatasetDataKey, value: any) => {
         setDataset((prev) => {
@@ -128,7 +128,6 @@ export default function AdminAddDataset() {
                 saveDisabled={!isDatasetValid(dataset)}
                 status={status}
                 onSave={saveData}
-                onExit={exit}
             />
         </MainContainer>
     );

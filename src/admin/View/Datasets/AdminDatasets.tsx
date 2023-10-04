@@ -30,6 +30,7 @@ export default function AdminDatasets() {
 
         try {
             const res = await getDatasets();
+			res.sort((a, b) => a.name.localeCompare(b.name));
 
             console.log(`${res.length} datasets recevied`);
             setDatasets(res);
