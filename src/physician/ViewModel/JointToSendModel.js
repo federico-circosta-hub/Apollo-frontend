@@ -27,12 +27,14 @@ export default class JointToSendModel {
     this.pain = joint.pain;
     this.cartilagine = joint.cartilage;
     this.subchondral_bone = joint.subchondralBone;
+    this.sinovite = joint.synovitis;
     this.media_ids = [];
   }
 
   setMediaIds(newVisit) {
     let mediaIds = [];
-    newVisit.ecographies.forEach((element) => {
+
+    /*     newVisit.ecographies.forEach((element) => {
       if (
         element.jointRef !== undefined &&
         element.jointRef.substring(0, 5) === this.name.substring(0, 5) &&
@@ -43,7 +45,11 @@ export default class JointToSendModel {
       ) {
         mediaIds.push(element.link);
       }
-    });
+    }); */
     this.media_ids = mediaIds;
+  }
+
+  setName(s) {
+    this.name = s;
   }
 }

@@ -77,6 +77,7 @@ export default class NewVisitToSend {
     newVisit.joints.forEach((element) => {
       let jointToSend = new JointToSendModel(element);
       jointToSend.setMediaIds(newVisit);
+      jointToSend.setName(jointToSend.name.toLowerCase());
       joints.push(jointToSend);
     });
     this.report.joints = joints;

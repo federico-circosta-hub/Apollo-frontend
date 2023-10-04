@@ -9,27 +9,27 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 export default function JointVisitQuestions(props) {
   const synovitisValues = [
-    { value: 10, label: "Assente/bassa" },
-    { value: 20, label: "Media" },
-    { value: 30, label: "Grave" },
+    { value: 0, label: "Assente/bassa" },
+    { value: 1, label: "Media" },
+    { value: 2, label: "Grave" },
   ];
   const cartilageValues = [
-    { value: 10, label: "Normale" },
-    { value: 20, label: "perdita <25%" },
-    { value: 30, label: "perdita <50%" },
-    { value: 40, label: "perdita >50%" },
-    { value: 50, label: "Perdita totale" },
+    { value: 0, label: "Normale" },
+    { value: 1, label: "perdita <25%" },
+    { value: 2, label: "perdita <50%" },
+    { value: 3, label: "perdita >50%" },
+    { value: 4, label: "Perdita totale" },
   ];
   const subchondralValues = [
-    { value: 10, label: "Normale" },
-    { value: 20, label: "Irregolarità medie" },
-    { value: 30, label: "Osteofite" },
+    { value: 0, label: "Normale" },
+    { value: 1, label: "Irregolarità medie" },
+    { value: 2, label: "Osteofite" },
   ];
   const distensionValues = [
-    { value: 10, label: "Assente" },
-    { value: 20, label: "Leggera" },
-    { value: 30, label: "Media" },
-    { value: 40, label: "Grave" },
+    { value: 0, label: "Assente", db: "absent" },
+    { value: 1, label: "Leggera", db: "minimum" },
+    { value: 2, label: "Media", db: "moderate" },
+    { value: 3, label: "Grave", db: "severe" },
   ];
   const distensionCauseValues = [
     "Unclear",
@@ -41,8 +41,8 @@ export default function JointVisitQuestions(props) {
   ];
 
   const [disableDistensionCauses, setDisableDistensionCauses] = useState(
-    props.joint.distension == "Absent" ||
-      props.joint.distension == "Minor" ||
+    props.joint.distension == "absent" ||
+      props.joint.distension == "minimum" ||
       props.joint.distension == undefined
       ? true
       : false
@@ -72,19 +72,19 @@ export default function JointVisitQuestions(props) {
         let synovitis = synovitisValues.find(
           (element) => element.value == e.target.value
         );
-        props.joint.setSynovitis(synovitis.label);
+        props.joint.setSynovitis(synovitis.value);
         return props.setJoint(props.joint);
       case "cartilage":
         let cartilage = cartilageValues.find(
           (element) => element.value == e.target.value
         );
-        props.joint.setCartilage(cartilage.label);
+        props.joint.setCartilage(cartilage.value);
         return props.setJoint(props.joint);
       case "subchondral":
         let subchondralBone = subchondralValues.find(
           (element) => element.value == e.target.value
         );
-        props.joint.setSubchondralBone(subchondralBone.label);
+        props.joint.setSubchondralBone(subchondralBone.value);
         return props.setJoint(props.joint);
       case "distension":
         let distension = distensionValues.find(
@@ -93,26 +93,27 @@ export default function JointVisitQuestions(props) {
         if (distension.label == "Media" || distension.label == "Grave")
           setDisableDistensionCauses(false);
         else setDisableDistensionCauses(true);
-        props.joint.setDistension(distension.label);
+        props.joint.setDistension(distension.db);
         return props.setJoint(props.joint);
     }
   };
 
   const valueResolver = (s) => {
-    let n = 10;
+    let n = 0;
     switch (s) {
       case "synovitis":
         if (props.joint.synovitis != undefined) {
           let synovitis = synovitisValues.find(
-            (element) => element.label == props.joint.synovitis
+            (element) => element.value == props.joint.synovitis
           );
+
           n = synovitis.value;
         }
         return n;
       case "cartilage":
         if (props.joint.cartilage != undefined) {
           let cartilage = cartilageValues.find(
-            (element) => element.label == props.joint.cartilage
+            (element) => element.value == props.joint.cartilage
           );
           n = cartilage.value;
         }
@@ -120,16 +121,22 @@ export default function JointVisitQuestions(props) {
       case "subchondral":
         if (props.joint.subchondralBone != undefined) {
           let subchondral = subchondralValues.find(
-            (element) => element.label == props.joint.subchondralBone
+            (element) => element.value == props.joint.subchondralBone
           );
           n = subchondral.value;
         }
         return n;
       case "distension":
         if (props.joint.distension != undefined) {
-          let distension = distensionValues.find(
-            (element) => element.label == props.joint.distension
+          console.log(
+            "valueResolver distension",
+            distensionValues,
+            props.joint.distension
           );
+          let distension = distensionValues.find(
+            (element) => element.db == props.joint.distension
+          );
+          console.log("valueResolver distension", distension);
           n = distension.value;
         }
         return n;
@@ -254,9 +261,9 @@ export default function JointVisitQuestions(props) {
               name="synovitis"
               disabled={false}
               marks={synovitisValues}
-              min={10}
-              max={30}
-              step={10}
+              min={0}
+              max={2}
+              step={1}
               defaultValue={() => valueResolver("synovitis")}
               className="MuiSlider-markLabel"
               onChange={(e) => modifyPatientSliders(e)}
@@ -278,9 +285,9 @@ export default function JointVisitQuestions(props) {
               name="cartilage"
               disabled={false}
               marks={cartilageValues}
-              min={10}
-              max={50}
-              step={10}
+              min={0}
+              max={4}
+              step={1}
               defaultValue={() => valueResolver("cartilage")}
               onChange={(e) => modifyPatientSliders(e)}
             />
@@ -301,9 +308,9 @@ export default function JointVisitQuestions(props) {
               name="subchondral"
               disabled={false}
               marks={subchondralValues}
-              min={10}
-              max={30}
-              step={10}
+              min={0}
+              max={2}
+              step={1}
               defaultValue={() => valueResolver("subchondral")}
               onChange={(e) => modifyPatientSliders(e)}
             />
@@ -339,9 +346,9 @@ export default function JointVisitQuestions(props) {
               name="distension"
               disabled={false}
               marks={distensionValues}
-              min={10}
-              max={40}
-              step={10}
+              min={0}
+              max={3}
+              step={1}
               defaultValue={() => valueResolver("distension")}
               onChange={(e) => modifyPatientSliders(e)}
             />

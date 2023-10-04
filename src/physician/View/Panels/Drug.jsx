@@ -166,13 +166,13 @@ export default function Drug() {
     setAcuteDrug(ad);
   };
 
-  const sendsAllAndFinish = () => {
+  const sendsAllAndFinish = async () => {
     setSending(true);
     console.log("newVisit:", newVisit);
     let newVisitToSend = new NewVisitToSend(newVisit);
     newVisitToSend.setJoints(newVisit);
     console.log("newVisitToSend:", newVisitToSend);
-    let n = Math.random();
+    /*     let n = Math.random();
     setTimeout(() => {
       if (n > 0.5) {
         setShowFinishAlert(false);
@@ -180,7 +180,21 @@ export default function Drug() {
         setShowFinishAlert(true);
       }
       setSending(false);
-    }, 5000);
+    }, 5000); */
+    try {
+      const sendedVisit = await CommunicationController.post(
+        "visit",
+        newVisitToSend
+      );
+      console.log("sendedVisit:", sendedVisit);
+      setShowFinishAlert(true);
+    } catch (err) {
+      setNetworkError(err || "Errore inatteso");
+      console.error("sendsAllAndFinish", err);
+      setShowFinishAlert(false);
+    } finally {
+      setSending(false);
+    }
   };
 
   const forward = () => {

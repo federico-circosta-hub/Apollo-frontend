@@ -6,8 +6,8 @@ import User, { UserType } from "../Model/User";
 import CommunicationController from "./../Model/CommunicationController";
 
 export default function Login() {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("test@test.it");
+  const [password, setPassword] = useState("test@test.it");
   const [networkError, setNetworkError] = useState(null);
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -75,6 +75,7 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
           <div className="input-group mb-3">
             <input
+              defaultValue={email}
               type="text"
               placeholder="email"
               onChange={(e) => {
@@ -85,6 +86,7 @@ export default function Login() {
           </div>
           <div className="input-group mb-3">
             <input
+              defaultValue={password}
               type="password"
               placeholder="password"
               onChange={(e) => {

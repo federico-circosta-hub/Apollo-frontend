@@ -135,10 +135,10 @@ export default class NewVisitModel {
         false,
         false,
         undefined,
-        "Assente/bassa",
-        "Normale",
-        "Normale",
-        "Assente",
+        0,
+        0,
+        0,
+        "absent",
         ""
       );
       joint.setName(s);
