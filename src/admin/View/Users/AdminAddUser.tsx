@@ -110,13 +110,6 @@ const style = {
         flexDirection: "row" as "row",
         marginTop: "16px",
     },
-    centerRow: {
-        width: "100%",
-        display: "flex",
-        flexDirection: "row" as "row",
-        justifyContent: "center",
-        marginTop: "4px",
-    },
     field: {
         flex: 1,
         marginLeft: "16px",

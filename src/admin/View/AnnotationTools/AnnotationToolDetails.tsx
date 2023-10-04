@@ -1,10 +1,12 @@
 import { DetailItemProps } from "../MasterDetail/DetailComponent";
-import AnnotationTool from "../../../common/Model/AnnotationTool";
-import { useEffect, useState } from "react";
+import AnnotationTool, {
+    AnnotationToolData,
+} from "../../../common/Model/AnnotationTool";
+import { useCallback, useEffect, useState } from "react";
 import AnnotationType from "../../../common/Model/AnnotationType";
 import AnnotationTypeDetails from "./AnnotationTypeDetails";
 import Box from "@mui/material/Box";
-import AnnotationToolData from "./AnnotationToolData";
+import AnnotationToolFields from "./AnnotationToolFields";
 import AnnotationToolTypes from "./AnnotationToolTypes";
 
 export default function AnnotationToolDetails({ item }: DetailItemProps) {
@@ -42,9 +44,24 @@ const AnnotationToolDetailsPage = ({
     tool: AnnotationTool;
     onTypeSelected: (type?: AnnotationType) => void;
 }) => {
+    const saveData = useCallback(
+        async (data: AnnotationToolData) => {
+            const updated = await tool.update(data);
+
+            return updated
+                ? "Modifiche salvate con successo"
+                : "Nessuna modifica effettuata";
+        },
+        [tool]
+    );
+
     return (
         <Box sx={style.box}>
-            <AnnotationToolData tool={tool} style={{ height: "75%" }} />
+            <AnnotationToolFields
+                tool={tool}
+                onSave={saveData}
+                style={{ height: "75%" }}
+            />
             <Box sx={{ m: 1 }} />
             <AnnotationToolTypes
                 tool={tool}

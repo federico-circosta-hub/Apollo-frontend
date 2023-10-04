@@ -12,6 +12,31 @@ export type AnnotationToolEndpoints = {
     update_annotation_endpoint: string;
 };
 
+export type EndpointsKey = keyof AnnotationToolEndpoints;
+
+export const isAnnotationToolDataValid = (data: AnnotationToolData) => {
+    return data.name.trim() !== "" && data.base_url.trim() !== "";
+};
+
+export class AnnotationToolData {
+    name: string = "";
+    base_url: string = "";
+    authorization_header: string = "";
+    new_instance_instructions: string = "";
+    endpoints: AnnotationToolEndpoints = {
+        create_task_endpoint: "",
+        delete_task_endpoint: "",
+        task_homepage_endpoint: "",
+        import_media_endpoint: "",
+        add_storage_endpoint: "",
+        add_webhook_endpoint: "",
+        update_annotation_endpoint: "",
+        edit_annotation_endpoint: "",
+    };
+}
+
+export type AnnotationToolDataKey = keyof AnnotationToolData;
+
 export default class AnnotationTool {
     id: number;
     name: string;
@@ -46,11 +71,30 @@ export default class AnnotationTool {
         this.edit_annotation_endpoint = obj.edit_annotation_endpoint;
     }
 
+    getData = (): AnnotationToolData => {
+        return {
+            name: this.name,
+            base_url: this.base_url,
+            authorization_header: this.authorization_header,
+            new_instance_instructions: this.new_instance_instructions,
+            endpoints: {
+                create_task_endpoint: this.create_task_endpoint,
+                delete_task_endpoint: this.delete_task_endpoint,
+                task_homepage_endpoint: this.task_homepage_endpoint,
+                import_media_endpoint: this.import_media_endpoint,
+                add_storage_endpoint: this.add_storage_endpoint,
+                add_webhook_endpoint: this.add_webhook_endpoint,
+                update_annotation_endpoint: this.update_annotation_endpoint,
+                edit_annotation_endpoint: this.edit_annotation_endpoint,
+            },
+        };
+    };
+
     filter = (filter: string): boolean => {
         return this.name.toLowerCase().includes(filter.toLowerCase());
     };
 
-    types = async (): Promise<AnnotationType[]> => {
+    getTypes = async (): Promise<AnnotationType[]> => {
         if (this.annotationTypes.length === 0) {
             this.annotationTypes =
                 await CommunicationController.getAnnotationTypes(this.id);
@@ -73,15 +117,6 @@ export default class AnnotationTool {
         return newType;
     };
 
-    updateType = (updatedType: AnnotationType) => {
-        this.annotationTypes = this.annotationTypes.map((type) => {
-            if (type.id === updatedType.id) {
-                return updatedType;
-            }
-            return type;
-        });
-    };
-
     async deleteType(type: AnnotationType) {
         await CommunicationController.deleteAnnotationType(type.id);
         this.annotationTypes = this.annotationTypes.filter(
@@ -89,13 +124,9 @@ export default class AnnotationTool {
         );
     }
 
-    update = async (data: {
-        base_url: string;
-        authorization_header: string;
-        new_instance_instructions: string;
-        endpoints: AnnotationToolEndpoints;
-    }): Promise<boolean> => {
-        if (!this.checkDifferences(data)) return false;
+    update = async (data: AnnotationToolData): Promise<boolean> => {
+        if (!isAnnotationToolDataValid(data) || !this.checkDifferences(data))
+            return false;
 
         await CommunicationController.updateAnnotationTool(this.id, data);
 
@@ -115,12 +146,7 @@ export default class AnnotationTool {
         return true;
     };
 
-    private checkDifferences = (data: {
-        base_url: string;
-        authorization_header: string;
-        new_instance_instructions: string;
-        endpoints: AnnotationToolEndpoints;
-    }) => {
+    private checkDifferences = (data: AnnotationToolData) => {
         if (this.base_url !== data.base_url) return true;
         if (this.authorization_header !== data.authorization_header)
             return true;

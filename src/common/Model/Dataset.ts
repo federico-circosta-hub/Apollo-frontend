@@ -6,8 +6,6 @@ export enum MediaType {
     VIDEO = "video",
 }
 
-export type DatasetDataKey = keyof DatasetData;
-
 export const isDatasetValid = (data: DatasetData): boolean => {
     return (
         data.name.trim() !== "" &&
@@ -27,6 +25,8 @@ export class DatasetData {
         this.start_date = dayjs().subtract(1, "month");
     }
 }
+
+export type DatasetDataKey = keyof DatasetData;
 
 export default class Dataset {
     id: number;

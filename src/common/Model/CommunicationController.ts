@@ -3,7 +3,10 @@ import config from "../../config";
 import User, { AnnotationToolAccess, UserData, UserType } from "./User";
 import PhysicianTask from "./PhysicianTask";
 import Dataset, { DatasetData } from "./Dataset";
-import AnnotationTool, { AnnotationToolEndpoints } from "./AnnotationTool";
+import AnnotationTool, {
+    AnnotationToolData,
+    AnnotationToolEndpoints,
+} from "./AnnotationTool";
 import AnnotationType from "./AnnotationType";
 
 type Params = { [key: string]: any };
@@ -48,6 +51,7 @@ class CommunicationController {
         DELETE_ANNOTATION_TYPE: "/annotationType",
         NEW_DATASET: "/dataset",
         NEW_PHYSICIAN: "/user/physician",
+        NEW_ANNOTATION_TOOL: "/annotationTool",
     };
 
     private baseCall = async (
@@ -239,12 +243,7 @@ class CommunicationController {
 
     updateAnnotationTool = async (
         annotationTool: number,
-        data: {
-            base_url: string;
-            authorization_header: string;
-            new_instance_instructions: string;
-            endpoints: AnnotationToolEndpoints;
-        }
+        data: AnnotationToolData
     ): Promise<AnnotationTool> => {
         const res = await this.patch(this.endpoints.UPDATE_ANNOTATION_TOOL, {
             id: annotationTool,
@@ -321,18 +320,25 @@ class CommunicationController {
         });
     };
 
-    async newDataset(data: DatasetData): Promise<Dataset> {
+    newDataset = async (data: DatasetData): Promise<Dataset> => {
         const res = await this.post(this.endpoints.NEW_DATASET, data);
         return new Dataset(res);
-    }
+    };
 
-    async newPhysician(data: UserData): Promise<User> {
+    newPhysician = async (data: UserData): Promise<User> => {
         const res = await this.post(this.endpoints.NEW_PHYSICIAN, {
             ...data,
             type: UserType.PHYSICIAN,
         });
         return new User(res);
-    }
+    };
+
+    newAnnotationTool = async (
+        data: AnnotationToolData
+    ): Promise<AnnotationTool> => {
+        const res = await this.post(this.endpoints.NEW_ANNOTATION_TOOL, data);
+        return new AnnotationTool(res);
+    };
 
     private formatGetData = (data: Params): string => {
         let result = "?";

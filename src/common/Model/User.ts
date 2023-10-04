@@ -14,8 +14,6 @@ export type AnnotationToolAccess = {
     access: boolean;
 };
 
-export type UserDataKey = keyof UserData;
-
 export const isUserEmailValid = (email: string): boolean => {
     email = email.trim();
     return /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
@@ -28,6 +26,8 @@ export const isUserValid = (data: UserData): boolean => {
         isUserEmailValid(data.email)
     );
 };
+
+export type UserDataKey = keyof UserData;
 
 export class UserData {
     email: string = "";

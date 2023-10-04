@@ -17,7 +17,7 @@ export default function ButtonsFooter({
     status: Status;
     onSave: () => Promise<string>;
     onDelete?: () => Promise<void>;
-    onExit: () => void;
+    onExit?: () => void;
 }) {
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
     const [snackbarText, setSnackbarText] = useState<string>("");
@@ -25,14 +25,16 @@ export default function ButtonsFooter({
     const handleSave = useCallback(async () => {
         const res = await onSave();
         setSnackbarText(res);
-        setTimeout(() => onExit(), 1000);
+        if (onExit) setTimeout(() => onExit(), 1000);
     }, [onSave, onExit]);
 
     return (
         <Box sx={style.footer}>
-            <Button variant="contained" color="error" onClick={onExit}>
-                Esci
-            </Button>
+            {onExit && (
+                <Button variant="contained" color="error" onClick={onExit}>
+                    Esci
+                </Button>
+            )}
             {onDelete && (
                 <StatusLoadingButton
                     text="Elimina"

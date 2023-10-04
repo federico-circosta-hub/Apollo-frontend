@@ -54,6 +54,9 @@ const AdminTasks = React.lazy(() => import("./admin/View/AdminTasks"));
 const AdminTools = React.lazy(() =>
     import("./admin/View/AnnotationTools/AdminTools")
 );
+const AdminAddTool = React.lazy(() =>
+    import("./admin/View/AnnotationTools/AdminAddTool")
+);
 
 function App() {
     const [user, setUser] = useState(null);
@@ -149,6 +152,10 @@ const UserRoutes = () => {
                                     <Route
                                         path="/tools"
                                         element={<AdminTools />}
+                                    />
+                                    <Route
+                                        path="/tools/add"
+                                        element={<AdminAddTool />}
                                     />
                                     <Route
                                         path="/tasks"
