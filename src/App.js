@@ -13,7 +13,7 @@ import { VisitProvider } from "./physician/Model/VisitContext";
 import { NewVisitProvider } from "./physician/Model/NewVisitContext";
 import { CurrentJointProvider } from "./physician/Model/CurrentJointContext";
 import { UserType } from "./common/Model/User";
-import UsersProvider from "./admin/ViewModel/UsersProvider";
+import PhysiciansProvider from "./admin/ViewModel/UsersProvider";
 import DatasetsProvider from "./admin/ViewModel/DatasetsProvider";
 import AnnotationToolsProvider from "./admin/ViewModel/AnnotationToolsProvider";
 import FunctionsProvider from "./admin/ViewModel/FunctionsProvider";
@@ -41,6 +41,9 @@ const Annotations = React.lazy(() =>
 
 const AdminHome = React.lazy(() => import("./admin/View/AdminHome"));
 const AdminUsers = React.lazy(() => import("./admin/View/Users/AdminUsers"));
+const AdminAddUser = React.lazy(() =>
+    import("./admin/View/Users/AdminAddUser")
+);
 const AdminDatasets = React.lazy(() =>
     import("./admin/View/Datasets/AdminDatasets")
 );
@@ -121,7 +124,7 @@ const UserRoutes = () => {
     } else if (user.type === UserType.ADMIN) {
         return (
             <AdminHeader>
-                <UsersProvider>
+                <PhysiciansProvider>
                     <DatasetsProvider>
                         <AnnotationToolsProvider>
                             <FunctionsProvider>
@@ -132,8 +135,16 @@ const UserRoutes = () => {
                                         element={<AdminUsers />}
                                     />
                                     <Route
+                                        path="/users/add"
+                                        element={<AdminAddUser />}
+                                    />
+                                    <Route
                                         path="/datasets"
                                         element={<AdminDatasets />}
+                                    />
+                                    <Route
+                                        path="/datasets/add"
+                                        element={<AdminAddDataset />}
                                     />
                                     <Route
                                         path="/tools"
@@ -143,15 +154,11 @@ const UserRoutes = () => {
                                         path="/tasks"
                                         element={<AdminTasks />}
                                     />
-                                    <Route
-                                        path="/datasets/add"
-                                        element={<AdminAddDataset />}
-                                    />
                                 </Routes>
                             </FunctionsProvider>
                         </AnnotationToolsProvider>
                     </DatasetsProvider>
-                </UsersProvider>
+                </PhysiciansProvider>
             </AdminHeader>
         );
     }

@@ -5,8 +5,14 @@ import CommunicationController from "../../common/Model/CommunicationController"
 export const DatasetsContext = createContext<{
     get: () => Promise<Dataset[]>;
     delete: (datasetId: number) => Promise<void>;
-    add: (dataset: DatasetData) => Promise<void>;
-}>({ get: async () => [], add: async () => {}, delete: async () => {} });
+    add: (dataset: DatasetData) => Promise<Dataset | undefined>;
+}>({
+    get: async () => [],
+    add: async () => {
+        return undefined;
+    },
+    delete: async () => {},
+});
 
 export default function DatasetsProvider({
     children,
@@ -27,8 +33,8 @@ export default function DatasetsProvider({
 
     const addDataset = useCallback(async (data: DatasetData) => {
         const dataset = await CommunicationController.newDataset(data);
-        console.log(dataset);
         datasets.current.push(dataset);
+        return dataset;
     }, []);
 
     const removeDataset = useCallback(async (datasetId: number) => {

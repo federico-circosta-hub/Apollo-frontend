@@ -1,29 +1,48 @@
 import { createContext, useCallback, useRef } from "react";
-import User from "../../common/Model/User";
+import User, { UserData } from "../../common/Model/User";
 import CommunicationController from "../../common/Model/CommunicationController";
 
-export const UsersContext = createContext<() => Promise<User[]>>(
-    async () => []
-);
+export const PhysiciansContext = createContext<{
+    get: () => Promise<User[]>;
+    add: (user: UserData) => Promise<User | undefined>;
+}>({
+    get: async () => [],
+    add: async () => {
+        return undefined;
+    },
+});
 
-export default function UsersProvider({
+export default function PhysiciansProvider({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const synchronized = useRef<boolean>(false);
     const users = useRef<User[]>([]);
 
-    const getUsers = useCallback(async () => {
-        if (users.current.length === 0) {
+    const getPhysician = useCallback(async () => {
+        if (!synchronized.current) {
             const res = await CommunicationController.getPhysicians(true);
-            users.current = res;
+            synchronized.current = true;
+            users.current.push(...res);
         }
         return users.current;
     }, []);
 
+    const addPhysician = useCallback(async (data: UserData) => {
+        const user = await CommunicationController.newPhysician(data);
+        users.current.push(user);
+        return user;
+    }, []);
+
     return (
-        <UsersContext.Provider value={getUsers}>
+        <PhysiciansContext.Provider
+            value={{
+                get: getPhysician,
+                add: addPhysician,
+            }}
+        >
             {children}
-        </UsersContext.Provider>
+        </PhysiciansContext.Provider>
     );
 }

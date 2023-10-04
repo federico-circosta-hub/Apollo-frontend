@@ -14,21 +14,44 @@ export type AnnotationToolAccess = {
     access: boolean;
 };
 
+export type UserDataKey = keyof UserData;
+
+export const isUserEmailValid = (email: string): boolean => {
+    email = email.trim();
+    return /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+};
+
+export const isUserValid = (data: UserData): boolean => {
+    return (
+        data.name.trim() !== "" &&
+        data.surname.trim() !== "" &&
+        isUserEmailValid(data.email)
+    );
+};
+
+export class UserData {
+    email: string = "";
+    name: string = "";
+    surname: string = "";
+}
+
 export default class User {
     id: number;
-    name: string;
     email: string;
+    name: string;
     surname?: string;
     type: UserType;
     enabled: boolean;
+    password?: string;
 
-    constructor(obj: User | any = {}) {
-        this.id = obj.id ?? 0;
-        this.name = obj.name ?? "";
-        this.email = obj.email ?? "";
-        this.surname = obj.surname ?? "";
-        this.type = obj.type ?? UserType.PHYSICIAN;
-        this.enabled = obj.enabled ?? false;
+    constructor(obj: User) {
+        this.id = obj.id;
+        this.name = obj.name;
+        this.email = obj.email;
+        this.surname = obj.surname;
+        this.type = obj.type;
+        this.enabled = obj.enabled;
+		this.password = obj.password;
     }
 
     getInitials = (): string => {
