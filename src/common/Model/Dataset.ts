@@ -1,9 +1,32 @@
+import dayjs, { Dayjs } from "dayjs";
 import CommunicationController from "./CommunicationController";
 
 export enum MediaType {
     IMAGE = "image",
     VIDEO = "video",
 }
+
+export const isDatasetValid = (data: DatasetData): boolean => {
+    return (
+        data.name.trim() !== "" &&
+        data.start_date !== null &&
+        data.end_date !== null &&
+        data.start_date.isBefore(data.end_date)
+    );
+};
+
+export class DatasetData {
+    name: string = "";
+    start_date: Dayjs | null;
+    end_date: Dayjs | null = dayjs();
+    type: MediaType = MediaType.IMAGE;
+
+    constructor() {
+        this.start_date = dayjs().subtract(1, "month");
+    }
+}
+
+export type DatasetDataKey = keyof DatasetData;
 
 export default class Dataset {
     id: number;
@@ -20,7 +43,7 @@ export default class Dataset {
         this.start_date = obj.start_date;
         this.end_date = obj.end_date;
         this.type = obj.type ?? MediaType.IMAGE;
-        this.media_count = obj.media_count ?? false;
+        this.media_count = obj.media_count ?? 0;
         this.completed = obj.completed;
     }
 

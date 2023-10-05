@@ -1,8 +1,8 @@
 import RefreshIcon from "@mui/icons-material/Refresh";
-import LoadingButton from "@mui/lab/LoadingButton";
 import Typography from "@mui/material/Typography";
 import Status from "../Model/Status";
 import Box from "@mui/material/Box";
+import StatusLoadingButton from "../../admin/Components/StatusLoadingButton";
 
 export default function LoadingError({
     status,
@@ -21,16 +21,12 @@ export default function LoadingError({
                     : errorMsg}
             </Typography>
 
-            <LoadingButton
-                loading={status === Status.LOADING}
-                loadingPosition="start"
-                startIcon={<RefreshIcon />}
-                variant="contained"
-                color={status === Status.ERROR ? "error" : "primary"}
+            <StatusLoadingButton
+                text="Ricarica"
                 onClick={onReload}
-            >
-                Ricarica
-            </LoadingButton>
+                status={status}
+                icon={<RefreshIcon />}
+            />
         </Box>
     );
 }

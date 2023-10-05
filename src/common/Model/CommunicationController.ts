@@ -1,9 +1,12 @@
 import axios from "axios";
 import config from "../../config";
-import User, { AnnotationToolAccess } from "./User";
+import User, { AnnotationToolAccess, UserData, UserType } from "./User";
 import PhysicianTask from "./PhysicianTask";
-import Dataset from "./Dataset";
-import AnnotationTool, { AnnotationToolEndpoints } from "./AnnotationTool";
+import Dataset, { DatasetData } from "./Dataset";
+import AnnotationTool, {
+    AnnotationToolData,
+    AnnotationToolEndpoints,
+} from "./AnnotationTool";
 import AnnotationType from "./AnnotationType";
 
 type Params = { [key: string]: any };
@@ -20,7 +23,7 @@ enum HttpMethod {
 class CommunicationController {
     controller = axios.create({
         baseURL: config.API_URL,
-        timeout: 5000,
+        timeout: 10000,
         headers: { "Content-Type": "application/json" },
     });
 
@@ -44,6 +47,11 @@ class CommunicationController {
         NEW_ANNOTATION_TYPE: "/annotationType",
         UPDATE_ANNOTATION_TYPE: "/annotationType",
         DELETE_DATASET: "/dataset",
+        DELETE_ANNOTATION_TOOL: "/annotationTool",
+        DELETE_ANNOTATION_TYPE: "/annotationType",
+        NEW_DATASET: "/dataset",
+        NEW_PHYSICIAN: "/user/physician",
+        NEW_ANNOTATION_TOOL: "/annotationTool",
     };
 
     private baseCall = async (
@@ -235,12 +243,7 @@ class CommunicationController {
 
     updateAnnotationTool = async (
         annotationTool: number,
-        data: {
-            base_url: string;
-            authorization_header: string;
-            new_instance_instructions: string;
-            endpoints: AnnotationToolEndpoints;
-        }
+        data: AnnotationToolData
     ): Promise<AnnotationTool> => {
         const res = await this.patch(this.endpoints.UPDATE_ANNOTATION_TOOL, {
             id: annotationTool,
@@ -260,19 +263,21 @@ class CommunicationController {
 
     newAnnotationType = async (
         annotation_tool: number,
-        name: string,
-        annotation_instructions: string,
-        annotation_interface: string,
-        print_function: string,
-        conflict_function: string
+        data: {
+            name: string;
+            annotation_instructions: string;
+            annotation_interface: string;
+            print_function: string;
+            conflict_function: string;
+        }
     ): Promise<AnnotationType> => {
         const res = await this.post(this.endpoints.NEW_ANNOTATION_TYPE, {
             annotation_tool,
-            name,
-            annotation_instructions,
-            annotation_interface,
-            print_function,
-            conflict_function,
+            name: data.name,
+            annotation_instructions: data.annotation_instructions,
+            annotation_interface: data.annotation_interface,
+            print_function: data.print_function,
+            conflict_function: data.conflict_function,
         });
 
         return new AnnotationType(res);
@@ -297,6 +302,42 @@ class CommunicationController {
 
     deleteDataset = async (dataset: number): Promise<Dataset> => {
         return this.delete(this.endpoints.DELETE_DATASET, { id: dataset });
+    };
+
+    deleteAnnotationTool = async (
+        annotationTool: number
+    ): Promise<AnnotationTool> => {
+        return this.delete(this.endpoints.DELETE_ANNOTATION_TOOL, {
+            id: annotationTool,
+        });
+    };
+
+    deleteAnnotationType = async (
+        annotationType: number
+    ): Promise<AnnotationTool> => {
+        return this.delete(this.endpoints.DELETE_ANNOTATION_TYPE, {
+            id: annotationType,
+        });
+    };
+
+    newDataset = async (data: DatasetData): Promise<Dataset> => {
+        const res = await this.post(this.endpoints.NEW_DATASET, data);
+        return new Dataset(res);
+    };
+
+    newPhysician = async (data: UserData): Promise<User> => {
+        const res = await this.post(this.endpoints.NEW_PHYSICIAN, {
+            ...data,
+            type: UserType.PHYSICIAN,
+        });
+        return new User(res);
+    };
+
+    newAnnotationTool = async (
+        data: AnnotationToolData
+    ): Promise<AnnotationTool> => {
+        const res = await this.post(this.endpoints.NEW_ANNOTATION_TOOL, data);
+        return new AnnotationTool(res);
     };
 
     private formatGetData = (data: Params): string => {
