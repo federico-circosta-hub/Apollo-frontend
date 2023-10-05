@@ -16,6 +16,7 @@ import c from "../../img/example_gin/3.jpg";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import { validateForm } from "../../ViewModel/Validation";
 import { Skeleton, CircularProgress } from "@mui/material";
+import CommunicationController from "../../../common/Model/CommunicationController";
 
 export default function Joint(props) {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -24,6 +25,7 @@ export default function Joint(props) {
 
   const [joint, setJoint] = useState(null);
   const [photos, setPhotos] = useState(newVisit.ecographies);
+  const [ids, setIds] = useState(newVisit.ecographiesId);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [formModal, setFormModal] = useState(false);
@@ -64,21 +66,29 @@ export default function Joint(props) {
 
   const getNewImages = async () => {
     setLoadingImages(true);
-    setTimeout(async () => {
-      try {
-        const imagesFromServer = await GenerateImages(); // await CommunicationController.get("media", {});
-        setPhotos((prevState) => [...prevState, ...imagesFromServer]);
-        newVisit.setEcographies(imagesFromServer);
-      } catch (err) {
-        setNetworkError(err || "Errore inatteso");
-      }
-    }, 3000);
+    console.log({
+      patient: selectedPatient.pid,
+      date: newVisit.visitDate,
+      exclude: ids,
+    });
+    try {
+      const idsFromServer = await CommunicationController.post("media/visit", {
+        patient: selectedPatient.pid,
+        date: newVisit.visitDate,
+        exclude: ids,
+      });
+      console.log(idsFromServer);
+      //newVisit.setEcographiesId(idsFromServer);
+    } catch (err) {
+      console.log(err);
+      setNetworkError(err || "Errore inatteso");
+    }
+    setLoadingImages(false);
   };
 
   const loadJoint = async () => {
     let j = await newVisit.getJoint(currentJoint);
     setJoint(j);
-    photos.length < 6 && (await getNewImages()); //massimo sei immagini
   };
 
   const openModal = (e) => {
@@ -94,9 +104,18 @@ export default function Joint(props) {
   };
 
   const filteredPhotos = () => {
+    if (photos.length === 0) return [];
     return photos.filter(
       (photo) =>
-        photo.jointRef === undefined || photo.jointRef === joint.jointName
+        photo.joint === undefined ||
+        (photo.joint ===
+          joint.jointName
+            .substring(0, joint.jointName.length - 3)
+            .ToLowerCase() &&
+          photo.side ===
+            joint.jointName
+              .substring(joint.jointName.length - 2, joint.jointName.length)
+              .toUpperCase())
     );
   };
 
@@ -147,14 +166,18 @@ export default function Joint(props) {
                 />
               </div>
               {joint != null ? (
-                <EcographImages
-                  handleClick={(e) => openModal(e)}
-                  photos={filteredPhotos()}
-                  setPhotos={setPhotos}
-                  joint={{ joint, setJoint }}
-                  loadingImages={loadingImages}
-                  setLoadingImages={setLoadingImages}
-                />
+                networkError === null ? (
+                  <EcographImages
+                    handleClick={(e) => openModal(e)}
+                    photos={filteredPhotos()}
+                    setPhotos={setPhotos}
+                    joint={{ joint, setJoint }}
+                    loadingImages={loadingImages}
+                    setLoadingImages={setLoadingImages}
+                  />
+                ) : (
+                  <h6>Errore nel caricamento delle immagini riprova</h6>
+                )
               ) : (
                 "Caricamento articolazione..."
               )}

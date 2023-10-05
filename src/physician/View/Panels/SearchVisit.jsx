@@ -59,7 +59,7 @@ export default function SearchVisit(props) {
 
   const createNewVisit = (IsInPresence) => {
     let nv = new NewVisitModel();
-    let pv = visitList.length > 0 ? visitList[0] : undefined;
+    let pv = visitList.length > 0 ? new Date(visitList[0].date) : undefined;
     nv.setPhysician(props.id);
     nv.setPreviousVisit(pv);
     nv.setIsInPresence(IsInPresence);

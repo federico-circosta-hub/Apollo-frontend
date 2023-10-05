@@ -46,8 +46,14 @@ export default class NewVisitModel {
   isInPresence;
 
   ecographies = [];
+  ecographiesId = [];
 
   constructor() {}
+
+  setEcographiesId(e) {
+    let updatedEcographiesId = [...this.ecographiesId, ...e];
+    this.ecographiesId = updatedEcographiesId;
+  }
 
   setEcographies(e) {
     let updatedEcographies = [...this.ecographies, ...e];
