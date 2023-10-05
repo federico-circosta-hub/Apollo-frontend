@@ -9,7 +9,7 @@ export default function ErrorScreen({
     onRetry: () => Promise<void>;
 }) {
     return (
-        <MainContainer style={style.errorScreen}>
+        <MainContainer style={style.container}>
             <Typography
                 variant="h4"
                 color="red"
@@ -30,11 +30,10 @@ export default function ErrorScreen({
 }
 
 const style = {
-    errorScreen: {
+    container: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column" as "column",
-        margin: "auto",
     },
 };

@@ -4,10 +4,9 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
 import ConfirmActionModal from "../../../common/View/Modal/ConfirmActionModal";
+import AddButton from "../../Components/AddButton";
 
 export type MasterItemProps = {
     item: any;
@@ -45,7 +44,13 @@ export default function MasterComponent({
             <Box sx={style.topBar}>
                 <Search onChange={(text) => setFilter(text)} />
                 <Box sx={{ flex: 1, height: 0 }} />
-                {onAdd && <AddButton itemName={itemName} onClick={onAdd} />}
+                {onAdd && (
+                    <AddButton
+                        itemName={itemName}
+                        onAdd={onAdd}
+                        style={style.addButton}
+                    />
+                )}
             </Box>
             <Box sx={style.scrollable}>
                 <List sx={{ width: "100%" }}>
@@ -95,25 +100,6 @@ const Search = ({ onChange }: { onChange: (text: string) => void }) => {
                 ),
             }}
         />
-    );
-};
-
-const AddButton = ({
-    itemName: title,
-    onClick,
-}: {
-    itemName: string;
-    onClick: () => void;
-}) => {
-    return (
-        <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            sx={style.addButton}
-            onClick={onClick}
-        >
-            {title}
-        </Button>
     );
 };
 

@@ -8,6 +8,7 @@ import DetailComponent, { DetailItemProps } from "./DetailComponent";
 import { useNavigate } from "react-router-dom";
 import Status from "../../../common/Model/Status";
 import ErrorScreen from "./ErrorScreen";
+import EmptyScreen from "./EmptyScreen";
 
 export default function MasterDetail({
     items,
@@ -36,6 +37,8 @@ export default function MasterDetail({
     }, [navigate, addRoute]);
 
     if (status === Status.ERROR) return <ErrorScreen onRetry={onRetry} />;
+    if (status !== Status.LOADING && items.length === 0)
+        return <EmptyScreen itemName={itemName} onAdd={onAdd} />;
 
     return (
         <MainContainer style={style.outerBox}>
