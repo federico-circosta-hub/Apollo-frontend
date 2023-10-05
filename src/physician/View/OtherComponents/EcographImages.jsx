@@ -4,12 +4,21 @@ import { Skeleton, CircularProgress } from "@mui/material";
 
 const EcographImages = (props) => {
   const handleSelect = (e, photo) => {
-    const index = props.photos.findIndex((p) => p.link === photo.link);
+    const index = props.photos.findIndex((p) => p.id === photo.id);
     let newPhotos = props.photos;
     if (e.target.checked) {
-      newPhotos[index].jointRef = props.joint.joint.jointName;
+      newPhotos[index].realJoint = props.joint.joint.jointName
+        .substring(0, props.joint.joint.jointName.length - 3)
+        .toLowerCase();
+      newPhotos[index].realSide = props.joint.joint.jointName
+        .substring(
+          props.joint.joint.jointName.length - 2,
+          props.joint.joint.jointName.length
+        )
+        .toUpperCase();
     } else {
-      newPhotos[index].jointRef = undefined;
+      newPhotos[index].realJoint = undefined;
+      newPhotos[index].realSide = undefined;
     }
     props.setPhotos(newPhotos);
   };
@@ -54,7 +63,20 @@ const EcographImages = (props) => {
               flexDirection: "column",
               margin: 2,
               background: props.photos
-                .filter((p) => p.jointRef === props.joint.joint.jointName)
+                .filter(
+                  (p) =>
+                    p.realJoint ===
+                      props.joint.joint.jointName
+                        .substring(0, props.joint.joint.jointName.length - 3)
+                        .toLowerCase() &&
+                    p.realSide ===
+                      props.joint.joint.jointName
+                        .substring(
+                          props.joint.joint.jointName.length - 2,
+                          props.joint.joint.jointName.length
+                        )
+                        .toUpperCase()
+                )
                 .includes(photo)
                 ? "#90ee90"
                 : "",
@@ -66,14 +88,27 @@ const EcographImages = (props) => {
                 props.setLoadingImages(false);
               }}
               onClick={props.handleClick}
-              src={photo.link}
+              src={photo.base64}
               alt={`Photo ${index}`}
               width={"100%"}
               style={{ borderRadius: "5px" }}
             />
             <Checkbox
               checked={props.photos
-                .filter((p) => p.jointRef === props.joint.joint.jointName)
+                .filter(
+                  (p) =>
+                    p.realJoint ===
+                      props.joint.joint.jointName
+                        .substring(0, props.joint.joint.jointName.length - 3)
+                        .toLowerCase() &&
+                    p.realSide ===
+                      props.joint.joint.jointName
+                        .substring(
+                          props.joint.joint.jointName.length - 2,
+                          props.joint.joint.jointName.length
+                        )
+                        .toUpperCase()
+                )
                 .includes(photo)}
               onChange={(e) => handleSelect(e, photo)}
             ></Checkbox>

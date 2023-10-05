@@ -63,19 +63,19 @@ export const validateForm = (formName, formData, formData2) => {
       return errors;
     case "jointVisit":
       if (
-        (formData.distension == "Media" || formData.distension == "Grave") &&
+        (formData.distension == "minor" || formData.distension == "severe") &&
         (formData.distensionCause == undefined ||
           formData.distensionCause == "")
       ) {
         errors.distension = "Inserire una causa per la distensione";
       }
-      if (
+      /*       if (
         formData2.ecographies.find(
           (el) => el.jointRef === formData.jointName
         ) === undefined
       ) {
         errors.images = `Selezionare almeno un'immagine dell'articolazione`;
-      }
+      } */
       return errors;
   }
 };

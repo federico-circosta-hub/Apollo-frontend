@@ -33,19 +33,22 @@ export default class JointToSendModel {
 
   setMediaIds(newVisit) {
     let mediaIds = [];
-
-    /*     newVisit.ecographies.forEach((element) => {
+    newVisit.ecographies.forEach((element) => {
+      console.log(
+        "setMediaIds:",
+        element.realJoint,
+        element.realSide,
+        this.name,
+        this.side
+      );
       if (
-        element.jointRef !== undefined &&
-        element.jointRef.substring(0, 5) === this.name.substring(0, 5) &&
-        element.jointRef.substring(
-          element.jointRef.length - 2,
-          element.jointRef.length
-        ) === this.side.toLowerCase()
+        element.realJoint !== undefined &&
+        element.realJoint === this.name &&
+        element.realSide === this.side
       ) {
-        mediaIds.push(element.link);
+        mediaIds.push(element.id);
       }
-    }); */
+    });
     this.media_ids = mediaIds;
   }
 
