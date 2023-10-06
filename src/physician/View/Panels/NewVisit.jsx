@@ -119,6 +119,7 @@ export default function NewVisit() {
         setTraumaticEvent(traumaticEvent);
         return;
       case "visitDate":
+        date.setHours(10, 15);
         setVisitDate(date);
         return;
     }

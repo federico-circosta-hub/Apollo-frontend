@@ -46,12 +46,20 @@ export default class NewVisitModel {
   isInPresence;
 
   ecographies = [];
+  ecographiesId = [];
 
   constructor() {}
 
+  setEcographiesId(e) {
+    let union = this.ecographiesId.concat(e);
+    this.ecographiesId = union.filter(
+      (item, pos) => union.indexOf(item) === pos
+    );
+  }
+
   setEcographies(e) {
-    let updatedEcographies = [...this.ecographies, ...e];
-    this.ecographies = updatedEcographies;
+    let union = this.ecographies.concat(e);
+    this.ecographies = union.filter((item, pos) => union.indexOf(item) === pos);
   }
 
   setPhysician(p) {

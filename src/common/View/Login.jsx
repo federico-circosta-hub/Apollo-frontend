@@ -13,6 +13,18 @@ export default function Login() {
 
   const [, setUser] = useContext(UserContext);
 
+  useEffect(() => {
+    getUserFromLS();
+  }, []);
+
+  const getUserFromLS = async () => {
+    const user = localStorage.getItem("user");
+    if (user !== null) {
+      const userObj = await JSON.parse(user);
+      setUser(new User(userObj));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoginLoading(true);
@@ -22,6 +34,7 @@ export default function Login() {
         email: email,
         password: password,
       });
+      localStorage.setItem("user", JSON.stringify(u));
       setUser(new User(u));
     } catch (err) {
       console.log(err);

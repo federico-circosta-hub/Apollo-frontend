@@ -16,6 +16,8 @@ import c from "../../img/example_gin/3.jpg";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import { validateForm } from "../../ViewModel/Validation";
 import { Skeleton, CircularProgress } from "@mui/material";
+import CommunicationController from "../../../common/Model/CommunicationController";
+import { Alert, AlertTitle } from "@mui/material";
 
 export default function Joint(props) {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -24,24 +26,29 @@ export default function Joint(props) {
 
   const [joint, setJoint] = useState(null);
   const [photos, setPhotos] = useState(newVisit.ecographies);
+  const [ids, setIds] = useState(newVisit.ecographiesId);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [formModal, setFormModal] = useState(false);
   const [errors, setErrors] = useState({ none: "none" });
   const [loadingImages, setLoadingImages] = useState(false);
-  const [forwardClicked, setForwardClicked] = useState(false);
+  const [isThereNewImage, setIsThereNewImage] = useState(null);
   const [networkError, setNetworkError] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     loadJoint();
+    getNewImages();
   }, []);
 
   const cancel = () => {
+    newVisit.setEcographies(photos);
+    newVisit.setEcographiesId(ids);
     setJoint(null);
     setCurrentJoint("");
     navigate("/newVisit/jointSelection");
+    setNewVisit(newVisit);
   };
   const saveAndForward = () => {
     setJoint(joint);
@@ -52,6 +59,8 @@ export default function Joint(props) {
         newVisit.deleteJointForUpdate(joint.jointName);
       }
       newVisit.addJoint(joint);
+      newVisit.setEcographies(photos);
+      newVisit.setEcographiesId(ids);
       setNewVisit(newVisit);
       setCurrentJoint("");
       console.log(newVisit);
@@ -64,21 +73,42 @@ export default function Joint(props) {
 
   const getNewImages = async () => {
     setLoadingImages(true);
-    setTimeout(async () => {
-      try {
-        const imagesFromServer = await GenerateImages(); // await CommunicationController.get("media", {});
-        setPhotos((prevState) => [...prevState, ...imagesFromServer]);
-        newVisit.setEcographies(imagesFromServer);
-      } catch (err) {
-        setNetworkError(err || "Errore inatteso");
+    try {
+      const idsFromServer = await CommunicationController.post("media/visit", {
+        patient: selectedPatient.pid,
+        date: newVisit.visitDate,
+        exclude: ids,
+      });
+      if (idsFromServer.length > 0) {
+        setIsThereNewImage(true);
+        console.log(idsFromServer);
+        await idsFromServer.forEach(async (e) => {
+          let eco = await CommunicationController.get("media", { id: e });
+          eco.realJoint = undefined;
+          eco.realSide = undefined;
+          console.log("ottenuta eco:", eco);
+          setPhotos((prevState) => [...prevState, eco]);
+          setIds((prevState) => [...prevState, e]);
+        });
+      } else {
+        setIsThereNewImage(false);
+        setTimeout(() => {
+          setIsThereNewImage(null);
+        }, 4000);
       }
-    }, 3000);
+    } catch (err) {
+      console.log(err);
+      setNetworkError(err || "Errore inatteso");
+    } finally {
+      setLoadingImages(false);
+    }
   };
 
   const loadJoint = async () => {
-    let j = await newVisit.getJoint(currentJoint);
-    setJoint(j);
-    photos.length < 6 && (await getNewImages()); //massimo sei immagini
+    if (joint === null) {
+      let j = await newVisit.getJoint(currentJoint);
+      setJoint(j);
+    }
   };
 
   const openModal = (e) => {
@@ -87,17 +117,6 @@ export default function Joint(props) {
     );
     setCurrentPhotoIndex(index);
     setShowPhotoModal(true);
-  };
-
-  const handleRefresh = async () => {
-    await getNewImages();
-  };
-
-  const filteredPhotos = () => {
-    return photos.filter(
-      (photo) =>
-        photo.jointRef === undefined || photo.jointRef === joint.jointName
-    );
   };
 
   return selectedPatient !== null ? (
@@ -140,29 +159,66 @@ export default function Joint(props) {
               >
                 <RefreshButton
                   onClick={() => {
-                    handleRefresh();
-                    setLoadingImages(true);
+                    getNewImages();
                   }}
                   loading={loadingImages}
                 />
+                {isThereNewImage === false && (
+                  <Alert
+                    severity="warning"
+                    variant="outlined"
+                    style={{ width: "100%" }}
+                  >
+                    <AlertTitle>Nessuna nuova ecografia</AlertTitle>
+                  </Alert>
+                )}
               </div>
-              {joint != null ? (
-                <EcographImages
-                  handleClick={(e) => openModal(e)}
-                  photos={filteredPhotos()}
-                  setPhotos={setPhotos}
-                  joint={{ joint, setJoint }}
-                  loadingImages={loadingImages}
-                  setLoadingImages={setLoadingImages}
-                />
-              ) : (
-                "Caricamento articolazione..."
+              {joint === null && "Caricamento..."}
+              {networkError !== null && (
+                <Alert
+                  severity="error"
+                  variant="filled"
+                  style={{ width: "100%" }}
+                >
+                  <AlertTitle>Errore di rete, riprovare</AlertTitle>
+                </Alert>
               )}
+              {joint !== null &&
+                !loadingImages &&
+                networkError === null &&
+                photos !== null && (
+                  <EcographImages
+                    handleClick={(e) => openModal(e)}
+                    photos={photos.filter(
+                      (e) =>
+                        e.realJoint === undefined ||
+                        (e.realJoint ===
+                          currentJoint
+                            .substring(0, currentJoint.length - 3)
+                            .toLowerCase() &&
+                          e.realSide ===
+                            currentJoint
+                              .substring(
+                                currentJoint.length - 2,
+                                currentJoint.length
+                              )
+                              .toUpperCase())
+                    )}
+                    setPhotos={setPhotos}
+                    joint={{ joint, setJoint }}
+                    loadingImages={loadingImages}
+                    setLoadingImages={setLoadingImages}
+                    networkError={networkError}
+                  />
+                )}
+              {photos !== null &&
+                photos.length === 0 &&
+                "Non ci sono ecografie"}
             </div>
           </div>
 
           <div style={{ height: "78vh", flex: 2 }}>
-            {joint != null ? (
+            {joint !== null ? (
               <JointVisitQuestions joint={joint} setJoint={setJoint} />
             ) : (
               "Caricamento..."
@@ -210,7 +266,7 @@ export default function Joint(props) {
         centered
       >
         <Modal.Body>
-          <img
+          {/*           <img
             src={
               photos[currentPhotoIndex] != undefined
                 ? photos[currentPhotoIndex].link
@@ -222,7 +278,7 @@ export default function Joint(props) {
               height: "auto",
               objectFit: "contain",
             }}
-          />
+          /> */}
         </Modal.Body>
       </Modal>
       <div>

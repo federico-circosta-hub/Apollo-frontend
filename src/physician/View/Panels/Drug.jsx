@@ -171,7 +171,7 @@ export default function Drug() {
     console.log("newVisit:", newVisit);
     let newVisitToSend = new NewVisitToSend(newVisit);
     newVisitToSend.setJoints(newVisit);
-    console.log("newVisitToSend:", newVisitToSend);
+    // console.log("newVisitToSend:", newVisitToSend);
     /*     let n = Math.random();
     setTimeout(() => {
       if (n > 0.5) {
@@ -182,11 +182,12 @@ export default function Drug() {
       setSending(false);
     }, 5000); */
     try {
-      const sendedVisit = await CommunicationController.post(
+      /*       const sendedVisit = await CommunicationController.post(
         "visit",
         newVisitToSend
-      );
-      console.log("sendedVisit:", sendedVisit);
+      ); 
+      console.log("sendedVisit:", sendedVisit);*/
+      console.log("newVisitToSend:", newVisitToSend);
       setShowFinishAlert(true);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");

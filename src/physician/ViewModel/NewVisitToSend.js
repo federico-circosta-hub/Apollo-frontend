@@ -49,23 +49,28 @@ export default class NewVisitToSend {
       ? undefined
       : newVisit.followUp.treatmentResponse;
     this.report.prophylaxis_drug =
-      newVisit.prophylacticDrug.drug.name === "Nessuno"
+      newVisit.prophylacticDrug.drug.name === "Nessuno" ||
+      newVisit.prophylacticDrug.drug.name === ""
         ? undefined
         : newVisit.prophylacticDrug.drug.name;
     this.report.prophylaxis_dose =
-      newVisit.prophylacticDrug.drug.name === "Nessuno"
+      newVisit.prophylacticDrug.drug.name === "Nessuno" ||
+      newVisit.prophylacticDrug.drug.name === ""
         ? undefined
         : newVisit.prophylacticDrug.dose;
     this.report.prophylaxis_frequency =
-      newVisit.prophylacticDrug.drug.name === "Nessuno"
+      newVisit.prophylacticDrug.drug.name === "Nessuno" ||
+      newVisit.prophylacticDrug.drug.name === ""
         ? undefined
         : newVisit.prophylacticDrug.frequency;
     this.report.acute_drug =
-      newVisit.acuteDrug.drug.name === "Nessuno"
+      newVisit.acuteDrug.drug.name === "Nessuno" ||
+      newVisit.acuteDrug.drug.name === ""
         ? undefined
         : newVisit.acuteDrug.drug.name;
     this.report.acute_dose =
-      newVisit.acuteDrug.drug.name === "Nessuno"
+      (newVisit.acuteDrug.drug.name === "Nessuno") |
+      (newVisit.acuteDrug.drug.name === "")
         ? undefined
         : newVisit.acuteDrug.dose;
     this.report.joints = [];
@@ -76,8 +81,8 @@ export default class NewVisitToSend {
     let joints = [];
     newVisit.joints.forEach((element) => {
       let jointToSend = new JointToSendModel(element);
-      jointToSend.setMediaIds(newVisit);
       jointToSend.setName(jointToSend.name.toLowerCase());
+      jointToSend.setMediaIds(newVisit);
       joints.push(jointToSend);
     });
     this.report.joints = joints;
