@@ -1,11 +1,18 @@
-export const isAnnotationTaskDataValid = (data: TaskData) => {
-    return data.dataset >= 0 && data.annotation_type >= 0;
+export const isTaskDataValid = (data: TaskData) => {
+    return (
+        !isNaN(data.dataset) &&
+        data.dataset >= 0 &&
+        !isNaN(data.annotation_type) &&
+        data.annotation_type >= 0
+    );
 };
 
 export class TaskData {
     dataset: number = -1;
     annotation_type: number = -1;
 }
+
+export type TaskDataKey = keyof TaskData;
 
 export default class Task {
     id: number;

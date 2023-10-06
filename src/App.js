@@ -54,6 +54,9 @@ const AdminAddDataset = React.lazy(() =>
 const AdminTasks = React.lazy(() =>
     import("./admin/View/AnnotationTasks/AdminTasks")
 );
+const AdminAddTask = React.lazy(() =>
+    import("./admin/View/AnnotationTasks/AdminAddTask")
+);
 const AdminTools = React.lazy(() =>
     import("./admin/View/AnnotationTools/AdminTools")
 );
@@ -164,6 +167,10 @@ const UserRoutes = () => {
                                         <Route
                                             path="/tasks"
                                             element={<AdminTasks />}
+                                        />
+                                        <Route
+                                            path="/tasks/add"
+                                            element={<AdminAddTask />}
                                         />
                                     </Routes>
                                 </FunctionsProvider>

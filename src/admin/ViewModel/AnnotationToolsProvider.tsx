@@ -8,12 +8,14 @@ export const AnnotationToolsContext = createContext<{
     get: () => Promise<AnnotationTool[]>;
     delete: (datasetId: number) => Promise<void>;
     add: (dataset: AnnotationToolData) => Promise<AnnotationTool | undefined>;
+    getWithTypes: () => Promise<AnnotationTool[]>;
 }>({
     get: async () => [],
     add: async () => {
         return undefined;
     },
     delete: async () => {},
+    getWithTypes: async () => [],
 });
 
 export default function AnnotationToolsProvider({
@@ -44,9 +46,25 @@ export default function AnnotationToolsProvider({
         tools.current = tools.current.filter((at) => at.id !== toolId);
     }, []);
 
+    const getWithTypes = useCallback(async () => {
+        await getTools();
+
+        const promises = [];
+        for (const tool of tools.current) promises.push(tool.fetchTypes());
+
+        await Promise.all(promises);
+
+        return tools.current;
+    }, [getTools]);
+
     return (
         <AnnotationToolsContext.Provider
-            value={{ get: getTools, add: addTool, delete: removeTool }}
+            value={{
+                get: getTools,
+                add: addTool,
+                delete: removeTool,
+                getWithTypes,
+            }}
         >
             {children}
         </AnnotationToolsContext.Provider>

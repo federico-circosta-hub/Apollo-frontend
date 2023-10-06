@@ -7,7 +7,7 @@ import Loading from "../../../common/View/Loading";
 import DetailComponent, { DetailItemProps } from "./DetailComponent";
 import { useNavigate } from "react-router-dom";
 import Status from "../../../common/Model/Status";
-import ErrorScreen from "./ErrorScreen";
+import ErrorScreen from "../../../common/View/ErrorScreen";
 import EmptyScreen from "./EmptyScreen";
 
 export default function MasterDetail({
@@ -19,7 +19,7 @@ export default function MasterDetail({
     status,
     onRetry,
     onDelete,
-	deleteText
+    deleteText,
 }: {
     items: any[];
     itemName: string;
@@ -29,7 +29,7 @@ export default function MasterDetail({
     status: Status;
     onRetry: () => Promise<void>;
     onDelete?: (item: any) => Promise<any>;
-	deleteText?: string;
+    deleteText?: string;
 }) {
     const navigate = useNavigate();
     const [selected, setSelected] = useState<number>(-1);
@@ -53,7 +53,7 @@ export default function MasterDetail({
                         onItemClick={(index) => setSelected(index)}
                         onAdd={onAdd}
                         onDelete={onDelete}
-						deleteText={deleteText}
+                        deleteText={deleteText}
                     />
                 ) : (
                     <Loading />

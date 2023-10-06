@@ -63,7 +63,8 @@ export default class AnnotationTool {
     update_annotation_endpoint: string;
     edit_annotation_endpoint: string;
 
-    private annotationTypes: AnnotationType[] = [];
+    annotationTypes: AnnotationType[] = [];
+    private _typesSynchronized: boolean = false;
 
     constructor(obj: AnnotationTool) {
         this.id = obj.id;
@@ -104,10 +105,11 @@ export default class AnnotationTool {
         return this.name.toLowerCase().includes(filter.toLowerCase());
     };
 
-    getTypes = async (): Promise<AnnotationType[]> => {
-        if (this.annotationTypes.length === 0) {
+    fetchTypes = async (): Promise<AnnotationType[]> => {
+        if (!this._typesSynchronized) {
             this.annotationTypes =
                 await CommunicationController.getAnnotationTypes(this.id);
+            this._typesSynchronized = true;
         }
         return this.annotationTypes;
     };

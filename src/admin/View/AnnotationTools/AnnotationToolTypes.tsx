@@ -27,7 +27,7 @@ export default function AnnotationToolTypes({
         setStatus(Status.LOADING);
 
         try {
-            const res = await tool.getTypes();
+            const res = await tool.fetchTypes();
 
             console.log(`${res.length} annotation types recevied`);
             setTypes(res);

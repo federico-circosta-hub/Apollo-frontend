@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import MainContainer from "../../../common/View/MainContainer";
+import MainContainer from "./MainContainer";
 
 export default function ErrorScreen({
     onRetry,

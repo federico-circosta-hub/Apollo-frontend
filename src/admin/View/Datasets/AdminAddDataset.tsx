@@ -11,7 +11,7 @@ import {
     DatasetData,
     DatasetDataKey,
     MediaType,
-    isDatasetValid,
+    isDatasetValid as isDatasetDataValid,
 } from "../../../common/Model/Dataset";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -125,7 +125,7 @@ export default function AdminAddDataset() {
             </Box>
             <Box sx={{ flex: 1 }} />
             <ButtonsFooter
-                saveDisabled={!isDatasetValid(dataset)}
+                saveDisabled={!isDatasetDataValid(dataset)}
                 status={status}
                 onSave={saveData}
             />
