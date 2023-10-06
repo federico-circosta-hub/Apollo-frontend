@@ -1,5 +1,5 @@
 import List from "@mui/material/List";
-import React, { ComponentType, useCallback, useState } from "react";
+import React, { ComponentType, useCallback, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
@@ -18,6 +18,7 @@ export default function MasterComponent({
     items,
     Item,
     itemName,
+    index,
     onItemClick,
     onAdd,
     onDelete,
@@ -26,18 +27,23 @@ export default function MasterComponent({
     items: any[];
     Item: ComponentType<MasterItemProps>;
     itemName: string;
+    index?: number;
     onItemClick?: (index: number) => void;
     onAdd?: () => void;
     onDelete?: (item: any) => Promise<any>;
     deleteText?: string;
 }) {
     const [filter, setFilter] = useState<string>("");
-    const [selected, setSelected] = useState<number>(-1);
+    const [selected, setSelected] = useState<number>(index ?? -1);
     const [deleteIndex, setDeleteIndex] = useState<number>(-1);
 
     const filterItems = useCallback(() => {
         return items.filter((item) => item.filter(filter));
     }, [items, filter]);
+
+    useEffect(() => {
+        setSelected(index ?? -1);
+    }, [index]);
 
     const filteredItems = filterItems();
 
@@ -56,20 +62,21 @@ export default function MasterComponent({
             </Box>
             <Box sx={style.scrollable}>
                 <List sx={{ width: "100%" }}>
-                    {filteredItems.map((item, index) => (
+                    {filteredItems.map((item, i) => (
                         <Box
-                            key={index}
-                            sx={index === selected ? style.selected : undefined}
+                            key={i}
+                            sx={i === selected ? style.selected : undefined}
                         >
                             <Item
                                 item={item}
-                                onClick={() => {
-                                    setSelected(index);
-                                    onItemClick && onItemClick(index);
-                                }}
+                                onClick={() =>
+                                    onItemClick
+                                        ? onItemClick(i)
+                                        : setSelected(i)
+                                }
                                 onDelete={
                                     onDelete
-                                        ? () => setDeleteIndex(index)
+                                        ? () => setDeleteIndex(i)
                                         : undefined
                                 }
                             />
