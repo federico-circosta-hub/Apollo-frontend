@@ -219,8 +219,8 @@ const getTypeHeader = (
     index: number
 ) => {
     const addType = (tool: AnnotationTool) => {
-		
-	};
+        navigate("/tools?id=" + tool.id);
+    };
 
     return (
         <ListSubheader sx={{ display: "flex" }} key={index}>
