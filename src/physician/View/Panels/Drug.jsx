@@ -171,23 +171,14 @@ export default function Drug() {
     console.log("newVisit:", newVisit);
     let newVisitToSend = new NewVisitToSend(newVisit);
     newVisitToSend.setJoints(newVisit);
-    // console.log("newVisitToSend:", newVisitToSend);
-    /*     let n = Math.random();
-    setTimeout(() => {
-      if (n > 0.5) {
-        setShowFinishAlert(false);
-      } else {
-        setShowFinishAlert(true);
-      }
-      setSending(false);
-    }, 5000); */
+    console.log("newVisitToSend:", newVisitToSend);
     try {
-      /*       const sendedVisit = await CommunicationController.post(
+      const sendedVisit = await CommunicationController.post(
         "visit",
         newVisitToSend
-      ); 
-      console.log("sendedVisit:", sendedVisit);*/
-      console.log("newVisitToSend:", newVisitToSend);
+      );
+      console.log("sendedVisit:", sendedVisit);
+
       setShowFinishAlert(true);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");

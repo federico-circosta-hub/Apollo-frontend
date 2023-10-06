@@ -172,13 +172,13 @@ export default function SearchVisit(props) {
                       <th style={{ background: "white", width: "15%" }}>
                         Id visita
                       </th>
-                      <th style={{ background: "white", width: "45%" }}>
+                      <th style={{ background: "white", width: "35%" }}>
                         Data
                       </th>
                       <th style={{ background: "white", width: "20%" }}>
                         Medico
                       </th>
-                      <th style={{ background: "white", width: "20%" }}>
+                      <th style={{ background: "white", width: "30%" }}>
                         Tipo visita
                       </th>
                     </tr>

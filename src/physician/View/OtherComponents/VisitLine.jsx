@@ -21,13 +21,19 @@ export default function VisitLine(props) {
   return (
     <tr
       className="tr-lg"
-      style={{ /*  borderBottom: '0.5px solid lightgray', */ padding: 30 }}
+      style={{
+        /*  borderBottom: '0.5px solid lightgray', */ padding: 30,
+      }}
       onClick={() => select()}
     >
       <td>{props.visit.id}</td>
       <td>{formatDate()}</td>
       <td>{props.visit.physician}</td>
-      <td>{props.visit.type}</td>
+      <td>
+        {props.visit.type !== null
+          ? props.visit.type
+          : "In attesa di trascrizione..."}
+      </td>
     </tr>
   );
 }

@@ -7,15 +7,8 @@ const EcographImages = (props) => {
     const index = props.photos.findIndex((p) => p.id === photo.id);
     let newPhotos = props.photos;
     if (e.target.checked) {
-      newPhotos[index].realJoint = props.joint.joint.jointName
-        .substring(0, props.joint.joint.jointName.length - 3)
-        .toLowerCase();
-      newPhotos[index].realSide = props.joint.joint.jointName
-        .substring(
-          props.joint.joint.jointName.length - 2,
-          props.joint.joint.jointName.length
-        )
-        .toUpperCase();
+      newPhotos[index].realJoint = props.joint.joint.jointName;
+      newPhotos[index].realSide = props.joint.joint.side;
     } else {
       newPhotos[index].realJoint = undefined;
       newPhotos[index].realSide = undefined;
@@ -65,17 +58,8 @@ const EcographImages = (props) => {
               background: props.photos
                 .filter(
                   (p) =>
-                    p.realJoint ===
-                      props.joint.joint.jointName
-                        .substring(0, props.joint.joint.jointName.length - 3)
-                        .toLowerCase() &&
-                    p.realSide ===
-                      props.joint.joint.jointName
-                        .substring(
-                          props.joint.joint.jointName.length - 2,
-                          props.joint.joint.jointName.length
-                        )
-                        .toUpperCase()
+                    p.realJoint === props.joint.joint.jointName &&
+                    p.realSide === props.joint.joint.side
                 )
                 .includes(photo)
                 ? "#90ee90"
@@ -97,17 +81,8 @@ const EcographImages = (props) => {
               checked={props.photos
                 .filter(
                   (p) =>
-                    p.realJoint ===
-                      props.joint.joint.jointName
-                        .substring(0, props.joint.joint.jointName.length - 3)
-                        .toLowerCase() &&
-                    p.realSide ===
-                      props.joint.joint.jointName
-                        .substring(
-                          props.joint.joint.jointName.length - 2,
-                          props.joint.joint.jointName.length
-                        )
-                        .toUpperCase()
+                    p.realJoint === props.joint.joint.jointName &&
+                    p.realSide === props.joint.joint.side
                 )
                 .includes(photo)}
               onChange={(e) => handleSelect(e, photo)}

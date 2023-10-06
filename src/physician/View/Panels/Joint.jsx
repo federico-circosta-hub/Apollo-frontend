@@ -46,23 +46,26 @@ export default function Joint(props) {
     newVisit.setEcographies(photos);
     newVisit.setEcographiesId(ids);
     setJoint(null);
-    setCurrentJoint("");
-    navigate("/newVisit/jointSelection");
+    setCurrentJoint(null);
     setNewVisit(newVisit);
+    navigate("/newVisit/jointSelection");
   };
   const saveAndForward = () => {
     setJoint(joint);
     let e = validateForm("jointVisit", joint, newVisit);
     console.log(Object.keys(e));
     if (Object.keys(e).length == 0) {
-      if (newVisit.jointPresence(joint.jointName)) {
-        newVisit.deleteJointForUpdate(joint.jointName);
+      if (newVisit.jointPresence({ name: joint.jointName, side: joint.side })) {
+        newVisit.deleteJointForUpdate({
+          name: joint.jointName,
+          side: joint.side,
+        });
       }
       newVisit.addJoint(joint);
       newVisit.setEcographies(photos);
       newVisit.setEcographiesId(ids);
       setNewVisit(newVisit);
-      setCurrentJoint("");
+      setCurrentJoint(null);
       console.log(newVisit);
       navigate("/newVisit/jointSelection");
     } else {
@@ -98,6 +101,7 @@ export default function Joint(props) {
       }
     } catch (err) {
       console.log(err);
+      //console.log(err.response.data.message);
       setNetworkError(err || "Errore inatteso");
     } finally {
       setLoadingImages(false);
@@ -105,10 +109,8 @@ export default function Joint(props) {
   };
 
   const loadJoint = async () => {
-    if (joint === null) {
-      let j = await newVisit.getJoint(currentJoint);
-      setJoint(j);
-    }
+    let j = await newVisit.getJoint(currentJoint);
+    setJoint(j);
   };
 
   const openModal = (e) => {
@@ -174,15 +176,28 @@ export default function Joint(props) {
                 )}
               </div>
               {joint === null && "Caricamento..."}
-              {networkError !== null && (
-                <Alert
-                  severity="error"
-                  variant="filled"
-                  style={{ width: "100%" }}
-                >
-                  <AlertTitle>Errore di rete, riprovare</AlertTitle>
-                </Alert>
-              )}
+              {networkError !== null &&
+                networkError.response.data.message !=
+                  "Error: visit does not exist" && (
+                  <Alert
+                    severity="error"
+                    variant="filled"
+                    style={{ width: "100%" }}
+                  >
+                    <AlertTitle>Errore di rete, riprovare</AlertTitle>
+                  </Alert>
+                )}
+              {networkError !== null &&
+                networkError.response.data.message ==
+                  "Error: visit does not exist" && (
+                  <Alert
+                    severity="error"
+                    variant="filled"
+                    style={{ width: "100%" }}
+                  >
+                    <AlertTitle>Non ci sono ecografie</AlertTitle>
+                  </Alert>
+                )}
               {joint !== null &&
                 !loadingImages &&
                 networkError === null &&
@@ -192,17 +207,8 @@ export default function Joint(props) {
                     photos={photos.filter(
                       (e) =>
                         e.realJoint === undefined ||
-                        (e.realJoint ===
-                          currentJoint
-                            .substring(0, currentJoint.length - 3)
-                            .toLowerCase() &&
-                          e.realSide ===
-                            currentJoint
-                              .substring(
-                                currentJoint.length - 2,
-                                currentJoint.length
-                              )
-                              .toUpperCase())
+                        (e.realJoint === currentJoint.name &&
+                          e.realSide === currentJoint.side)
                     )}
                     setPhotos={setPhotos}
                     joint={{ joint, setJoint }}
@@ -213,6 +219,8 @@ export default function Joint(props) {
                 )}
               {photos !== null &&
                 photos.length === 0 &&
+                !loadingImages &&
+                networkError === null &&
                 "Non ci sono ecografie"}
             </div>
           </div>
