@@ -7,6 +7,9 @@ import VisitObjectGenerator from "../../Model/VisitObjectGenerator";
 import { useNavigate } from "react-router-dom";
 import CommunicationController from "../../../common/Model/CommunicationController";
 import MainContainer from "../../../common/View/MainContainer";
+import VisitInfo from "../OtherComponents/SeeVisit/VisitInfo";
+import JointInfo from "../OtherComponents/SeeVisit/JointInfo";
+import JointNameChanger from "../../ViewModel/JointNameChanger";
 
 export default function SeeVisit() {
   const { selectedVisit } = useContext(VisitContext);
@@ -33,141 +36,6 @@ export default function SeeVisit() {
     } finally {
       setLoadingVisit(false);
     }
-  };
-
-  const jointInfo = () => {
-    let jointToDisplay = visit.joints.find(
-      (item) => item.jointName == selectedJoint
-    );
-    return (
-      <>
-        <h4>{jointToDisplay.jointName}</h4>
-
-        <p>Index Joint: {jointToDisplay.indexJoint ? "Sì" : "No"}</p>
-        <p>
-          Difficoltà di movimento:{" "}
-          {jointToDisplay.jointDifficulty ? "Yes" : "No"}
-        </p>
-        <p>Dolore: {jointToDisplay.pain ? "Sì" : "No"}</p>
-        <p>Ultimo sanguinamento: {jointToDisplay.lastBleed.toDateString()}</p>
-        <p>Sinovite: {jointToDisplay.synovitis}</p>
-        <p>Cartilagine: {jointToDisplay.articularCartilage}</p>
-        <p>Osso subcondrale: {jointToDisplay.subchondralBone}</p>
-        <p>Distension: {jointToDisplay.distension}</p>
-        <p>Distension cause: {jointToDisplay.distensionCause}</p>
-        <p>Ecografie:</p>
-        {jointToDisplay.selectedImages.map((item, index) => (
-          <img
-            key={index}
-            src={item.link}
-            style={{ width: "100%", margin: 5 }}
-          />
-        ))}
-      </>
-    );
-  };
-
-  const visitInfo = () => {
-    return (
-      <div style={{ textAlign: "center", width: "100%" }}>
-        <h3>
-          Data visita:{" "}
-          {format(new Date(selectedVisit.date), "d MMMM y", { locale: it })}
-        </h3>
-        <br />
-        <br />
-        <p>Paziente: {selectedVisit.patient}</p>
-        <p>Medico: {visit.physician}</p>
-        <p>Tipo di visita: {visit.type}</p>
-        <h3>Attività fisica</h3>
-        <p>
-          Tipo attività fisica:{" "}
-          {visit.report.exercise !== null ? visit.report.exercise : "/"}
-        </p>
-        <p>
-          Data attività fisica:{" "}
-          {visit.report.exercise !== null ? visit.report.date_exercise : "/"}
-        </p>
-        <br />
-        <br />
-
-        <h3>Evento traumatico</h3>
-        <p>
-          Tipo di evento traumatico:{" "}
-          {visit.report.date_trauma !== null ? visit.report.trauma_event : "/"}
-        </p>
-        <p>
-          Data evento traumatico:{" "}
-          {visit.report.date_trauma !== null ? visit.report.date_trauma : "/"}
-        </p>
-        <br />
-        <br />
-
-        <h3>Follow-Up</h3>
-        <p>
-          Follow-Up:{" "}
-          {visit.report.followUp !== null ? visit.report.followUp : "/"}
-        </p>
-        {/*         <p>
-          Risposta al trattamento:{" "}
-          {visit.followUp.followUp ? visit.followUp.treatmentResponse : "/"}
-        </p> */}
-        {/*         <p>
-          Visita precedente:{" "}
-          {visit.followUp.followUp
-            ? visit.followUp.lastVisit.toDateString()
-            : "/"}
-        </p> */}
-        {/*         <br />
-        <br />
-
-        <h3>Necessità di visita di Follow-Up</h3>
-        <p>
-          Necessità di visita di Follow-Up:{" "}
-          {visit.needFollowUp.needFollowUp ? "Sì" : "No"}
-        </p>
-        <p>
-          Data di visita di Follow-Up:{" "}
-          {visit.needFollowUp.needFollowUp
-            ? visit.needFollowUp.followUpDate.toDateString()
-            : "/"}
-        </p> */}
-
-        <br />
-        <br />
-        <h3>Farmaco di profilassi</h3>
-        <p>
-          Nome farmaco:{" "}
-          {visit.report.prophylaxis_drug !== null
-            ? visit.report.prophylaxis_drug
-            : "/"}
-        </p>
-        <p>
-          Dose:{" "}
-          {visit.report.prophylaxis_drug !== null
-            ? visit.report.prophylaxis_dose
-            : "/"}
-        </p>
-        <p>
-          Frequenza:{" "}
-          {visit.report.prophylaxis_drug !== null
-            ? visit.report.prophylaxis_frequency
-            : "/"}
-        </p>
-
-        <br />
-        <br />
-        <h3>Farmaco acuto</h3>
-        <p>
-          Nome farmaco:{" "}
-          {visit.report.acute_drug !== null ? visit.report.acute_drug : "/"}
-        </p>
-        <p>
-          Dose:{" "}
-          {visit.report.acute_drug !== null ? visit.report.acute_dose : "/"}
-        </p>
-      </div>
-    );
   };
 
   const navigate = useNavigate();
@@ -231,35 +99,41 @@ export default function SeeVisit() {
                   Dettagli visita
                 </button>
               </div>
-              {/* {joints !== null}
-              {visit.joints.map((item, index) => (
-                <div
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                    padding: "2vh",
-                    background:
-                      selectedJoint === item.jointName ? "#1e90ff" : "white",
-                    borderRadius: 15,
-                  }}
-                >
-                  <button
-                    onClick={() =>
-                      selectedJoint !== item.jointName
-                        ? setSelectedJoint(item.jointName)
-                        : setSelectedJoint(null)
-                    }
-                    className={
-                      selectedJoint != item.jointName
-                        ? "btn btn-lg btn-primary"
-                        : "btn btn-lg btn-light"
-                    }
-                    key={index}
+              {visit !== null &&
+                visit.report.joints.length > 0 &&
+                visit.report.joints.map((item, index) => (
+                  <div
+                    style={{
+                      width: "100%",
+                      textAlign: "center",
+                      padding: "2vh",
+                      background:
+                        selectedJoint === item.name + " " + item.side
+                          ? "#1e90ff"
+                          : "white",
+                      borderRadius: 15,
+                    }}
                   >
-                    {item.jointName}
-                  </button>
-                </div>
-              ))} */}
+                    <button
+                      onClick={() =>
+                        selectedJoint !== item.name + " " + item.side
+                          ? setSelectedJoint(item.name + " " + item.side)
+                          : setSelectedJoint(null)
+                      }
+                      className={
+                        selectedJoint != item.name + " " + item.side
+                          ? "btn btn-lg btn-primary"
+                          : "btn btn-lg btn-light"
+                      }
+                      key={index}
+                    >
+                      {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+                        item.name,
+                        item.side
+                      )}
+                    </button>
+                  </div>
+                ))}
             </div>
 
             <div
@@ -274,9 +148,11 @@ export default function SeeVisit() {
               }}
             >
               <div>
-                {selectedJoint !== null && visit !== null
-                  ? jointInfo()
-                  : visitInfo()}
+                {selectedJoint !== null && visit !== null ? (
+                  <JointInfo visit={visit} selectedJoint={selectedJoint} />
+                ) : (
+                  <VisitInfo visit={visit} />
+                )}
               </div>
             </div>
           </div>
