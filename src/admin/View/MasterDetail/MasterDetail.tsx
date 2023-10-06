@@ -19,6 +19,7 @@ export default function MasterDetail({
     status,
     onRetry,
     onDelete,
+	deleteText
 }: {
     items: any[];
     itemName: string;
@@ -28,6 +29,7 @@ export default function MasterDetail({
     status: Status;
     onRetry: () => Promise<void>;
     onDelete?: (item: any) => Promise<any>;
+	deleteText?: string;
 }) {
     const navigate = useNavigate();
     const [selected, setSelected] = useState<number>(-1);
@@ -51,6 +53,7 @@ export default function MasterDetail({
                         onItemClick={(index) => setSelected(index)}
                         onAdd={onAdd}
                         onDelete={onDelete}
+						deleteText={deleteText}
                     />
                 ) : (
                     <Loading />

@@ -3,11 +3,9 @@ import config from "../../config";
 import User, { AnnotationToolAccess, UserData, UserType } from "./User";
 import PhysicianTask from "./PhysicianTask";
 import Dataset, { DatasetData } from "./Dataset";
-import AnnotationTool, {
-    AnnotationToolData,
-    AnnotationToolEndpoints,
-} from "./AnnotationTool";
+import AnnotationTool, { AnnotationToolData } from "./AnnotationTool";
 import AnnotationType from "./AnnotationType";
+import Task, { TaskData } from "./Task";
 
 type Params = { [key: string]: any };
 type Result = any;
@@ -52,6 +50,8 @@ class CommunicationController {
         NEW_DATASET: "/dataset",
         NEW_PHYSICIAN: "/user/physician",
         NEW_ANNOTATION_TOOL: "/annotationTool",
+        NEW_TASK: "/task",
+        DELETE_TASK: "/task",
     };
 
     private baseCall = async (
@@ -143,6 +143,16 @@ class CommunicationController {
         return tasks.map(
             (task: any) => new PhysicianTask(task, task.physician)
         );
+    };
+
+    getAllTasks = async (
+        includeCompleted: boolean = false
+    ): Promise<Task[]> => {
+        const tasks = await this.get(this.endpoints.GET_TASKS, {
+            includeCompleted,
+        });
+
+        return tasks.map((task: any) => new Task(task));
     };
 
     generateNewPassword = async (email: string): Promise<string> => {
@@ -301,23 +311,28 @@ class CommunicationController {
     };
 
     deleteDataset = async (dataset: number): Promise<Dataset> => {
-        return this.delete(this.endpoints.DELETE_DATASET, { id: dataset });
+        const res = await this.delete(this.endpoints.DELETE_DATASET, {
+            id: dataset,
+        });
+        return new Dataset(res);
     };
 
     deleteAnnotationTool = async (
         annotationTool: number
     ): Promise<AnnotationTool> => {
-        return this.delete(this.endpoints.DELETE_ANNOTATION_TOOL, {
+        const res = await this.delete(this.endpoints.DELETE_ANNOTATION_TOOL, {
             id: annotationTool,
         });
+        return new AnnotationTool(res);
     };
 
     deleteAnnotationType = async (
         annotationType: number
-    ): Promise<AnnotationTool> => {
-        return this.delete(this.endpoints.DELETE_ANNOTATION_TYPE, {
+    ): Promise<AnnotationType> => {
+        const res = await this.delete(this.endpoints.DELETE_ANNOTATION_TYPE, {
             id: annotationType,
         });
+        return new AnnotationType(res);
     };
 
     newDataset = async (data: DatasetData): Promise<Dataset> => {
@@ -338,6 +353,18 @@ class CommunicationController {
     ): Promise<AnnotationTool> => {
         const res = await this.post(this.endpoints.NEW_ANNOTATION_TOOL, data);
         return new AnnotationTool(res);
+    };
+
+    newAnnotationTask = async (data: TaskData): Promise<Task> => {
+        const res = await this.post(this.endpoints.NEW_TASK, data);
+        return new Task(res);
+    };
+
+    deleteAnnotationTask = async (task: number): Promise<Task> => {
+        const res = await this.delete(this.endpoints.DELETE_TASK, {
+            id: task,
+        });
+        return new Task(res);
     };
 
     private formatGetData = (data: Params): string => {

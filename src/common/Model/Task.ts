@@ -1,3 +1,12 @@
+export const isAnnotationTaskDataValid = (data: TaskData) => {
+    return data.dataset >= 0 && data.annotation_type >= 0;
+};
+
+export class TaskData {
+    dataset: number = -1;
+    annotation_type: number = -1;
+}
+
 export default class Task {
     id: number;
     dataset: number;
@@ -21,5 +30,9 @@ export default class Task {
 
     name = () => {
         return `${this.dataset_name} - ${this.annotation_type_name}`;
+    };
+
+    filter = (search: string): boolean => {
+        return this.name().toLowerCase().includes(search.toLowerCase());
     };
 }

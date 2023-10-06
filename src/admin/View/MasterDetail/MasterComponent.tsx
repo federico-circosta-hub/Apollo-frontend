@@ -21,6 +21,7 @@ export default function MasterComponent({
     onItemClick,
     onAdd,
     onDelete,
+    deleteText,
 }: {
     items: any[];
     Item: ComponentType<MasterItemProps>;
@@ -28,6 +29,7 @@ export default function MasterComponent({
     onItemClick?: (index: number) => void;
     onAdd?: () => void;
     onDelete?: (item: any) => Promise<any>;
+    deleteText?: string;
 }) {
     const [filter, setFilter] = useState<string>("");
     const [selected, setSelected] = useState<number>(-1);
@@ -78,6 +80,7 @@ export default function MasterComponent({
             </Box>
             <ConfirmActionModal
                 text="Sei sicuro di voler eliminare questo elemento?"
+                subtext={deleteText}
                 show={deleteIndex >= 0}
                 onConfirm={() => onDelete!(items[deleteIndex])}
                 onClose={() => setDeleteIndex(-1)}
