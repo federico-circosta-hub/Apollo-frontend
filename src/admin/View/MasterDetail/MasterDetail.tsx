@@ -31,7 +31,7 @@ export default function MasterDetail({
     onDelete?: (item: any) => Promise<any>;
     deleteText?: string;
 }) {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const selectedIdStr = parseInt(searchParams.get("id") ?? "");
     const selectedId = isNaN(selectedIdStr) ? -1 : selectedIdStr;
 
