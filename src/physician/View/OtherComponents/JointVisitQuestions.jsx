@@ -6,6 +6,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import format from "date-fns/format";
 import Slider from "@mui/material/Slider";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import CommunicationController from "../../../common/Model/CommunicationController";
+import { RefreshButton } from "./RefreshButton";
 
 export default function JointVisitQuestions(props) {
   const synovitisValues = [
@@ -31,14 +33,14 @@ export default function JointVisitQuestions(props) {
     { value: 2, label: "Media", db: "moderate" },
     { value: 3, label: "Grave", db: "severe" },
   ];
-  const distensionCauseValues = [
+  /*   const distensionCauseValues = [
     "Unclear",
     "Synovial Effusion",
     "Synovial Effusion + Synovial Hyperplasia",
     "Vacuum",
     "Vacuum + Synovial Hyperplasia",
     "Synovial Hyperplasia",
-  ];
+  ]; */
 
   const [disableDistensionCauses, setDisableDistensionCauses] = useState(
     props.joint.distension == "absent" ||
@@ -47,6 +49,26 @@ export default function JointVisitQuestions(props) {
       ? true
       : false
   );
+  const [distensionCauseValues, setDistensionCauseValues] = useState([]);
+  const [loadingOptions, setLoadingOptions] = useState(false);
+  const [networkError, setNetworkError] = useState(null);
+
+  useEffect(() => {
+    getDistensionCauseValuesFromServer();
+  }, []);
+
+  const getDistensionCauseValuesFromServer = async () => {
+    setLoadingOptions(true);
+    setDistensionCauseValues([]);
+    try {
+      const dcv = await CommunicationController.get("distensionReason", {});
+      setDistensionCauseValues(dcv.map((e) => e.name));
+    } catch (err) {
+      setNetworkError(err || "Errore inatteso");
+    } finally {
+      setLoadingOptions(false);
+    }
+  };
 
   const modifyJoint = (e, field) => {
     let b = e.target.checked;
@@ -106,7 +128,6 @@ export default function JointVisitQuestions(props) {
           let synovitis = synovitisValues.find(
             (element) => element.value == props.joint.synovitis
           );
-
           n = synovitis.value;
         }
         return n;
@@ -128,15 +149,9 @@ export default function JointVisitQuestions(props) {
         return n;
       case "distension":
         if (props.joint.distension != undefined) {
-          console.log(
-            "valueResolver distension",
-            distensionValues,
-            props.joint.distension
-          );
           let distension = distensionValues.find(
             (element) => element.db == props.joint.distension
           );
-          console.log("valueResolver distension", distension);
           n = distension.value;
         }
         return n;
@@ -145,9 +160,19 @@ export default function JointVisitQuestions(props) {
   };
 
   const displayDistensionCauses = () => {
-    return distensionCauseValues.map((element) => (
-      <MenuItem value={element}>{element}</MenuItem>
-    ));
+    return networkError === null ? (
+      distensionCauseValues.map((element) => (
+        <MenuItem value={element}>{element}</MenuItem>
+      ))
+    ) : (
+      <MenuItem>
+        Errore nell'ottenere gli eventi traumatici
+        <RefreshButton
+          onClick={getDistensionCauseValuesFromServer}
+          loading={loadingOptions}
+        />
+      </MenuItem>
+    );
   };
 
   return (

@@ -63,19 +63,21 @@ export const validateForm = (formName, formData, formData2) => {
       return errors;
     case "jointVisit":
       if (
-        (formData.distension == "minor" || formData.distension == "severe") &&
+        (formData.distension == "moderate" ||
+          formData.distension == "severe") &&
         (formData.distensionCause == undefined ||
           formData.distensionCause == "")
       ) {
-        errors.distension = "Inserire una causa per la distensione";
+        errors.distension = "Inserire causa distensione";
       }
-      /*       if (
+      if (
         formData2.ecographies.find(
-          (el) => el.jointRef === formData.jointName
+          (el) =>
+            el.realJoint === formData.jointName && el.realSide === formData.side
         ) === undefined
       ) {
         errors.images = `Selezionare almeno un'immagine dell'articolazione`;
-      } */
+      }
       return errors;
   }
 };

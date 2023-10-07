@@ -174,6 +174,7 @@ export default function Joint(props) {
               </div>
               {joint === null && "Caricamento..."}
               {networkError !== null &&
+                networkError.response !== undefined &&
                 networkError.response.data.message !=
                   "Error: visit does not exist" && (
                   <Alert
@@ -185,6 +186,7 @@ export default function Joint(props) {
                   </Alert>
                 )}
               {networkError !== null &&
+                networkError.response !== undefined &&
                 networkError.response.data.message ==
                   "Error: visit does not exist" && (
                   <Alert
