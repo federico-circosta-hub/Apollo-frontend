@@ -10,6 +10,7 @@ import AddButton from "../../Components/AddButton";
 
 export type MasterItemProps = {
     item: any;
+    index: number;
     onClick: () => void;
     onDelete?: () => void;
 };
@@ -23,6 +24,7 @@ export default function MasterComponent({
     onAdd,
     onDelete,
     deleteText,
+    style,
 }: {
     items: any[];
     Item: ComponentType<MasterItemProps>;
@@ -32,6 +34,7 @@ export default function MasterComponent({
     onAdd?: () => void;
     onDelete?: (item: any) => Promise<any>;
     deleteText?: string;
+    style?: any;
 }) {
     const [filter, setFilter] = useState<string>("");
     const [selected, setSelected] = useState<number>(index ?? -1);
@@ -48,27 +51,28 @@ export default function MasterComponent({
     const filteredItems = filterItems();
 
     return (
-        <Box sx={style.box}>
-            <Box sx={style.topBar}>
+        <Box sx={[baseStyle.box, style]}>
+            <Box sx={baseStyle.topBar}>
                 <Search onChange={(text) => setFilter(text)} />
                 <Box sx={{ flex: 1, height: 0 }} />
                 {onAdd && (
                     <AddButton
                         itemName={itemName}
                         onAdd={onAdd}
-                        style={style.addButton}
+                        style={baseStyle.addButton}
                     />
                 )}
             </Box>
-            <Box sx={style.scrollable}>
+            <Box sx={baseStyle.scrollable}>
                 <List sx={{ width: "100%" }}>
                     {filteredItems.map((item, i) => (
                         <Box
                             key={i}
-                            sx={i === selected ? style.selected : undefined}
+                            sx={i === selected ? baseStyle.selected : undefined}
                         >
                             <Item
                                 item={item}
+                                index={i}
                                 onClick={() =>
                                     onItemClick
                                         ? onItemClick(i)
@@ -80,7 +84,7 @@ export default function MasterComponent({
                                         : undefined
                                 }
                             />
-                            <Divider sx={style.divider} />
+                            <Divider sx={baseStyle.divider} />
                         </Box>
                     ))}
                 </List>
@@ -113,7 +117,7 @@ const Search = ({ onChange }: { onChange: (text: string) => void }) => {
     );
 };
 
-const style = {
+const baseStyle = {
     box: {
         width: "100%",
         height: "100%",
@@ -121,6 +125,7 @@ const style = {
         flexDirection: "column" as "column",
     },
     scrollable: {
+        marginTop: "2px",
         maxHeight: "100%",
         width: "100%",
         overflow: "auto",

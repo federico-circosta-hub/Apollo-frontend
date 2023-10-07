@@ -11,7 +11,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { AnnotationTasksContext } from "../../ViewModel/AnnotationTasksProvider";
-import AnnotationTaskDetails from "./AnnotationTaskDetails";
+import AnnotationTaskDetails from "./TaskDetails";
 
 export default function AdminTasks() {
     const [, setTitle] = useContext(HeaderContext);

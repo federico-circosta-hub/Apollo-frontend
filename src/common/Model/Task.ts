@@ -1,15 +1,23 @@
+import { Dayjs } from "dayjs";
+
 export const isTaskDataValid = (data: TaskData) => {
     return (
         !isNaN(data.dataset) &&
         data.dataset >= 0 &&
         !isNaN(data.annotation_type) &&
-        data.annotation_type >= 0
+        data.annotation_type >= 0 &&
+        data.physicians.filter((p) => p.assign && !p.deadline).length === 0
     );
 };
 
 export class TaskData {
     dataset: number = -1;
     annotation_type: number = -1;
+    physicians: {
+        id: number;
+        deadline: Dayjs | null;
+        assign: boolean;
+    }[] = [];
 }
 
 export type TaskDataKey = keyof TaskData;
@@ -24,6 +32,13 @@ export default class Task {
     type: "image" | "video";
     annotation_tool: number;
 
+    physicians: {
+        annotated_media: number;
+        deadline: string;
+        task_url: string;
+        id: number;
+    }[];
+
     constructor(obj: Task) {
         this.id = obj.id;
         this.dataset = obj.dataset;
@@ -33,6 +48,7 @@ export default class Task {
         this.media_count = obj.media_count;
         this.type = obj.type;
         this.annotation_tool = obj.annotation_tool;
+        this.physicians = obj.physicians;
     }
 
     name = () => {

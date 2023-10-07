@@ -8,7 +8,9 @@ import Dataset from "../../../common/Model/Dataset";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
 import Loading from "../../../common/View/Loading";
 import ErrorScreen from "../../../common/View/ErrorScreen";
-import AnnotationTaskAddForm from "./AnnotationTaskAddForm";
+import AnnotationTaskAddForm from "./TaskAddForm";
+import User from "../../../common/Model/User";
+import { PhysiciansContext } from "../../ViewModel/UsersProvider";
 
 export default function AdminAddTask() {
     const [, setTitle] = useContext(HeaderContext);
@@ -21,9 +23,11 @@ export default function AdminAddTask() {
 
     const { get: getDatasets } = useContext(DatasetsContext);
     const { getWithTypes: getTools } = useContext(AnnotationToolsContext);
+    const { getWithTools: getUsers } = useContext(PhysiciansContext);
 
     const [datasets, setDatasets] = useState<Dataset[]>([]);
     const [tools, setTools] = useState<AnnotationTool[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
 
     const fetchData = useCallback(async () => {
         setStatus(Status.LOADING);
@@ -32,17 +36,19 @@ export default function AdminAddTask() {
         try {
             promises.push(getDatasets());
             promises.push(getTools());
+            promises.push(getUsers());
 
             const res = await Promise.all(promises);
 
-            setDatasets(res[0] as Dataset[]);
+            setDatasets((res[0] as Dataset[]).filter((d) => d.completed));
             setTools(res[1] as AnnotationTool[]);
+            setUsers(res[2] as User[]);
 
             setStatus(Status.IDLE);
         } catch (err: any) {
             setStatus(Status.ERROR);
         }
-    }, [getDatasets, getTools]);
+    }, [getDatasets, getTools, getUsers]);
 
     useEffect(() => {
         fetchData();
@@ -57,5 +63,11 @@ export default function AdminAddTask() {
 
     if (status === Status.ERROR) return <ErrorScreen onRetry={fetchData} />;
 
-    return <AnnotationTaskAddForm datasets={datasets} tools={tools} />;
+    return (
+        <AnnotationTaskAddForm
+            datasets={datasets}
+            tools={tools}
+            users={users}
+        />
+    );
 }

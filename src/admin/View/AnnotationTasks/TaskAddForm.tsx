@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import { Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import MainContainer from "../../../common/View/MainContainer";
 import Dataset from "../../../common/Model/Dataset";
 import AddIcon from "@mui/icons-material/Add";
@@ -21,14 +21,31 @@ import {
 } from "../../../common/Model/Task";
 import Status from "../../../common/Model/Status";
 import { AnnotationTasksContext } from "../../ViewModel/AnnotationTasksProvider";
+import User from "../../../common/Model/User";
+import TaskAssignment from "./TaskAssignment";
+import { ListItemText } from "@mui/material";
 
 export default function AnnotationTaskAddForm({
     datasets,
     tools,
+    users,
 }: {
     datasets: Dataset[];
     tools: AnnotationTool[];
+    users: User[];
 }) {
+    const hasUserAccessToType = useCallback(
+        (user: User, type: number): boolean => {
+            const tool = tools.find(
+                (t) =>
+                    t.annotationTypes.find((at) => at.id === type) !== undefined
+            );
+            if (!tool) return false;
+            return user.toolsAccess.find((t) => t.id === tool.id) !== undefined;
+        },
+        [tools]
+    );
+
     const [status, setStatus] = useState<Status>(Status.IDLE);
 
     const { add: addTask } = useContext(AnnotationTasksContext);
@@ -54,7 +71,6 @@ export default function AnnotationTaskAddForm({
     }, [addTask, task, exit]);
 
     const updateTask = useCallback((key: TaskDataKey, value: any) => {
-        console.log(key, value);
         setTask((prev) => {
             return {
                 ...prev,
@@ -65,20 +81,23 @@ export default function AnnotationTaskAddForm({
 
     return (
         <MainContainer style={style.container}>
-            <Box sx={style.row}>
-                <DatasetSelect
-                    value={task.dataset}
-                    datasets={datasets}
-                    onSelect={(value) => updateTask("dataset", value)}
-                />
-            </Box>
-            <Box sx={style.row}>
-                <TypeSelect
-                    value={task.annotation_type}
-                    tools={tools}
-                    onSelect={(value) => updateTask("annotation_type", value)}
-                />
-            </Box>
+            <DatasetSelect
+                value={task.dataset}
+                datasets={datasets}
+                onSelect={(value) => updateTask("dataset", value)}
+            />
+            <TypeSelect
+                value={task.annotation_type}
+                tools={tools}
+                onSelect={(value) => updateTask("annotation_type", value)}
+            />
+            <TaskAssignment
+                users={users.filter((u) =>
+                    hasUserAccessToType(u, task.annotation_type)
+                )}
+                style={style.field}
+                onAssignmentChange={(value) => updateTask("physicians", value)}
+            />
             <Box sx={{ flex: 1 }} />
             <ButtonsFooter
                 saveDisabled={!isTaskDataValid(task)}
@@ -126,7 +145,13 @@ const DatasetSelect = ({
 
                 {datasets.map((d) => (
                     <MenuItem key={d.id} value={d.id}>
-                        {d.name}
+                        <ListItemText
+                            primary={d.name}
+                            secondary={
+                                d.media_count +
+                                (d.type ? " immagini" : " video")
+                            }
+                        />
                     </MenuItem>
                 ))}
             </Select>
@@ -203,21 +228,9 @@ const style = {
     container: {
         alignItems: "flex-start",
     },
-    row: {
-        width: "100%",
-        display: "flex",
-        flexDirection: "row" as "row",
-        marginTop: "16px",
-    },
-    centerRow: {
-        width: "100%",
-        display: "flex",
-        flexDirection: "row" as "row",
-        justifyContent: "center",
-        marginTop: "4px",
-    },
     field: {
-        flex: 1,
+        width: "fill-available",
+        marginTop: "16px",
         marginLeft: "16px",
         marginRight: "16px",
     },

@@ -10,7 +10,7 @@ export enum UserType {
 export type AnnotationToolAccess = {
     id: number;
     name: string;
-    endpoint: string;
+    endpoint?: string;
     access: boolean;
 };
 
@@ -45,6 +45,9 @@ export default class User {
     enabled: boolean;
     password?: string;
 
+    toolsAccess: AnnotationToolAccess[] = [];
+    private _toolsSynchronized: boolean = false;
+
     constructor(obj: User) {
         this.id = obj.id;
         this.name = obj.name;
@@ -77,8 +80,13 @@ export default class User {
         return this.enabled;
     };
 
-    annotationTools = async (): Promise<AnnotationToolAccess[]> => {
-        return await CommunicationController.getUserAnnotationTool(this.id);
+    fetchToolsAccess = async (): Promise<AnnotationToolAccess[]> => {
+        if (!this._toolsSynchronized) {
+            this.toolsAccess =
+                await CommunicationController.getUserAnnotationTool(this.id);
+            this._toolsSynchronized = true;
+        }
+        return this.toolsAccess;
     };
 
     toggleAnnotationToolAccess = async (
@@ -86,12 +94,23 @@ export default class User {
         access: boolean,
         endpoint?: string
     ): Promise<string> => {
-        return await CommunicationController.toggleUserAnnotationToolAccess(
-            this.id,
-            annotationToolId,
-            access,
-            endpoint
-        );
+        const instructions =
+            await CommunicationController.toggleUserAnnotationToolAccess(
+                this.id,
+                annotationToolId,
+                access,
+                endpoint
+            );
+
+        this.toolsAccess = this.toolsAccess.map((tool) => {
+            if (tool.id === annotationToolId) {
+                tool.access = access;
+                tool.endpoint = endpoint;
+            }
+            return tool;
+        });
+
+        return instructions;
     };
 
     tasks = async (

@@ -74,12 +74,11 @@ export default function MasterDetail({
                 )}
             </Box>
             <Divider orientation="vertical" flexItem sx={style.divider} />
-            <Box sx={style.detailsBox}>
-                <DetailComponent
-                    Item={DetailItem}
-                    item={selected >= 0 ? items[selected] : null}
-                />
-            </Box>
+            <DetailComponent
+                Item={DetailItem}
+                item={selected >= 0 ? items[selected] : null}
+                style={style.detailsBox}
+            />
         </MainContainer>
     );
 }
