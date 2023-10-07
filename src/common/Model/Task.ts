@@ -1,4 +1,5 @@
-import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import CommunicationController from "./CommunicationController";
 
 export const isTaskDataValid = (data: TaskData) => {
     return (
@@ -6,18 +7,23 @@ export const isTaskDataValid = (data: TaskData) => {
         data.dataset >= 0 &&
         !isNaN(data.annotation_type) &&
         data.annotation_type >= 0 &&
-        data.physicians.filter((p) => p.assign && !p.deadline).length === 0
+        data.physicians.filter(
+            (p) =>
+                p.assign && (!p.deadline || dayjs(p.deadline).isBefore(dayjs()))
+        ).length === 0
     );
+};
+
+export type AssignmentType = {
+    user: number;
+    assign: boolean;
+    deadline: string | undefined;
 };
 
 export class TaskData {
     dataset: number = -1;
     annotation_type: number = -1;
-    physicians: {
-        id: number;
-        deadline: Dayjs | null;
-        assign: boolean;
-    }[] = [];
+    physicians: AssignmentType[] = [];
 }
 
 export type TaskDataKey = keyof TaskData;
@@ -36,7 +42,7 @@ export default class Task {
         annotated_media: number;
         deadline: string;
         task_url: string;
-        id: number;
+        user: number;
     }[];
 
     constructor(obj: Task) {
@@ -57,5 +63,45 @@ export default class Task {
 
     filter = (search: string): boolean => {
         return this.name().toLowerCase().includes(search.toLowerCase());
+    };
+
+    getData = (): TaskData => {
+        return {
+            dataset: this.dataset,
+            annotation_type: this.annotation_type,
+            physicians: this.physicians.map((p) => ({
+                user: p.user,
+                deadline: p.deadline,
+                assign: true,
+            })),
+        };
+    };
+
+    updateAssignment = async (
+        assignments: AssignmentType[]
+    ): Promise<boolean> => {
+        assignments = this.filterAssignments(assignments);
+
+        const status = await CommunicationController.updateTaskAssignment(
+            this.id,
+            assignments
+        );
+
+        this.physicians = status;
+
+        return true;
+    };
+
+    filterAssignments = (assignments: AssignmentType[]): AssignmentType[] => {
+        return assignments.filter((a) => {
+            const physician = this.physicians.find((p) => p.user === a.user);
+            if (!physician) return a.assign;
+            return !a.assign || physician.deadline !== a.deadline;
+        });
+    };
+
+	overallProgress = () => {
+		const annotations = this.physicians.reduce((acc, p) => acc + p.annotated_media, 0)
+        return annotations / this.media_count * this.physicians.length;
     };
 }

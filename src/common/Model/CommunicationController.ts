@@ -5,7 +5,7 @@ import PhysicianTask from "./PhysicianTask";
 import Dataset, { DatasetData } from "./Dataset";
 import AnnotationTool, { AnnotationToolData } from "./AnnotationTool";
 import AnnotationType from "./AnnotationType";
-import Task, { TaskData } from "./Task";
+import Task, { AssignmentType, TaskData } from "./Task";
 
 type Params = { [key: string]: any };
 type Result = any;
@@ -52,6 +52,7 @@ class CommunicationController {
         NEW_ANNOTATION_TOOL: "/annotationTool",
         NEW_TASK: "/task",
         DELETE_TASK: "/task",
+        ASSIGN_TASK: "/task/assign",
     };
 
     private baseCall = async (
@@ -365,6 +366,20 @@ class CommunicationController {
             id: task,
         });
         return new Task(res);
+    };
+
+    updateTaskAssignment = (
+        id: number,
+        assignments: AssignmentType[]
+    ): Promise<
+        {
+            user: number;
+            deadline: string;
+            annotated_media: number;
+            task_url: string;
+        }[]
+    > => {
+        return this.patch(this.endpoints.ASSIGN_TASK, { id, assignments });
     };
 
     private formatGetData = (data: Params): string => {

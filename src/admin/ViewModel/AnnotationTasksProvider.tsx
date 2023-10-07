@@ -24,7 +24,7 @@ export default function AnnotationToolsProvider({
 
     const getTasks = useCallback(async () => {
         if (!synchronized.current) {
-            const res = await CommunicationController.getAllTasks();
+            const res = await CommunicationController.getAllTasks(true);
             synchronized.current = true;
             tasks.current.push(...res);
         }
@@ -32,6 +32,10 @@ export default function AnnotationToolsProvider({
     }, []);
 
     const addTask = useCallback(async (data: TaskData) => {
+        data = {
+            ...data,
+            physicians: data.physicians.filter((p) => p.assign),
+        };
         const task = await CommunicationController.newAnnotationTask(data);
         tasks.current.push(task);
         return task;

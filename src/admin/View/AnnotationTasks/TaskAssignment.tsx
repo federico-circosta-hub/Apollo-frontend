@@ -12,14 +12,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "dayjs/locale/it";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useCallback, useEffect, useState } from "react";
+import Task, { AssignmentType } from "../../../common/Model/Task";
 import dayjs, { Dayjs } from "dayjs";
-import Task from "../../../common/Model/Task";
-
-type AssignmentType = {
-    id: number;
-    assign: boolean;
-    deadline: Dayjs | null;
-};
 
 export default function TaskAssignment({
     task,
@@ -35,9 +29,9 @@ export default function TaskAssignment({
     const [data, setData] = useState<AssignmentType[]>(
         users.map((user) => {
             return {
-                id: user.id,
+                user: user.id,
                 assign: false,
-                deadline: null,
+                deadline: undefined,
             };
         })
     );
@@ -48,14 +42,14 @@ export default function TaskAssignment({
         setData((prev) => {
             for (let i = 0; i < prev.length; i++) {
                 const physician = task.physicians.find(
-                    (p) => p.id === prev[i].id
+                    (p) => p.user === prev[i].user
                 );
                 if (physician) {
                     prev[i].assign = true;
-                    prev[i].deadline = dayjs(physician.deadline);
+                    prev[i].deadline = physician.deadline;
                 } else {
                     prev[i].assign = false;
-                    prev[i].deadline = null;
+                    prev[i].deadline = undefined;
                 }
             }
             return prev;
@@ -66,13 +60,13 @@ export default function TaskAssignment({
         let newData: AssignmentType[] = [];
         setData((prev) => {
             for (const user of users) {
-                const assignment = prev.find((p) => p.id === user.id);
+                const assignment = prev.find((p) => p.user === user.id);
                 if (assignment) newData.push(assignment);
                 else {
                     newData.push({
-                        id: user.id,
+                        user: user.id,
                         assign: false,
-                        deadline: null,
+                        deadline: undefined,
                     });
                 }
             }
@@ -86,7 +80,7 @@ export default function TaskAssignment({
         const handleAssignmentChange = useCallback(
             (assigned: boolean) => {
                 data[i].assign = assigned;
-                setData(data);
+                setData([...data]);
                 onAssignmentChange(data);
             },
             [i]
@@ -94,8 +88,8 @@ export default function TaskAssignment({
 
         const hadleDeadlineChange = useCallback(
             (date: Dayjs | null) => {
-                data[i].deadline = date;
-                setData(data);
+                data[i].deadline = date?.toISOString();
+                setData([...data]);
                 onAssignmentChange(data);
             },
             [i]
@@ -120,9 +114,16 @@ export default function TaskAssignment({
                 >
                     <DatePicker
                         label="Deadline"
-                        value={data[i].deadline ?? null}
+                        value={dayjs(data[i].deadline)}
                         onChange={(date) => hadleDeadlineChange(date)}
                         disablePast
+                        slotProps={{
+                            textField: {
+                                error:
+                                    data[i].assign &&
+                                    dayjs(data[i].deadline).isSame(dayjs()),
+                            },
+                        }}
                     />
                 </LocalizationProvider>
             </ListItem>

@@ -41,7 +41,10 @@ export default function AnnotationTaskAddForm({
                     t.annotationTypes.find((at) => at.id === type) !== undefined
             );
             if (!tool) return false;
-            return user.toolsAccess.find((t) => t.id === tool.id) !== undefined;
+            return (
+                user.toolsAccess.find((t) => t.id === tool.id && t.access) !==
+                undefined
+            );
         },
         [tools]
     );

@@ -76,7 +76,17 @@ const AnnotationTaskItem = ({ item, onClick, onDelete }: MasterItemProps) => {
 
     return (
         <ListItemButton onClick={onClick}>
-            <ListItemText primary={task.name()} />
+            <ListItemText
+                primary={task.dataset_name}
+                secondary={task.annotation_type_name}
+            />
+            <ListItemText
+                primary={`${task.overallProgress()}%`}
+                secondary={
+                    task.media_count + (task.type ? " immagini" : " video")
+                }
+                sx={{ textAlign: "right" }}
+            />
             <ListItemIcon
                 sx={{ display: "flex", flexDirection: "row-reverse" }}
             >
