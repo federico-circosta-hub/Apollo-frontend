@@ -27,7 +27,7 @@ export default function Joint(props) {
   const [joint, setJoint] = useState(null);
   const [photos, setPhotos] = useState(newVisit.ecographies);
   const [ids, setIds] = useState(newVisit.ecographiesId);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [currentPhoto, setCurrentPhoto] = useState(0);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [formModal, setFormModal] = useState(false);
   const [errors, setErrors] = useState({ none: "none" });
@@ -101,7 +101,6 @@ export default function Joint(props) {
       }
     } catch (err) {
       console.log(err);
-      //console.log(err.response.data.message);
       setNetworkError(err || "Errore inatteso");
     } finally {
       setLoadingImages(false);
@@ -114,10 +113,8 @@ export default function Joint(props) {
   };
 
   const openModal = (e) => {
-    let index = Number(
-      e.target.alt.substring(e.target.alt.length - 1, e.target.alt.length)
-    );
-    setCurrentPhotoIndex(index);
+    console.log(e);
+    setCurrentPhoto(e.target.__reactProps$sceibgztdz.src);
     setShowPhotoModal(true);
   };
 
@@ -268,25 +265,22 @@ export default function Joint(props) {
         </div>
       </div>
       <Modal
-        size="sm"
+        fullscreen={true}
         show={showPhotoModal}
         onHide={() => setShowPhotoModal(false)}
         centered
       >
         <Modal.Body>
-          {/*           <img
-            src={
-              photos[currentPhotoIndex] != undefined
-                ? photos[currentPhotoIndex].link
-                : null
-            }
-            alt={`Photo ${currentPhotoIndex}`}
+          <img
+            src={currentPhoto != undefined ? currentPhoto : null}
+            alt={"Ecografia " + currentJoint.name + " " + currentJoint.side}
             style={{
               width: "100%",
               height: "auto",
               objectFit: "contain",
             }}
-          /> */}
+            onClick={() => setShowPhotoModal(false)}
+          />
         </Modal.Body>
       </Modal>
       <div>
