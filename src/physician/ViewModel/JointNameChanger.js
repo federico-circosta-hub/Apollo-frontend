@@ -64,6 +64,25 @@ class JointNameChanger {
     }
     return newName;
   }
+
+  fromEngToItaName(name) {
+    let newName;
+    switch (name) {
+      case "knee":
+        newName = "Ginocchio";
+        break;
+      case "ankle":
+        newName = "Caviglia";
+        break;
+      case "elbow":
+        newName = "Gomito";
+        break;
+      default:
+        newName = name;
+        break;
+    }
+    return newName;
+  }
 }
 const instance = new JointNameChanger();
 export default instance;

@@ -71,7 +71,7 @@ export const validateForm = (formName, formData, formData2) => {
         errors.distension = "Inserire causa distensione";
       }
       if (
-        formData2.ecographies.find(
+        formData2.ecographies.filter(
           (el) =>
             el.realJoint === formData.jointName && el.realSide === formData.side
         ) === undefined

@@ -113,9 +113,18 @@ export default function Joint(props) {
   };
 
   const openModal = (e) => {
-    console.log(e);
     setCurrentPhoto(e.target.__reactProps$sceibgztdz.src);
     setShowPhotoModal(true);
+  };
+
+  const setJointFieldInPhotos = (id, joint) => {
+    let newPhotos = photos;
+    newPhotos.forEach((e) => {
+      if (e.id === id) {
+        e.joint = joint;
+      }
+    });
+    setPhotos(newPhotos);
   };
 
   return selectedPatient !== null ? (
@@ -203,17 +212,15 @@ export default function Joint(props) {
                 photos !== null && (
                   <EcographImages
                     handleClick={(e) => openModal(e)}
-                    photos={photos.filter(
-                      (e) =>
-                        e.realJoint === undefined ||
-                        (e.realJoint === currentJoint.name &&
-                          e.realSide === currentJoint.side)
-                    )}
+                    photos={photos}
                     setPhotos={setPhotos}
+                    //unfilteredPhotos={photos}
+                    //setUnfilteredPhotos={setPhotos}
                     joint={{ joint, setJoint }}
                     loadingImages={loadingImages}
                     setLoadingImages={setLoadingImages}
                     networkError={networkError}
+                    setJointField={setJointFieldInPhotos}
                   />
                 )}
               {photos !== null &&
