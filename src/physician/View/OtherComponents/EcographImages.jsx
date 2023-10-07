@@ -89,7 +89,7 @@ const EcographImages = (props) => {
                 onLoad={() => {
                   props.setLoadingImages(false);
                 }}
-                onClick={props.handleClick}
+                onClick={() => props.handleClick(photo.id)}
                 src={photo.base64}
                 alt={`Photo ${index}`}
                 width={"100%"}

@@ -27,7 +27,7 @@ export default function Joint(props) {
   const [joint, setJoint] = useState(null);
   const [photos, setPhotos] = useState(newVisit.ecographies);
   const [ids, setIds] = useState(newVisit.ecographiesId);
-  const [currentPhoto, setCurrentPhoto] = useState(0);
+  const [currentPhoto, setCurrentPhoto] = useState(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [formModal, setFormModal] = useState(false);
   const [errors, setErrors] = useState({ none: "none" });
@@ -75,6 +75,7 @@ export default function Joint(props) {
   };
 
   const getNewImages = async () => {
+    setNetworkError(null);
     setLoadingImages(true);
     try {
       const idsFromServer = await CommunicationController.post("media/visit", {
@@ -112,8 +113,8 @@ export default function Joint(props) {
     setJoint(j);
   };
 
-  const openModal = (e) => {
-    setCurrentPhoto(e.target.__reactProps$sceibgztdz.src);
+  const openModal = (id) => {
+    setCurrentPhoto(id);
     setShowPhotoModal(true);
   };
 
@@ -180,49 +181,45 @@ export default function Joint(props) {
                     <AlertTitle>Nessuna nuova ecografia</AlertTitle>
                   </Alert>
                 )}
+
+                {joint === null && "Caricamento..."}
+                {networkError !== null &&
+                  networkError.response === undefined && (
+                    <Alert
+                      severity="error"
+                      variant="filled"
+                      style={{ width: "100%" }}
+                    >
+                      <AlertTitle>Errore di rete, riprovare</AlertTitle>
+                    </Alert>
+                  )}
+                {networkError !== null &&
+                  networkError.response !== undefined &&
+                  networkError.response.data.message ===
+                    "Error: visit does not exist" && (
+                    <Alert
+                      severity="error"
+                      variant="filled"
+                      style={{ width: "100%" }}
+                    >
+                      <AlertTitle>Non ci sono ecografie</AlertTitle>
+                    </Alert>
+                  )}
               </div>
-              {joint === null && "Caricamento..."}
-              {networkError !== null &&
-                networkError.response !== undefined &&
-                networkError.response.data.message !=
-                  "Error: visit does not exist" && (
-                  <Alert
-                    severity="error"
-                    variant="filled"
-                    style={{ width: "100%" }}
-                  >
-                    <AlertTitle>Errore di rete, riprovare</AlertTitle>
-                  </Alert>
-                )}
-              {networkError !== null &&
-                networkError.response !== undefined &&
-                networkError.response.data.message ==
-                  "Error: visit does not exist" && (
-                  <Alert
-                    severity="error"
-                    variant="filled"
-                    style={{ width: "100%" }}
-                  >
-                    <AlertTitle>Non ci sono ecografie</AlertTitle>
-                  </Alert>
-                )}
-              {joint !== null &&
-                !loadingImages &&
-                networkError === null &&
-                photos !== null && (
-                  <EcographImages
-                    handleClick={(e) => openModal(e)}
-                    photos={photos}
-                    setPhotos={setPhotos}
-                    //unfilteredPhotos={photos}
-                    //setUnfilteredPhotos={setPhotos}
-                    joint={{ joint, setJoint }}
-                    loadingImages={loadingImages}
-                    setLoadingImages={setLoadingImages}
-                    networkError={networkError}
-                    setJointField={setJointFieldInPhotos}
-                  />
-                )}
+              {joint !== null && !loadingImages && photos !== null && (
+                <EcographImages
+                  handleClick={(e) => openModal(e)}
+                  photos={photos}
+                  setPhotos={setPhotos}
+                  //unfilteredPhotos={photos}
+                  //setUnfilteredPhotos={setPhotos}
+                  joint={{ joint, setJoint }}
+                  loadingImages={loadingImages}
+                  setLoadingImages={setLoadingImages}
+                  networkError={networkError}
+                  setJointField={setJointFieldInPhotos}
+                />
+              )}
               {photos !== null &&
                 photos.length === 0 &&
                 !loadingImages &&
@@ -281,14 +278,21 @@ export default function Joint(props) {
       >
         <Modal.Body>
           <img
-            src={currentPhoto != undefined ? currentPhoto : null}
+            src={
+              currentPhoto !== null
+                ? photos.find((e) => e.id === currentPhoto).base64
+                : null
+            }
             alt={"Ecografia " + currentJoint.name + " " + currentJoint.side}
             style={{
               width: "100%",
               height: "auto",
               objectFit: "contain",
             }}
-            onClick={() => setShowPhotoModal(false)}
+            onClick={() => {
+              setShowPhotoModal(false);
+              setCurrentPhoto(null);
+            }}
           />
         </Modal.Body>
       </Modal>
