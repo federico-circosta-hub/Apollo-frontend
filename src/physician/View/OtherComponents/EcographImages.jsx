@@ -29,6 +29,21 @@ const EcographImages = (props) => {
     props.setPhotos(newPhotos);
   };
 
+  const sortByJoint = (arr) => {
+    return arr.sort((a, b) => {
+      if (a.joint === currentJoint.name && b.joint !== currentJoint.name) {
+        return -1;
+      } else if (
+        a.joint !== currentJoint.name &&
+        b.joint === currentJoint.name
+      ) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  };
+
   return (
     <div className="photo-gallery">
       <div style={style.photoContainer} className="photo-container">
@@ -60,55 +75,55 @@ const EcographImages = (props) => {
             />
           </div>
         )}
-        {props.photos
-          .filter(
+        {sortByJoint(
+          props.photos.filter(
             (e) =>
               e.realJoint === undefined ||
               (e.realJoint === currentJoint.name &&
                 e.realSide === currentJoint.side)
           )
-          .map((photo, index) => (
-            <div
-              key={index}
-              style={{
-                padding: "10px",
-                display: "flex",
-                flexDirection: "column",
-                margin: 2,
-                background: props.photos
-                  .filter(
-                    (e) =>
-                      e.realJoint === currentJoint.name &&
-                      e.realSide === currentJoint.side
-                  )
-                  .includes(photo)
-                  ? "#90ee90"
-                  : "",
-                borderRadius: "5px",
+        ).map((photo, index) => (
+          <div
+            key={index}
+            style={{
+              padding: "10px",
+              display: "flex",
+              flexDirection: "column",
+              margin: 2,
+              background: props.photos
+                .filter(
+                  (e) =>
+                    e.realJoint === currentJoint.name &&
+                    e.realSide === currentJoint.side
+                )
+                .includes(photo)
+                ? "#90ee90"
+                : "",
+              borderRadius: "5px",
+            }}
+          >
+            <img
+              onLoad={() => {
+                props.setLoadingImages(false);
               }}
-            >
-              <img
-                onLoad={() => {
-                  props.setLoadingImages(false);
-                }}
-                onClick={() => props.handleClick(photo.id)}
-                src={photo.base64}
-                alt={`Photo ${index}`}
-                width={"100%"}
-                style={{ borderRadius: "5px" }}
-              />
-              <Checkbox
-                checked={props.photos
-                  .filter(
-                    (e) =>
-                      e.realJoint === currentJoint.name &&
-                      e.realSide === currentJoint.side
-                  )
-                  .includes(photo)}
-                onChange={(e) => handleSelect(e, photo)}
-              ></Checkbox>
-            </div>
-          ))}
+              onClick={() => props.handleClick(photo.id)}
+              src={photo.base64}
+              alt={`Photo ${index}`}
+              width={"100%"}
+              style={{ borderRadius: "5px" }}
+            />
+            <Checkbox
+              checked={props.photos
+                .filter(
+                  (e) =>
+                    e.realJoint === currentJoint.name &&
+                    e.realSide === currentJoint.side
+                )
+                .includes(photo)}
+              onChange={(e) => handleSelect(e, photo)}
+            ></Checkbox>
+          </div>
+        ))}
       </div>
       {showChangingJointFieldModal && idToChange !== -1 && (
         <ChangingJointFieldMediaModal
