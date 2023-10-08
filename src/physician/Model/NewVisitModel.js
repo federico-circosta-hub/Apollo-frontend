@@ -59,6 +59,7 @@ export default class NewVisitModel {
 
   setEcographies(e) {
     let union = this.ecographies.concat(e);
+    union.forEach((e) => (e.actualModified = { value: false, select: null }));
     this.ecographies = union.filter((item, pos) => union.indexOf(item) === pos);
   }
 

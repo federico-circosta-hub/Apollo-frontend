@@ -43,6 +43,17 @@ export default function Joint(props) {
   }, []);
 
   const cancel = () => {
+    let photosModified = [...photos];
+    photosModified.forEach((e) => {
+      if (e.actualModified.value && e.actualModified.select === true) {
+        e.realJoint = undefined;
+        e.realSide = undefined;
+      } else if (e.actualModified.value && e.actualModified.select === false) {
+        e.realJoint = currentJoint.name;
+        e.realSide = currentJoint.side;
+      }
+    });
+    setPhotos(photosModified);
     newVisit.setEcographies(photos);
     newVisit.setEcographiesId(ids);
     setJoint(null);
@@ -90,6 +101,7 @@ export default function Joint(props) {
           let eco = await CommunicationController.get("media", { id: e });
           eco.realJoint = undefined;
           eco.realSide = undefined;
+          eco.actualModified = { value: false, select: null };
           console.log("ottenuta eco:", eco);
           setPhotos((prevState) => [...prevState, eco]);
           setIds((prevState) => [...prevState, e]);

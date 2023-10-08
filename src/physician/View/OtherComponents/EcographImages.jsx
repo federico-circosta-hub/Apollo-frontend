@@ -16,6 +16,7 @@ const EcographImages = (props) => {
     if (e.target.checked) {
       newPhotos[index].realJoint = props.joint.joint.jointName;
       newPhotos[index].realSide = props.joint.joint.side;
+      newPhotos[index].actualModified = { value: true, select: true };
       if (newPhotos[index].realJoint !== photo.joint) {
         setIdToChange(photo.id);
         setShowChangingJointFieldModal(true);
@@ -23,6 +24,7 @@ const EcographImages = (props) => {
     } else {
       newPhotos[index].realJoint = undefined;
       newPhotos[index].realSide = undefined;
+      newPhotos[index].actualModified = { value: true, select: false };
     }
     props.setPhotos(newPhotos);
   };
