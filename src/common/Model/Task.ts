@@ -100,8 +100,11 @@ export default class Task {
         });
     };
 
-	overallProgress = () => {
-		const annotations = this.physicians.reduce((acc, p) => acc + p.annotated_media, 0)
-        return annotations / this.media_count * this.physicians.length;
+    overallProgress = () => {
+        const annotations = this.physicians.reduce(
+            (acc, p) => acc + p.annotated_media,
+            0
+        );
+        return (annotations / this.media_count) * this.physicians.length;
     };
 }

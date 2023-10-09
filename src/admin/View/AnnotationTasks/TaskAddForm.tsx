@@ -36,6 +36,7 @@ export default function AnnotationTaskAddForm({
 }) {
     const hasUserAccessToType = useCallback(
         (user: User, type: number): boolean => {
+            if (type < 0) return true;
             const tool = tools.find(
                 (t) =>
                     t.annotationTypes.find((at) => at.id === type) !== undefined
@@ -94,6 +95,9 @@ export default function AnnotationTaskAddForm({
                 tools={tools}
                 onSelect={(value) => updateTask("annotation_type", value)}
             />
+            <Typography variant="h5" sx={{ marginTop: "8px" }}>
+                Assegna a:
+            </Typography>
             <TaskAssignment
                 users={users.filter((u) =>
                     hasUserAccessToType(u, task.annotation_type)

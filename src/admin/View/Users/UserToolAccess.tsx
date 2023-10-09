@@ -152,6 +152,7 @@ const ToolAccess = ({
                     <Checkbox
                         checked={access}
                         onChange={(_event, checked) => setAccess(checked)}
+                        disabled={!user.enabled}
                     />
                 }
                 sx={{ flex: 1 }}
@@ -164,14 +165,16 @@ const ToolAccess = ({
                 onChange={(e) => setEndpoint(e.target.value)}
                 variant="standard"
                 inputProps={{ maxLength: 255 }}
+                disabled={!user.enabled}
             />
             <Box sx={{ flex: 1 }} />
             <StatusLoadingButton
                 status={status}
                 text="Salva"
                 disabled={
-                    access === tool.access &&
-                    (!access || endpoint === tool.endpoint)
+                    !user.enabled ||
+                    (access === tool.access &&
+                        (!access || endpoint === tool.endpoint))
                 }
                 onClick={handleAccessChange}
             />

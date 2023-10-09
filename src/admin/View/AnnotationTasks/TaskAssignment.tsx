@@ -6,7 +6,6 @@ import ListItem from "@mui/material/ListItem";
 import User from "../../../common/Model/User";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
-import Typography from "@mui/material/Typography";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "dayjs/locale/it";
@@ -131,24 +130,18 @@ export default function TaskAssignment({
     };
 
     return (
-        <>
-            <Typography variant="h5" sx={style}>
-                Assegna a:
-            </Typography>
-            <Box sx={[style, baseStyle.box]}>
-                <MasterComponent
-                    items={users}
-                    Item={UserAssignmentItem}
-                    itemName="Utente"
-                />
-            </Box>
-        </>
+        <Box sx={[baseStyle.box, style]}>
+            <MasterComponent
+                items={users}
+                Item={UserAssignmentItem}
+                itemName="Utente"
+            />
+        </Box>
     );
 }
 
 const baseStyle = {
     box: {
-        marginTop: "8px",
         overflow: "auto",
     },
 };

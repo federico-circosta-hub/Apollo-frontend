@@ -3,9 +3,9 @@ import User, { UserData } from "../../common/Model/User";
 import CommunicationController from "../../common/Model/CommunicationController";
 
 export const PhysiciansContext = createContext<{
-    get: () => Promise<User[]>;
+    get: (includeDisabled: boolean) => Promise<User[]>;
     add: (user: UserData) => Promise<User | undefined>;
-    getWithTools: () => Promise<User[]>;
+    getWithTools: (includeDisabled: boolean) => Promise<User[]>;
 }>({
     get: async () => [],
     add: async () => {
@@ -22,14 +22,18 @@ export default function PhysiciansProvider({
     const synchronized = useRef<boolean>(false);
     const users = useRef<User[]>([]);
 
-    const getPhysician = useCallback(async () => {
-        if (!synchronized.current) {
-            const res = await CommunicationController.getPhysicians(true);
-            synchronized.current = true;
-            users.current.push(...res);
-        }
-        return users.current;
-    }, []);
+    const getPhysician = useCallback(
+        async (includeDisabled: boolean = true) => {
+            if (!synchronized.current) {
+                const res = await CommunicationController.getPhysicians(true);
+                synchronized.current = true;
+                users.current.push(...res);
+            }
+            if (includeDisabled) return users.current;
+            return users.current.filter((u) => u.enabled);
+        },
+        []
+    );
 
     const addPhysician = useCallback(async (data: UserData) => {
         const user = await CommunicationController.newPhysician(data);
@@ -37,17 +41,20 @@ export default function PhysiciansProvider({
         return user;
     }, []);
 
-    const getWithTools = useCallback(async () => {
-        await getPhysician();
+    const getWithTools = useCallback(
+        async (includeDisabled: boolean = true) => {
+            const res = await getPhysician(includeDisabled);
 
-        const promises = [];
-        for (const user of users.current)
-            promises.push(user.fetchToolsAccess());
+            const promises = [];
+            for (const user of res)
+                promises.push(user.fetchToolsAccess());
 
-        await Promise.all(promises);
+            await Promise.all(promises);
 
-        return users.current;
-    }, [getPhysician]);
+            return res;
+        },
+        [getPhysician]
+    );
 
     return (
         <PhysiciansContext.Provider

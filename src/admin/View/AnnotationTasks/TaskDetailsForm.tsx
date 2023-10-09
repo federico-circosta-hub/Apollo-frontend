@@ -1,11 +1,17 @@
-import Task, { TaskData, isTaskDataValid } from "../../../common/Model/Task";
+import Task, { TaskData } from "../../../common/Model/Task";
 import TaskAssignment from "./TaskAssignment";
 import Box from "@mui/material/Box";
 import User from "../../../common/Model/User";
 import { useCallback, useState } from "react";
-import ButtonsFooter from "../../Components/ButtonsFooter";
 import Status from "../../../common/Model/Status";
 import Loading from "../../../common/View/Loading";
+import TaskStatus from "./TaskStatus";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import StatusLoadingButton from "../../Components/StatusLoadingButton";
+import DialogTitle from "@mui/material/DialogTitle";
 
 export default function TaskDetailsForm({
     task,
@@ -14,6 +20,50 @@ export default function TaskDetailsForm({
     task: Task;
     users: User[];
 }) {
+    const [showAssignModal, setShowAssignModal] = useState<boolean>(false);
+
+    if (users.length === 0) return <Loading />;
+
+    return (
+        <Box sx={style.box}>
+            <TaskStatus task={task} users={users} />
+            <Box sx={{ m: 1 }} />
+
+            <Box sx={style.footer}>
+                <Button
+                    variant="contained"
+                    onClick={() => setShowAssignModal(true)}
+                    sx={style.footerButton}
+                >
+                    Assegna
+                </Button>
+                <AssignModal
+                    show={showAssignModal}
+                    task={task}
+                    users={users.filter(
+                        (u) =>
+                            u.enabled ||
+                            task.physicians.find((p) => p.user === u.id) !==
+                                undefined
+                    )}
+                    onClose={() => setShowAssignModal(false)}
+                />
+            </Box>
+        </Box>
+    );
+}
+
+const AssignModal = ({
+    show,
+    task,
+    users,
+    onClose,
+}: {
+    show: boolean;
+    task: Task;
+    users: User[];
+    onClose: () => void;
+}) => {
     const [status, setStatus] = useState<Status>(Status.IDLE);
     const [taskData, setTaskData] = useState<TaskData>(task.getData());
 
@@ -23,37 +73,67 @@ export default function TaskDetailsForm({
         try {
             setStatus(Status.IDLE);
             await task.updateAssignment(taskData.physicians);
-            return "Aggiornamento completato";
+            onClose();
         } catch (err: any) {
             setStatus(Status.ERROR);
-            return "Errore di salvataggio";
         }
-    }, [task, taskData.physicians]);
-
-    if (users.length === 0) return <Loading />;
+    }, [task, taskData.physicians, onClose]);
 
     return (
-        <Box sx={style.box}>
-            <TaskAssignment
-                task={task}
-                users={users}
-                onAssignmentChange={(data) => {
-                    setTaskData({ ...taskData, physicians: data });
-                }}
-            />
-            <ButtonsFooter
-                saveDisabled={!isTaskDataValid(taskData)}
-                status={status}
-                onSave={saveAssignment}
-            />
-        </Box>
+        <Dialog
+            open={show}
+            onClose={onClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            sx={style.assignDialog}
+        >
+            <DialogTitle id="alert-dialog-title">Assegna a:</DialogTitle>
+
+            <DialogContent>
+                <TaskAssignment
+                    task={task}
+                    users={users}
+                    onAssignmentChange={(data) => {
+                        setTaskData({ ...taskData, physicians: data });
+                    }}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose} variant="outlined">
+                    Annulla
+                </Button>
+                <StatusLoadingButton
+                    text={status === Status.IDLE ? "Salva" : "Riprova"}
+                    status={status}
+                    onClick={saveAssignment}
+                />
+            </DialogActions>
+        </Dialog>
     );
-}
+};
 
 const style = {
     box: {
         flex: 1,
         display: "flex",
         flexDirection: "column" as "column",
+        overflow: "auto",
+    },
+    footer: {
+        display: "flex",
+        justifyContent: "flex-end",
+        marginTop: "8px",
+        width: "100%",
+    },
+    footerButton: {
+        textTransform: "none",
+    },
+    assignDialog: {
+        "& .MuiDialog-container": {
+            "& .MuiPaper-root": {
+                width: "100%",
+                maxWidth: "75%",
+            },
+        },
     },
 };
