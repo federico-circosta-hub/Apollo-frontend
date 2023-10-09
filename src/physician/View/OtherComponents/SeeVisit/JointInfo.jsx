@@ -1,7 +1,43 @@
+import JointNameChanger from "../../../ViewModel/JointNameChanger";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { useEffect, useState } from "react";
+import CommunicationController from "./../../../../common/Model/CommunicationController";
+import { Skeletons } from "../Skeletons";
+import { Alert, AlertTitle, CircularProgress } from "@mui/material";
+
 export default function JointInfo(props) {
-  const jointToDisplay = props.visit.report.joints.find(
-    (item) => item.name + " " + item.side === props.selectedJoint
-  );
+  const [ecographies, setEcographies] = useState([]);
+  const [loadingEcographies, setLoadingEcographies] = useState(false);
+  const [networkError, setNetworkError] = useState(null);
+
+  const jointToDisplay = props.selectedJoint;
+
+  useEffect(() => {
+    getEcographies();
+  }, [props.selectedJoint]);
+
+  const getEcographies = async () => {
+    let a = [];
+    setEcographies(a);
+    setLoadingEcographies(true);
+    setNetworkError(null);
+    try {
+      await jointToDisplay.media_ids.forEach(async (e) => {
+        let eco = await CommunicationController.get("media", { id: e });
+        setEcographies((prevState) => [...prevState, eco]);
+      });
+    } catch (err) {
+      setNetworkError(err || "Errore inatteso");
+    } finally {
+      setLoadingEcographies(false);
+    }
+  };
 
   const valueResolver = (s) => {
     let result = "";
@@ -42,7 +78,7 @@ export default function JointInfo(props) {
         }
         return result;
       case "distension":
-        switch (jointToDisplay.distension) {
+        switch (jointToDisplay.distension_amount) {
           case "absent":
             result = "Assente";
           case "minimum":
@@ -53,36 +89,105 @@ export default function JointInfo(props) {
             result = "Grave";
         }
         return result;
+      case "distensionCause":
+        switch (jointToDisplay.blood) {
+          case 1:
+            result = "Unclear";
+          case 2:
+            result = "Synovial Effusion";
+          case 4:
+            result = "Synovial Effusion + Synovial Hyperplasia";
+          case 5:
+            result = "Vacuum";
+          case 3:
+            result = "Synovial Hyperplasia";
+          case 6:
+            result = "Vacuum + Synovial Hyperplasia";
+          default:
+            result = "N/A";
+        }
+        return result;
     }
   };
 
-  return (
-    <>
-      <h4>
-        {jointToDisplay.name}
-        {jointToDisplay.side}
-      </h4>
+  function createData(key, value) {
+    return { key, value };
+  }
 
-      <p>Index Joint: {jointToDisplay.index_joint ? "Sì" : "No"}</p>
-      <p>
-        Difficoltà di movimento:{" "}
-        {jointToDisplay.difficulty_moving ? "Sì" : "No"}
-      </p>
-      <p>Dolore: {jointToDisplay.pain ? "Sì" : "No"}</p>
-      <p>Ultimo sanguinamento: {jointToDisplay.last_bleeding}</p>
-      <p>Sinovite: {valueResolver("sinovite")}</p>
-      <p>Cartilagine: {valueResolver("cartilagine")}</p>
-      <p>Osso subcondrale: {valueResolver("subchondral")}</p>
-      <p>Distension: {valueResolver("distension")}</p>
-      <p>Causa distensione: {jointToDisplay.blood}</p>
-      <p>Ecografie:</p>
-      {/* {jointToDisplay.selectedImages.map((item, index) => (
-          <img
-            key={index}
-            src={item.link}
-            style={{ width: "100%", margin: 5 }}
-          />
-        ))} */}
-    </>
+  const rows = [
+    createData("Index Joint:", jointToDisplay.index_joint ? "Sì" : "No"),
+    createData(
+      "Difficoltà di movimento:",
+      jointToDisplay.difficulty_moving ? "Sì" : "No"
+    ),
+    createData("Dolore:", jointToDisplay.pain ? "Sì" : "No"),
+    createData(
+      "Ultimo sanguinamento:",
+      jointToDisplay.last_bleeding !== null
+        ? jointToDisplay.last_bleeding
+        : "N/A"
+    ),
+    createData("Sinovite:", valueResolver("sinovite")),
+    createData("Cartilagine:", valueResolver("cartilagine")),
+    createData("Osso subcondrale:", valueResolver("subchondral")),
+    createData("Livello di distensione:", valueResolver("distension")),
+    createData("Causa distensione:", valueResolver("distensionCause")),
+  ];
+
+  return (
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <h4>
+        {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+          jointToDisplay.name,
+          jointToDisplay.side
+        )}
+      </h4>
+      <TableContainer style={{ width: "75%" }} component={Paper}>
+        <Table aria-label="simple table">
+          <TableBody style={{ fontSize: 20 }}>
+            {rows.map((row) => (
+              <TableRow
+                key={row.key}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.key}
+                </TableCell>
+                <TableCell align="right">{row.value}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <div style={{ marginTop: "5vh", width: "100%" }}>
+        <p>Ecografie:</p>
+        {loadingEcographies && <Skeletons />}
+        <div>
+          {!loadingEcographies &&
+            ecographies.map((item, index) => (
+              <img
+                key={index}
+                src={item.base64}
+                style={{ width: "100%", margin: 5 }}
+              />
+            ))}
+        </div>
+
+        {/*           /* ) : networkError !== null ? (
+          <Alert severity="error" variant="filled" style={{ width: "100%" }}>
+            <AlertTitle>Errore di rete, riprovare</AlertTitle>
+          </Alert>
+        ) :  : (
+          ecographies.length === 0 &&
+          !loadingEcographies && (
+            <p>
+              <em>Non sono presenti ecografie</em>
+            </p>
+          )
+          )*/}
+      </div>
+    </div>
   );
 }

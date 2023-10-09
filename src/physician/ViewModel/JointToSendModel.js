@@ -17,7 +17,8 @@ export default class JointToSendModel {
     this.id = 1;
     this.name = joint.jointName;
     this.side = joint.side;
-    this.blood = joint.distensionCause;
+    this.blood =
+      joint.distensionCause /*  === null ? undefined : joint.distensionCause */;
     this.distension_amount = joint.distension;
     this.last_bleeding = joint.lastBleed;
     this.difficulty_moving = joint.jointDifficulty;

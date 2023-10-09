@@ -7,7 +7,91 @@ export default function VisitInfo(props) {
   const { selectedVisit } = useContext(VisitContext);
 
   return (
-    <div style={{ textAlign: "center", width: "100%" }}>
+    <div
+      style={{
+        textAlign: "center",
+        width: "100%",
+        padding: "5px",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <h2 style={styles.h2}>Data Visita:</h2>
+      <p style={{ fontSize: "1.2em", marginBottom: "20px" }}>
+        {format(new Date(selectedVisit.date), "d MMMM y", { locale: it })}
+      </p>
+
+      <h3 style={styles.h3}>Dettagli Visita:</h3>
+      <p>
+        <strong>Paziente:</strong> {selectedVisit.patient}
+      </p>
+      <p>
+        <strong>Medico:</strong> {props.visit.physician}
+      </p>
+      <p>
+        <strong>Tipo di Visita:</strong> {props.visit.type}
+      </p>
+
+      <h3 style={styles.h3}>Attività Fisica:</h3>
+      <p>
+        <strong>Tipo:</strong> {props.visit.report.exercise || "N/A"}
+      </p>
+      <p>
+        <strong>Data:</strong> {props.visit.report.date_exercise || "N/A"}
+      </p>
+
+      <h3 style={styles.h3}>Evento Traumatico:</h3>
+      <p>
+        <strong>Tipo:</strong> {props.visit.report.trauma_event || "N/A"}
+      </p>
+      <p>
+        <strong>Data:</strong> {props.visit.report.date_trauma || "N/A"}
+      </p>
+
+      <h3 style={styles.h3}>Follow-Up:</h3>
+      <p>{props.visit.report.followUp || "N/A"}</p>
+
+      <h3 style={styles.h3}>Farmaco di Profilassi:</h3>
+      <p>
+        <strong>Nome:</strong> {props.visit.report.prophylaxis_drug || "N/A"}
+      </p>
+      <p>
+        <strong>Dose:</strong> {props.visit.report.prophylaxis_dose || "N/A"}
+      </p>
+      <p>
+        <strong>Frequenza:</strong>{" "}
+        {props.visit.report.prophylaxis_frequency || "N/A"}
+      </p>
+
+      <h3 style={styles.h3}>Farmaco Acuto:</h3>
+      <p>
+        <strong>Nome:</strong> {props.visit.report.acute_drug || "N/A"}
+      </p>
+      <p>
+        <strong>Dose:</strong> {props.visit.report.acute_dose || "N/A"}
+      </p>
+    </div>
+  );
+}
+
+const styles = {
+  h3: {
+    borderRadius: "5px",
+    width: "100%",
+    border: "1px solid #4682b4",
+    color: "#4682b4",
+    background: "#fcfdff",
+  },
+  h2: {
+    marginBottom: "10px",
+    borderRadius: "5px",
+    width: "100%",
+    border: "1px solid #4682b4",
+    color: "#4682b4",
+    background: "#fcfdff",
+  },
+};
+{
+  /* <div style={{ textAlign: "center", width: "100%" }}>
       <h3>
         Data visita:{" "}
         {format(new Date(selectedVisit.date), "d MMMM y", { locale: it })}
@@ -56,17 +140,17 @@ export default function VisitInfo(props) {
           ? props.visit.report.followUp
           : "/"}
       </p>
-      {/*         <p>
+               <p>
           Risposta al trattamento:{" "}
           {visit.followUp.followUp ? visit.followUp.treatmentResponse : "/"}
-        </p> */}
-      {/*         <p>
+        </p> 
+               <p>
           Visita precedente:{" "}
           {visit.followUp.followUp
             ? visit.followUp.lastVisit.toDateString()
             : "/"}
-        </p> */}
-      {/*         <br />
+        </p> 
+               <br />
         <br />
 
         <h3>Necessità di visita di Follow-Up</h3>
@@ -79,7 +163,7 @@ export default function VisitInfo(props) {
           {visit.needFollowUp.needFollowUp
             ? visit.needFollowUp.followUpDate.toDateString()
             : "/"}
-        </p> */}
+        </p> 
 
       <br />
       <br />
@@ -118,6 +202,5 @@ export default function VisitInfo(props) {
           ? props.visit.report.acute_dose
           : "/"}
       </p>
-    </div>
-  );
+    </div> */
 }

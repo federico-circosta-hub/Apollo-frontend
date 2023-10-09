@@ -103,7 +103,6 @@ export default function Joint(props) {
           eco.realJoint = undefined;
           eco.realSide = undefined;
           eco.actualModified = { value: false, select: null };
-          if (eco.id === 31) eco.joint = "elbow";
           console.log("ottenuta eco:", eco);
           setPhotos((prevState) => [...prevState, eco]);
           setIds((prevState) => [...prevState, e]);
