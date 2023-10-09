@@ -1,6 +1,5 @@
 import { Checkbox } from "@mui/material";
 import { useState, useContext } from "react";
-import { Skeleton, CircularProgress } from "@mui/material";
 import ChangingJointFieldMediaModal from "../Modals/ChangingJointFieldMediaModal";
 import { NewVisitContext } from "../../Model/NewVisitContext";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
@@ -47,34 +46,6 @@ const EcographImages = (props) => {
   return (
     <div className="photo-gallery">
       <div style={style.photoContainer} className="photo-container">
-        {props.loadingImages && (
-          <div>
-            <Skeleton
-              style={{ margin: "2%" }}
-              variant="rectangular"
-              width={"95%"}
-              height={"30vh"}
-            />
-            <Skeleton
-              style={{ margin: "2%" }}
-              variant="rectangular"
-              width={"95%"}
-              height={"30vh"}
-            />
-            <Skeleton
-              style={{ margin: "2%" }}
-              variant="rectangular"
-              width={"95%"}
-              height={"30vh"}
-            />
-            <Skeleton
-              style={{ margin: "2%" }}
-              variant="rectangular"
-              width={"95%"}
-              height={"30vh"}
-            />
-          </div>
-        )}
         {sortByJoint(
           props.photos.filter(
             (e) =>

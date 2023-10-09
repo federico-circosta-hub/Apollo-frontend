@@ -18,6 +18,7 @@ import { validateForm } from "../../ViewModel/Validation";
 import { Skeleton, CircularProgress } from "@mui/material";
 import CommunicationController from "../../../common/Model/CommunicationController";
 import { Alert, AlertTitle } from "@mui/material";
+import { Skeletons } from "../OtherComponents/Skeletons";
 
 export default function Joint(props) {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -194,7 +195,7 @@ export default function Joint(props) {
                     <AlertTitle>Nessuna nuova ecografia</AlertTitle>
                   </Alert>
                 )}
-
+                {loadingImages && <Skeletons />}
                 {joint === null && "Caricamento..."}
                 {networkError !== null &&
                   networkError.response === undefined && (
@@ -224,8 +225,6 @@ export default function Joint(props) {
                   handleClick={(e) => openModal(e)}
                   photos={photos}
                   setPhotos={setPhotos}
-                  //unfilteredPhotos={photos}
-                  //setUnfilteredPhotos={setPhotos}
                   joint={{ joint, setJoint }}
                   loadingImages={loadingImages}
                   setLoadingImages={setLoadingImages}
