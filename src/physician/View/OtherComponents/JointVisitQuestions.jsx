@@ -62,7 +62,7 @@ export default function JointVisitQuestions(props) {
     setDistensionCauseValues([]);
     try {
       const dcv = await CommunicationController.get("distensionReason", {});
-      setDistensionCauseValues(dcv.map((e) => e.name));
+      setDistensionCauseValues(dcv);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -112,11 +112,14 @@ export default function JointVisitQuestions(props) {
         let distension = distensionValues.find(
           (element) => element.value == e.target.value
         );
-        if (distension.label == "Media" || distension.label == "Grave")
+        if (distension.label == "Media" || distension.label == "Grave") {
           setDisableDistensionCauses(false);
-        else setDisableDistensionCauses(true);
+        } else {
+          setDisableDistensionCauses(true);
+          props.joint.setDistensionCause(null);
+        }
         props.joint.setDistension(distension.db);
-        return props.setJoint(props.joint);
+        return props.setJoint(props.joint.clone());
     }
   };
 
@@ -162,7 +165,7 @@ export default function JointVisitQuestions(props) {
   const displayDistensionCauses = () => {
     return networkError === null ? (
       distensionCauseValues.map((element) => (
-        <MenuItem value={element}>{element}</MenuItem>
+        <MenuItem value={element.name}>{element.name}</MenuItem>
       ))
     ) : (
       <MenuItem>
@@ -399,13 +402,24 @@ export default function JointVisitQuestions(props) {
               La più probabile causa di distensione?
             </InputLabel>
             <Select
-              defaultValue={props.joint.distensionCause}
+              value={
+                props.joint.distensionCause !== null &&
+                distensionCauseValues.length !== 0
+                  ? distensionCauseValues.filter(
+                      (d) => d.id === props.joint.distensionCause
+                    )[0].name
+                  : ""
+              }
               style={{ fontSize: 20 }}
               id="demo-simple-select"
               label="La più probabile causa di d...?"
               onChange={(e) => {
-                props.joint.setDistensionCause(e.target.value);
-                props.setJoint(props.joint);
+                props.joint.setDistensionCause(
+                  distensionCauseValues.filter(
+                    (d) => d.name === e.target.value
+                  )[0].id
+                );
+                props.setJoint(props.joint.clone());
               }}
             >
               {displayDistensionCauses()}
