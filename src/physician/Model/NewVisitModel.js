@@ -43,6 +43,8 @@ export default class NewVisitModel {
 
   previousVisit;
 
+  previousVisitList;
+
   isInPresence;
 
   ecographies = [];
@@ -189,8 +191,12 @@ export default class NewVisitModel {
     );
   }
 
-  setPreviousVisit(d) {
-    this.previousVisit = d;
+  setPreviousVisitList(pvl) {
+    this.previousVisitList = pvl;
+  }
+
+  setPreviousVisit(pv) {
+    this.previousVisit = pv;
   }
 
   setIsInPresence(b) {

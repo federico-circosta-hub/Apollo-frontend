@@ -24,6 +24,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MainContainer from "../../../common/View/MainContainer";
 import NoPreviousVisit from "../Modals/NoPreviousVisit";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
+import FollowUpChooseModal from "../Modals/FollowUpChooseModal";
 
 export default function NewVisit() {
   const nav = useNavigate();
@@ -51,6 +52,7 @@ export default function NewVisit() {
   const [formErrors, setErrors] = useState({ none: "none" });
   const [loadingOptions, setLoadingOptions] = useState(false);
   const [networkError, setNetworkError] = useState(null);
+  const [previousVisit, setPreviousVisit] = useState(newVisit.previousVisit);
 
   useEffect(() => {
     getTraumaticEventAndActivitiesFromServer();
@@ -98,6 +100,7 @@ export default function NewVisit() {
       newVisit.setVisitDate(visitDate);
       newVisit.setPhysicalActivity(physicalActivity);
       newVisit.setTraumaticEvent(traumaticEvent);
+      newVisit.setPreviousVisit(previousVisit);
       setNewVisit(newVisit);
       setErrors({});
       console.log(newVisit);
@@ -175,6 +178,7 @@ export default function NewVisit() {
 
   const followUp = (e) => {
     setIsFollowUp(e.target.checked);
+    if (!e.target.checked) setPreviousVisit(undefined);
   };
 
   const datePickerResolver = (b, s) => {
@@ -206,6 +210,7 @@ export default function NewVisit() {
     newVisit.setVisitDate(new Date());
     newVisit.setPhysicalActivity(physicalActivity);
     newVisit.setTraumaticEvent(traumaticEvent);
+    newVisit.setPreviousVisit(previousVisit);
     setNewVisit(newVisit);
   };
 
@@ -218,15 +223,31 @@ export default function NewVisit() {
             <Switch checked={isFollowUp} onChange={followUp} />
           </div>
           <div>
-            {isFollowUp ? (
-              newVisit.previousVisit !== undefined ? (
-                <FollowUpHelper onCancel={handleCancel} seeVisit={saveInfo} />
-              ) : (
+            {isFollowUp &&
+              previousVisit !== undefined &&
+              newVisit.previousVisitList.length !== 0 && (
+                <FollowUpHelper
+                  onCancel={handleCancel}
+                  seeVisit={saveInfo}
+                  previousVisit={previousVisit}
+                />
+              )}
+            {isFollowUp &&
+              previousVisit === undefined &&
+              (newVisit.previousVisitList.length === 0 ||
+                newVisit.previousVisitList.filter((e) => e.physician !== null)
+                  .length === 0) && (
                 <NoPreviousVisit setIsFollowUp={() => setIsFollowUp(false)} />
-              )
-            ) : (
-              <></>
-            )}
+              )}
+            {isFollowUp &&
+              previousVisit === undefined &&
+              newVisit.previousVisitList.filter((e) => e.physician !== null)
+                .length > 0 && (
+                <FollowUpChooseModal
+                  onCancel={handleCancel}
+                  onChoose={setPreviousVisit}
+                />
+              )}
           </div>
         </div>
 
@@ -392,7 +413,7 @@ const style = {
   monoButtons: {
     display: "flex",
     flexDirection: "row",
-    width: "55%",
+    width: "70%",
     height: "10vh",
     padding: "1.5%",
     justifyContent: "space-between",
@@ -403,7 +424,7 @@ const style = {
   },
 
   buttons: {
-    width: "55%",
+    width: "70%",
     height: "27vh",
     display: "flex",
     flexDirection: "column",

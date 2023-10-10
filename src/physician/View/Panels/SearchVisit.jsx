@@ -12,6 +12,7 @@ import CommunicationController from "../../../common/Model/CommunicationControll
 import CircularProgress from "@mui/material/CircularProgress";
 import MainContainer from "../../../common/View/MainContainer";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
+import { SkeletonsList } from "../OtherComponents/SkeletonsList";
 
 export default function SearchVisit(props) {
   const [visitList, setVisitList] = useState(null);
@@ -59,11 +60,10 @@ export default function SearchVisit(props) {
 
   const createNewVisit = (IsInPresence) => {
     let nv = new NewVisitModel();
-    let pv = visitList.length > 0 ? new Date(visitList[0].date) : undefined;
     nv.setPhysician(props.id);
-    nv.setPreviousVisit(pv);
     nv.setIsInPresence(IsInPresence);
     nv.setPatient(selectedPatient.pid);
+    nv.setPreviousVisitList(visitList);
     setNewVisit(nv);
   };
 
@@ -143,7 +143,7 @@ export default function SearchVisit(props) {
                 : "1px 2px 6px #56AEC9",
           }}
         >
-          {loadingVisits && <CircularProgress />}
+          {loadingVisits && <SkeletonsList />}
           {networkError !== null && (
             <div style={{ marginTop: "1%" }}>
               {console.log(networkError)}

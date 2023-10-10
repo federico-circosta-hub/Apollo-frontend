@@ -2,14 +2,15 @@ import { Link } from "react-router-dom";
 import React from "react";
 import { Button, Modal } from "react-bootstrap/";
 import JointNameChanger from "./../../ViewModel/JointNameChanger";
+import { Alert, AlertTitle } from "@mui/material";
 
 const DeleteJointModal = (props) => {
   return (
     <Modal show={true} animation={true}>
-      <Modal.Header>
-        <Modal.Title>Attenzione!</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+      <Alert severity="error" variant="filled" style={{ width: "100%" }}>
+        <AlertTitle style={{ fontSize: 23 }}>Attenzione!</AlertTitle>
+      </Alert>
+      <Modal.Body style={{ background: "whitesmoke", fontSize: 20 }}>
         Sei sicuro di voler eliminare la visita al{" "}
         {
           props.joint /* JointNameChanger.fromSeparateEnglishToSingleStringIta(
@@ -19,16 +20,22 @@ const DeleteJointModal = (props) => {
         }
         ?
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          background: "whitesmoke",
+        }}
+      >
         <button className="btn btn-secondary btn-lg" onClick={props.cancel}>
           Annulla
         </button>
         <Link
           to={"/newVisit/jointSelection"}
-          className="btn btn-primary btn-lg"
+          className="btn btn-danger btn-lg"
           onClick={() => props.deleteJoint()}
         >
-          Prosegui
+          Conferma
         </Link>
       </Modal.Footer>
     </Modal>

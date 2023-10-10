@@ -9,6 +9,7 @@ import CommunicationController from "../../../common/Model/CommunicationControll
 import FakeSecurityModule from "./../../Model/FakeSecurityModule";
 import MainContainer from "../../../common/View/MainContainer";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
+import { SkeletonsList } from "../OtherComponents/SkeletonsList";
 
 export default function SearchPatient() {
   const [patientList, setPatientList] = useState([]);
@@ -125,7 +126,7 @@ export default function SearchPatient() {
             boxShadow: "1px 2px 6px #56AEC9",
           }}
         >
-          {loadingPatients && <CircularProgress />}
+          {loadingPatients && <SkeletonsList />}
           {networkError !== null && (
             <div style={{ marginTop: "1%" }}>
               Errore nell'ottenere lista pazienti
