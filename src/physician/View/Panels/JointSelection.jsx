@@ -25,15 +25,15 @@ export default function JointSelection() {
     }, 200);
   });
 
-  const handleJoint = (s) => {
-    newVisit.setCurrentJoint(s);
+  const handleJoint = (obj) => {
+    newVisit.setCurrentJoint(obj);
     setNewVisit(newVisit);
-    setCurrentJoint(s);
+    setCurrentJoint(obj);
     navigate("/newVisit/jointSelection/joint");
   };
 
-  const deleteJoint = (s) => {
-    newVisit.deleteJoint(s);
+  const deleteJoint = (obj) => {
+    newVisit.deleteJoint(obj);
     setNewVisit(newVisit);
   };
 
@@ -74,10 +74,13 @@ export default function JointSelection() {
               ) : (
                 <JointSelectionButtonVisualizer
                   click={() => {
-                    handleJoint("Gomito dx");
+                    handleJoint({ name: "elbow", side: "RIGHT" });
                   }}
-                  deleteJoint={(s) => deleteJoint(s)}
+                  deleteJoint={() =>
+                    deleteJoint({ name: "elbow", side: "RIGHT" })
+                  }
                   name={"Gomito dx"}
+                  nameAndSide={{ name: "elbow", side: "RIGHT" }}
                 />
               )}
             </div>
@@ -91,9 +94,12 @@ export default function JointSelection() {
                 />
               ) : (
                 <JointSelectionButtonVisualizer
-                  click={() => handleJoint("Right knee")}
-                  deleteJoint={(s) => deleteJoint(s)}
+                  click={() => handleJoint({ name: "knee", side: "RIGHT" })}
+                  deleteJoint={() =>
+                    deleteJoint({ name: "knee", side: "RIGHT" })
+                  }
                   name={"Ginocchio dx"}
+                  nameAndSide={{ name: "knee", side: "RIGHT" }}
                 />
               )}
             </div>
@@ -107,9 +113,12 @@ export default function JointSelection() {
                 />
               ) : (
                 <JointSelectionButtonVisualizer
-                  click={() => handleJoint("Caviglia dx")}
-                  deleteJoint={(s) => deleteJoint(s)}
+                  click={() => handleJoint({ name: "ankle", side: "RIGHT" })}
+                  deleteJoint={() =>
+                    deleteJoint({ name: "ankle", side: "RIGHT" })
+                  }
                   name={"Caviglia dx"}
+                  nameAndSide={{ name: "ankle", side: "RIGHT" }}
                 />
               )}
             </div>
@@ -148,9 +157,12 @@ export default function JointSelection() {
                 />
               ) : (
                 <JointSelectionButtonVisualizer
-                  click={() => handleJoint("Gomito sx")}
-                  deleteJoint={(s) => deleteJoint(s)}
+                  click={() => handleJoint({ name: "elbow", side: "LEFT" })}
+                  deleteJoint={() =>
+                    deleteJoint({ name: "elbow", side: "LEFT" })
+                  }
                   name={"Gomito sx"}
+                  nameAndSide={{ name: "elbow", side: "LEFT" }}
                 />
               )}
             </div>
@@ -164,9 +176,12 @@ export default function JointSelection() {
                 />
               ) : (
                 <JointSelectionButtonVisualizer
-                  click={() => handleJoint("Ginocchio sx")}
-                  deleteJoint={(s) => deleteJoint(s)}
+                  click={() => handleJoint({ name: "knee", side: "LEFT" })}
+                  deleteJoint={() =>
+                    deleteJoint({ name: "knee", side: "LEFT" })
+                  }
                   name={"Ginocchio sx"}
+                  nameAndSide={{ name: "knee", side: "LEFT" }}
                 />
               )}
             </div>
@@ -180,9 +195,12 @@ export default function JointSelection() {
                 />
               ) : (
                 <JointSelectionButtonVisualizer
-                  click={() => handleJoint("Caviglia sx")}
-                  deleteJoint={(s) => deleteJoint(s)}
+                  click={() => handleJoint({ name: "ankle", side: "LEFT" })}
+                  deleteJoint={() =>
+                    deleteJoint({ name: "ankle", side: "LEFT" })
+                  }
                   name={"Caviglia sx"}
+                  nameAndSide={{ name: "ankle", side: "LEFT" }}
                 />
               )}
             </div>

@@ -7,13 +7,17 @@ import VisitObjectGenerator from "../../Model/VisitObjectGenerator";
 import { useNavigate } from "react-router-dom";
 import CommunicationController from "../../../common/Model/CommunicationController";
 import MainContainer from "../../../common/View/MainContainer";
+import VisitInfo from "../OtherComponents/SeeVisit/VisitInfo";
+import JointInfo from "../OtherComponents/SeeVisit/JointInfo";
+import JointNameChanger from "../../ViewModel/JointNameChanger";
+import { CircularProgress } from "@mui/material";
 
 export default function SeeVisit() {
   const { selectedVisit } = useContext(VisitContext);
   const [visit, setVisit] = useState(null);
   const [loadingVisit, setLoadingVisit] = useState(false);
   const [networkError, setNetworkError] = useState(null);
-
+  const [selectedJointForInfo, setSelectedJointForInfo] = useState(null);
   const [selectedJoint, setSelectedJoint] = useState(null);
 
   useEffect(() => {
@@ -35,145 +39,23 @@ export default function SeeVisit() {
     }
   };
 
-  const jointInfo = () => {
-    let jointToDisplay = visit.joints.find(
-      (item) => item.jointName == selectedJoint
-    );
-    return (
-      <>
-        <h4>{jointToDisplay.jointName}</h4>
-
-        <p>Index Joint: {jointToDisplay.indexJoint ? "Sì" : "No"}</p>
-        <p>
-          Difficoltà di movimento:{" "}
-          {jointToDisplay.jointDifficulty ? "Yes" : "No"}
-        </p>
-        <p>Dolore: {jointToDisplay.pain ? "Sì" : "No"}</p>
-        <p>Ultimo sanguinamento: {jointToDisplay.lastBleed.toDateString()}</p>
-        <p>Sinovite: {jointToDisplay.synovitis}</p>
-        <p>Cartilagine: {jointToDisplay.articularCartilage}</p>
-        <p>Osso subcondrale: {jointToDisplay.subchondralBone}</p>
-        <p>Distension: {jointToDisplay.distension}</p>
-        <p>Distension cause: {jointToDisplay.distensionCause}</p>
-        <p>Ecografie:</p>
-        {jointToDisplay.selectedImages.map((item, index) => (
-          <img
-            key={index}
-            src={item.link}
-            style={{ width: "100%", margin: 5 }}
-          />
-        ))}
-      </>
-    );
-  };
-
-  const visitInfo = () => {
-    return (
-      <div style={{ textAlign: "center", width: "100%" }}>
-        <h3>
-          Data visita:{" "}
-          {format(new Date(selectedVisit.date), "d MMMM y", { locale: it })}
-        </h3>
-        <br />
-        <br />
-        <p>Paziente: {selectedVisit.patient}</p>
-        <p>Medico: {visit.physician}</p>
-        <p>Tipo di visita: {visit.type}</p>
-        <h3>Attività fisica</h3>
-        <p>
-          Tipo attività fisica:{" "}
-          {visit.report.exercise !== null ? visit.report.exercise : "/"}
-        </p>
-        <p>
-          Data attività fisica:{" "}
-          {visit.report.exercise !== null ? visit.report.date_exercise : "/"}
-        </p>
-        <br />
-        <br />
-
-        <h3>Evento traumatico</h3>
-        <p>
-          Tipo di evento traumatico:{" "}
-          {visit.report.date_trauma !== null ? visit.report.trauma_event : "/"}
-        </p>
-        <p>
-          Data evento traumatico:{" "}
-          {visit.report.date_trauma !== null ? visit.report.date_trauma : "/"}
-        </p>
-        <br />
-        <br />
-
-        <h3>Follow-Up</h3>
-        <p>
-          Follow-Up:{" "}
-          {visit.report.followUp !== null ? visit.report.followUp : "/"}
-        </p>
-        {/*         <p>
-          Risposta al trattamento:{" "}
-          {visit.followUp.followUp ? visit.followUp.treatmentResponse : "/"}
-        </p> */}
-        {/*         <p>
-          Visita precedente:{" "}
-          {visit.followUp.followUp
-            ? visit.followUp.lastVisit.toDateString()
-            : "/"}
-        </p> */}
-        {/*         <br />
-        <br />
-
-        <h3>Necessità di visita di Follow-Up</h3>
-        <p>
-          Necessità di visita di Follow-Up:{" "}
-          {visit.needFollowUp.needFollowUp ? "Sì" : "No"}
-        </p>
-        <p>
-          Data di visita di Follow-Up:{" "}
-          {visit.needFollowUp.needFollowUp
-            ? visit.needFollowUp.followUpDate.toDateString()
-            : "/"}
-        </p> */}
-
-        <br />
-        <br />
-        <h3>Farmaco di profilassi</h3>
-        <p>
-          Nome farmaco:{" "}
-          {visit.report.prophylaxis_drug !== null
-            ? visit.report.prophylaxis_drug
-            : "/"}
-        </p>
-        <p>
-          Dose:{" "}
-          {visit.report.prophylaxis_drug !== null
-            ? visit.report.prophylaxis_dose
-            : "/"}
-        </p>
-        <p>
-          Frequenza:{" "}
-          {visit.report.prophylaxis_drug !== null
-            ? visit.report.prophylaxis_frequency
-            : "/"}
-        </p>
-
-        <br />
-        <br />
-        <h3>Farmaco acuto</h3>
-        <p>
-          Nome farmaco:{" "}
-          {visit.report.acute_drug !== null ? visit.report.acute_drug : "/"}
-        </p>
-        <p>
-          Dose:{" "}
-          {visit.report.acute_drug !== null ? visit.report.acute_dose : "/"}
-        </p>
-      </div>
-    );
+  const handleJointSelection = (j) => {
+    setSelectedJoint(null);
+    console.log(j);
+    setSelectedJoint(j);
   };
 
   const navigate = useNavigate();
 
   return selectedVisit !== null ? (
-    <MainContainer>
+    <MainContainer
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: 0,
+      }}
+    >
       {loadingVisit && visit === null && <h3>Loading...</h3>}
       {!loadingVisit && visit !== null && networkError === null && (
         <>
@@ -181,10 +63,12 @@ export default function SeeVisit() {
             style={{
               display: "flex",
               justifyContent: "center",
-              background: selectedJoint !== null ? "#1e90ff" : "#2f4f4f",
+              background: selectedJoint !== null ? "#87cefa" : "#4682b4",
               width: "100%",
-              height: "5vh",
+              height: "6vh",
               alignItems: "center",
+              borderStartEndRadius: "15px",
+              borderStartStartRadius: "15px",
             }}
           >
             <h2 style={{ color: "white" }}>
@@ -207,7 +91,14 @@ export default function SeeVisit() {
                 display: "flex",
                 flexDirection: "column",
                 width: "25%",
-                border: "1px solid lightgray",
+                border:
+                  selectedJoint !== null
+                    ? "0.5px solid #87cefa"
+                    : "0.5px solid #4682b4",
+                boxShadow:
+                  selectedJoint !== null
+                    ? "2px 2px 4px #87cefa"
+                    : "2px 2px 4px #4682b4",
                 borderRadius: 15,
               }}
             >
@@ -216,7 +107,7 @@ export default function SeeVisit() {
                   width: "100%",
                   textAlign: "center",
                   padding: "2vh",
-                  background: selectedJoint === null ? "#2f4f4f" : "white",
+                  background: selectedJoint === null ? "#4682b4" : "white",
                   borderRadius: 15,
                 }}
               >
@@ -231,35 +122,34 @@ export default function SeeVisit() {
                   Dettagli visita
                 </button>
               </div>
-              {/* {joints !== null}
-              {visit.joints.map((item, index) => (
-                <div
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                    padding: "2vh",
-                    background:
-                      selectedJoint === item.jointName ? "#1e90ff" : "white",
-                    borderRadius: 15,
-                  }}
-                >
-                  <button
-                    onClick={() =>
-                      selectedJoint !== item.jointName
-                        ? setSelectedJoint(item.jointName)
-                        : setSelectedJoint(null)
-                    }
-                    className={
-                      selectedJoint != item.jointName
-                        ? "btn btn-lg btn-primary"
-                        : "btn btn-lg btn-light"
-                    }
-                    key={index}
+              {visit !== null &&
+                visit.report.joints.length > 0 &&
+                visit.report.joints.map((item, index) => (
+                  <div
+                    style={{
+                      width: "100%",
+                      textAlign: "center",
+                      padding: "2vh",
+                      background: selectedJoint == item ? "#87cefa" : "white",
+                      borderRadius: 15,
+                    }}
                   >
-                    {item.jointName}
-                  </button>
-                </div>
-              ))} */}
+                    <button
+                      onClick={() => handleJointSelection(item)}
+                      className={
+                        selectedJoint != item
+                          ? "btn btn-lg btn-primary"
+                          : "btn btn-lg btn-light"
+                      }
+                      key={index}
+                    >
+                      {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+                        item.name,
+                        item.side
+                      )}
+                    </button>
+                  </div>
+                ))}
             </div>
 
             <div
@@ -267,27 +157,42 @@ export default function SeeVisit() {
                 overflow: "auto",
                 width: "70%",
                 textAlign: "center",
-                height: "75vh",
-                border: "1px solid gray",
+                height: "68vh",
+                border:
+                  selectedJoint !== null
+                    ? "0.5px solid #87cefa"
+                    : "0.5px solid #4682b4",
+                boxShadow:
+                  selectedJoint !== null
+                    ? "2px 2px 4px #87cefa"
+                    : "2px 2px 4px #4682b4",
                 padding: "1.5%",
                 borderRadius: 15,
               }}
             >
               <div>
-                {selectedJoint !== null && visit !== null
-                  ? jointInfo()
-                  : visitInfo()}
+                {selectedJoint !== null && (
+                  <JointInfo visit={visit} selectedJoint={selectedJoint} />
+                )}
+
+                {visit !== null && selectedJoint === null && (
+                  <VisitInfo visit={visit} />
+                )}
+                {visit === null && selectedJoint === null && (
+                  <CircularProgress />
+                )}
               </div>
             </div>
           </div>
-          <div>
+          <div style={{ marginBottom: "1%" }}>
             <button
-              className="btn btn-danger btn-lg"
+              style={{ fontSize: 24 }}
+              className="btn btn-danger btn"
               onClick={() => {
                 navigate(-1);
               }}
             >
-              Chiudi visualizzazione
+              Chiudi
             </button>
           </div>
         </>

@@ -211,7 +211,7 @@ export default function NewVisit() {
 
   return selectedPatient !== null ? (
     <div>
-      <MainContainer>
+      <MainContainer style={{ paddingTop: 5 }}>
         <div style={style.monoButtons}>
           <div style={{ alignItems: "center", display: "flex" }}>
             <label style={{ fontSize: 22 }}>È una visita di follow-up?</label>
@@ -392,7 +392,7 @@ const style = {
   monoButtons: {
     display: "flex",
     flexDirection: "row",
-    width: "47%",
+    width: "55%",
     height: "10vh",
     padding: "1.5%",
     justifyContent: "space-between",
@@ -403,8 +403,8 @@ const style = {
   },
 
   buttons: {
-    width: "47%",
-    height: "25vh",
+    width: "55%",
+    height: "27vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",

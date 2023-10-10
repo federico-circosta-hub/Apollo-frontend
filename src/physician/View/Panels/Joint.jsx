@@ -18,6 +18,7 @@ import { validateForm } from "../../ViewModel/Validation";
 import { Skeleton, CircularProgress } from "@mui/material";
 import CommunicationController from "../../../common/Model/CommunicationController";
 import { Alert, AlertTitle } from "@mui/material";
+import { Skeletons } from "../OtherComponents/Skeletons";
 
 export default function Joint(props) {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -27,7 +28,7 @@ export default function Joint(props) {
   const [joint, setJoint] = useState(null);
   const [photos, setPhotos] = useState(newVisit.ecographies);
   const [ids, setIds] = useState(newVisit.ecographiesId);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [currentPhoto, setCurrentPhoto] = useState(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [formModal, setFormModal] = useState(false);
   const [errors, setErrors] = useState({ none: "none" });
@@ -43,26 +44,40 @@ export default function Joint(props) {
   }, []);
 
   const cancel = () => {
+    let photosModified = [...photos];
+    photosModified.forEach((e) => {
+      if (e.actualModified.value && e.actualModified.select === true) {
+        e.realJoint = undefined;
+        e.realSide = undefined;
+      } else if (e.actualModified.value && e.actualModified.select === false) {
+        e.realJoint = currentJoint.name;
+        e.realSide = currentJoint.side;
+      }
+    });
+    setPhotos(photosModified);
     newVisit.setEcographies(photos);
     newVisit.setEcographiesId(ids);
     setJoint(null);
-    setCurrentJoint("");
-    navigate("/newVisit/jointSelection");
+    setCurrentJoint(null);
     setNewVisit(newVisit);
+    navigate("/newVisit/jointSelection");
   };
   const saveAndForward = () => {
     setJoint(joint);
     let e = validateForm("jointVisit", joint, newVisit);
     console.log(Object.keys(e));
     if (Object.keys(e).length == 0) {
-      if (newVisit.jointPresence(joint.jointName)) {
-        newVisit.deleteJointForUpdate(joint.jointName);
+      if (newVisit.jointPresence({ name: joint.jointName, side: joint.side })) {
+        newVisit.deleteJointForUpdate({
+          name: joint.jointName,
+          side: joint.side,
+        });
       }
       newVisit.addJoint(joint);
       newVisit.setEcographies(photos);
       newVisit.setEcographiesId(ids);
       setNewVisit(newVisit);
-      setCurrentJoint("");
+      setCurrentJoint(null);
       console.log(newVisit);
       navigate("/newVisit/jointSelection");
     } else {
@@ -72,6 +87,7 @@ export default function Joint(props) {
   };
 
   const getNewImages = async () => {
+    setNetworkError(null);
     setLoadingImages(true);
     try {
       const idsFromServer = await CommunicationController.post("media/visit", {
@@ -86,6 +102,7 @@ export default function Joint(props) {
           let eco = await CommunicationController.get("media", { id: e });
           eco.realJoint = undefined;
           eco.realSide = undefined;
+          eco.actualModified = { value: false, select: null };
           console.log("ottenuta eco:", eco);
           setPhotos((prevState) => [...prevState, eco]);
           setIds((prevState) => [...prevState, e]);
@@ -105,18 +122,23 @@ export default function Joint(props) {
   };
 
   const loadJoint = async () => {
-    if (joint === null) {
-      let j = await newVisit.getJoint(currentJoint);
-      setJoint(j);
-    }
+    let j = await newVisit.getJoint(currentJoint);
+    setJoint(j);
   };
 
-  const openModal = (e) => {
-    let index = Number(
-      e.target.alt.substring(e.target.alt.length - 1, e.target.alt.length)
-    );
-    setCurrentPhotoIndex(index);
+  const openModal = (id) => {
+    setCurrentPhoto(id);
     setShowPhotoModal(true);
+  };
+
+  const setJointFieldInPhotos = (id, joint) => {
+    let newPhotos = photos;
+    newPhotos.forEach((e) => {
+      if (e.id === id) {
+        e.joint = joint;
+      }
+    });
+    setPhotos(newPhotos);
   };
 
   return selectedPatient !== null ? (
@@ -172,47 +194,47 @@ export default function Joint(props) {
                     <AlertTitle>Nessuna nuova ecografia</AlertTitle>
                   </Alert>
                 )}
+                {loadingImages && <Skeletons />}
+                {joint === null && "Caricamento..."}
+                {networkError !== null &&
+                  networkError.response === undefined && (
+                    <Alert
+                      severity="error"
+                      variant="filled"
+                      style={{ width: "100%" }}
+                    >
+                      <AlertTitle>Errore di rete, riprovare</AlertTitle>
+                    </Alert>
+                  )}
+                {networkError !== null &&
+                  networkError.response !== undefined &&
+                  networkError.response.data.message ===
+                    "Error: visit does not exist" && (
+                    <Alert
+                      severity="error"
+                      variant="filled"
+                      style={{ width: "100%" }}
+                    >
+                      <AlertTitle>Non ci sono ecografie</AlertTitle>
+                    </Alert>
+                  )}
               </div>
-              {joint === null && "Caricamento..."}
-              {networkError !== null && (
-                <Alert
-                  severity="error"
-                  variant="filled"
-                  style={{ width: "100%" }}
-                >
-                  <AlertTitle>Errore di rete, riprovare</AlertTitle>
-                </Alert>
+              {joint !== null && !loadingImages && photos !== null && (
+                <EcographImages
+                  handleClick={(e) => openModal(e)}
+                  photos={photos}
+                  setPhotos={setPhotos}
+                  joint={{ joint, setJoint }}
+                  loadingImages={loadingImages}
+                  setLoadingImages={setLoadingImages}
+                  networkError={networkError}
+                  setJointField={setJointFieldInPhotos}
+                />
               )}
-              {joint !== null &&
-                !loadingImages &&
-                networkError === null &&
-                photos !== null && (
-                  <EcographImages
-                    handleClick={(e) => openModal(e)}
-                    photos={photos.filter(
-                      (e) =>
-                        e.realJoint === undefined ||
-                        (e.realJoint ===
-                          currentJoint
-                            .substring(0, currentJoint.length - 3)
-                            .toLowerCase() &&
-                          e.realSide ===
-                            currentJoint
-                              .substring(
-                                currentJoint.length - 2,
-                                currentJoint.length
-                              )
-                              .toUpperCase())
-                    )}
-                    setPhotos={setPhotos}
-                    joint={{ joint, setJoint }}
-                    loadingImages={loadingImages}
-                    setLoadingImages={setLoadingImages}
-                    networkError={networkError}
-                  />
-                )}
               {photos !== null &&
                 photos.length === 0 &&
+                !loadingImages &&
+                networkError === null &&
                 "Non ci sono ecografie"}
             </div>
           </div>
@@ -260,25 +282,29 @@ export default function Joint(props) {
         </div>
       </div>
       <Modal
-        size="sm"
+        fullscreen={true}
         show={showPhotoModal}
         onHide={() => setShowPhotoModal(false)}
         centered
       >
         <Modal.Body>
-          {/*           <img
+          <img
             src={
-              photos[currentPhotoIndex] != undefined
-                ? photos[currentPhotoIndex].link
+              currentPhoto !== null
+                ? photos.find((e) => e.id === currentPhoto).base64
                 : null
             }
-            alt={`Photo ${currentPhotoIndex}`}
+            alt={"Ecografia " + currentJoint.name + " " + currentJoint.side}
             style={{
               width: "100%",
               height: "auto",
               objectFit: "contain",
             }}
-          /> */}
+            onClick={() => {
+              setShowPhotoModal(false);
+              setCurrentPhoto(null);
+            }}
+          />
         </Modal.Body>
       </Modal>
       <div>

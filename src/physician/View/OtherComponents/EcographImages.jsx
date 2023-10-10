@@ -1,60 +1,59 @@
 import { Checkbox } from "@mui/material";
-import { useState } from "react";
-import { Skeleton, CircularProgress } from "@mui/material";
+import { useState, useContext } from "react";
+import ChangingJointFieldMediaModal from "../Modals/ChangingJointFieldMediaModal";
+import { NewVisitContext } from "../../Model/NewVisitContext";
+import { CurrentJointContext } from "../../Model/CurrentJointContext";
 
 const EcographImages = (props) => {
+  const { currentJoint } = useContext(CurrentJointContext);
+  const [idToChange, setIdToChange] = useState(-1);
+  const [showChangingJointFieldModal, setShowChangingJointFieldModal] =
+    useState(false);
   const handleSelect = (e, photo) => {
     const index = props.photos.findIndex((p) => p.id === photo.id);
-    let newPhotos = props.photos;
+    let newPhotos = [...props.photos];
     if (e.target.checked) {
-      newPhotos[index].realJoint = props.joint.joint.jointName
-        .substring(0, props.joint.joint.jointName.length - 3)
-        .toLowerCase();
-      newPhotos[index].realSide = props.joint.joint.jointName
-        .substring(
-          props.joint.joint.jointName.length - 2,
-          props.joint.joint.jointName.length
-        )
-        .toUpperCase();
+      newPhotos[index].realJoint = props.joint.joint.jointName;
+      newPhotos[index].realSide = props.joint.joint.side;
+      newPhotos[index].actualModified = { value: true, select: true };
+      if (newPhotos[index].realJoint !== photo.joint) {
+        setIdToChange(photo.id);
+        setShowChangingJointFieldModal(true);
+      }
     } else {
       newPhotos[index].realJoint = undefined;
       newPhotos[index].realSide = undefined;
+      newPhotos[index].actualModified = { value: true, select: false };
     }
     props.setPhotos(newPhotos);
+  };
+
+  const sortByJoint = (arr) => {
+    return arr.sort((a, b) => {
+      if (a.joint === currentJoint.name && b.joint !== currentJoint.name) {
+        return -1;
+      } else if (
+        a.joint !== currentJoint.name &&
+        b.joint === currentJoint.name
+      ) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
   };
 
   return (
     <div className="photo-gallery">
       <div style={style.photoContainer} className="photo-container">
-        {props.loadingImages && (
-          <div>
-            <Skeleton
-              style={{ margin: "2%" }}
-              variant="rectangular"
-              width={"95%"}
-              height={"30vh"}
-            />
-            <Skeleton
-              style={{ margin: "2%" }}
-              variant="rectangular"
-              width={"95%"}
-              height={"30vh"}
-            />
-            <Skeleton
-              style={{ margin: "2%" }}
-              variant="rectangular"
-              width={"95%"}
-              height={"30vh"}
-            />
-            <Skeleton
-              style={{ margin: "2%" }}
-              variant="rectangular"
-              width={"95%"}
-              height={"30vh"}
-            />
-          </div>
-        )}
-        {props.photos.map((photo, index) => (
+        {sortByJoint(
+          props.photos.filter(
+            (e) =>
+              e.realJoint === undefined ||
+              (e.realJoint === currentJoint.name &&
+                e.realSide === currentJoint.side)
+          )
+        ).map((photo, index) => (
           <div
             key={index}
             style={{
@@ -64,18 +63,9 @@ const EcographImages = (props) => {
               margin: 2,
               background: props.photos
                 .filter(
-                  (p) =>
-                    p.realJoint ===
-                      props.joint.joint.jointName
-                        .substring(0, props.joint.joint.jointName.length - 3)
-                        .toLowerCase() &&
-                    p.realSide ===
-                      props.joint.joint.jointName
-                        .substring(
-                          props.joint.joint.jointName.length - 2,
-                          props.joint.joint.jointName.length
-                        )
-                        .toUpperCase()
+                  (e) =>
+                    e.realJoint === currentJoint.name &&
+                    e.realSide === currentJoint.side
                 )
                 .includes(photo)
                 ? "#90ee90"
@@ -87,7 +77,7 @@ const EcographImages = (props) => {
               onLoad={() => {
                 props.setLoadingImages(false);
               }}
-              onClick={props.handleClick}
+              onClick={() => props.handleClick(photo.id)}
               src={photo.base64}
               alt={`Photo ${index}`}
               width={"100%"}
@@ -96,18 +86,9 @@ const EcographImages = (props) => {
             <Checkbox
               checked={props.photos
                 .filter(
-                  (p) =>
-                    p.realJoint ===
-                      props.joint.joint.jointName
-                        .substring(0, props.joint.joint.jointName.length - 3)
-                        .toLowerCase() &&
-                    p.realSide ===
-                      props.joint.joint.jointName
-                        .substring(
-                          props.joint.joint.jointName.length - 2,
-                          props.joint.joint.jointName.length
-                        )
-                        .toUpperCase()
+                  (e) =>
+                    e.realJoint === currentJoint.name &&
+                    e.realSide === currentJoint.side
                 )
                 .includes(photo)}
               onChange={(e) => handleSelect(e, photo)}
@@ -115,6 +96,22 @@ const EcographImages = (props) => {
           </div>
         ))}
       </div>
+      {showChangingJointFieldModal && idToChange !== -1 && (
+        <ChangingJointFieldMediaModal
+          savedJointName={
+            props.photos.filter((p) => p.id === idToChange)[0].joint
+          }
+          actualJointName={
+            props.photos.filter((p) => p.id === idToChange)[0].realJoint
+          }
+          show={showChangingJointFieldModal}
+          setShow={setShowChangingJointFieldModal}
+          id={idToChange}
+          setJointField={props.setJointField}
+          setPhotos={props.setPhotos}
+          photos={props.photos}
+        />
+      )}
     </div>
   );
 };

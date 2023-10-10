@@ -59,6 +59,7 @@ export default class NewVisitModel {
 
   setEcographies(e) {
     let union = this.ecographies.concat(e);
+    union.forEach((e) => (e.actualModified = { value: false, select: null }));
     this.ecographies = union.filter((item, pos) => union.indexOf(item) === pos);
   }
 
@@ -133,12 +134,15 @@ export default class NewVisitModel {
     return new NewVisitModel();
   }
 
-  async getJoint(s) {
-    let jointToClone = this.joints.find((e) => e.jointName == s);
+  async getJoint(obj) {
+    let jointToClone = this.joints.find(
+      (e) => e.jointName === obj.name && e.side === obj.side
+    );
     let joint;
     if (jointToClone === undefined) {
       joint = new JointModel(
-        s,
+        obj.name,
+        obj.side,
         false,
         false,
         false,
@@ -147,38 +151,42 @@ export default class NewVisitModel {
         0,
         0,
         "absent",
-        ""
+        null
       );
-      joint.setName(s);
     } else {
       joint = await jointToClone.clone();
     }
     return joint;
   }
 
-  jointPresence(s) {
+  jointPresence(obj) {
     console.log("chiamato jointPresence");
     let b = false;
     this.joints.forEach((e) => {
-      if (e.jointName == s) {
+      if (e.jointName === obj.name && e.side === obj.side) {
         b = true;
       }
     });
     return b;
   }
 
-  deleteJoint(s) {
+  deleteJoint(obj) {
     this.ecographies.length > 0 &&
       this.ecographies.forEach((ecog) => {
-        if (ecog.jointRef === s) {
-          ecog.jointRef = undefined;
+        if (ecog.realJoint === obj.name && ecog.realSide === obj.side) {
+          ecog.realJoint = undefined;
+          ecog.realSide = undefined;
         }
       });
-    this.joints = this.joints.filter((joint) => joint.jointName != s);
+    this.joints = this.joints.filter(
+      (joint) => joint.jointName !== obj.name || joint.side !== obj.side
+    );
   }
 
-  deleteJointForUpdate(s) {
-    this.joints = this.joints.filter((joint) => joint.jointName != s);
+  deleteJointForUpdate(obj) {
+    this.joints = this.joints.filter(
+      (joint) => joint.jointName !== obj.name || joint.side !== obj.side
+    );
   }
 
   setPreviousVisit(d) {

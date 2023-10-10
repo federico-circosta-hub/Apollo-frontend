@@ -1,3 +1,4 @@
+import JointNameChanger from "./JointNameChanger";
 import JointToSendModel from "./JointToSendModel";
 
 export default class NewVisitToSend {
@@ -77,12 +78,12 @@ export default class NewVisitToSend {
   }
 
   setJoints(newVisit) {
-    if (newVisit.joints.length === 0) return [];
+    if (newVisit.joints.length === 0) return;
     let joints = [];
     newVisit.joints.forEach((element) => {
       let jointToSend = new JointToSendModel(element);
-      jointToSend.setName(jointToSend.name.toLowerCase());
       jointToSend.setMediaIds(newVisit);
+      console.log("setJoints, pusho:", jointToSend);
       joints.push(jointToSend);
     });
     this.report.joints = joints;

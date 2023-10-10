@@ -15,11 +15,10 @@ export default class JointToSendModel {
 
   constructor(joint) {
     this.id = 1;
-    this.name = joint.jointName.substring(0, joint.jointName.length - 3);
-    this.side = joint.jointName
-      .substring(joint.jointName.length - 2, joint.jointName.length)
-      .toUpperCase();
-    this.blood = "not clear";
+    this.name = joint.jointName;
+    this.side = joint.side;
+    this.blood =
+      joint.distensionCause /*  === null ? undefined : joint.distensionCause */;
     this.distension_amount = joint.distension;
     this.last_bleeding = joint.lastBleed;
     this.difficulty_moving = joint.jointDifficulty;
@@ -54,5 +53,9 @@ export default class JointToSendModel {
 
   setName(s) {
     this.name = s;
+  }
+
+  setSide(s) {
+    this.side = s;
   }
 }

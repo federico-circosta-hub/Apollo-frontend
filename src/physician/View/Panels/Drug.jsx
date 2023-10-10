@@ -27,6 +27,10 @@ import { RefreshButton } from "../OtherComponents/RefreshButton";
 import NewVisitToSend from "../../ViewModel/NewVisitToSend";
 import EndingVisitModal from "../Modals/EndingVisitModal";
 import { PatientContext } from "../../Model/PatientContext";
+import AcuteDrug from "../OtherComponents/Drug/AcuteDrug";
+import Treatment from "../OtherComponents/Drug/Treatment";
+import ProphylacticDrug from "../OtherComponents/Drug/ProphylacticDrug";
+import FollowUpNeeded from "../OtherComponents/Drug/FollowUpNeeded";
 
 export default function Drug() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -171,23 +175,14 @@ export default function Drug() {
     console.log("newVisit:", newVisit);
     let newVisitToSend = new NewVisitToSend(newVisit);
     newVisitToSend.setJoints(newVisit);
-    // console.log("newVisitToSend:", newVisitToSend);
-    /*     let n = Math.random();
-    setTimeout(() => {
-      if (n > 0.5) {
-        setShowFinishAlert(false);
-      } else {
-        setShowFinishAlert(true);
-      }
-      setSending(false);
-    }, 5000); */
+    console.log("newVisitToSend:", newVisitToSend);
     try {
-      /*       const sendedVisit = await CommunicationController.post(
+      const sendedVisit = await CommunicationController.post(
         "visit",
         newVisitToSend
-      ); 
-      console.log("sendedVisit:", sendedVisit);*/
-      console.log("newVisitToSend:", newVisitToSend);
+      );
+      console.log("sendedVisit:", sendedVisit);
+
       setShowFinishAlert(true);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -251,16 +246,25 @@ export default function Drug() {
     navigate(-1);
   };
 
-  return (
+  return newVisit.followUp.followUp ? (
     <div>
-      <MainContainer>
+      <MainContainer
+        style={{
+          width: "98vw",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          flexDirection: "space-around",
+          padding: "1.5vw",
+          paddingTop: "6vh",
+        }}
+      >
         <div
           style={{
             display: "flex",
-            width: "95%",
+            width: "100%",
             alignItems: "center",
-            justifyContent: "center",
-            gap: "2vw",
+            justifyContent: "space-between",
           }}
         >
           <div
@@ -268,317 +272,173 @@ export default function Drug() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              gap: "3vh",
             }}
           >
-            <div
-              style={{
-                width: "40vw",
-                display: newVisit.followUp.followUp ? "flex" : "none",
-                flexDirection: "column",
-                justifyContent: "left",
-                gap: "4vh",
-                border: "1px solid black",
-                borderRadius: "20px",
-                padding: "4%",
-                height: "45vh",
-                margin: "1%",
-              }}
-            >
-              <div>
-                <h4>
-                  <img src={response} width={50} alt="" />
-                  Risposta al trattamento
-                </h4>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "start",
-                  gap: 20,
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <label style={{ fontSize: 15 }}>Visita precedente</label>
-                </div>
-                <div>{visitButtonResolver()}</div>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "start",
-                  gap: 20,
-                  width: "80%",
-                }}
-              >
-                <div>
-                  <label style={{ fontSize: 15 }}>
-                    Risposta al trattamento
-                  </label>
-                </div>
-                <Slider
-                  name="treatment response"
-                  disabled={!newVisit.followUp.followUp}
-                  marks={treatmentResponses}
-                  min={10}
-                  max={40}
-                  step={10}
-                  defaultValue={
-                    newVisit.followUp.treatmentResponse != ""
-                      ? newVisit.followUp.treatmentResponse
-                      : 10
-                  }
-                />
-              </div>
-              <div>
-                <FormControl fullWidth disabled={!newVisit.followUp.followUp}>
-                  <InputLabel
-                    id="demo-simple-select-label"
-                    style={{ width: "80%" }}
-                  >
-                    Which <strong>was</strong> the most likely cause of the
-                    distension?
-                  </InputLabel>
-                  <Select
-                    style={{ fontSize: 15 }}
-                    id="demo-simple-select"
-                    label="Which was the most likely cause of the distension?..."
-                  >
-                    {displayDistensionCauses()}
-                  </Select>
-                </FormControl>
-              </div>
-            </div>
-            {newVisit.followUp.followup && (
-              <div style={style.needFollowUpButtons}>
-                <div
-                  style={{
-                    display: "flex",
-                    width: "70%",
-                    alignItems: "center",
-                  }}
-                >
-                  <label style={{ fontSize: 22 }}>
-                    <img src={notification} width={50} alt="" />
-                    Ha bisogno di follow up?
-                  </label>
-                  <Switch
-                    checked={
-                      needFollowUp == null ? false : needFollowUp.needFollowUp
-                    }
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <LocalizationProvider
-                    dateAdapter={AdapterDayjs}
-                    adapterLocale="it"
-                  >
-                    {datePickerResolver(
-                      !needFollowUp.needFollowUp,
-                      "followUpDate"
-                    )}
-                  </LocalizationProvider>
-                </div>
-              </div>
-            )}
+            <FollowUpNeeded
+              needFollowUp={needFollowUp}
+              handleChange={handleChange}
+              datePickerResolver={datePickerResolver}
+            />
+
+            <Treatment
+              visitButtonResolver={visitButtonResolver}
+              treatmentResponses={treatmentResponses}
+              displayDistensionCauses={displayDistensionCauses}
+            />
           </div>
-          {newVisit.followUp.followup && <div style={style.verticalLine}></div>}
+          {/* <div style={style.verticalLine}></div> */}
 
           <div
             style={{
-              width: "45%",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              gap: "3vh",
             }}
           >
-            {!newVisit.followUp.followup && (
-              <div style={style.needFollowUpButtonsOnTop}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    width: "95%",
-                    alignItems: "center",
-                    gap: "1vw",
-                  }}
-                >
-                  <div>
-                    <label style={{ fontSize: 22 }}>
-                      <img src={notification} width={50} alt="" />
-                      Ha bisogno di follow up?
-                    </label>
-                  </div>
-                  <div>
-                    <Switch
-                      checked={
-                        needFollowUp == null ? false : needFollowUp.needFollowUp
-                      }
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <LocalizationProvider
-                      dateAdapter={AdapterDayjs}
-                      adapterLocale="it"
-                    >
-                      {datePickerResolver(
-                        !needFollowUp.needFollowUp,
-                        "followUpDate"
-                      )}
-                    </LocalizationProvider>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div style={style.prophylacticButtons}>
-              <div>
-                <label style={{ fontSize: 22 }}>
-                  <img src={p_drugs} width={50} alt="" />
-                  Medicinale di profilassi
-                </label>
-              </div>
-              <div>
-                <FormControl fullWidth>
-                  <InputLabel
-                    id="demo-simple-select-label"
-                    style={{ width: "fit-content" }}
-                  >
-                    Medicinale di profilassi
-                  </InputLabel>
-                  <Select
-                    style={{ fontSize: 15 }}
-                    id="demo-simple-select"
-                    value={
-                      prophylacticDrug.drug.name === ""
-                        ? "Nessuno"
-                        : newVisit.prophylacticDrug.drug.name
-                    }
-                    onChange={(e) => handleProphylacticDrug(e)}
-                    label="Medicinale di profilassi "
-                  >
-                    <MenuItem value="Nessuno">
-                      <em>Nessuno</em>
-                    </MenuItem>
-                    {networkError === null && drugs !== null ? (
-                      drugs.map((element) => (
-                        <MenuItem value={element.name}>{element.name}</MenuItem>
-                      ))
-                    ) : (
-                      <MenuItem>
-                        Errore nell'ottenere la lista farmaci
-                        <RefreshButton
-                          onClick={getDrugsFromServer}
-                          loading={loadingOptions}
-                        />
-                      </MenuItem>
-                    )}
-                  </Select>
-                </FormControl>
-              </div>
-              <div style={{ display: "flex" }}>
-                <input
-                  disabled
-                  placeholder={
-                    prophylacticDrug.unit !== ""
-                      ? prophylacticDrug.unit
-                      : "Unità"
-                  }
-                  style={{ background: `#fffacd` }}
-                />
-                <input
-                  placeholder="Dose"
-                  defaultValue={prophylacticDrug.dose}
-                  onChange={handleProphylacticDrugDose}
-                  style={{ background: `#fffacd` }}
-                  name="prophylacticDose"
-                  type="number"
-                  disabled={disabledProphylactic}
-                />
-              </div>
-              <div>
-                <input
-                  placeholder="Frequenza"
-                  defaultValue={prophylacticDrug.frequency}
-                  onChange={handleProphylacticDrugFrequency}
-                  style={{ background: `#fffacd` }}
-                  name="prophylacticFrequency"
-                  type="number"
-                  disabled={disabledProphylactic}
-                />
-              </div>
-            </div>
+            <ProphylacticDrug
+              prophylacticDrug={prophylacticDrug}
+              handleProphylacticDrug={handleProphylacticDrug}
+              networkError={networkError}
+              drugs={drugs}
+              getDrugsFromServer={getDrugsFromServer}
+              loadingOptions={loadingOptions}
+              handleProphylacticDrugDose={handleProphylacticDrugDose}
+              disabledProphylactic={disabledProphylactic}
+              handleProphylacticDrugFrequency={handleProphylacticDrugFrequency}
+            />
 
-            <div style={style.acuteButtons}>
-              <div>
-                <label style={{ fontSize: 22 }}>
-                  <img src={a_drugs} width={50} alt="" />
-                  Medicinale acuto
-                </label>
-              </div>
-              <div>
-                <FormControl fullWidth>
-                  <InputLabel
-                    id="demo-simple-select-label"
-                    style={{ maxWidth: "fit-content" }}
-                  >
-                    Medicinale acuto
-                  </InputLabel>
-                  <Select
-                    style={{ fontSize: 15 }}
-                    id="demo-simple-select"
-                    value={
-                      acuteDrug.drug.name === ""
-                        ? "Nessuno"
-                        : newVisit.acuteDrug.drug.name
-                    }
-                    onChange={(e) => handleAcuteDrug(e)}
-                    label="Medicinale acuto"
-                  >
-                    <MenuItem value="Nessuno">
-                      <em>Nessuno</em>
-                    </MenuItem>
-                    {networkError === null && drugs !== null ? (
-                      drugs.map((element) => (
-                        <MenuItem value={element.name}>{element.name}</MenuItem>
-                      ))
-                    ) : (
-                      <MenuItem>
-                        Errore nell'ottenere la lista farmaci
-                        <RefreshButton
-                          onClick={getDrugsFromServer}
-                          loading={loadingOptions}
-                        />
-                      </MenuItem>
-                    )}
-                  </Select>
-                </FormControl>
-              </div>
-              <div style={{ display: "flex" }}>
-                <input
-                  disabled
-                  placeholder={acuteDrug.unit !== "" ? acuteDrug.unit : "Unità"}
-                  style={{ background: `#ffe4e1` }}
-                />
-                <input
-                  placeholder="Dose"
-                  style={{ background: `#ffe4e1` }}
-                  value={acuteDrug.dose}
-                  name="AcuteDose"
-                  type="number"
-                  onChange={handleAcuteDrugDose}
-                  disabled={disabledAcute}
-                />
-              </div>
-            </div>
+            <AcuteDrug
+              acuteDrug={acuteDrug}
+              newVisit={newVisit}
+              handleAcuteDrug={handleAcuteDrug}
+              networkError={networkError}
+              drugs={drugs}
+              getDrugsFromServer={getDrugsFromServer}
+              loadingOptions={loadingOptions}
+              handleAcuteDrugDose={handleAcuteDrugDose}
+              disabledAcute={disabledAcute}
+            />
           </div>
         </div>
         <div
           style={{
+            marginTop: "6vh",
             display: "flex",
             justifyContent: "space-between",
-            width: "95%",
+            width: "97.5%",
+          }}
+        >
+          <div>
+            <button
+              onClick={() => back()}
+              className="btn btn-primary"
+              style={{ fontSize: 24 }}
+            >
+              Indietro
+            </button>
+          </div>
+          <div>
+            <button
+              className="btn btn-success"
+              onClick={forward}
+              style={{ fontSize: 24 }}
+            >
+              Termina visita
+            </button>
+          </div>
+        </div>
+      </MainContainer>
+      <div>
+        {formModal && (
+          <FormModal
+            formModal={formModal}
+            setFormModal={setFormModal}
+            errors={errors}
+          />
+        )}
+        {endingVisitModal && (
+          <EndingVisitModal
+            showAlert={showFinishAlert}
+            setShowAlert={setShowFinishAlert}
+            navigate={navigate}
+            showModal={endingVisitModal}
+            setShowModal={setEndingVisitModal}
+            sends={sendsAllAndFinish}
+            patient={selectedPatient}
+            visit={newVisit}
+            sending={sending}
+          />
+        )}
+      </div>
+    </div>
+  ) : (
+    <div>
+      <MainContainer
+        style={{
+          width: "98vw",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-around",
+          padding: "1.5vw",
+          //paddingTop: "6vh",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "1%",
+            }}
+          >
+            <FollowUpNeeded
+              needFollowUp={needFollowUp}
+              handleChange={handleChange}
+              datePickerResolver={datePickerResolver}
+            />
+
+            <ProphylacticDrug
+              prophylacticDrug={prophylacticDrug}
+              handleProphylacticDrug={handleProphylacticDrug}
+              networkError={networkError}
+              drugs={drugs}
+              getDrugsFromServer={getDrugsFromServer}
+              loadingOptions={loadingOptions}
+              handleProphylacticDrugDose={handleProphylacticDrugDose}
+              disabledProphylactic={disabledProphylactic}
+              handleProphylacticDrugFrequency={handleProphylacticDrugFrequency}
+            />
+
+            <AcuteDrug
+              acuteDrug={acuteDrug}
+              newVisit={newVisit}
+              handleAcuteDrug={handleAcuteDrug}
+              networkError={networkError}
+              drugs={drugs}
+              getDrugsFromServer={getDrugsFromServer}
+              loadingOptions={loadingOptions}
+              handleAcuteDrugDose={handleAcuteDrugDose}
+              disabledAcute={disabledAcute}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            marginTop: "1.5vh",
+            display: "flex",
+            justifyContent: "space-between",
+            width: "97.5%",
           }}
         >
           <div>
@@ -626,66 +486,3 @@ export default function Drug() {
     </div>
   );
 }
-
-const style = {
-  needFollowUpButtonsOnTop: {
-    width: "52vw",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: "20px",
-    height: "10vh",
-    marginBottom: "1%",
-    border: "0.5px solid #56AEC9",
-    boxShadow: "2px 2px 4px #56AEC9",
-  },
-  needFollowUpButtons: {
-    width: "52vw",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    border: "1px solid black",
-    borderRadius: "20px",
-    padding: "4%",
-    height: "22vh",
-    margin: "1%",
-    border: "0.5px solid #56AEC9",
-    boxShadow: "2px 2px 4px #56AEC9",
-  },
-
-  prophylacticButtons: {
-    background: `#fffacd`,
-    width: "52vw",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    borderRadius: "20px",
-    padding: "4%",
-    height: "32vh",
-    margin: "1%",
-    border: "0.5px solid #daa520",
-    boxShadow: "2px 2px 4px #daa520",
-  },
-
-  acuteButtons: {
-    background: `#ffe4e1`,
-    width: "52vw",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    borderRadius: "20px",
-    padding: "4%",
-    height: "27vh",
-    margin: "1%",
-    border: "0.5px solid #b22222",
-    boxShadow: "2px 2px 4px #b22222",
-  },
-
-  verticalLine: {
-    width: 1,
-    backgroundColor: "black",
-    height: "85%",
-    borderRadius: 15,
-  },
-};

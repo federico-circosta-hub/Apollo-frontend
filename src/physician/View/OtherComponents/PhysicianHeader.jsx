@@ -8,6 +8,7 @@ import StopPatientProcessModal from "../Modals/StopPatientProcessModal";
 import Header from "../../../common/View/Header";
 import PositionedMenu from "./PositionedMenu";
 import { useLocation } from "react-router-dom";
+import JointNameChanger from "./../../ViewModel/JointNameChanger";
 
 export default function PhysicianHeader(props) {
   const { selectedPatient } = useContext(PatientContext);
@@ -22,7 +23,10 @@ export default function PhysicianHeader(props) {
       return currentJoint != null && currentJoint !== "" ? (
         <label>
           <img src={joints} width={40} style={{ marginRight: 5 }} />
-          {currentJoint}
+          {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+            currentJoint.name,
+            currentJoint.side
+          )}
         </label>
       ) : (
         ""
