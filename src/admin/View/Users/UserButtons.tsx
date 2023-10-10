@@ -43,7 +43,7 @@ export default function UserButtons({
                     Reset password
                 </Button>
                 <Button
-                    variant="outlined"
+                    variant="contained"
                     color="error"
                     onClick={() => setShowToggleEnableModal(true)}
                     sx={{ marginLeft: "16px" }}

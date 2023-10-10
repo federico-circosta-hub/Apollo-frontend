@@ -10,11 +10,13 @@ import StatusLoadingButton from "../../../admin/Components/StatusLoadingButton";
 
 export default function ConfirmActionModal({
     text,
+    subtext,
     show,
     onConfirm,
     onClose,
 }: {
     text: string;
+    subtext?: string;
     show: boolean;
     onConfirm: () => Promise<any>;
     onClose: () => void;
@@ -41,13 +43,14 @@ export default function ConfirmActionModal({
             aria-describedby="alert-dialog-description"
         >
             <DialogTitle id="alert-dialog-title">{text}</DialogTitle>
-            {status === Status.ERROR && (
-                <DialogContent>
-                    <DialogContentText>
-                        Errore durante l'esecuzione dell'operazione. Riprovare?
-                    </DialogContentText>
-                </DialogContent>
-            )}
+
+            <DialogContent>
+                <DialogContentText>
+                    {status === Status.ERROR
+                        ? "Errore durante l'esecuzione dell'operazione. Riprovare?"
+                        : subtext}
+                </DialogContentText>
+            </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} variant="outlined">
                     Annulla

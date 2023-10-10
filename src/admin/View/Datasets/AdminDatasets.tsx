@@ -7,7 +7,7 @@ import { DatasetsContext } from "../../ViewModel/DatasetsProvider";
 import MasterComponent from "../MasterDetail/MasterComponent";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../../common/View/Loading";
-import ErrorScreen from "../MasterDetail/ErrorScreen";
+import ErrorScreen from "../../../common/View/ErrorScreen";
 import MainContainer from "../../../common/View/MainContainer";
 import DatasetItem from "./DatasetItem";
 import EmptyScreen from "../MasterDetail/EmptyScreen";

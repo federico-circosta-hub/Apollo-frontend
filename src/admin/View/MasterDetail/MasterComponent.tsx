@@ -1,5 +1,5 @@
 import List from "@mui/material/List";
-import React, { ComponentType, useCallback, useState } from "react";
+import React, { ComponentType, useCallback, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
@@ -10,6 +10,7 @@ import AddButton from "../../Components/AddButton";
 
 export type MasterItemProps = {
     item: any;
+    index: number;
     onClick: () => void;
     onDelete?: () => void;
 };
@@ -18,66 +19,79 @@ export default function MasterComponent({
     items,
     Item,
     itemName,
+    index,
     onItemClick,
     onAdd,
     onDelete,
+    deleteText,
+    style,
 }: {
     items: any[];
     Item: ComponentType<MasterItemProps>;
     itemName: string;
+    index?: number;
     onItemClick?: (index: number) => void;
     onAdd?: () => void;
     onDelete?: (item: any) => Promise<any>;
+    deleteText?: string;
+    style?: any;
 }) {
     const [filter, setFilter] = useState<string>("");
-    const [selected, setSelected] = useState<number>(-1);
+    const [selected, setSelected] = useState<number>(index ?? -1);
     const [deleteIndex, setDeleteIndex] = useState<number>(-1);
 
     const filterItems = useCallback(() => {
         return items.filter((item) => item.filter(filter));
     }, [items, filter]);
 
+    useEffect(() => {
+        setSelected(index ?? -1);
+    }, [index]);
+
     const filteredItems = filterItems();
 
     return (
-        <Box sx={style.box}>
-            <Box sx={style.topBar}>
+        <Box sx={[baseStyle.box, style]}>
+            <Box sx={baseStyle.topBar}>
                 <Search onChange={(text) => setFilter(text)} />
                 <Box sx={{ flex: 1, height: 0 }} />
                 {onAdd && (
                     <AddButton
                         itemName={itemName}
                         onAdd={onAdd}
-                        style={style.addButton}
+                        style={baseStyle.addButton}
                     />
                 )}
             </Box>
-            <Box sx={style.scrollable}>
+            <Box sx={baseStyle.scrollable}>
                 <List sx={{ width: "100%" }}>
-                    {filteredItems.map((item, index) => (
+                    {filteredItems.map((item, i) => (
                         <Box
-                            key={index}
-                            sx={index === selected ? style.selected : undefined}
+                            key={i}
+                            sx={i === selected ? baseStyle.selected : undefined}
                         >
                             <Item
                                 item={item}
-                                onClick={() => {
-                                    setSelected(index);
-                                    onItemClick && onItemClick(index);
-                                }}
+                                index={i}
+                                onClick={() =>
+                                    onItemClick
+                                        ? onItemClick(i)
+                                        : setSelected(i)
+                                }
                                 onDelete={
                                     onDelete
-                                        ? () => setDeleteIndex(index)
+                                        ? () => setDeleteIndex(i)
                                         : undefined
                                 }
                             />
-                            <Divider sx={style.divider} />
+                            <Divider sx={baseStyle.divider} />
                         </Box>
                     ))}
                 </List>
             </Box>
             <ConfirmActionModal
                 text="Sei sicuro di voler eliminare questo elemento?"
+                subtext={deleteText}
                 show={deleteIndex >= 0}
                 onConfirm={() => onDelete!(items[deleteIndex])}
                 onClose={() => setDeleteIndex(-1)}
@@ -103,7 +117,7 @@ const Search = ({ onChange }: { onChange: (text: string) => void }) => {
     );
 };
 
-const style = {
+const baseStyle = {
     box: {
         width: "100%",
         height: "100%",
@@ -111,6 +125,7 @@ const style = {
         flexDirection: "column" as "column",
     },
     scrollable: {
+        marginTop: "2px",
         maxHeight: "100%",
         width: "100%",
         overflow: "auto",

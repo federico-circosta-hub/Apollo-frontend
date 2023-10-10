@@ -9,22 +9,24 @@ export type DetailItemProps = {
 export default function DetailComponent({
     item,
     Item,
+    style,
 }: {
     item: any;
     Item: ComponentType<DetailItemProps>;
+    style?: any;
 }) {
     return item ? (
-        <Box sx={style.scrollable}>
+        <Box sx={[baseStyle.scrollable, style]}>
             <Item item={item} />
         </Box>
     ) : (
-        <EmptyScreen />
+        <EmptyScreen style={style} />
     );
 }
 
-const EmptyScreen = () => {
+const EmptyScreen = ({ style }: { style?: any }) => {
     return (
-        <Box sx={style.emptyScreen}>
+        <Box sx={[baseStyle.emptyScreen, style]}>
             <Typography variant="h6" align="center">
                 Seleziona un elemento dal menu a sinistra
             </Typography>
@@ -32,7 +34,7 @@ const EmptyScreen = () => {
     );
 };
 
-const style = {
+const baseStyle = {
     scrollable: {
         maxHeight: "100%",
         width: "100%",

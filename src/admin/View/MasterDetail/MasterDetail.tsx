@@ -1,13 +1,13 @@
-import { ComponentType, useCallback, useState } from "react";
+import { ComponentType, useCallback, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import MasterComponent, { MasterItemProps } from "./MasterComponent";
 import Divider from "@mui/material/Divider";
 import MainContainer from "../../../common/View/MainContainer";
 import Loading from "../../../common/View/Loading";
 import DetailComponent, { DetailItemProps } from "./DetailComponent";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Status from "../../../common/Model/Status";
-import ErrorScreen from "./ErrorScreen";
+import ErrorScreen from "../../../common/View/ErrorScreen";
 import EmptyScreen from "./EmptyScreen";
 
 export default function MasterDetail({
@@ -19,6 +19,7 @@ export default function MasterDetail({
     status,
     onRetry,
     onDelete,
+    deleteText,
 }: {
     items: any[];
     itemName: string;
@@ -28,13 +29,27 @@ export default function MasterDetail({
     status: Status;
     onRetry: () => Promise<void>;
     onDelete?: (item: any) => Promise<any>;
+    deleteText?: string;
 }) {
+    const [searchParams] = useSearchParams();
+    const selectedIdStr = parseInt(searchParams.get("id") ?? "");
+    const selectedId = isNaN(selectedIdStr) ? -1 : selectedIdStr;
+
     const navigate = useNavigate();
     const [selected, setSelected] = useState<number>(-1);
 
     const onAdd = useCallback(() => {
         navigate(addRoute);
     }, [navigate, addRoute]);
+
+    useEffect(() => {
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].id === selectedId) {
+                setSelected(i);
+                return;
+            }
+        }
+    }, [selectedId, items]);
 
     if (status === Status.ERROR) return <ErrorScreen onRetry={onRetry} />;
     if (status !== Status.LOADING && items.length === 0)
@@ -48,21 +63,22 @@ export default function MasterDetail({
                         items={items}
                         itemName={itemName}
                         Item={MasterItem}
+                        index={selected}
                         onItemClick={(index) => setSelected(index)}
                         onAdd={onAdd}
                         onDelete={onDelete}
+                        deleteText={deleteText}
                     />
                 ) : (
                     <Loading />
                 )}
             </Box>
             <Divider orientation="vertical" flexItem sx={style.divider} />
-            <Box sx={style.detailsBox}>
-                <DetailComponent
-                    Item={DetailItem}
-                    item={selected >= 0 ? items[selected] : null}
-                />
-            </Box>
+            <DetailComponent
+                Item={DetailItem}
+                item={selected >= 0 ? items[selected] : null}
+                style={style.detailsBox}
+            />
         </MainContainer>
     );
 }
