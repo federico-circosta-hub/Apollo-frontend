@@ -77,7 +77,7 @@ const styles = {
   h3: {
     borderRadius: "5px",
     width: "100%",
-    border: "1px solid #4682b4",
+    border: "0.5px solid #7cc0d8",
     color: "#4682b4",
     background: "#fcfdff",
   },
@@ -85,7 +85,7 @@ const styles = {
     marginBottom: "10px",
     borderRadius: "5px",
     width: "100%",
-    border: "1px solid #4682b4",
+    border: "0.5px solid #7cc0d8",
     color: "#4682b4",
     background: "#fcfdff",
   },
