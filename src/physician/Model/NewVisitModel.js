@@ -112,6 +112,10 @@ export default class NewVisitModel {
     };
   }
 
+  setLastVisit(d) {
+    this.followUp.lastVisit = d;
+  }
+
   addJoint(j) {
     this.joints.push(j);
   }

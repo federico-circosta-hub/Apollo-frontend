@@ -13,7 +13,7 @@ import a_drugs from "../../img/icon/a_drugs.png";
 import p_drugs from "../../img/icon/p_drugs.png";
 import eye from "../../img/icon/view.png";
 import response from "../../img/icon/hydrotherapy.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -31,10 +31,12 @@ import AcuteDrug from "../OtherComponents/Drug/AcuteDrug";
 import Treatment from "../OtherComponents/Drug/Treatment";
 import ProphylacticDrug from "../OtherComponents/Drug/ProphylacticDrug";
 import FollowUpNeeded from "../OtherComponents/Drug/FollowUpNeeded";
+import { VisitContext } from "../../Model/VisitContext";
 
 export default function Drug() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { selectedPatient } = useContext(PatientContext);
+  const { selectedVisit, setSelectedVisit } = useContext(VisitContext);
   const treatmentResponses = [
     { value: 10, label: "Low/absent" },
     { value: 20, label: "Discrete" },
@@ -218,10 +220,14 @@ export default function Drug() {
   const visitButtonResolver = () => {
     if (newVisit.followUp.followUp) {
       return (
-        <button className="btn btn-info">
+        <Link
+          onClick={() => setSelectedVisit(newVisit.previousVisit)}
+          className="btn btn-info"
+          to={"/seeVisit"}
+        >
           <img width={22} src={eye} alt="" />{" "}
-          {format(newVisit.previousVisit, "dd-MM-y")}
-        </button>
+          {format(newVisit.followUp.lastVisit, "dd-MM-y")}
+        </Link>
       );
     } else {
       return (

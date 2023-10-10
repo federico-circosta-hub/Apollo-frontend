@@ -101,6 +101,7 @@ export default function NewVisit() {
       newVisit.setPhysicalActivity(physicalActivity);
       newVisit.setTraumaticEvent(traumaticEvent);
       newVisit.setPreviousVisit(previousVisit);
+      newVisit.setLastVisit(new Date(previousVisit.date));
       setNewVisit(newVisit);
       setErrors({});
       console.log(newVisit);
