@@ -27,7 +27,7 @@ export default function AdminUsers() {
         setStatus(Status.LOADING);
 
         try {
-            const res = await getUsers();
+            const res = await getUsers(true);
             res.sort(
                 (a, b) =>
                     a.surname?.localeCompare(b.surname ?? "") ||

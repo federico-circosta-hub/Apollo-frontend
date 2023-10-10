@@ -19,7 +19,7 @@ export default function UserToolAccess({ user }: { user: User }) {
     const fetchData = useCallback(async () => {
         setStatus(Status.LOADING);
         try {
-            const res = await user.annotationTools();
+            const res = await user.fetchToolsAccess();
             setTools(res);
             setStatus(Status.IDLE);
         } catch (err: any) {
@@ -118,7 +118,7 @@ const ToolAccess = ({
     onSave: (access: boolean, instructions: string) => void;
     onError: () => void;
 }) => {
-    const [endpoint, setEndpoint] = useState<string>(tool.endpoint);
+    const [endpoint, setEndpoint] = useState<string>(tool.endpoint ?? "");
     const [access, setAccess] = useState<boolean>(tool.access);
     const [status, setStatus] = useState<Status>(Status.IDLE);
 
@@ -140,7 +140,7 @@ const ToolAccess = ({
         } catch (err: any) {
             setStatus(Status.ERROR);
             setAccess(tool.access);
-            setEndpoint(tool.endpoint);
+            setEndpoint(tool.endpoint ?? "");
             onError();
         }
     }, [user, tool, access, endpoint, onSave, onError]);
@@ -152,6 +152,7 @@ const ToolAccess = ({
                     <Checkbox
                         checked={access}
                         onChange={(_event, checked) => setAccess(checked)}
+                        disabled={!user.enabled}
                     />
                 }
                 sx={{ flex: 1 }}
@@ -164,14 +165,16 @@ const ToolAccess = ({
                 onChange={(e) => setEndpoint(e.target.value)}
                 variant="standard"
                 inputProps={{ maxLength: 255 }}
+                disabled={!user.enabled}
             />
             <Box sx={{ flex: 1 }} />
             <StatusLoadingButton
                 status={status}
                 text="Salva"
                 disabled={
-                    access === tool.access &&
-                    (!access || endpoint === tool.endpoint)
+                    !user.enabled ||
+                    (access === tool.access &&
+                        (!access || endpoint === tool.endpoint))
                 }
                 onClick={handleAccessChange}
             />

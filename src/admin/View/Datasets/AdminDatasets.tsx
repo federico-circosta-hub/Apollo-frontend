@@ -7,11 +7,14 @@ import { DatasetsContext } from "../../ViewModel/DatasetsProvider";
 import MasterComponent from "../MasterDetail/MasterComponent";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../../common/View/Loading";
-import ErrorScreen from "../MasterDetail/ErrorScreen";
+import ErrorScreen from "../../../common/View/ErrorScreen";
 import MainContainer from "../../../common/View/MainContainer";
 import DatasetItem from "./DatasetItem";
+import EmptyScreen from "../MasterDetail/EmptyScreen";
 
 export default function AdminDatasets() {
+    const itemName = "Dataset";
+
     const [, setTitle] = useContext(HeaderContext);
 
     useEffect(() => {
@@ -30,7 +33,7 @@ export default function AdminDatasets() {
 
         try {
             const res = await getDatasets();
-			res.sort((a, b) => a.name.localeCompare(b.name));
+            res.sort((a, b) => a.name.localeCompare(b.name));
 
             console.log(`${res.length} datasets recevied`);
             setDatasets(res);
@@ -45,6 +48,10 @@ export default function AdminDatasets() {
         return () => CommunicationController.abortLast();
     }, [fetchData]);
 
+    const onAdd = useCallback(() => {
+        navigate("/datasets/add");
+    }, [navigate]);
+
     const handleDelete = useCallback(
         async (dataset: Dataset) => {
             await deleteDataset(dataset.id);
@@ -55,15 +62,17 @@ export default function AdminDatasets() {
     );
 
     if (status === Status.ERROR) return <ErrorScreen onRetry={fetchData} />;
+    if (status !== Status.LOADING && datasets.length === 0)
+        return <EmptyScreen itemName={itemName} onAdd={onAdd} />;
 
     return (
         <MainContainer>
             {status === Status.IDLE ? (
                 <MasterComponent
                     items={datasets}
-                    itemName="Dataset"
+                    itemName={itemName}
                     Item={DatasetItem}
-                    onAdd={() => navigate("/datasets/add")}
+                    onAdd={onAdd}
                     onDelete={handleDelete}
                 />
             ) : (

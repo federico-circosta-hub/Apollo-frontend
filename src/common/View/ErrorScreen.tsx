@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import MainContainer from "../../../common/View/MainContainer";
+import MainContainer from "./MainContainer";
 
 export default function ErrorScreen({
     onRetry,
@@ -9,7 +9,7 @@ export default function ErrorScreen({
     onRetry: () => Promise<void>;
 }) {
     return (
-        <MainContainer style={style.errorScreen}>
+        <MainContainer style={style.container}>
             <Typography
                 variant="h4"
                 color="red"
@@ -30,11 +30,10 @@ export default function ErrorScreen({
 }
 
 const style = {
-    errorScreen: {
+    container: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column" as "column",
-        margin: "auto",
     },
 };

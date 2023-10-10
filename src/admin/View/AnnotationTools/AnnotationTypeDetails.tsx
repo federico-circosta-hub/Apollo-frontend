@@ -204,7 +204,7 @@ const AnnotationTypeDetailsForm = ({
                     label="Interfaccia di annotazione"
                     onChange={(e) => setLayout(e.target.value)}
                     multiline
-                    rows={2}
+                    rows={3}
                     sx={style.marginBig}
                 />
             </Box>
