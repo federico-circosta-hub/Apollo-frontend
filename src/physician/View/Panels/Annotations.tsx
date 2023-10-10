@@ -44,26 +44,28 @@ export default function Annotations() {
         return () => CommunicationController.abortLast();
     }, [fetchData]);
 
+    if (status === Status.LOADING)
+        return (
+            <MainContainer>
+                <Loading />
+            </MainContainer>
+        );
+    if (status === Status.ERROR) return <Error onRetry={fetchData} />;
+
     return (
         <MainContainer>
-            {status === Status.LOADING ? (
-                <Loading />
-            ) : status === Status.ERROR ? (
-                <Error onRetry={fetchData} />
-            ) : (
-                <AnnotationGrid
-                    tasks={tasks}
-                    includeCompleted={includeCompleted}
-                    onToogleInclude={toggleInclude}
-                />
-            )}
+            <AnnotationGrid
+                tasks={tasks}
+                includeCompleted={includeCompleted}
+                onToogleInclude={toggleInclude}
+            />
         </MainContainer>
     );
 }
 
 const Error = ({ onRetry }: { onRetry: () => Promise<void> }) => {
     return (
-        <div style={style.error}>
+        <MainContainer style={style.error}>
             <Typography
                 variant="h4"
                 color="red"
@@ -73,13 +75,13 @@ const Error = ({ onRetry }: { onRetry: () => Promise<void> }) => {
                 ERRORE!
             </Typography>
             <Typography variant="h6" align="center">
-                Errore nel carimento dei task di annotazione
+                Nessun task di annotazione
             </Typography>
             <Box sx={{ m: 2 }} />
             <Button variant="contained" color="primary" onClick={onRetry}>
                 Riprova
             </Button>
-        </div>
+        </MainContainer>
     );
 };
 
@@ -104,19 +106,23 @@ const AnnotationGrid = ({
                 }
                 label="Includi task completati"
             />
-            <Box style={style.scrollable}>
-                <Grid
-                    alignItems="top"
-                    justifyContent="left"
-                    container
-                    spacing={2}
-                    style={style.grid}
-                >
-                    {tasks.map((task: PhysicianTask) => (
-                        <GridElement key={task.id} task={task} />
-                    ))}
-                </Grid>
-            </Box>
+            {tasks.length === 0 ? (
+                <EmptyScreen />
+            ) : (
+                <Box style={style.scrollable}>
+                    <Grid
+                        alignItems="top"
+                        justifyContent="left"
+                        container
+                        spacing={2}
+                        style={style.grid}
+                    >
+                        {tasks.map((task: PhysicianTask) => (
+                            <GridElement key={task.id} task={task} />
+                        ))}
+                    </Grid>
+                </Box>
+            )}
         </>
     );
 };
@@ -126,6 +132,19 @@ const GridElement = (props: any) => (
         <AnnotationTask {...props} />
     </Grid>
 );
+
+const EmptyScreen = () => {
+    return (
+        <Box style={style.empty}>
+            <Typography variant="h6" align="center">
+                Nessun task di annotazione assegnato.
+            </Typography>
+            <Typography variant="h6" align="center">
+                Ricontrolla più tardi!
+            </Typography>
+        </Box>
+    );
+};
 
 const style = {
     scrollable: {
@@ -138,10 +157,13 @@ const style = {
         padding: "16px",
     },
     error: {
-        display: "flex",
         justifyContent: "center",
         alignItems: "center",
+    },
+    empty: {
+        flex: 1,
+        display: "flex",
+        justifyContent: "center",
         flexDirection: "column" as "column",
-        margin: "auto",
     },
 };
