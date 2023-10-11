@@ -185,17 +185,19 @@ export default function SearchVisit(props) {
                   </thead>
 
                   <tbody>
-                    {visitList.map((visit, index) => (
-                      <VisitLine
-                        key={index}
-                        visit={visit}
-                        isSelected={visit === selectedVisit}
-                        onSelectVisit={() => {
-                          setSelectedVisit(visit);
-                          handleSelect();
-                        }}
-                      />
-                    ))}
+                    {visitList
+                      .filter((e) => e.physician !== null)
+                      .map((visit, index) => (
+                        <VisitLine
+                          key={index}
+                          visit={visit}
+                          isSelected={visit === selectedVisit}
+                          onSelectVisit={() => {
+                            setSelectedVisit(visit);
+                            handleSelect();
+                          }}
+                        />
+                      ))}
                   </tbody>
                 </table>
               )}
