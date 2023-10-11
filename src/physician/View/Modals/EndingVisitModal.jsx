@@ -3,6 +3,7 @@ import { Alert, AlertTitle } from "@mui/material";
 import format from "date-fns/format";
 import documentSend from "../../img/icon/document-send.png";
 import { Link } from "react-router-dom";
+import JointNameChanger from "../../ViewModel/JointNameChanger";
 
 export default function EndingVisitModal(props) {
   const footer = () => {
@@ -104,14 +105,101 @@ export default function EndingVisitModal(props) {
       <Modal.Header style={{ background: "#f0f8ff" }}>
         <Modal.Title>Confermare invio visita</Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ background: "whitesmoke" }}>
-        <p>Nome: {props.patient.name}</p>
-        <p>Cognome: {props.patient.surname}</p>
+      <Modal.Body
+        style={{
+          display: "flex",
+          background: "whitesmoke",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <h5>Info generali</h5>
         <p>
-          {props.patient.gender === "F" ? "Nata il: " : "Nato il: "}{" "}
+          <strong>Nome: </strong>
+          {props.patient.name}
+        </p>
+        <p>
+          <strong>Cognome: </strong>
+          {props.patient.surname}
+        </p>
+        <p>
+          <strong>
+            {props.patient.gender === "F" ? "Nata il: " : "Nato il: "}
+          </strong>{" "}
           {format(props.patient.birthdate, "dd-M-y")}
         </p>
-        <p>Data visita: {format(props.visit.visitDate, "dd-M-y")}</p>
+        <p>
+          <strong>Data visita: </strong>
+          {format(props.visit.visitDate, "dd-M-y")}
+        </p>
+        <p>
+          <strong>Medico:</strong> {props.visit.physician}
+        </p>
+
+        <br />
+        <h5>Attività Fisica</h5>
+        <p>
+          <strong>Tipo:</strong>{" "}
+          {props.visit.physicalActivity.physicalActivityType || "N/A"}
+        </p>
+        <p>
+          <strong>Data:</strong>{" "}
+          {props.visit.physicalActivity.physicalActivityDate || "N/A"}
+        </p>
+        <br />
+        <h5>Evento Traumatico</h5>
+        <p>
+          <strong>Tipo:</strong>{" "}
+          {props.visit.traumaticEvent.traumaticEvent || "N/A"}
+        </p>
+        <p>
+          <strong>Data:</strong>{" "}
+          {props.visit.traumaticEvent.traumaticEventDate || "N/A"}
+        </p>
+
+        {props.visit.previousVisit !== undefined && (
+          <>
+            {" "}
+            <br /> <h5>Follow-Up</h5>
+          </>
+        )}
+        <p>{props.visit.followUp.lastVisit || "N/A"}</p>
+        <br />
+        <h5>Farmaco di Profilassi</h5>
+        <p>
+          <strong>Nome:</strong>{" "}
+          {props.visit.prophylacticDrug.drug.name || "N/A"}
+        </p>
+        <p>
+          <strong>Dose:</strong> {props.visit.prophylacticDrug.dose || "N/A"}
+        </p>
+        <p>
+          <strong>Frequenza:</strong>{" "}
+          {props.visit.prophylacticDrug.frequency || "N/A"}
+        </p>
+        <br />
+        <h5>Farmaco Acuto</h5>
+        <p>
+          <strong>Nome:</strong> {props.visit.acuteDrug.drug.name || "N/A"}
+        </p>
+        <p>
+          <strong>Dose:</strong> {props.visit.acuteDrug.dose || "N/A"}
+        </p>
+
+        <br />
+        <h5>Aricolazioni visitate</h5>
+        {props.visit.joints.map((e) => {
+          return (
+            <>
+              <p>
+                {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+                  e.jointName,
+                  e.side
+                )}
+              </p>
+            </>
+          );
+        })}
       </Modal.Body>
 
       {footer()}
