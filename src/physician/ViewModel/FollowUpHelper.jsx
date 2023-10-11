@@ -5,6 +5,7 @@ import { Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { VisitContext } from "../Model/VisitContext";
 import { NewVisitContext } from "../Model/NewVisitContext";
+import { Alert, AlertTitle } from "@mui/material";
 
 export default function FollowUpHelper(props) {
   const { setSelectedVisit } = useContext(VisitContext);
@@ -13,8 +14,8 @@ export default function FollowUpHelper(props) {
 
   function dateDiffInDays(a, b) {
     const _MS_PER_DAY = 1000 * 60 * 60 * 24;
-    const utc1 = Date(a.getFullYear(), a.getMonth(), a.getDate());
-    const utc2 = Date(b.getFullYear(), b.getMonth(), b.getDate());
+    const utc1 = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = new Date(b.getFullYear(), b.getMonth(), b.getDate());
     return Math.floor((utc2 - utc1) / _MS_PER_DAY);
   }
 
@@ -46,10 +47,10 @@ export default function FollowUpHelper(props) {
     </div>
   ) : (
     <Modal show={showModal} animation={true}>
-      <Modal.Header>
-        <Modal.Title>Confermare visita di follow up?</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+      <Alert severity="warning" variant="filled" style={{ width: "100%" }}>
+        <AlertTitle>Confermare visita di follow up</AlertTitle>
+      </Alert>
+      <Modal.Body style={{ background: "whitesmoke", fontSize: 20 }}>
         <p>
           La data dell'ultima visita è antecedente i 30 giorni,{" "}
           {format(previousVisitDate, "dd-MM-y")}
@@ -58,12 +59,18 @@ export default function FollowUpHelper(props) {
         </p>
       </Modal.Body>
 
-      <Modal.Footer>
+      <Modal.Footer
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          background: "whitesmoke",
+        }}
+      >
         <button
           className="btn btn-secondary"
           onClick={() => {
-            setShowModal(false);
             props.onCancel();
+            setShowModal(false);
           }}
         >
           Annulla

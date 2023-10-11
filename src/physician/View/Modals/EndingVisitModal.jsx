@@ -126,11 +126,11 @@ export default function EndingVisitModal(props) {
           <strong>
             {props.patient.gender === "F" ? "Nata il: " : "Nato il: "}
           </strong>{" "}
-          {format(props.patient.birthdate, "dd-M-y")}
+          {format(props.patient.birthdate, "dd-MM-y")}
         </p>
         <p>
           <strong>Data visita: </strong>
-          {format(props.visit.visitDate, "dd-M-y")}
+          {format(props.visit.visitDate, "dd-MM-y")}
         </p>
         <p>
           <strong>Medico:</strong> {props.visit.physician}
@@ -163,7 +163,7 @@ export default function EndingVisitModal(props) {
             <br /> <h5>Follow-Up</h5>
           </>
         )}
-        <p>{props.visit.followUp.lastVisit || "N/A"}</p>
+        <p>{format(props.visit.followUp.lastVisit, "dd-MM-y") || "N/A"}</p>
         <br />
         <h5>Farmaco di Profilassi</h5>
         <p>

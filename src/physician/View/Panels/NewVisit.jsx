@@ -204,6 +204,7 @@ export default function NewVisit() {
   };
 
   const handleCancel = () => {
+    setPreviousVisit(undefined);
     setIsFollowUp(false);
   };
 
