@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import CommunicationController from "./../../../../common/Model/CommunicationController";
 import { Skeletons } from "../Skeletons";
 import { Alert, AlertTitle, CircularProgress } from "@mui/material";
+import { RefreshButton } from "../RefreshButton";
 
 export default function JointInfo(props) {
   const [ecographies, setEcographies] = useState([]);
@@ -28,10 +29,13 @@ export default function JointInfo(props) {
     setLoadingEcographies(true);
     setNetworkError(null);
     try {
-      await jointToDisplay.media_ids.forEach(async (e) => {
-        let eco = await CommunicationController.get("media", { id: e });
-        setEcographies((prevState) => [...prevState, eco]);
-      });
+      const updatedEcographies = await Promise.all(
+        jointToDisplay.media_ids.map(async (e) => {
+          const eco = await CommunicationController.get("media", { id: e });
+          return eco;
+        })
+      );
+      setEcographies(updatedEcographies);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -150,22 +154,50 @@ export default function JointInfo(props) {
             {rows.map((row) => (
               <TableRow
                 key={row.key}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  fontSize: 20,
+                }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell
+                  component="th"
+                  scope="row"
+                  sx={{ fontSize: 20, fontWeight: "700" }}
+                >
                   {row.key}
                 </TableCell>
-                <TableCell align="right">{row.value}</TableCell>
+                <TableCell
+                  align="right"
+                  sx={{ fontSize: 20, fontWeight: "500" }}
+                >
+                  {row.value}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <div style={{ marginTop: "5vh", width: "100%" }}>
-        <p>Ecografie:</p>
+      <div
+        style={{
+          marginTop: "5vh",
+          width: "100%",
+        }}
+      >
+        <h4>Ecografie:</h4>
         {loadingEcographies && <Skeletons />}
+
+        {networkError !== null && (
+          <>
+            <Alert severity="error" variant="filled" style={{ width: "100%" }}>
+              <AlertTitle>Errore di rete, riprovare</AlertTitle>
+            </Alert>
+            <RefreshButton onClick={getEcographies} />
+          </>
+        )}
+
         <div>
           {!loadingEcographies &&
+            networkError === null &&
             ecographies.map((item, index) => (
               <img
                 key={index}
@@ -175,18 +207,15 @@ export default function JointInfo(props) {
             ))}
         </div>
 
-        {/*           /* ) : networkError !== null ? (
-          <Alert severity="error" variant="filled" style={{ width: "100%" }}>
-            <AlertTitle>Errore di rete, riprovare</AlertTitle>
-          </Alert>
-        ) :  : (
-          ecographies.length === 0 &&
-          !loadingEcographies && (
-            <p>
-              <em>Non sono presenti ecografie</em>
-            </p>
-          )
-          )*/}
+        {ecographies.length === 0 &&
+          !loadingEcographies &&
+          networkError === null && (
+            <Alert severity="info" variant="filled" style={{ width: "100%" }}>
+              <AlertTitle>
+                <em>Non sono presenti ecografie</em>
+              </AlertTitle>
+            </Alert>
+          )}
       </div>
     </div>
   );

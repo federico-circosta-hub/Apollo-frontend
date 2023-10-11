@@ -11,6 +11,7 @@ import VisitInfo from "../OtherComponents/SeeVisit/VisitInfo";
 import JointInfo from "../OtherComponents/SeeVisit/JointInfo";
 import JointNameChanger from "../../ViewModel/JointNameChanger";
 import { CircularProgress } from "@mui/material";
+import { RefreshButton } from "../OtherComponents/RefreshButton";
 
 export default function SeeVisit() {
   const { selectedVisit } = useContext(VisitContext);
@@ -25,6 +26,7 @@ export default function SeeVisit() {
   }, []);
 
   const loadVisit = async () => {
+    setNetworkError(null);
     setLoadingVisit(true);
     try {
       const visitObject = await CommunicationController.get("visit/details", {
@@ -57,6 +59,17 @@ export default function SeeVisit() {
       }}
     >
       {loadingVisit && visit === null && <h3>Loading...</h3>}
+      {networkError !== null && (
+        <div style={{ marginTop: "5%" }}>
+          Errore nell'ottenere la visita
+          <RefreshButton
+            onClick={() => {
+              loadVisit();
+              console.log(networkError);
+            }}
+          />
+        </div>
+      )}
       {!loadingVisit && visit !== null && networkError === null && (
         <>
           <div
