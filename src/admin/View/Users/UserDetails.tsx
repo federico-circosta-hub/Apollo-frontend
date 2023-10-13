@@ -22,9 +22,9 @@ export default function UserDetails({ item }: DetailItemProps) {
 
     return (
         <Box sx={style.box}>
-            <UserToolAccess user={user} />
+            <UserToolAccess user={user} style={{ maxHeight: "50%" }} />
             <Box sx={{ m: 1 }} />
-            <UserTasks user={user} />
+            <UserTasks user={user} style={{ maxHeight: "50%" }} />
             <Box sx={{ flex: 1 }} />
             <UserButtons
                 user={user}

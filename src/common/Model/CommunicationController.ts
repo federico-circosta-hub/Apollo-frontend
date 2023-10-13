@@ -63,7 +63,10 @@ class CommunicationController {
         console.log(`Axios call: ${method} ${endpoint}`);
 
         this.signalController = new AbortController();
-        const config = { signal: this.signalController.signal };
+        const config = {
+            headers: { "Content-Type": "application/json" },
+            signal: this.signalController.signal,
+        };
 
         let fn = this.getFunctionByHttpMethod(method);
 
@@ -134,11 +137,15 @@ class CommunicationController {
 
     getPhysicianTasks = async (
         id: number,
-        includeCompleted: boolean = false
+        includeCompleted: boolean = false,
+        offset: number = 0,
+        cnt: number = 20
     ): Promise<PhysicianTask[]> => {
         const tasks = await this.get(this.endpoints.GET_TASKS, {
             physician: id,
             includeCompleted,
+            cnt: cnt,
+            offset: offset,
         });
 
         return tasks.map(
@@ -147,10 +154,14 @@ class CommunicationController {
     };
 
     getAllTasks = async (
-        includeCompleted: boolean = false
+        includeCompleted: boolean = false,
+        offset: number = 0,
+        cnt: number = 20
     ): Promise<Task[]> => {
         const tasks = await this.get(this.endpoints.GET_TASKS, {
             includeCompleted,
+            cnt: cnt,
+            offset: offset,
         });
 
         return tasks.map((task: any) => new Task(task));
