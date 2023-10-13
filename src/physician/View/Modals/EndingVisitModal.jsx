@@ -157,13 +157,14 @@ export default function EndingVisitModal(props) {
           {props.visit.traumaticEvent.traumaticEventDate || "N/A"}
         </p>
 
-        {props.visit.previousVisit !== undefined && (
-          <>
-            {" "}
-            <br /> <h5>Follow-Up</h5>
-          </>
-        )}
-        <p>{format(props.visit.followUp.lastVisit, "dd-MM-y") || "N/A"}</p>
+        <br />
+        <h5>Follow-Up</h5>
+
+        <p>
+          {props.visit.previousVisit !== undefined
+            ? format(new Date(props.visit.previousVisit.date), "dd-MM-y")
+            : "N/A"}
+        </p>
         <br />
         <h5>Farmaco di Profilassi</h5>
         <p>

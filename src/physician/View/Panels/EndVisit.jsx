@@ -34,7 +34,7 @@ export default function EndVisit() {
             borderRadius: "15px",
             border: "0.5px solid #56AEC9",
             boxShadow: "1px 2px 6px #56AEC9",
-            background: "grey",
+            background: "lightgrey",
           }}
         >
           <MyDocument

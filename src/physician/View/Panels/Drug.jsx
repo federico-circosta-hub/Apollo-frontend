@@ -177,13 +177,14 @@ export default function Drug() {
     console.log("newVisit:", newVisit);
     let newVisitToSend = new NewVisitToSend(newVisit);
     newVisitToSend.setJoints(newVisit);
-    console.log("newVisitToSend:", newVisitToSend);
+
     try {
-      const sendedVisit = await CommunicationController.post(
+      console.log("newVisitToSend:", newVisitToSend);
+      /*       const sendedVisit = await CommunicationController.post(
         "visit",
         newVisitToSend
       );
-      console.log("sendedVisit:", sendedVisit);
+      console.log("sendedVisit:", sendedVisit); */
 
       setShowFinishAlert(true);
     } catch (err) {
