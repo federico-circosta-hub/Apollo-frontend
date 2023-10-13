@@ -114,11 +114,15 @@ export default class User {
     };
 
     tasks = async (
-        includeCompleted: boolean = false
+        includeCompleted: boolean = false,
+        offset: number = 0,
+        cnt: number = 20
     ): Promise<PhysicianTask[]> => {
         return await CommunicationController.getPhysicianTasks(
             this.id,
-            includeCompleted
+            includeCompleted,
+            offset,
+            cnt
         );
     };
 

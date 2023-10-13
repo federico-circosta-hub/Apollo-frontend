@@ -24,6 +24,7 @@ export default function MasterComponent({
     onAdd,
     onDelete,
     deleteText,
+    onScroll,
     style,
 }: {
     items: any[];
@@ -34,6 +35,7 @@ export default function MasterComponent({
     onAdd?: () => void;
     onDelete?: (item: any) => Promise<any>;
     deleteText?: string;
+    onScroll?: () => void;
     style?: any;
 }) {
     const [filter, setFilter] = useState<string>("");
@@ -47,6 +49,17 @@ export default function MasterComponent({
     useEffect(() => {
         setSelected(index ?? -1);
     }, [index]);
+
+    const handleScroll = useCallback(
+        (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+            if (!onScroll) return;
+            const percent =
+                e.currentTarget.scrollTop /
+                (e.currentTarget as any).scrollTopMax;
+            if (percent > 0.8) onScroll();
+        },
+        [onScroll]
+    );
 
     const filteredItems = filterItems();
 
@@ -63,7 +76,7 @@ export default function MasterComponent({
                     />
                 )}
             </Box>
-            <Box sx={baseStyle.scrollable}>
+            <Box sx={baseStyle.scrollable} onScroll={handleScroll}>
                 <List sx={{ width: "100%" }}>
                     {filteredItems.map((item, i) => (
                         <Box

@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField";
 import LoadingError from "../../../common/View/LoadingError";
 import StatusLoadingButton from "../../Components/StatusLoadingButton";
 
-export default function UserToolAccess({ user }: { user: User }) {
+export default function UserToolAccess({ user, style }: { user: User, style?:any }) {
     const [status, setStatus] = useState<Status>(Status.IDLE);
     const [tools, setTools] = useState<AnnotationToolAccess[]>([]);
 
@@ -44,7 +44,7 @@ export default function UserToolAccess({ user }: { user: User }) {
     }
 
     return (
-        <Box sx={style.box}>
+        <Box sx={[baseStyle.box, style]}>
             <Typography sx={{ flex: 1 }} variant="h5">
                 Concedi accesso a:
             </Typography>
@@ -85,7 +85,7 @@ const AnnotationToolsForm = ({
 
     return (
         <>
-            <Box sx={style.scrollable}>
+            <Box sx={baseStyle.scrollable}>
                 <FormGroup>
                     {tools.map((tool) => (
                         <Box key={tool.id}>
@@ -95,7 +95,7 @@ const AnnotationToolsForm = ({
                                 onSave={showInstructions}
                                 onError={showError}
                             />
-                            <Divider sx={style.checkboxDivider} />
+                            <Divider sx={baseStyle.checkboxDivider} />
                         </Box>
                     ))}
                 </FormGroup>
@@ -146,7 +146,7 @@ const ToolAccess = ({
     }, [user, tool, access, endpoint, onSave, onError]);
 
     return (
-        <Box sx={style.checkbox}>
+        <Box sx={baseStyle.checkbox}>
             <FormControlLabel
                 control={
                     <Checkbox
@@ -182,7 +182,7 @@ const ToolAccess = ({
     );
 };
 
-const style = {
+const baseStyle = {
     box: {
         display: "flex",
         flexDirection: "column" as "column",
