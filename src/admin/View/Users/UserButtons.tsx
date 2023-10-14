@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import User from "../../../common/Model/User";
 import Button from "@mui/material/Button";
 import ConfirmActionModal from "../../../common/View/Modal/ConfirmActionModal";
-import CommunicationController from "../../../common/Model/CommunicationController";
+import DeanonymizedCC from "../../../common/Model/Communication/DeanonymizedCommunicationController";
 import { useCallback, useState } from "react";
 
 export default function UserButtons({
@@ -19,7 +19,7 @@ export default function UserButtons({
         useState<boolean>(false);
 
     const resetPassword = useCallback(async () => {
-        const newPassword = await CommunicationController.generateNewPassword(
+        const newPassword = await DeanonymizedCC.generateNewPassword(
             user.email
         );
 

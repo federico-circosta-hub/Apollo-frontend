@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { HeaderContext } from "../AdminHeader";
 import Status from "../../../common/Model/Status";
-import CommunicationController from "../../../common/Model/CommunicationController";
+import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import MasterDetail from "../MasterDetail/MasterDetail";
 import { MasterItemProps } from "../MasterDetail/MasterComponent";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -32,7 +32,7 @@ export default function AdminTools() {
 
         try {
             const res = await getTools();
-			res.sort((a, b) => a.name.localeCompare(b.name));
+            res.sort((a, b) => a.name.localeCompare(b.name));
 
             console.log(`${res.length} annotation tools recevied`);
             setTools(res);

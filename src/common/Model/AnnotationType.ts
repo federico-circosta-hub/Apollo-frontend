@@ -1,4 +1,4 @@
-import CommunicationController from "./CommunicationController";
+import CommunicationController from "./Communication/MainCommunicationController";
 
 export default class AnnotationType {
     id: number;

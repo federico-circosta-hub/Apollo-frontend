@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import CommunicationController from "./CommunicationController";
+import CommunicationController from "./Communication/MainCommunicationController";
 
 export const isTaskDataValid = (data: TaskData) => {
     return (

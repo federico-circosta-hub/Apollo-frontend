@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
 import Status from "../../../common/Model/Status";
 import AnnotationType from "../../../common/Model/AnnotationType";
-import CommunicationController from "../../../common/Model/CommunicationController";
+import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LoadingError from "../../../common/View/LoadingError";

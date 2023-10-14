@@ -1,38 +1,17 @@
-import axios from "axios";
-import config from "../../config";
-import User, { AnnotationToolAccess, UserData, UserType } from "./User";
-import PhysicianTask from "./PhysicianTask";
-import Dataset, { DatasetData } from "./Dataset";
-import AnnotationTool, { AnnotationToolData } from "./AnnotationTool";
-import AnnotationType from "./AnnotationType";
-import Task, { AssignmentType, TaskData } from "./Task";
+import config from "../../../config";
+import { AnnotationToolAccess } from "../User";
+import PhysicianTask from "../PhysicianTask";
+import Dataset, { DatasetData } from "../Dataset";
+import AnnotationTool, { AnnotationToolData } from "../AnnotationTool";
+import AnnotationType from "../AnnotationType";
+import Task, { AssignmentType, TaskData } from "../Task";
+import AbstractCommunicationController from "./AbstractCommunicationController";
+import Cookies from "js-cookie";
+import DeanonymizedCC from "./DeanonymizedCommunicationController";
 
-type Params = { [key: string]: any };
-type Result = any;
-
-enum HttpMethod {
-    GET = "GET",
-    POST = "POST",
-    DELETE = "DELETE",
-    PUT = "PUT",
-    PATCH = "PATCH",
-}
-
-class CommunicationController {
-    controller = axios.create({
-        baseURL: config.API_URL,
-        timeout: 10000,
-        headers: { "Content-Type": "application/json" },
-    });
-
-    signalController?: AbortController;
-
+class MainCommunicationController extends AbstractCommunicationController {
     private endpoints = {
-        GET_PHYSICIANS: "/user/physician",
-        LOGIN: "/user/login",
         GET_TASKS: "/task",
-        RESET_USER_PASSWORD: "/user/resetPassword",
-        TOGGLE_USER_ENABLED: "/user/enable",
         ANNOTATION_TOOL_ACCESS: "/annotationTool/access",
         TOGGLE_USER_TOOL_ACCESS: "/user/physician/annotationTool",
         GET_DATASET: "/dataset",
@@ -48,92 +27,17 @@ class CommunicationController {
         DELETE_ANNOTATION_TOOL: "/annotationTool",
         DELETE_ANNOTATION_TYPE: "/annotationType",
         NEW_DATASET: "/dataset",
-        NEW_PHYSICIAN: "/user/physician",
         NEW_ANNOTATION_TOOL: "/annotationTool",
         NEW_TASK: "/task",
         DELETE_TASK: "/task",
         ASSIGN_TASK: "/task/assign",
     };
 
-    private baseCall = async (
-        method: HttpMethod,
-        endpoint: string,
-        data: Params
-    ): Promise<Result> => {
-        console.log(`Axios call: ${method} ${endpoint}`);
-
-        this.signalController = new AbortController();
-        const config = {
-            headers: { "Content-Type": "application/json" },
-            signal: this.signalController.signal,
+    protected getHeaders(): { [key: string]: string } {
+        return {
+            Cookie: Cookies.get(DeanonymizedCC.SESSION_COOKIE_NAME) ?? "",
         };
-
-        let fn = this.getFunctionByHttpMethod(method);
-
-        try {
-            let res: any;
-            if (method === HttpMethod.GET)
-                res = await fn(
-                    endpoint + "/" + this.formatGetData(data),
-                    config
-                );
-            else if (method === HttpMethod.DELETE)
-                res = await fn(endpoint, { ...config, data: data });
-            else res = await fn(endpoint, data, config);
-
-            return res.data;
-        } catch (err: any) {
-            console.error(`Axios error: ${err.message}`);
-            if (err.response) {
-                // status not in 2xx range
-                console.error(`Response error: ${err.response.data.message}`);
-            } else if (err.request) {
-                console.error(`Request error: no response received`);
-            }
-            throw err;
-        }
-    };
-
-    private get = (endpoint: string, data: Params = {}): Promise<Result> => {
-        return this.baseCall(HttpMethod.GET, endpoint, data);
-    };
-
-    private post = (endpoint: string, data: Params = {}): Promise<Result> => {
-        return this.baseCall(HttpMethod.POST, endpoint, data);
-    };
-
-    private put = (endpoint: string, data: Params = {}): Promise<Result> => {
-        return this.baseCall(HttpMethod.PUT, endpoint, data);
-    };
-
-    private patch = (endpoint: string, data: Params = {}): Promise<Result> => {
-        return this.baseCall(HttpMethod.PATCH, endpoint, data);
-    };
-
-    private delete = (endpoint: string, data: Params = {}): Promise<Result> => {
-        return this.baseCall(HttpMethod.DELETE, endpoint, data);
-    };
-
-    abortLast = () => {
-        this.signalController?.abort();
-    };
-
-    getPhysicians = async (
-        includeDisabled: boolean = false,
-        id?: number
-    ): Promise<User[]> => {
-        const users = await this.get(this.endpoints.GET_PHYSICIANS, {
-            includeDisabled,
-            id,
-        });
-
-        return users.map((user: User) => new User(user));
-    };
-
-    login = async (email: string, password: string): Promise<User> => {
-        const user = await this.post(this.endpoints.LOGIN, { email, password });
-        return new User(user);
-    };
+    }
 
     getPhysicianTasks = async (
         id: number,
@@ -165,33 +69,6 @@ class CommunicationController {
         });
 
         return tasks.map((task: any) => new Task(task));
-    };
-
-    generateNewPassword = async (email: string): Promise<string> => {
-        const res = await this.post(this.endpoints.RESET_USER_PASSWORD, {
-            email,
-        });
-        return res.password;
-    };
-
-    resetPassword = async (
-        email: string,
-        oldPassword: string,
-        newPassword: string
-    ): Promise<string> => {
-        const res = await this.post(this.endpoints.RESET_USER_PASSWORD, {
-            email,
-            oldPassword,
-            newPassword,
-        });
-        return res.password;
-    };
-
-    toggleUserEnabled = async (id: number): Promise<boolean> => {
-        const res = await this.patch(this.endpoints.TOGGLE_USER_ENABLED, {
-            id,
-        });
-        return res.enabled;
     };
 
     getUserAnnotationTool = async (
@@ -352,14 +229,6 @@ class CommunicationController {
         return new Dataset(res);
     };
 
-    newPhysician = async (data: UserData): Promise<User> => {
-        const res = await this.post(this.endpoints.NEW_PHYSICIAN, {
-            ...data,
-            type: UserType.PHYSICIAN,
-        });
-        return new User(res);
-    };
-
     newAnnotationTool = async (
         data: AnnotationToolData
     ): Promise<AnnotationTool> => {
@@ -392,35 +261,8 @@ class CommunicationController {
     > => {
         return this.patch(this.endpoints.ASSIGN_TASK, { id, assignments });
     };
-
-    private formatGetData = (data: Params): string => {
-        let result = "?";
-
-        Object.entries(data)
-            .filter(([_key, value]) => value !== undefined && value !== null)
-            .forEach(([key, value]) => {
-                result += key + "=" + value + "&";
-            });
-
-        return result;
-    };
-
-    private getFunctionByHttpMethod = (method: HttpMethod) => {
-        switch (method) {
-            case HttpMethod.GET:
-                return this.controller.get;
-            case HttpMethod.POST:
-                return this.controller.post;
-            case HttpMethod.PUT:
-                return this.controller.put;
-            case HttpMethod.PATCH:
-                return this.controller.patch;
-            case HttpMethod.DELETE:
-                return this.controller.delete;
-        }
-    };
 }
 
-const instance = new CommunicationController();
+const instance = new MainCommunicationController(config.MAIN_API_URL);
 
 export default instance;

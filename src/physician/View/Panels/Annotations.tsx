@@ -15,7 +15,7 @@ import {
     Typography,
 } from "@mui/material";
 import PhysicianTask from "../../../common/Model/PhysicianTask";
-import CommunicationController from "../../../common/Model/CommunicationController";
+import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import UserContext from "../../../common/Model/UserContext";
 import MainContainer from "../../../common/View/MainContainer";
 import Loading from "../../../common/View/Loading";

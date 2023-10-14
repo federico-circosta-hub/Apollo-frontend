@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { HeaderContext } from "../AdminHeader";
 import Status from "../../../common/Model/Status";
 import Task from "../../../common/Model/Task";
-import CommunicationController from "../../../common/Model/CommunicationController";
+import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import MasterDetail from "../MasterDetail/MasterDetail";
 import { MasterItemProps } from "../MasterDetail/MasterComponent";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -46,32 +46,29 @@ export default function AdminTasks() {
         }
     }, [getTasks]);
 
-    const handleUpdate = useCallback(
-        async () => {
-            if (allGot.current || waitingUpdate.current) return;
-            waitingUpdate.current = true;
+    const handleUpdate = useCallback(async () => {
+        if (allGot.current || waitingUpdate.current) return;
+        waitingUpdate.current = true;
 
-            try {
-                const res = await updateTasks(tasks.length);
+        try {
+            const res = await updateTasks(tasks.length);
 
-                const newTasks = res.filter(
-                    (task) => tasks.find((t) => t.id === task.id) === undefined
-                );
+            const newTasks = res.filter(
+                (task) => tasks.find((t) => t.id === task.id) === undefined
+            );
 
-                waitingUpdate.current = false;
-                if (newTasks.length === 0) {
-                    allGot.current = true;
-                    return;
-                }
-
-                setTasks((prev) => [...prev, ...newTasks]);
-            } catch (err: any) {
-                waitingUpdate.current = false;
-                setStatus(Status.ERROR);
+            waitingUpdate.current = false;
+            if (newTasks.length === 0) {
+                allGot.current = true;
+                return;
             }
-        },
-        [tasks, updateTasks]
-    );
+
+            setTasks((prev) => [...prev, ...newTasks]);
+        } catch (err: any) {
+            waitingUpdate.current = false;
+            setStatus(Status.ERROR);
+        }
+    }, [tasks, updateTasks]);
 
     useEffect(() => {
         fetchData();

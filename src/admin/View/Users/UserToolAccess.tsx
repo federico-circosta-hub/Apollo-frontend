@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import User, { AnnotationToolAccess } from "../../../common/Model/User";
 import { useCallback, useEffect, useState } from "react";
-import CommunicationController from "../../../common/Model/CommunicationController";
+import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import Typography from "@mui/material/Typography";
 import Status from "../../../common/Model/Status";
 import Checkbox from "@mui/material/Checkbox";
@@ -12,7 +12,13 @@ import TextField from "@mui/material/TextField";
 import LoadingError from "../../../common/View/LoadingError";
 import StatusLoadingButton from "../../Components/StatusLoadingButton";
 
-export default function UserToolAccess({ user, style }: { user: User, style?:any }) {
+export default function UserToolAccess({
+    user,
+    style,
+}: {
+    user: User;
+    style?: any;
+}) {
     const [status, setStatus] = useState<Status>(Status.IDLE);
     const [tools, setTools] = useState<AnnotationToolAccess[]>([]);
 
