@@ -1,6 +1,6 @@
 import { createContext, useCallback, useRef } from "react";
 import User, { UserData } from "../../common/Model/User";
-import CommunicationController from "../../common/Model/CommunicationController";
+import DeanonymizedCC from "../../common/Model/Communication/DeanonymizedCommunicationController";
 
 export const PhysiciansContext = createContext<{
     get: (includeDisabled: boolean) => Promise<User[]>;
@@ -25,7 +25,7 @@ export default function PhysiciansProvider({
     const getPhysician = useCallback(
         async (includeDisabled: boolean = true) => {
             if (!synchronized.current) {
-                const res = await CommunicationController.getPhysicians(true);
+                const res = await DeanonymizedCC.getPhysicians(true);
                 synchronized.current = true;
                 users.current.push(...res);
             }
@@ -36,7 +36,7 @@ export default function PhysiciansProvider({
     );
 
     const addPhysician = useCallback(async (data: UserData) => {
-        const user = await CommunicationController.newPhysician(data);
+        const user = await DeanonymizedCC.newPhysician(data);
         users.current.push(user);
         return user;
     }, []);
@@ -46,8 +46,7 @@ export default function PhysiciansProvider({
             const res = await getPhysician(includeDisabled);
 
             const promises = [];
-            for (const user of res)
-                promises.push(user.fetchToolsAccess());
+            for (const user of res) promises.push(user.fetchToolsAccess());
 
             await Promise.all(promises);
 

@@ -1,4 +1,4 @@
-import Communication from "../../common/Model/CommunicationController";
+import DeanonymizedCC from "../../common/Model/Communication/DeanonymizedCommunicationController";
 
 export default class PatientModel {
     name;
@@ -78,6 +78,6 @@ export default class PatientModel {
     }
 
     async register(pid) {
-        await Communication.post("patient", { pid: pid });
+        await DeanonymizedCC.post("patient", { pid: pid });
     }
 }

@@ -1,5 +1,5 @@
 import AnnotationType from "./AnnotationType";
-import CommunicationController from "./CommunicationController";
+import CommunicationController from "./Communication/MainCommunicationController";
 
 export type AnnotationToolEndpoints = {
     add_storage_endpoint: string;

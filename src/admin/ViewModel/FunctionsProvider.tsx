@@ -1,5 +1,5 @@
 import { createContext, useCallback, useRef } from "react";
-import CommunicationController from "../../common/Model/CommunicationController";
+import CommunicationController from "../../common/Model/Communication/MainCommunicationController";
 
 export const FunctionsContext = createContext<
     () => Promise<{ print: string[]; conflict: string[] }>

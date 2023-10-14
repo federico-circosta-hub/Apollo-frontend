@@ -9,7 +9,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { FunctionsContext } from "../../ViewModel/FunctionsProvider";
-import CommunicationController from "../../../common/Model/CommunicationController";
+import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import LoadingError from "../../../common/View/LoadingError";
 import Button from "@mui/material/Button";
 import AnnotationTool from "../../../common/Model/AnnotationTool";

@@ -1,4 +1,5 @@
-import CommunicationController from "./CommunicationController";
+import MainCC from "./Communication/MainCommunicationController";
+import DeanonimizedCC from "./Communication/DeanonymizedCommunicationController";
 import PhysicianTask from "./PhysicianTask";
 
 export enum UserType {
@@ -73,17 +74,14 @@ export default class User {
     };
 
     toggleEnabled = async (): Promise<boolean> => {
-        const enabled = await CommunicationController.toggleUserEnabled(
-            this.id
-        );
+        const enabled = await DeanonimizedCC.toggleUserEnabled(this.id);
         this.enabled = enabled;
         return this.enabled;
     };
 
     fetchToolsAccess = async (): Promise<AnnotationToolAccess[]> => {
         if (!this._toolsSynchronized) {
-            this.toolsAccess =
-                await CommunicationController.getUserAnnotationTool(this.id);
+            this.toolsAccess = await MainCC.getUserAnnotationTool(this.id);
             this._toolsSynchronized = true;
         }
         return this.toolsAccess;
@@ -94,13 +92,12 @@ export default class User {
         access: boolean,
         endpoint?: string
     ): Promise<string> => {
-        const instructions =
-            await CommunicationController.toggleUserAnnotationToolAccess(
-                this.id,
-                annotationToolId,
-                access,
-                endpoint
-            );
+        const instructions = await MainCC.toggleUserAnnotationToolAccess(
+            this.id,
+            annotationToolId,
+            access,
+            endpoint
+        );
 
         this.toolsAccess = this.toolsAccess.map((tool) => {
             if (tool.id === annotationToolId) {
@@ -118,7 +115,7 @@ export default class User {
         offset: number = 0,
         cnt: number = 20
     ): Promise<PhysicianTask[]> => {
-        return await CommunicationController.getPhysicianTasks(
+        return await MainCC.getPhysicianTasks(
             this.id,
             includeCompleted,
             offset,

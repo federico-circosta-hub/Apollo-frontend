@@ -1,6 +1,6 @@
 import { createContext, useCallback, useRef } from "react";
 import Dataset, { DatasetData } from "../../common/Model/Dataset";
-import CommunicationController from "../../common/Model/CommunicationController";
+import CommunicationController from "../../common/Model/Communication/MainCommunicationController";
 
 export const DatasetsContext = createContext<{
     get: () => Promise<Dataset[]>;

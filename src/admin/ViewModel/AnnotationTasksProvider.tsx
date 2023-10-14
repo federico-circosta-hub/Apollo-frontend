@@ -1,6 +1,6 @@
 import { createContext, useCallback, useRef } from "react";
 import Task, { TaskData } from "../../common/Model/Task";
-import CommunicationController from "../../common/Model/CommunicationController";
+import CommunicationController from "../../common/Model/Communication/MainCommunicationController";
 
 export const AnnotationTasksContext = createContext<{
     get: () => Promise<Task[]>;

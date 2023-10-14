@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
-import CommunicationController from "./CommunicationController";
+import CommunicationController from "./Communication/MainCommunicationController";
 
 export enum MediaType {
     IMAGE = "image",

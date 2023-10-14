@@ -3,149 +3,135 @@ import unimi from "../img/logo_unimi.png";
 import ospedale from "../img/ospedale-loghi.jpeg";
 import UserContext from "../Model/UserContext";
 import User, { UserType } from "../Model/User";
-import CommunicationController from "./../Model/CommunicationController";
+import DeanonymizedCC from "../Model/Communication/DeanonymizedCommunicationController";
+import Status from "../Model/Status";
 
 export default function Login() {
-  const [email, setEmail] = useState("test@test.it");
-  const [password, setPassword] = useState("test@test.it");
-  const [networkError, setNetworkError] = useState(null);
-  const [loginLoading, setLoginLoading] = useState(false);
+    const [status, setStatus] = useState(Status.IDLE);
 
-  const [, setUser] = useContext(UserContext);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    getUserFromLS();
-  }, []);
+    const [, setUser] = useContext(UserContext);
 
-  const getUserFromLS = async () => {
-    const user = localStorage.getItem("user");
-    if (user !== null) {
-      const userObj = await JSON.parse(user);
-      setUser(new User(userObj));
-    }
-  };
+    useEffect(() => {
+        getUserFromLS();
+    }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoginLoading(true);
-    let u = null;
-    try {
-      u = await CommunicationController.post("user/login", {
-        email: email,
-        password: password,
-      });
-      localStorage.setItem("user", JSON.stringify(u));
-      setUser(new User(u));
-    } catch (err) {
-      console.log(err);
-      setNetworkError(err || "Errore inatteso");
-    } finally {
-      setLoginLoading(false);
-    }
-  };
+    const getUserFromLS = async () => {
+        const user = localStorage.getItem("user");
+        if (user !== null) {
+            const userObj = await JSON.parse(user);
+            setUser(new User(userObj));
+        }
+    };
 
-  return (
-    <div style={style.box}>
-      <div style={{ paddingTop: "5%" }}>
-        <h2>Autenticarsi</h2>
-      </div>
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setStatus(Status.LOADING);
 
-      <br />
+        try {
+            const user = await DeanonymizedCC.login(email, password);
+            setUser(user);
+            setStatus(Status.IDLE);
+        } catch (err) {
+            setStatus(Status.ERROR);
+        }
+    };
 
-      <div
-        style={{
-          padding: "3%",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          justifyContent: "space-around",
-          alignItems: "center",
-        }}
-      >
-        <div>
-          <img
-            src={unimi}
-            alt="logo_unimi"
-            style={{ maxWidth: "90%", height: "auto" }}
-          />
-        </div>
-        <div>
-          <img
-            src={ospedale}
-            alt="logo_unimi"
-            style={{ maxWidth: "90%", height: "auto" }}
-          />
-        </div>
-      </div>
-      <br />
-      <br />
-      <div
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          display: "flex",
-        }}
-      >
-        <form onSubmit={handleSubmit}>
-          <div className="input-group mb-3">
-            <input
-              defaultValue={email}
-              type="text"
-              placeholder="email"
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setNetworkError(null);
-              }}
-            />
-          </div>
-          <div className="input-group mb-3">
-            <input
-              defaultValue={password}
-              type="password"
-              placeholder="password"
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setNetworkError(null);
-              }}
-            />
-          </div>
-          <div className="input-group mb-3">
-            <button
-              className="btn btn-primary"
-              type="submit"
-              loginLoading={loginLoading}
-              style={{ margin: "auto" }}
-            >
-              Login
-            </button>
-          </div>
-          {networkError !== null && (
-            <div
-              className="alert alert-danger"
-              role="alert"
-              style={{ textAlign: "center" }}
-            >
-              {networkError.response !== undefined
-                ? networkError.response.data.message
-                : "Errore di rete"}
+    return (
+        <div style={style.box}>
+            <div style={{ paddingTop: "5%" }}>
+                <h2>Autenticarsi</h2>
             </div>
-          )}
-        </form>
-      </div>
-    </div>
-  );
+
+            <br />
+
+            <div style={style.images}>
+                <div>
+                    <img
+                        src={unimi}
+                        alt="Logo dell'università degli studi di Milano"
+                        style={{ maxWidth: "90%", height: "auto" }}
+                    />
+                </div>
+                <div>
+                    <img
+                        src={ospedale}
+                        alt="Logo dell'ospedale policlinico di Milano"
+                        style={{ maxWidth: "90%", height: "auto" }}
+                    />
+                </div>
+            </div>
+            <br />
+            <br />
+            <div
+                style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                }}
+            >
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group mb-3">
+                        <input
+                            defaultValue={email}
+                            type="text"
+                            placeholder="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className="input-group mb-3">
+                        <input
+                            defaultValue={password}
+                            type="password"
+                            placeholder="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <div className="input-group mb-3">
+                        <button
+                            className="btn btn-primary"
+                            type="submit"
+                            disabled={status === Status.LOADING}
+                            style={{ margin: "auto" }}
+                        >
+                            Login
+                        </button>
+                    </div>
+                    {status === Status.ERROR && (
+                        <div
+                            className="alert alert-danger"
+                            role="alert"
+                            style={{ textAlign: "center" }}
+                        >
+                            Email o password non corretti
+                        </div>
+                    )}
+                </form>
+            </div>
+        </div>
+    );
 }
 
 const style = {
-  box: {
-    width: "40%",
-    height: "fit-content",
-    borderRadius: "15px",
-    background: "white",
-    margin: "auto",
-    marginTop: "10%",
-    display: "flex",
-    flexDirection: "column",
-    alignText: "center",
-    alignItems: "center",
-  },
+    box: {
+        width: "40%",
+        height: "fit-content",
+        borderRadius: "15px",
+        background: "white",
+        margin: "auto",
+        marginTop: "10%",
+        display: "flex",
+        flexDirection: "column",
+        alignText: "center",
+        alignItems: "center",
+    },
+    images: {
+        padding: "3%",
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
 };
