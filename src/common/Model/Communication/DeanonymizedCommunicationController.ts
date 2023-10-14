@@ -8,6 +8,7 @@ class DeanonymizedCommunicationController extends AbstractCommunicationControlle
     private endpoints = {
         GET_PHYSICIANS: "/user/physician",
         LOGIN: "/user/login",
+		LOGOUT: "/user/logout",
         RESET_USER_PASSWORD: "/user/resetPassword",
         TOGGLE_USER_ENABLED: "/user/enable",
         NEW_PHYSICIAN: "/user/physician",
@@ -38,6 +39,12 @@ class DeanonymizedCommunicationController extends AbstractCommunicationControlle
 		localStorage.setItem(config.LOCAL_STORAGE_SESSION_KEY, res.session.sid);
 		localStorage.setItem(config.LOCAL_STORAGE_EXPIRE_KEY, res.session.expire);
         return new User(res);
+    };
+
+	logout = async () => {
+        await this.post(this.endpoints.LOGOUT);
+		localStorage.removeItem(config.LOCAL_STORAGE_SESSION_KEY);
+		localStorage.removeItem(config.LOCAL_STORAGE_EXPIRE_KEY);
     };
 
     generateNewPassword = async (email: string): Promise<string> => {
