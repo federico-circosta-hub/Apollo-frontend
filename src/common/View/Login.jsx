@@ -2,7 +2,6 @@ import { useContext, useState, useEffect } from "react";
 import unimi from "../img/logo_unimi.png";
 import ospedale from "../img/ospedale-loghi.jpeg";
 import UserContext from "../Model/UserContext";
-import User, { UserType } from "../Model/User";
 import DeanonymizedCC from "../Model/Communication/DeanonymizedCommunicationController";
 import Status from "../Model/Status";
 import Cookies from "js-cookie";
@@ -27,7 +26,7 @@ export default function Login() {
             setStatus(Status.ERROR);
         }
     };
-	
+
     const getUserFromLS = async () => {
         if (Cookies.get(DeanonymizedCC.SESSION_COOKIE_NAME)) handleSubmit();
     };
