@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import config from "../../../config";
 
 type Params = { [key: string]: any };
 type Result = any;
@@ -18,7 +19,7 @@ abstract class AbstractCommunicationController {
         this.controller = axios.create({
             baseURL: url,
             timeout: 10000,
-            withCredentials: true,
+            withCredentials: config.NODE_ENV === "production",
             headers: { "Content-Type": "application/json" },
         });
     }
