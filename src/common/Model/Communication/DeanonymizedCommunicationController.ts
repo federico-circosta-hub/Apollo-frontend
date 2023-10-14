@@ -25,7 +25,7 @@ class DeanonymizedCommunicationController extends AbstractCommunicationControlle
         return users.map((user: User) => new User(user));
     };
 
-    login = async (email: string, password: string): Promise<User> => {
+    login = async (email?: string, password?: string): Promise<User> => {
         const user = await this.post(this.endpoints.LOGIN, { email, password });
         return new User(user);
     };

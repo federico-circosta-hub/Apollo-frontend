@@ -11,8 +11,6 @@ enum HttpMethod {
     PATCH = "PATCH",
 }
 
-axios.defaults.withCredentials = true;
-
 abstract class AbstractCommunicationController {
     private controller: AxiosInstance;
 

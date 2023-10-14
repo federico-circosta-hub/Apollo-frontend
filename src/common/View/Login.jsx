@@ -5,6 +5,7 @@ import UserContext from "../Model/UserContext";
 import User, { UserType } from "../Model/User";
 import DeanonymizedCC from "../Model/Communication/DeanonymizedCommunicationController";
 import Status from "../Model/Status";
+import Cookies from "js-cookie";
 
 export default function Login() {
     const [status, setStatus] = useState(Status.IDLE);
@@ -14,20 +15,8 @@ export default function Login() {
 
     const [, setUser] = useContext(UserContext);
 
-    useEffect(() => {
-        getUserFromLS();
-    }, []);
-
-    const getUserFromLS = async () => {
-        const user = localStorage.getItem("user");
-        if (user !== null) {
-            const userObj = await JSON.parse(user);
-            setUser(new User(userObj));
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+	const handleSubmit = async (e) => {
+        if (e) e.preventDefault();
         setStatus(Status.LOADING);
 
         try {
@@ -38,6 +27,14 @@ export default function Login() {
             setStatus(Status.ERROR);
         }
     };
+	
+    const getUserFromLS = async () => {
+        if (Cookies.get(DeanonymizedCC.SESSION_COOKIE_NAME)) handleSubmit();
+    };
+
+    useEffect(() => {
+        getUserFromLS();
+    }, []);
 
     return (
         <div style={style.box}>
