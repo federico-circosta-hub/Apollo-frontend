@@ -1,7 +1,9 @@
 const config = {
     ENDPOINT: "apolloWebAppTest",
-    MAIN_API_URL: "https://develop.ewlab.di.unimi.it/apolloApiTest",
+    MAIN_API_URL: "https://apollo.policlinico.mi.it/apiV3",
     DEANONYMIZED_API_URL: "https://apollo.policlinico.mi.it/apiV3/deanonymized",
+    LOCAL_STORAGE_SESSION_KEY: "ApolloSession",
+	LOCAL_STORAGE_EXPIRE_KEY: "ApolloSessionExpire",
 };
 
 export default config;

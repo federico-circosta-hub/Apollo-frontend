@@ -4,7 +4,7 @@ import ospedale from "../img/ospedale-loghi.jpeg";
 import UserContext from "../Model/UserContext";
 import DeanonymizedCC from "../Model/Communication/DeanonymizedCommunicationController";
 import Status from "../Model/Status";
-import Cookies from "js-cookie";
+import config from "../../config";
 
 export default function Login() {
     const [status, setStatus] = useState(Status.IDLE);
@@ -14,7 +14,7 @@ export default function Login() {
 
     const [, setUser] = useContext(UserContext);
 
-	const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         if (e) e.preventDefault();
         setStatus(Status.LOADING);
 
@@ -28,7 +28,15 @@ export default function Login() {
     };
 
     const getUserFromLS = async () => {
-        if (Cookies.get(DeanonymizedCC.SESSION_COOKIE_NAME)) handleSubmit();
+        const expireDate = Date.parse(
+            localStorage.getItem(config.LOCAL_STORAGE_EXPIRE_KEY)
+        );
+        if (expireDate > Date.now()) {
+            handleSubmit();
+        } else {
+            localStorage.removeItem(config.LOCAL_STORAGE_SESSION_KEY);
+            localStorage.removeItem(config.LOCAL_STORAGE_EXPIRE_KEY);
+        }
     };
 
     useEffect(() => {

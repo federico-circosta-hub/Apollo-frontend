@@ -3,7 +3,7 @@ import User, { UserData, UserType } from "../User";
 import AbstractCommunicationController from "./AbstractCommunicationController";
 
 class DeanonymizedCommunicationController extends AbstractCommunicationController {
-    SESSION_COOKIE_NAME = "connect.sid";
+    SESSION_HEADER_NAME = "ApolloSession";
 
     private endpoints = {
         GET_PHYSICIANS: "/user/physician",
@@ -12,6 +12,14 @@ class DeanonymizedCommunicationController extends AbstractCommunicationControlle
         TOGGLE_USER_ENABLED: "/user/enable",
         NEW_PHYSICIAN: "/user/physician",
     };
+
+    protected getHeaders(): { [key: string]: string } {
+        const session = localStorage.getItem(config.LOCAL_STORAGE_SESSION_KEY);
+
+        return {
+            [this.SESSION_HEADER_NAME]: session ?? "",
+        };
+    }
 
     getPhysicians = async (
         includeDisabled: boolean = false,
@@ -26,8 +34,10 @@ class DeanonymizedCommunicationController extends AbstractCommunicationControlle
     };
 
     login = async (email?: string, password?: string): Promise<User> => {
-        const user = await this.post(this.endpoints.LOGIN, { email, password });
-        return new User(user);
+        const res = await this.post(this.endpoints.LOGIN, { email, password });
+		localStorage.setItem(config.LOCAL_STORAGE_SESSION_KEY, res.session.sid);
+		localStorage.setItem(config.LOCAL_STORAGE_EXPIRE_KEY, res.session.expire);
+        return new User(res);
     };
 
     generateNewPassword = async (email: string): Promise<string> => {

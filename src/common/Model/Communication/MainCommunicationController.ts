@@ -6,7 +6,6 @@ import AnnotationTool, { AnnotationToolData } from "../AnnotationTool";
 import AnnotationType from "../AnnotationType";
 import Task, { AssignmentType, TaskData } from "../Task";
 import AbstractCommunicationController from "./AbstractCommunicationController";
-import Cookies from "js-cookie";
 import DeanonymizedCC from "./DeanonymizedCommunicationController";
 
 class MainCommunicationController extends AbstractCommunicationController {
@@ -34,8 +33,10 @@ class MainCommunicationController extends AbstractCommunicationController {
     };
 
     protected getHeaders(): { [key: string]: string } {
+        const session = localStorage.getItem(config.LOCAL_STORAGE_SESSION_KEY);
+
         return {
-            Cookie: Cookies.get(DeanonymizedCC.SESSION_COOKIE_NAME) ?? "",
+            [DeanonymizedCC.SESSION_HEADER_NAME]: session ?? "",
         };
     }
 
