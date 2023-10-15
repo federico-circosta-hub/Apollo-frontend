@@ -16,21 +16,13 @@ export default function UserDetails({ item }: DetailItemProps) {
         setSnackbarText(`La nuova password è stata copiata negli appunti!`);
     }, []);
 
-    const onEnabledToggled = useCallback((enabled: boolean) => {
-        setSnackbarText(`Utente ${enabled ? "abilitato" : "disabilitato"}!`);
-    }, []);
-
     return (
         <Box sx={style.box}>
             <UserToolAccess user={user} style={{ maxHeight: "50%" }} />
             <Box sx={{ m: 1 }} />
             <UserTasks user={user} style={{ maxHeight: "50%" }} />
             <Box sx={{ flex: 1 }} />
-            <UserButtons
-                user={user}
-                onPasswordResetted={onPasswordResetted}
-                onEnabledToggled={onEnabledToggled}
-            />
+            <UserButtons user={user} onPasswordResetted={onPasswordResetted} />
             <ResultSnackar
                 show={snackbarText !== ""}
                 text={snackbarText}

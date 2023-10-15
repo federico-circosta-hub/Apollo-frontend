@@ -12,7 +12,7 @@ class MainCommunicationController extends AbstractCommunicationController {
     private endpoints = {
         GET_TASKS: "/task",
         ANNOTATION_TOOL_ACCESS: "/annotationTool/access",
-        TOGGLE_USER_TOOL_ACCESS: "/user/physician/annotationTool",
+        TOGGLE_USER_TOOL_ACCESS: "/annotationTool/physician",
         GET_DATASET: "/dataset",
         COMPLETE_DATASET: "/dataset/complete",
         GET_ANNOTATION_TOOLS: "/annotationTool",

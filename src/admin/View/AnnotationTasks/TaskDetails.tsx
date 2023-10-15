@@ -31,7 +31,7 @@ export default function AnnotationTaskDetails({ item }: DetailItemProps) {
         setStatus(Status.LOADING);
 
         try {
-            const res = await getUsers(false);
+            const res = await getUsers();
             setUsers(res.filter(hasUserAccessToTool));
 
             setStatus(Status.IDLE);

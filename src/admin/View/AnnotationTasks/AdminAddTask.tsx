@@ -36,7 +36,7 @@ export default function AdminAddTask() {
         try {
             promises.push(getDatasets());
             promises.push(getTools());
-            promises.push(getUsers(true));
+            promises.push(getUsers());
 
             const res = await Promise.all(promises);
 

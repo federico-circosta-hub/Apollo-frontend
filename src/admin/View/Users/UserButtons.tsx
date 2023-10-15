@@ -8,15 +8,11 @@ import { useCallback, useState } from "react";
 export default function UserButtons({
     user,
     onPasswordResetted,
-    onEnabledToggled,
 }: {
     user: User;
     onPasswordResetted: (password: string) => void;
-    onEnabledToggled: (enabled: boolean) => void;
 }) {
     const [showResetPWModal, setShowResetPWModal] = useState<boolean>(false);
-    const [showToggleEnableModal, setShowToggleEnableModal] =
-        useState<boolean>(false);
 
     const resetPassword = useCallback(async () => {
         const newPassword = await DeanonymizedCC.generateNewPassword(
@@ -25,11 +21,6 @@ export default function UserButtons({
 
         onPasswordResetted(newPassword);
     }, [user.email, onPasswordResetted]);
-
-    const toggleEnabled = useCallback(async () => {
-        const enabled = await user.toggleEnabled();
-        onEnabledToggled(enabled);
-    }, [user, onEnabledToggled]);
 
     return (
         <>
@@ -42,26 +33,12 @@ export default function UserButtons({
                 >
                     Reset password
                 </Button>
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => setShowToggleEnableModal(true)}
-                    sx={{ marginLeft: "16px" }}
-                >
-                    {user.enabled ? "Disabilita" : "Abilita"} account
-                </Button>
             </Box>
             <ConfirmActionModal
                 text="Sei sicuro di voler reimpostare la password?"
                 show={showResetPWModal}
                 onClose={() => setShowResetPWModal(false)}
                 onConfirm={resetPassword}
-            />
-            <ConfirmActionModal
-                text="Sei sicuro di voler abilitare/disabilitare l'account?"
-                show={showToggleEnableModal}
-                onClose={() => setShowToggleEnableModal(false)}
-                onConfirm={toggleEnabled}
             />
         </>
     );

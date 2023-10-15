@@ -10,7 +10,6 @@ class DeanonymizedCommunicationController extends AbstractCommunicationControlle
         LOGIN: "/user/login",
 		LOGOUT: "/user/logout",
         RESET_USER_PASSWORD: "/user/resetPassword",
-        TOGGLE_USER_ENABLED: "/user/enable",
         NEW_PHYSICIAN: "/user/physician",
     };
 
@@ -65,13 +64,6 @@ class DeanonymizedCommunicationController extends AbstractCommunicationControlle
             newPassword,
         });
         return res.password;
-    };
-
-    toggleUserEnabled = async (id: number): Promise<boolean> => {
-        const res = await this.patch(this.endpoints.TOGGLE_USER_ENABLED, {
-            id,
-        });
-        return res.enabled;
     };
 
     newPhysician = async (data: UserData): Promise<User> => {

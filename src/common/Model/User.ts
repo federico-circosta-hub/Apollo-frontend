@@ -43,7 +43,6 @@ export default class User {
     name: string;
     surname?: string;
     type: UserType;
-    enabled: boolean;
     password?: string;
 
     toolsAccess: AnnotationToolAccess[] = [];
@@ -55,7 +54,6 @@ export default class User {
         this.email = obj.email;
         this.surname = obj.surname;
         this.type = obj.type;
-        this.enabled = obj.enabled;
         this.password = obj.password;
     }
 
@@ -71,12 +69,6 @@ export default class User {
 
     filter = (search: string): boolean => {
         return this.fullName().toLowerCase().includes(search.toLowerCase());
-    };
-
-    toggleEnabled = async (): Promise<boolean> => {
-        const enabled = await DeanonimizedCC.toggleUserEnabled(this.id);
-        this.enabled = enabled;
-        return this.enabled;
     };
 
     fetchToolsAccess = async (): Promise<AnnotationToolAccess[]> => {

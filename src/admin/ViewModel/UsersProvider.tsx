@@ -3,9 +3,9 @@ import User, { UserData } from "../../common/Model/User";
 import DeanonymizedCC from "../../common/Model/Communication/DeanonymizedCommunicationController";
 
 export const PhysiciansContext = createContext<{
-    get: (includeDisabled: boolean) => Promise<User[]>;
+    get: () => Promise<User[]>;
     add: (user: UserData) => Promise<User | undefined>;
-    getWithTools: (includeDisabled: boolean) => Promise<User[]>;
+    getWithTools: () => Promise<User[]>;
 }>({
     get: async () => [],
     add: async () => {
@@ -22,18 +22,14 @@ export default function PhysiciansProvider({
     const synchronized = useRef<boolean>(false);
     const users = useRef<User[]>([]);
 
-    const getPhysician = useCallback(
-        async (includeDisabled: boolean = true) => {
-            if (!synchronized.current) {
-                const res = await DeanonymizedCC.getPhysicians(true);
-                synchronized.current = true;
-                users.current.push(...res);
-            }
-            if (includeDisabled) return users.current;
-            return users.current.filter((u) => u.enabled);
-        },
-        []
-    );
+    const getPhysician = useCallback(async () => {
+        if (!synchronized.current) {
+            const res = await DeanonymizedCC.getPhysicians(true);
+            synchronized.current = true;
+            users.current.push(...res);
+        }
+        return users.current;
+    }, []);
 
     const addPhysician = useCallback(async (data: UserData) => {
         const user = await DeanonymizedCC.newPhysician(data);
@@ -41,19 +37,16 @@ export default function PhysiciansProvider({
         return user;
     }, []);
 
-    const getWithTools = useCallback(
-        async (includeDisabled: boolean = true) => {
-            const res = await getPhysician(includeDisabled);
+    const getWithTools = useCallback(async () => {
+        const res = await getPhysician();
 
-            const promises = [];
-            for (const user of res) promises.push(user.fetchToolsAccess());
+        const promises = [];
+        for (const user of res) promises.push(user.fetchToolsAccess());
 
-            await Promise.all(promises);
+        await Promise.all(promises);
 
-            return res;
-        },
-        [getPhysician]
-    );
+        return res;
+    }, [getPhysician]);
 
     return (
         <PhysiciansContext.Provider

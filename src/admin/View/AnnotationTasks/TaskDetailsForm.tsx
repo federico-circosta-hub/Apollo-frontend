@@ -42,9 +42,8 @@ export default function TaskDetailsForm({
                     task={task}
                     users={users.filter(
                         (u) =>
-                            u.enabled ||
                             task.physicians.find((p) => p.user === u.id) !==
-                                undefined
+                            undefined
                     )}
                     onClose={() => setShowAssignModal(false)}
                 />

@@ -24,6 +24,8 @@ export default function Login() {
             setStatus(Status.IDLE);
         } catch (err) {
             setStatus(Status.ERROR);
+			localStorage.removeItem(config.LOCAL_STORAGE_SESSION_KEY);
+			localStorage.removeItem(config.LOCAL_STORAGE_EXPIRE_KEY);
         }
     };
 
