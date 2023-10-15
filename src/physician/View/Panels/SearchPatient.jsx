@@ -35,11 +35,13 @@ export default function SearchPatient() {
         clearAll();
         setLoadingPatients(true);
         try {
-            const idList = await DeanonymizedCC.get("patient", {});
-            const namedList = await FakeSecurityModule.decriptPatients(idList);
-            namedList.sort((a, b) => a.surname.localeCompare(b.surname));
-            setPatientListToShow(namedList);
-            setPatientList(namedList);
+            let patients = await DeanonymizedCC.get("patient");
+            patients = patients.map((p) => {
+                p.birthdate = new Date(p.birthdate);
+                return p;
+            });
+            setPatientListToShow(patients);
+            setPatientList(patients);
         } catch (err) {
             setNetworkError(err || "Errore inatteso");
         } finally {
