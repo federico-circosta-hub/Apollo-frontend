@@ -98,7 +98,7 @@ export default function Joint(props) {
         setNetworkError(null);
         setLoadingImages(true);
         try {
-            const idsFromServer = await CommunicationController.post(
+            const idsFromServer = await CommunicationController.get(
                 "media/visit",
                 {
                     patient: selectedPatient.pid,
