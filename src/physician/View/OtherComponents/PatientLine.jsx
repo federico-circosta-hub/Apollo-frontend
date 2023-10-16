@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import editUser from "./../../img/icon/edit-user.png";
 
 export default function PatientLine(props) {
   const select = () => {
@@ -9,7 +10,7 @@ export default function PatientLine(props) {
     <tr
       className="tr-lg"
       style={{
-        /*  borderBottom: '0.5px solid lightgray', */ padding: 30,
+        padding: 30,
         background: props.isSelected ? "lightgreen" : "white",
       }}
       onClick={() => select()}
@@ -21,6 +22,17 @@ export default function PatientLine(props) {
         {props.patient.birthdate !== ""
           ? format(new Date(props.patient.birthdate), "y-MM-dd")
           : ""}
+      </td>
+      <td>
+        <button
+          className="btn btn-info"
+          onClick={(event) => {
+            event.stopPropagation();
+            console.log("modifica", props.patient);
+          }}
+        >
+          <img src={editUser} alt="edit user button" width={30} height={30} />
+        </button>
       </td>
     </tr>
   );
