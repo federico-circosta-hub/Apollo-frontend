@@ -14,10 +14,14 @@ export default function PatientLine(props) {
       }}
       onClick={() => select()}
     >
-      {/* <td>{props.patient.pid}</td> */}
+      <td>{props.patient.cf}</td>
       <td>{props.patient.surname}</td>
       <td>{props.patient.name}</td>
-      <td>{format(props.patient.birthdate, "y-MM-dd")}</td>
+      <td>
+        {props.patient.birthdate !== ""
+          ? format(new Date(props.patient.birthdate), "y-MM-dd")
+          : ""}
+      </td>
     </tr>
   );
 }
