@@ -11,6 +11,9 @@ export const validateForm = (formName, formData, formData2) => {
       if (formData.birthdate == "") {
         errors.birthdate = "Inserire data di nascita valida";
       }
+      if (formData.CF.trim().length !== 16) {
+        errors.CF = "Inserire codice fiscale valido";
+      }
       return errors;
     case "newVisit":
       if (formData.physicalActivity.physicalActivity) {

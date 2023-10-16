@@ -17,6 +17,7 @@ import "dayjs/locale/it";
 import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
 import FakeSecurityModule from "./../../Model/FakeSecurityModule";
+import MainContainer from "../../../common/View/MainContainer";
 
 export default function NewPatient() {
   const marksH = [
@@ -38,24 +39,32 @@ export default function NewPatient() {
     { value: 150, label: "150kg" },
   ];
   const [patient, setPatient] = useState(
-    new PatientModel("", "", "", "M", 170, 75, [])
+    new PatientModel("", "", "", "", "M", 170, 75, [])
   );
   const [protButtonClass, setProtButtonClass] = useState("btn btn-warning");
   const [showProthesis, setShowProthesis] = useState("none");
   const [showModal, setShowModal] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [sendingButton, setSendingButton] = useState("Conferma e procedi");
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState(null);
   const [formModal, setFormModal] = useState(false);
+  const [networkError, setNetworkError] = useState(null);
   const [errors, setErrors] = useState({ none: "none" });
   const navigate = useNavigate();
 
   const handleNew = async () => {
     setDisabled(true);
     setSendingButton("Inviando...");
-    let pid = await FakeSecurityModule.encryptAndStorePatient(patient);
-    await patient.register(pid);
-    setShowAlert(true);
+    try {
+      await patient.register();
+      setShowAlert(true);
+    } catch (err) {
+      setNetworkError(err);
+      setShowAlert(false);
+    } finally {
+      setDisabled(false);
+      setSendingButton("Conferma e procedi");
+    }
   };
 
   const add = () => {
@@ -66,6 +75,12 @@ export default function NewPatient() {
       setErrors(e);
       setFormModal(true);
     }
+  };
+
+  const modifyCF = (event) => {
+    let p = patient.clone();
+    p.setCF(event.target.value.toUpperCase());
+    setPatient(p);
   };
 
   const modifyPatientName = (event) => {
@@ -98,7 +113,6 @@ export default function NewPatient() {
   const handleGender = (event) => {
     let p = patient.clone();
     p.setGender(event.target.value);
-    console.log(p.toString());
     setPatient(p);
   };
 
@@ -124,29 +138,7 @@ export default function NewPatient() {
   };
 
   return (
-    <div className="box-bianco" style={style.box}>
-      <div
-        className="input-group mb-3"
-        style={{
-          justifyContent: "center",
-          display: "flex",
-          marginTop: "2%",
-          alignItems: "center",
-        }}
-      >
-        <input
-          id="name"
-          type="text"
-          placeholder="nome..."
-          onChange={(e) => modifyPatientName(e)}
-        />
-        <input
-          id="surname"
-          type="text"
-          placeholder="cognome..."
-          onChange={(e) => modifyPatientName(e)}
-        />
-      </div>
+    <MainContainer style={{ gap: "2vh" }}>
       <div
         className="fascia centrale"
         style={{
@@ -154,14 +146,49 @@ export default function NewPatient() {
           flexDirection: "row",
           justifyContent: "space-between",
           width: "95%",
+          height: "60vh",
         }}
       >
         <div style={style.leftButtons}>
           <div>
-            <label style={{ fontSize: 22 }}>Data di nascita:</label>
+            <input
+              className="form-control"
+              style={{ fontSize: 20, background: "white" }}
+              id="name"
+              type="text"
+              placeholder="Nome..."
+              onChange={(e) => modifyPatientName(e)}
+            />
+          </div>
+          <div>
+            <input
+              className="form-control"
+              style={{ fontSize: 20, background: "white" }}
+              id="surname"
+              type="text"
+              placeholder="Cognome..."
+              onChange={(e) => modifyPatientName(e)}
+            />
+          </div>
+          <div>
+            <input
+              className="form-control"
+              style={{ fontSize: 20, background: "white" }}
+              id="CF"
+              value={patient.CF}
+              type="text"
+              placeholder="Codice fiscale..."
+              onChange={(e) => modifyCF(e)}
+            />
+          </div>
+          <div>
+            <label style={{ fontSize: 20 }}>Data di nascita:</label>
             <br />
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
-              <DatePicker onChange={modifyPatientBirthdate} />
+              <DatePicker
+                slotProps={{ textField: { size: "small" } }}
+                onChange={modifyPatientBirthdate}
+              />
             </LocalizationProvider>
           </div>
 
@@ -169,6 +196,7 @@ export default function NewPatient() {
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Genere</InputLabel>
               <Select
+                size="small"
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={patient.gender}
@@ -250,12 +278,22 @@ export default function NewPatient() {
                 </label>
               </div>
             </div>
-            <img
-              src={male}
-              alt="male human silhouette"
-              width={"45%"}
-              style={{ maxHeight: "70vh" }}
-            />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "60vh",
+              }}
+            >
+              <img
+                src={male}
+                alt="male human silhouette"
+                width={"80%"}
+                style={{ maxHeight: "70vh" }}
+              />
+            </div>
+
             <div style={style.prot}>
               <div style={{ display: showProthesis }}>
                 <label>
@@ -366,6 +404,7 @@ export default function NewPatient() {
         data={{
           navigate: navigate,
           showAlert: showAlert,
+          setShowAlert: setShowAlert,
           patient: patient,
           disabled: disabled,
           showModal: showModal,
@@ -383,13 +422,14 @@ export default function NewPatient() {
           />
         )}
       </div>
-    </div>
+    </MainContainer>
   );
 }
 
 const style = {
   leftButtons: {
-    border: "1px solid lightgray",
+    border: "1px solid #dcdcdc",
+    boxShadow: "1px 2px 6px #dcdcdc",
     width: "25%",
     borderRadius: "15px",
     padding: "1%",
