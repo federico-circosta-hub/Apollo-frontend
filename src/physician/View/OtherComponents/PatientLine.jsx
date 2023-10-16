@@ -14,7 +14,7 @@ export default function PatientLine(props) {
       }}
       onClick={() => select()}
     >
-      <td>{props.patient.pid}</td>
+      {/* <td>{props.patient.pid}</td> */}
       <td>{props.patient.surname}</td>
       <td>{props.patient.name}</td>
       <td>{format(props.patient.birthdate, "y-MM-dd")}</td>
