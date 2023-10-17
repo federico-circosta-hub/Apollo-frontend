@@ -126,7 +126,7 @@ export default function EndingVisitModal(props) {
           <strong>
             {props.patient.gender === "F" ? "Nata il: " : "Nato il: "}
           </strong>{" "}
-          {format(props.patient.birthdate, "dd-MM-y")}
+          {format(new Date(props.patient.birthdate), "dd-MM-y")}
         </p>
         <p>
           <strong>Data visita: </strong>

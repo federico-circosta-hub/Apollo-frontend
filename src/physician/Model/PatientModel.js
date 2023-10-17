@@ -97,4 +97,19 @@ export default class PatientModel {
     console.log(params);
     await DeanonymizedCC.post("patient", params);
   }
+
+  async modifyPatient(pid) {
+    let params = {
+      pid: pid,
+      name: this.name,
+      surname: this.surname,
+      birthdate: this.birthdate,
+      gender: this.gender,
+      height: this.height,
+      weight: this.weight,
+      cf: this.CF,
+    };
+    console.log(params);
+    await DeanonymizedCC.patch("patient", params);
+  }
 }

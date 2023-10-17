@@ -1,5 +1,7 @@
 import { format } from "date-fns";
 import editUser from "./../../img/icon/edit-user.png";
+import { useState } from "react";
+import ModifyPatientModal from "../Modals/ModifyPatientModal";
 
 export default function PatientLine(props) {
   const select = () => {
@@ -13,22 +15,43 @@ export default function PatientLine(props) {
         padding: 30,
         background: props.isSelected ? "lightgreen" : "white",
       }}
-      onClick={() => select()}
     >
-      <td>{props.patient.cf}</td>
-      <td>{props.patient.surname}</td>
-      <td>{props.patient.name}</td>
-      <td>
+      <td
+        onClick={() => {
+          select();
+        }}
+      >
+        {props.patient.cf}
+      </td>
+      <td
+        onClick={() => {
+          select();
+        }}
+      >
+        {props.patient.surname}
+      </td>
+      <td
+        onClick={() => {
+          select();
+        }}
+      >
+        {props.patient.name}
+      </td>
+      <td
+        onClick={() => {
+          select();
+        }}
+      >
         {props.patient.birthdate !== ""
           ? format(new Date(props.patient.birthdate), "y-MM-dd")
           : ""}
       </td>
+
       <td>
         <button
           className="btn btn-info"
-          onClick={(event) => {
-            event.stopPropagation();
-            console.log("modifica", props.patient);
+          onClick={() => {
+            props.onMod(props.patient);
           }}
         >
           <img src={editUser} alt="edit user button" width={30} height={30} />

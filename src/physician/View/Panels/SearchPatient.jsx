@@ -10,8 +10,7 @@ import FakeSecurityModule from "./../../Model/FakeSecurityModule";
 import MainContainer from "../../../common/View/MainContainer";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import { SkeletonsList } from "../OtherComponents/SkeletonsList";
-import { LoadingButton } from "@mui/lab";
-import Loading from "../../../common/View/Loading";
+import ModifyPatientModal from "../Modals/ModifyPatientModal";
 
 export default function SearchPatient() {
   const PATIENTS_AT_TIME = 10;
@@ -21,40 +20,35 @@ export default function SearchPatient() {
   const [networkError, setNetworkError] = useState(null);
   const [offset, setOffset] = useState(0);
   const [endReached, setEndReached] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [disable, setDisable] = useState(false);
+  const [patientToMod, setPatientToMod] = useState(null);
 
   const navigate = useNavigate();
 
   const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
 
   useEffect(() => {
-    setLoadingFirstPatients(true);
     getPatients();
   }, []);
 
   const clearAll = () => {
-    setOffset(0);
     setPatientListToShow([]);
     setNetworkError(null);
   };
 
   const getPatients = async () => {
-    clearAll();
     try {
       let patients = await DeanonymizedCC.get("patient", {
         cnt: PATIENTS_AT_TIME,
         offset: offset,
       });
+      if (patients.length === 0 || patients.length < PATIENTS_AT_TIME)
+        setEndReached(true);
       if (patients.length > 0) {
-        patients = patients.map((p) => {
-          p.birthdate = new Date(p.birthdate);
-          return p;
-        });
-        patients.length < PATIENTS_AT_TIME && setEndReached(true);
         console.log(patients);
         setPatientListToShow((prevState) => [...prevState, ...patients]);
         setOffset(offset + PATIENTS_AT_TIME);
-      } else {
-        setEndReached(true);
       }
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -70,32 +64,46 @@ export default function SearchPatient() {
     }, 200);
   };
 
-  const research = async (event) => {
-    if (event.target.value.length == 0) return getPatients();
-    setLoadingFirstPatients(true);
+  const handleResearch = async (e) => {
+    setSearchInput(e.target.value);
+    setOffset(0);
     clearAll();
-    const searchString = event.target.value.trim();
+  };
+
+  const researchPatients = debounce(async () => {
+    setDisable(true);
+    setLoadingFirstPatients(true);
     try {
       let patients = await DeanonymizedCC.get("patient", {
         cnt: PATIENTS_AT_TIME,
         offset: offset,
-        search: searchString,
+        search: searchInput,
       });
+      if (patients.length === 0 || patients.length < PATIENTS_AT_TIME)
+        setEndReached(true);
       if (patients.length > 0) {
-        patients.length < PATIENTS_AT_TIME && setEndReached(true);
         console.log(patients);
         setPatientListToShow(patients);
         setOffset(offset + PATIENTS_AT_TIME);
-      } else {
-        setEndReached(true);
       }
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
+      setDisable(false);
       setLoadingFirstPatients(false);
       setLoadingOtherPatients(false);
     }
-  };
+  }, 2000);
+
+  function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
+  }
 
   const handleScroll = useCallback((e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -123,7 +131,9 @@ export default function SearchPatient() {
             type="text"
             name="name"
             placeholder="cerca per nome o cognome..."
-            onChange={(event) => research(event)}
+            /*             onChange={handleResearch} */
+            value={searchInput}
+            disabled={disable}
           />
 
           <div
@@ -203,6 +213,7 @@ export default function SearchPatient() {
                       key={index}
                       patient={patient}
                       isSelected={patient === selectedPatient}
+                      onMod={setPatientToMod}
                       onSelectPatient={() => {
                         setSelectedPatient(patient);
                         handleSelect();
@@ -232,6 +243,12 @@ export default function SearchPatient() {
             </tfoot>
           )}
         </div>
+        {patientToMod !== null && (
+          <ModifyPatientModal
+            patient={patientToMod}
+            setPatient={setPatientToMod}
+          />
+        )}
       </MainContainer>
     </div>
   );

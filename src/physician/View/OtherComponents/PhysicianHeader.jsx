@@ -49,7 +49,7 @@ export default function PhysicianHeader(props) {
                 " " +
                 selectedPatient.surname +
                 " " +
-                format(selectedPatient.birthdate, "(dd/MM/y)")}
+                format(new Date(selectedPatient.birthdate), "(dd/MM/y)")}
             </label>
             {joint()}
           </>
