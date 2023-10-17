@@ -112,4 +112,20 @@ export default class PatientModel {
     console.log(params);
     await DeanonymizedCC.patch("patient", params);
   }
+
+  checkFields() {
+    if (
+      !this.name ||
+      !this.surname ||
+      !this.birthdate ||
+      !this.gender ||
+      !this.height ||
+      !this.weight ||
+      !this.CF
+    )
+      return false;
+    else {
+      return true;
+    }
+  }
 }

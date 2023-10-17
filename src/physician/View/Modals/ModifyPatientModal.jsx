@@ -1,26 +1,14 @@
 import { Modal, Button } from "react-bootstrap";
 import { Alert, AlertTitle } from "@mui/material";
-import { RefreshButton } from "../OtherComponents/RefreshButton";
 import PatientModel from "../../Model/PatientModel";
 import { useState } from "react";
-import male from "../../img/male.png";
-import question from "../../img/icon/question.png";
-import Slider from "@mui/material/Slider";
 import "react-day-picker/dist/style.css";
 import format from "date-fns/format";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { Checkbox } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import NewPatientModal from "../Modals/NewPatientModal";
-import { Link } from "react-router-dom";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "dayjs/locale/it";
-import { validateForm } from "../../ViewModel/Validation";
-import FormModal from "../Modals/FormModal";
-import FakeSecurityModule from "./../../Model/FakeSecurityModule";
-import MainContainer from "../../../common/View/MainContainer";
 
 export default function ModifyPatientModal(props) {
   const [patient, setPatient] = useState(
@@ -37,7 +25,6 @@ export default function ModifyPatientModal(props) {
   const [disabled, setDisabled] = useState(false);
   const [sendingButton, setSendingButton] = useState("Conferma");
   const [showAlert, setShowAlert] = useState(null);
-  const [formModal, setFormModal] = useState(false);
   const [networkError, setNetworkError] = useState(null);
 
   const modifyCF = (event) => {
@@ -80,8 +67,8 @@ export default function ModifyPatientModal(props) {
   };
 
   const handleModify = async () => {
+    setSendingButton("Inviando");
     setDisabled(true);
-    setSendingButton("Inviando...");
     try {
       await patient.modifyPatient(props.patient.pid);
       setShowAlert(true);
@@ -106,7 +93,7 @@ export default function ModifyPatientModal(props) {
           <div>
             <input
               className="form-control"
-              style={{ fontSize: 20, background: "whitesmoke" }}
+              style={{ fontSize: 20, background: "white" }}
               id="name"
               type="text"
               placeholder="Nome..."
@@ -117,7 +104,7 @@ export default function ModifyPatientModal(props) {
           <div>
             <input
               className="form-control"
-              style={{ fontSize: 20, background: "whitesmoke" }}
+              style={{ fontSize: 20, background: "white" }}
               id="surname"
               type="text"
               placeholder="Cognome..."
@@ -128,9 +115,14 @@ export default function ModifyPatientModal(props) {
           <div>
             <input
               className="form-control"
-              style={{ fontSize: 20, background: "whitesmoke" }}
+              style={{
+                fontSize: 20,
+                background: props.patient.cf !== null ? "whitesmoke" : "white",
+              }}
               id="cf"
-              disabled={props.patient.cf.length > 0}
+              disabled={
+                props.patient.cf !== null ? props.patient.cf.length > 0 : false
+              }
               type="text"
               placeholder="CF..."
               value={patient.CF}
@@ -142,6 +134,7 @@ export default function ModifyPatientModal(props) {
             <br />
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
+                sx={{ background: "white" }}
                 label={patient.birthdate.substring(0, 10)}
                 slotProps={{ textField: { size: "small" } }}
                 onChange={modifyPatientBirthdate}
@@ -149,7 +142,7 @@ export default function ModifyPatientModal(props) {
             </LocalizationProvider>
           </div>
           <div>
-            <FormControl fullWidth>
+            <FormControl style={{ background: "white" }} fullWidth>
               <InputLabel id="demo-simple-select-label">Genere</InputLabel>
               <Select
                 size="small"
@@ -164,10 +157,17 @@ export default function ModifyPatientModal(props) {
               </Select>
             </FormControl>
           </div>
-          <div>
+          <div style={{ display: "flex" }}>
+            <span
+              style={{ flex: 1.5, background: "whitesmoke" }}
+              class="input-group-text"
+              id="basic-addon1"
+            >
+              Altezza cm
+            </span>
             <input
               className="form-control"
-              style={{ fontSize: 20, background: "whitesmoke" }}
+              style={{ fontSize: 20, background: "white", flex: 5 }}
               id="height"
               type="number"
               placeholder="Altezza..."
@@ -175,10 +175,17 @@ export default function ModifyPatientModal(props) {
               onChange={modifyPatientDimensions}
             />
           </div>
-          <div>
+          <div style={{ display: "flex" }}>
+            <span
+              style={{ flex: 1.5, background: "whitesmoke" }}
+              class="input-group-text"
+              id="basic-addon1"
+            >
+              Peso kg
+            </span>
             <input
               className="form-control"
-              style={{ fontSize: 20, background: "whitesmoke" }}
+              style={{ fontSize: 20, background: "white", flex: 5 }}
               id="weight"
               type="number"
               placeholder="Peso..."
@@ -213,7 +220,7 @@ export default function ModifyPatientModal(props) {
           Annulla
         </Button>
         <Button
-          disabled={disabled}
+          disabled={disabled || !patient.checkFields()}
           onClick={(e) => {
             handleModify();
           }}
