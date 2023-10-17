@@ -28,27 +28,47 @@ export default function SearchPatient() {
 
   const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     getPatients();
-  }, []);
+  }, []); */
+
+  useEffect(() => {
+    let searchTimeout;
+    if (searchInput.length >= 3) {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        console.log("cerco", searchInput);
+        clearAll();
+        getPatients(searchInput);
+      }, 500);
+    } else if (searchInput.length === 0) {
+      console.log("cerco tutti");
+      clearAll();
+      getPatients();
+    }
+    return () => clearTimeout(searchTimeout);
+  }, [searchInput]);
 
   const clearAll = () => {
     setPatientListToShow([]);
     setNetworkError(null);
   };
 
-  const getPatients = async () => {
+  const getPatients = async (searchTerm) => {
+    let params = {
+      cnt: PATIENTS_AT_TIME,
+      offset: offset,
+      search: searchTerm,
+    };
+    console.log("infatti qui i parametri:", params);
     try {
-      let patients = await DeanonymizedCC.get("patient", {
-        cnt: PATIENTS_AT_TIME,
-        offset: offset,
-      });
+      let patients = await DeanonymizedCC.get("patient", params);
+      console.log(patients);
       if (patients.length === 0 || patients.length < PATIENTS_AT_TIME)
         setEndReached(true);
       if (patients.length > 0) {
-        console.log(patients);
         setPatientListToShow((prevState) => [...prevState, ...patients]);
-        setOffset(offset + PATIENTS_AT_TIME);
+        /* setOffset(offset + PATIENTS_AT_TIME); */
       }
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -64,50 +84,10 @@ export default function SearchPatient() {
     }, 200);
   };
 
-  const handleResearch = async (e) => {
-    setSearchInput(e.target.value);
-    setOffset(0);
-    clearAll();
-  };
-
-  const researchPatients = debounce(async () => {
-    setDisable(true);
-    setLoadingFirstPatients(true);
-    try {
-      let patients = await DeanonymizedCC.get("patient", {
-        cnt: PATIENTS_AT_TIME,
-        offset: offset,
-        search: searchInput,
-      });
-      if (patients.length === 0 || patients.length < PATIENTS_AT_TIME)
-        setEndReached(true);
-      if (patients.length > 0) {
-        console.log(patients);
-        setPatientListToShow(patients);
-        setOffset(offset + PATIENTS_AT_TIME);
-      }
-    } catch (err) {
-      setNetworkError(err || "Errore inatteso");
-    } finally {
-      setDisable(false);
-      setLoadingFirstPatients(false);
-      setLoadingOtherPatients(false);
-    }
-  }, 2000);
-
-  function debounce(func, delay) {
-    let timeoutId;
-    return function (...args) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func.apply(this, args);
-      }, delay);
-    };
-  }
-
   const handleScroll = useCallback((e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
     if (!endReached && (scrollTop + clientHeight) / scrollHeight >= 0.9) {
+      setOffset(offset + PATIENTS_AT_TIME);
       setLoadingOtherPatients(true);
       getPatients();
     }
@@ -131,7 +111,10 @@ export default function SearchPatient() {
             type="text"
             name="name"
             placeholder="cerca per nome o cognome..."
-            /*             onChange={handleResearch} */
+            onChange={(e) => {
+              setOffset(0);
+              setSearchInput(e.target.value);
+            }}
             value={searchInput}
             disabled={disable}
           />
