@@ -191,18 +191,20 @@ export default function SearchPatient() {
                   </tr>
                 </thead>
                 <tbody onScroll={handleScroll} style={{ textAlign: "center" }}>
-                  {patientListToShow.map((patient, index) => (
-                    <PatientLine
-                      key={index}
-                      patient={patient}
-                      isSelected={patient === selectedPatient}
-                      onMod={setPatientToMod}
-                      onSelectPatient={() => {
-                        setSelectedPatient(patient);
-                        handleSelect();
-                      }}
-                    />
-                  ))}
+                  {patientListToShow
+                    .filter((e) => e.pid !== "iYHoCDJzYxvw5kDNB42rkX")
+                    .map((patient, index) => (
+                      <PatientLine
+                        key={index}
+                        patient={patient}
+                        isSelected={patient === selectedPatient}
+                        onMod={setPatientToMod}
+                        onSelectPatient={() => {
+                          setSelectedPatient(patient);
+                          handleSelect();
+                        }}
+                      />
+                    ))}
                 </tbody>
               </table>
             )}

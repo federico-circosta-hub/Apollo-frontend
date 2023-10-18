@@ -2,6 +2,7 @@ import JointModel from "./JointModel";
 import { format } from "date-fns";
 
 export default class NewVisitModel {
+  visitId;
   patient;
   visitDate;
   physician;
@@ -51,6 +52,10 @@ export default class NewVisitModel {
   ecographiesId = [];
 
   constructor() {}
+
+  setVisitId(id) {
+    this.visitId = id;
+  }
 
   setEcographiesId(e) {
     let union = this.ecographiesId.concat(e);

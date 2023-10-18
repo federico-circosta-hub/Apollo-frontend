@@ -135,7 +135,9 @@ export default function ModifyPatientModal(props) {
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
                 sx={{ background: "white" }}
-                label={patient.birthdate.substring(0, 10)}
+                label={
+                  patient.birthdate ? patient.birthdate.substring(0, 10) : ""
+                }
                 slotProps={{ textField: { size: "small" } }}
                 onChange={modifyPatientBirthdate}
               />

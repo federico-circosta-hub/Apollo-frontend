@@ -13,11 +13,14 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MainContainer from "../../../common/View/MainContainer";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import { SkeletonsList } from "../OtherComponents/SkeletonsList";
+import { TrendingUpRounded } from "@mui/icons-material";
+import ExpostVisitServiceModal from "../Modals/ExpostVisitServiceModal";
 
 export default function SearchVisit(props) {
   const [visitList, setVisitList] = useState(null);
   const [loadingVisits, setLoadingVisits] = useState(false);
   const [networkError, setNetworkError] = useState(null);
+  const [showExpostServiceModal, setShowExpostServiceModal] = useState(false);
 
   const { selectedVisit, setSelectedVisit } = useContext(VisitContext);
   const { selectedPatient } = useContext(PatientContext);
@@ -58,13 +61,16 @@ export default function SearchVisit(props) {
     }, 200);
   };
 
-  const createNewVisit = (IsInPresence) => {
+  const createNewVisit = (IsInPresence, visitId, visitDate) => {
     let nv = new NewVisitModel();
     nv.setPhysician(props.id);
+    nv.setVisitId(visitId);
     nv.setIsInPresence(IsInPresence);
     nv.setPatient(selectedPatient.pid);
     nv.setPreviousVisitList(visitList);
+    nv.setVisitDate(new Date(visitDate));
     setNewVisit(nv);
+    navigate("/newVisit");
   };
 
   return selectedPatient !== null ? (
@@ -85,12 +91,7 @@ export default function SearchVisit(props) {
 
           <div style={{ display: "flex", gap: 20 }}>
             <div>
-              <Link
-                to={"/newVisit"}
-                className="btn btn-primary"
-                style={{ fontSize: 24 }}
-                onClick={() => createNewVisit(true)}
-              >
+              <button className="btn btn-primary" style={{ fontSize: 24 }}>
                 Nuova visita{" "}
                 <img
                   src={newFile}
@@ -98,14 +99,13 @@ export default function SearchVisit(props) {
                   width={38}
                   style={{ filter: "invert(100%)" }}
                 />
-              </Link>
+              </button>
             </div>
             <div>
-              <Link
-                to={"/newVisit"}
+              <button
                 className="btn btn-primary"
                 style={{ fontSize: 24 }}
-                onClick={() => createNewVisit(false)}
+                onClick={() => setShowExpostServiceModal(true)}
               >
                 Trascrivi visita{" "}
                 <img
@@ -114,7 +114,7 @@ export default function SearchVisit(props) {
                   width={38}
                   style={{ filter: "invert(100%)" }}
                 />
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -235,6 +235,14 @@ export default function SearchVisit(props) {
                 </h6>
               )}
           </div>
+        </div>
+        <div>
+          {showExpostServiceModal && (
+            <ExpostVisitServiceModal
+              onCancel={() => setShowExpostServiceModal(false)}
+              onCreate={createNewVisit}
+            />
+          )}
         </div>
       </MainContainer>
     </div>

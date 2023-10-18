@@ -42,9 +42,11 @@ export default function PatientLine(props) {
           select();
         }}
       >
-        {props.patient.birthdate !== ""
-          ? format(new Date(props.patient.birthdate), "y-MM-dd")
-          : ""}
+        {props.patient.birthdate ? (
+          format(new Date(props.patient.birthdate), "y-MM-dd")
+        ) : (
+          <em>N/A</em>
+        )}
       </td>
 
       <td>
