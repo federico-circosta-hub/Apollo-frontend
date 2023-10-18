@@ -15,12 +15,14 @@ import { RefreshButton } from "../OtherComponents/RefreshButton";
 import { SkeletonsList } from "../OtherComponents/SkeletonsList";
 import { TrendingUpRounded } from "@mui/icons-material";
 import ExpostVisitServiceModal from "../Modals/ExpostVisitServiceModal";
+import LiveVisitServiceModal from "../Modals/LiveVisitServiceModal";
 
 export default function SearchVisit(props) {
   const [visitList, setVisitList] = useState(null);
   const [loadingVisits, setLoadingVisits] = useState(false);
   const [networkError, setNetworkError] = useState(null);
   const [showExpostServiceModal, setShowExpostServiceModal] = useState(false);
+  const [showLiveServiceModal, setShowLiveServiceModal] = useState(false);
 
   const { selectedVisit, setSelectedVisit } = useContext(VisitContext);
   const { selectedPatient } = useContext(PatientContext);
@@ -91,7 +93,11 @@ export default function SearchVisit(props) {
 
           <div style={{ display: "flex", gap: 20 }}>
             <div>
-              <button className="btn btn-primary" style={{ fontSize: 24 }}>
+              <button
+                className="btn btn-primary"
+                style={{ fontSize: 24 }}
+                onClick={() => setShowLiveServiceModal(true)}
+              >
                 Nuova visita{" "}
                 <img
                   src={newFile}
@@ -240,6 +246,14 @@ export default function SearchVisit(props) {
           {showExpostServiceModal && (
             <ExpostVisitServiceModal
               onCancel={() => setShowExpostServiceModal(false)}
+              onCreate={createNewVisit}
+            />
+          )}
+        </div>
+        <div>
+          {showLiveServiceModal && (
+            <LiveVisitServiceModal
+              onCancel={() => setShowLiveServiceModal(false)}
               onCreate={createNewVisit}
             />
           )}

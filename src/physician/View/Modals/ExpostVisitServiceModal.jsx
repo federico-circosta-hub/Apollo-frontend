@@ -9,6 +9,7 @@ import { SkeletonsList } from "../OtherComponents/SkeletonsList";
 import DeanonymizedCC from "../../../common/Model/Communication/DeanonymizedCommunicationController";
 import { PatientContext } from "../../Model/PatientContext";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
+import format from "date-fns/format";
 
 export default function ExpostVisitServiceModal(props) {
   const { selectedPatient } = useContext(PatientContext);
@@ -113,13 +114,13 @@ export default function ExpostVisitServiceModal(props) {
                   <th style={{ background: "white", width: "15%" }}>
                     Id visita
                   </th>
-                  <th style={{ background: "white", width: "35%" }}>
+                  <th style={{ background: "white", width: "25%" }}>
                     Data della visita
                   </th>
-                  <th style={{ background: "white", width: "20%" }}>
+                  <th style={{ background: "white", width: "35%" }}>
                     Paziente
                   </th>
-                  <th style={{ background: "white", width: "30%" }}>
+                  <th style={{ background: "white", width: "25%" }}>
                     Data di nascita
                   </th>
                 </tr>
@@ -136,11 +137,11 @@ export default function ExpostVisitServiceModal(props) {
                     id={index}
                   >
                     <td>{visit.id}</td>
-                    <td>{visit.date.substring(0, 10)}</td>
+                    <td>{format(new Date(visit.date), "dd-MM-y")}</td>
                     <td>{visit.deanonymizedPatient}</td>
                     <td>
                       {visit.birthdate ? (
-                        visit.birthdate.substring(0, 10)
+                        format(new Date(visit.birthdate), "dd-MM-y")
                       ) : (
                         <em>N/A</em>
                       )}
@@ -169,13 +170,14 @@ export default function ExpostVisitServiceModal(props) {
   ) : (
     <Modal show={page == 2} animation={true} size={"lg"}>
       <Alert severity="warning" variant="filled" style={{ width: "100%" }}>
-        <AlertTitle>
+        <AlertTitle style={{ fontSize: 25 }}>
           Associa visita selezionata a {selectedPatient.name}{" "}
           {selectedPatient.surname}
         </AlertTitle>
       </Alert>
-      <Modal.Body style={{ background: "whitesmoke" }}>
-        La visita selezionata appartiene al paziente{" "}
+      <Modal.Body style={{ background: "whitesmoke", fontSize: 21 }}>
+        La visita selezionata appartiene{" "}
+        {selectedVisit.gender == "M" ? "al" : "alla"} paziente{" "}
         {selectedVisit.deanonymizedPatient}, confermando, tutte le visite a{" "}
         {selectedVisit.gender == "M" ? "lui" : "lei"} associate verranno
         attribuite a {selectedPatient.name} {selectedPatient.surname}
@@ -193,7 +195,7 @@ export default function ExpostVisitServiceModal(props) {
             <AlertTitle>Errore nell'invio</AlertTitle>
           </Alert>
         )}
-        <button className="btn btn-primary btn-lg" onClick={() => setPage(1)}>
+        <button className="btn btn-secondary btn-lg" onClick={() => setPage(1)}>
           Indietro
         </button>
         {!networkError ? (
