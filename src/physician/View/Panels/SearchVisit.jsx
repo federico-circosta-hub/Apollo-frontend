@@ -70,6 +70,8 @@ export default function SearchVisit(props) {
     nv.setIsInPresence(IsInPresence);
     nv.setPatient(selectedPatient.pid);
     nv.setPreviousVisitList(visitList);
+    nv.setPreviousVisit({ date: new Date(2023, 6, 1) }); //ELIMINARE STA ROBA APPENA POSSIBILE
+    nv.setIsFollowUp(true);
     nv.setVisitDate(new Date(visitDate));
     setNewVisit(nv);
     navigate("/newVisit");
