@@ -29,42 +29,49 @@ export default function ProphylacticDrug(props) {
         </label>
       </div>
       <div>
-        <FormControl fullWidth>
-          <InputLabel
-            id="demo-simple-select-label"
-            style={{ width: "fit-content" }}
-          >
-            Medicinale di profilassi
-          </InputLabel>
-          <Select
-            style={{ fontSize: 15 }}
-            id="demo-simple-select"
-            value={
-              props.prophylacticDrug.drug.name === ""
-                ? "Nessuno"
-                : newVisit.prophylacticDrug.drug.name
-            }
-            onChange={(e) => props.handleProphylacticDrug(e)}
-            label="Medicinale di profilassi "
-          >
-            <MenuItem value="Nessuno">
-              <em>Nessuno</em>
-            </MenuItem>
-            {props.networkError === null && props.drugs !== null ? (
-              props.drugs.map((element) => (
-                <MenuItem value={element.name}>{element.name}</MenuItem>
-              ))
-            ) : (
-              <MenuItem>
-                Errore nell'ottenere la lista farmaci
-                <RefreshButton
-                  onClick={props.getDrugsFromServer}
-                  loading={props.loadingOptions}
-                />
+        {!props.networkError && props.drugs ? (
+          <FormControl fullWidth>
+            <InputLabel
+              id="demo-simple-select-label"
+              style={{ width: "fit-content" }}
+            >
+              Medicinale di profilassi
+            </InputLabel>
+            <Select
+              style={{ fontSize: 15 }}
+              id="demo-simple-select"
+              value={
+                props.prophylacticDrug.drug.name === ""
+                  ? "Nessuno"
+                  : newVisit.prophylacticDrug.drug.name
+              }
+              onChange={(e) => props.handleProphylacticDrug(e)}
+              label="Medicinale di profilassi "
+            >
+              <MenuItem value="Nessuno">
+                <em>Nessuno</em>
               </MenuItem>
-            )}
-          </Select>
-        </FormControl>
+
+              {props.drugs.map((element) => (
+                <MenuItem value={element.name}>{element.name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+            }}
+          >
+            Errore nell'ottenere la lista farmaci
+            <RefreshButton
+              onClick={props.getDrugsFromServer}
+              loading={props.loadingOptions}
+            />
+          </div>
+        )}
       </div>
       <div style={{ display: "flex" }}>
         <input

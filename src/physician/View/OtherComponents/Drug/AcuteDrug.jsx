@@ -23,42 +23,49 @@ export default function AcuteDrug(props) {
         </label>
       </div>
       <div>
-        <FormControl fullWidth>
-          <InputLabel
-            id="demo-simple-select-label"
-            style={{ maxWidth: "fit-content" }}
-          >
-            Medicinale acuto
-          </InputLabel>
-          <Select
-            style={{ fontSize: 15 }}
-            id="demo-simple-select"
-            value={
-              props.acuteDrug.drug.name === ""
-                ? "Nessuno"
-                : newVisit.acuteDrug.drug.name
-            }
-            onChange={(e) => props.handleAcuteDrug(e)}
-            label="Medicinale acuto"
-          >
-            <MenuItem value="Nessuno">
-              <em>Nessuno</em>
-            </MenuItem>
-            {props.networkError === null && props.drugs !== null ? (
-              props.drugs.map((element) => (
-                <MenuItem value={element.name}>{element.name}</MenuItem>
-              ))
-            ) : (
-              <MenuItem>
-                Errore nell'ottenere la lista farmaci
-                <RefreshButton
-                  onClick={props.getDrugsFromServer}
-                  loading={props.loadingOptions}
-                />
+        {props.networkError === null && props.drugs !== null ? (
+          <FormControl fullWidth>
+            <InputLabel
+              id="demo-simple-select-label"
+              style={{ maxWidth: "fit-content" }}
+            >
+              Medicinale acuto
+            </InputLabel>
+            <Select
+              style={{ fontSize: 15 }}
+              id="demo-simple-select"
+              value={
+                props.acuteDrug.drug.name === ""
+                  ? "Nessuno"
+                  : newVisit.acuteDrug.drug.name
+              }
+              onChange={(e) => props.handleAcuteDrug(e)}
+              label="Medicinale acuto"
+            >
+              <MenuItem value="Nessuno">
+                <em>Nessuno</em>
               </MenuItem>
-            )}
-          </Select>
-        </FormControl>
+
+              {props.drugs.map((element) => (
+                <MenuItem value={element.name}>{element.name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+            }}
+          >
+            <h6>Errore nell'ottenere la lista farmaci</h6>
+            <RefreshButton
+              onClick={props.getDrugsFromServer}
+              loading={props.loadingOptions}
+            />
+          </div>
+        )}
       </div>
       <div style={{ display: "flex" }}>
         <input

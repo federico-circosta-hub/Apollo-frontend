@@ -136,7 +136,9 @@ export default function ModifyPatientModal(props) {
               <DatePicker
                 sx={{ background: "white" }}
                 label={
-                  patient.birthdate ? patient.birthdate.substring(0, 10) : ""
+                  patient.birthdate
+                    ? format(new Date(patient.birthdate), "dd-MM-y")
+                    : ""
                 }
                 slotProps={{ textField: { size: "small" } }}
                 onChange={modifyPatientBirthdate}

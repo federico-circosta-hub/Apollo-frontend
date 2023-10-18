@@ -15,7 +15,7 @@ import b from "../../img/example_gin/2.jpg";
 import c from "../../img/example_gin/3.jpg";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import { validateForm } from "../../ViewModel/Validation";
-import { Skeleton, CircularProgress } from "@mui/material";
+import format from "date-fns/format";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import { Alert, AlertTitle } from "@mui/material";
 import { Skeletons } from "../OtherComponents/Skeletons";
@@ -96,7 +96,7 @@ export default function Joint(props) {
     setLoadingImages(true);
     let params = {
       patient: selectedPatient.pid,
-      date: newVisit.visitDate.toISOString(),
+      date: format(newVisit.visitDate, "y-MM-dd"),
       exclude: ids,
     };
     console.log(params);
