@@ -53,6 +53,10 @@ export default class NewVisitModel {
 
   constructor() {}
 
+  setTreatment(n) {
+    this.followUp.treatmentResponse = n;
+  }
+
   setVisitId(id) {
     this.visitId = id;
   }

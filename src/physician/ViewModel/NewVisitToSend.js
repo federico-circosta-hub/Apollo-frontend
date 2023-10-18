@@ -1,12 +1,12 @@
-import JointNameChanger from "./JointNameChanger";
+import format from "date-fns/format";
 import JointToSendModel from "./JointToSendModel";
 
 export default class NewVisitToSend {
+  id;
   patient; //string
   physician; //number
   date; //data string
   type; // live | remote | expost
-  client_app_version; // string | undefined (se type == remote)
   follows; // id della visita seguita da questa
   report = {
     /* date: visitDate, // string | undefined	(maggiore o uguale alla data della visita, se non definito viene salvata quella della visita) */
@@ -24,13 +24,13 @@ export default class NewVisitToSend {
   };
 
   constructor(newVisit) {
+    this.id = newVisit.visitId;
     this.patient = newVisit.patient;
     this.physician = newVisit.physician;
     this.date = newVisit.visitDate;
     this.type = newVisit.isInPresence ? "live" : "expost";
-    this.client_app_version = "0.1";
     this.follows = newVisit.followUp.followUp
-      ? newVisit.previousVisit
+      ? format(newVisit.previousVisit.date, "y-MM-dd")
       : undefined;
     this.report.trauma_event =
       newVisit.traumaticEvent.traumaticEvent === "Nessuno"

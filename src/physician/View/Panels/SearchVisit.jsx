@@ -131,20 +131,25 @@ export default function SearchVisit(props) {
             height: "70vh",
             overflow: "auto",
             textAlign:
-              visitList === null || loadingVisits || visitList.length === 0
+              visitList === null ||
+              loadingVisits ||
+              visitList.filter((e) => e.physician).length === 0
                 ? "center"
                 : "left",
             borderRadius: "15px",
             background:
-              visitList === null || visitList.length === 0
+              visitList === null ||
+              visitList.filter((e) => e.physician).length === 0
                 ? "#e8e8e8"
                 : "white",
             border:
-              visitList === null || visitList.length === 0
+              visitList === null ||
+              visitList.filter((e) => e.physician).length === 0
                 ? "1px 2px 6px grey"
                 : "1px 2px 6px #56AEC9",
             boxShadow:
-              visitList === null || visitList.length === 0
+              visitList === null ||
+              visitList.filter((e) => e.physician).length === 0
                 ? "1px 2px 6px #000000"
                 : "1px 2px 6px #56AEC9",
           }}
@@ -165,7 +170,7 @@ export default function SearchVisit(props) {
             {!loadingVisits &&
               networkError === null &&
               visitList !== null &&
-              visitList.length !== 0 && (
+              visitList.filter((e) => e.physician).length !== 0 && (
                 <table className="table table-primary table-striped table-hover">
                   <thead
                     style={{
@@ -229,10 +234,11 @@ export default function SearchVisit(props) {
               )}
             {!loadingVisits &&
               networkError === null &&
-              (visitList === null || visitList.length === 0) && (
+              (visitList === null ||
+                visitList.filter((e) => e.physician).length === 0) && (
                 <h6 style={{ marginTop: "2%" }}>
                   <em>
-                    Non sono presenti visite per{" "}
+                    Non sono presenti visite passate per{" "}
                     {selectedPatient.gender === "M" ? "il" : "la"} paziente{" "}
                     <strong>
                       {selectedPatient.name} {selectedPatient.surname}

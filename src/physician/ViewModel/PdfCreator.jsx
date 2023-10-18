@@ -45,7 +45,8 @@ const MyDocument = forwardRef((props, ref) => {
                 Paziente: {patient.name} {patient.surname}
               </p>
               <p style={styles.text}>
-                Data di nascita: {format(patient.birthdate, "dd - MM - y")}
+                Data di nascita:{" "}
+                {format(new Date(patient.birthdate), "dd-MM-y")}
               </p>
             </div>
             <div>

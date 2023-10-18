@@ -65,14 +65,11 @@ export default function Treatment(props) {
         <Slider
           name="treatment response"
           marks={props.treatmentResponses}
-          min={10}
-          max={40}
-          step={10}
-          defaultValue={
-            newVisit.followUp.treatmentResponse !== undefined
-              ? newVisit.followUp.treatmentResponse
-              : 10
-          }
+          min={1}
+          max={props.treatmentResponses.length}
+          step={1}
+          value={props.treatment}
+          onChange={props.onTreatmentChange}
         />
       </div>
       <div>
