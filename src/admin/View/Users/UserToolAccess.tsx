@@ -78,7 +78,7 @@ const AnnotationToolsForm = ({
         (access: boolean, instructions: string) => {
             setInstructions(
                 access
-                    ? `Diritti di accesso dati. Segui le istruzioni per completare l'operazione: ${instructions}`
+                    ? `Diritti di accesso dati. ${instructions}`
                     : "Diritti di accesso revocati"
             );
         },
