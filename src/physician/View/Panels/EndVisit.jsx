@@ -26,10 +26,7 @@ export default function EndVisit() {
         <div
           style={{
             overflow: "auto",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "80%",
+            width: "90%",
             height: "80vh",
             borderRadius: "15px",
             border: "0.5px solid #56AEC9",
@@ -37,13 +34,26 @@ export default function EndVisit() {
             background: "lightgrey",
           }}
         >
-          <MyDocument
-            patient={selectedPatient}
-            visit={newVisit}
-            ref={componentRef}
-          />
+          <div
+            style={{
+              width: "100%",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MyDocument
+                patient={selectedPatient}
+                visit={newVisit}
+                ref={componentRef}
+              />
+            </div>
+          </div>
         </div>
-
         <div
           style={{
             display: "flex",
@@ -96,36 +106,3 @@ export default function EndVisit() {
     </div>
   );
 }
-
-const styles = {
-  box: {
-    justifyContent: "space-around",
-    width: "98%",
-    height: "90vh",
-    borderRadius: "15px",
-    background: "white",
-    margin: "auto",
-    marginTop: "1%",
-    paddingTop: "1%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  container: {
-    width: "90%",
-    padding: 5,
-    height: "90%",
-    display: "flex",
-    flexDirection: "column",
-    background: "white",
-  },
-  title: {
-    fontSize: 24,
-  },
-  text: {
-    fontSize: 18,
-  },
-  link: {
-    fontSize: 12,
-  },
-};

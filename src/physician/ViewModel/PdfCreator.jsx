@@ -14,6 +14,37 @@ const MyDocument = forwardRef((props, ref) => {
   const visit = props.visit;
   const patient = props.patient;
 
+  const getResult = (field, fieldValue, joint, side) => {
+    switch (field) {
+      case "sinovite":
+        return visit.getJointWithoutMod(joint, side)
+          ? visit.getJointWithoutMod(joint, side).synovitis === fieldValue
+            ? fieldValue
+            : "-"
+          : "-";
+      case "cartilagine":
+        return visit.getJointWithoutMod(joint, side)
+          ? visit.getJointWithoutMod(joint, side).cartilage === fieldValue
+            ? fieldValue
+            : "-"
+          : "-";
+      case "subchondral":
+        return visit.getJointWithoutMod(joint, side)
+          ? visit.getJointWithoutMod(joint, side).subchondralBone === fieldValue
+            ? fieldValue
+            : "-"
+          : "-";
+      case "totalScore":
+        return visit.getJointWithoutMod(joint, side)
+          ? visit.getJointWithoutMod(joint, side).subchondralBone +
+              visit.getJointWithoutMod(joint, side).cartilage +
+              visit.getJointWithoutMod(joint, side).synovitis
+          : "N/A";
+      default:
+        return "N/A";
+    }
+  };
+
   return (
     <div style={styles.container} ref={ref}>
       <h2>HEAD-US protocol</h2>
@@ -63,7 +94,9 @@ const MyDocument = forwardRef((props, ref) => {
             MHz
           </p>
           <p style={styles.text}>Diagnosi:</p>
-          <p style={styles.text}>Index joint(s):</p>
+          <p style={styles.text}>
+            Index joint(s):{visit.getIndexJoints().toString()}
+          </p>
         </div>
       </div>
       <div>
@@ -72,7 +105,7 @@ const MyDocument = forwardRef((props, ref) => {
             tableLayout: "fixed",
             width: "19cm",
             fontSize: 12,
-            border: "0.5px solid black",
+            border: "1px solid lightgray",
             height: "20cm",
             borderRadius: 5,
             padding: 3,
@@ -124,32 +157,68 @@ const MyDocument = forwardRef((props, ref) => {
             <tr>
               <td style={styles.keys}>Assente / minima</td>
               <td style={styles.values}>0</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("sinovite", 0, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 0, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 0, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 0, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 0, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 0, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.keys}>Media / moderata</td>
               <td style={styles.values}>1</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("sinovite", 1, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 1, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 1, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 1, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 1, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 1, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.keys}>Grave</td>
               <td style={styles.values}>2</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("sinovite", 2, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 2, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 2, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 2, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 2, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("sinovite", 2, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.th}>Cartilagine articolare</td>
@@ -171,12 +240,24 @@ const MyDocument = forwardRef((props, ref) => {
             <tr>
               <td style={styles.keys}>Normale</td>
               <td style={styles.values}>0</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 0, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 0, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 0, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 0, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 0, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 0, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.keys}>
@@ -184,12 +265,24 @@ const MyDocument = forwardRef((props, ref) => {
                 superficie target
               </td>
               <td style={styles.values}>1</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 1, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 1, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 1, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 1, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 1, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 1, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.keys}>
@@ -197,12 +290,24 @@ const MyDocument = forwardRef((props, ref) => {
                 superficie target
               </td>
               <td style={styles.values}>2</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 2, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 2, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 2, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 2, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 2, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 2, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.keys}>
@@ -210,12 +315,24 @@ const MyDocument = forwardRef((props, ref) => {
                 superficie target
               </td>
               <td style={styles.values}>3</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 3, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 3, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 3, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 3, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 3, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 3, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.keys}>
@@ -223,12 +340,24 @@ const MyDocument = forwardRef((props, ref) => {
                 ossea target
               </td>
               <td style={styles.values}>4</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 4, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 4, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 4, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 4, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 4, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("cartilagine", 4, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.th}>Osso subcondrale</td>
@@ -240,12 +369,24 @@ const MyDocument = forwardRef((props, ref) => {
             <tr>
               <td style={styles.keys}>Normale</td>
               <td style={styles.values}>0</td>
-              <td style={styles.values}></td>
-              <td style={styles.values}></td>
-              <td style={styles.values}></td>
-              <td style={styles.values}></td>
-              <td style={styles.values}></td>
-              <td style={styles.values}></td>
+              <td style={styles.result}>
+                {getResult("subchondral", 0, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 0, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 0, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 0, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 0, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 0, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.keys}>
@@ -253,12 +394,24 @@ const MyDocument = forwardRef((props, ref) => {
                 all'articolazione
               </td>
               <td style={styles.values}>1</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("subchondral", 1, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 1, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 1, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 1, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 1, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 1, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.keys}>
@@ -266,22 +419,46 @@ const MyDocument = forwardRef((props, ref) => {
                 prominenti attorno all'articolazione
               </td>
               <td style={styles.values}>2</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.result}>
+                {getResult("subchondral", 2, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 2, "elbow", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 2, "knee", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 2, "knee", "LEFT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 2, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.result}>
+                {getResult("subchondral", 2, "ankle", "LEFT")}
+              </td>
             </tr>
             <tr>
               <td style={styles.th}>Total score</td>
               <td style={styles.values}>0</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style={styles.totalScore}>
+                {getResult("totalScore", 0, "elbow", "RIGHT")}
+              </td>
+              <td style={styles.totalScore}>
+                {getResult("totalScore", 0, "elbow", "LEFT")}
+              </td>
+              <td style={styles.totalScore}>
+                {getResult("totalScore", 0, "knee", "RIGHT")}
+              </td>
+              <td style={styles.totalScore}>
+                {getResult("totalScore", 0, "knee", "LEFT")}
+              </td>
+              <td style={styles.totalScore}>
+                {getResult("totalScore", 0, "ankle", "RIGHT")}
+              </td>
+              <td style={styles.totalScore}>
+                {getResult("totalScore", 0, "ankle", "LEFT")}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -316,20 +493,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     fontWeight: 600,
+    border: "0.1cm solid lightgray",
   },
 
   keys: {
     fontSize: 12,
     textAlign: "left",
+    border: "1px solid lightgray",
   },
 
   descriptions: {
     fontSize: 12,
     textAlign: "center",
+    border: "1px solid lightgray",
   },
   values: {
     fontSize: 12,
     textAlign: "center",
+    border: "1px solid lightgray",
+  },
+  result: {
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: 550,
+    border: "1px solid lightgray",
+  },
+  totalScore: {
+    fontSize: 18,
+    textAlign: "center",
+    fontWeight: 600,
+    border: "1px solid lightgray",
   },
 });
 

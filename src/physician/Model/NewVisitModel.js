@@ -1,5 +1,6 @@
 import JointModel from "./JointModel";
 import { format } from "date-fns";
+import JointNameChager from "./../ViewModel/JointNameChanger";
 
 export default class NewVisitModel {
   visitId;
@@ -250,5 +251,25 @@ export default class NewVisitModel {
         });
         return s;
     }
+  }
+
+  getJointWithoutMod(jointName, side) {
+    return this.joints.find(
+      (e) => e.jointName === jointName && e.side === side
+    );
+  }
+
+  getIndexJoints() {
+    let arr = [];
+    this.joints.forEach((e) => {
+      if (e.indexJoint)
+        arr.push(
+          JointNameChager.fromSeparateEnglishToSingleStringIta(
+            e.jointName,
+            e.side
+          )
+        );
+    });
+    return arr;
   }
 }
