@@ -36,7 +36,7 @@ export default function Joint(props) {
 
   useEffect(() => {
     loadJoint();
-    if (newVisit.ecographies.length === 0 && newVisit.isInPresence) {
+    if (newVisit.ecographies.length === 0) {
       getNewImages();
     }
   }, []);
