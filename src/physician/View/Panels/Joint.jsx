@@ -3,16 +3,12 @@ import { NewVisitContext } from "../../Model/NewVisitContext";
 import { PatientContext } from "../../Model/PatientContext";
 import NoContextModal from "../Modals/NoContextModal";
 import "dayjs/locale/it";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import EcographImages from "../OtherComponents/EcographImages";
-import GenerateImages from "../../Model/GenerateImages";
 import { Modal } from "react-bootstrap";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import JointVisitQuestions from "../OtherComponents/JointVisitQuestions";
 import FormModal from "../Modals/FormModal";
-import a from "../../img/example_gin/1.jpg";
-import b from "../../img/example_gin/2.jpg";
-import c from "../../img/example_gin/3.jpg";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import { validateForm } from "../../ViewModel/Validation";
 import format from "date-fns/format";
@@ -40,7 +36,9 @@ export default function Joint(props) {
 
   useEffect(() => {
     loadJoint();
-    getNewImages();
+    if (newVisit.ecographies.length === 0 && newVisit.isInPresence) {
+      getNewImages();
+    }
   }, []);
 
   const cancel = () => {
