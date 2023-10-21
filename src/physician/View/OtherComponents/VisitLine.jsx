@@ -26,7 +26,7 @@ export default function VisitLine(props) {
       }}
       onClick={() => select()}
     >
-      <td>{props.visit.id}</td>
+      {/*       <td>{props.visit.id}</td> */}
       <td>{formatDate()}</td>
       <td>{props.visit.physician}</td>
       <td>

@@ -180,18 +180,18 @@ export default function SearchVisit(props) {
                     }}
                   >
                     <tr style={{}}>
-                      <th
+                      {/* <th
                         style={{
                           background: "white",
                           width: "15%",
                         }}
                       >
                         Id visita
-                      </th>
+                      </th> */}
                       <th
                         style={{
                           background: "white",
-                          width: "35%",
+                          width: "40%",
                         }}
                       >
                         Data
@@ -199,7 +199,7 @@ export default function SearchVisit(props) {
                       <th
                         style={{
                           background: "white",
-                          width: "20%",
+                          width: "25%",
                         }}
                       >
                         Medico
@@ -207,7 +207,7 @@ export default function SearchVisit(props) {
                       <th
                         style={{
                           background: "white",
-                          width: "30%",
+                          width: "35%",
                         }}
                       >
                         Tipo visita

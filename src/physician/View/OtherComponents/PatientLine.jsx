@@ -21,13 +21,6 @@ export default function PatientLine(props) {
           select();
         }}
       >
-        {props.patient.cf}
-      </td>
-      <td
-        onClick={() => {
-          select();
-        }}
-      >
         {props.patient.surname}
       </td>
       <td
@@ -48,7 +41,13 @@ export default function PatientLine(props) {
           <em>N/A</em>
         )}
       </td>
-
+      <td
+        onClick={() => {
+          select();
+        }}
+      >
+        {props.patient.cf}
+      </td>
       <td>
         <button
           className="btn btn-info"

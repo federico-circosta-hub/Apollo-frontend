@@ -179,9 +179,9 @@ export default function LiveVisitServiceModal(props) {
                   }}
                 >
                   <tr style={{}}>
-                    <th style={{ background: "white", width: "15%" }}>
+                    {/* <th style={{ background: "white", width: "15%" }}>
                       Id visita
-                    </th>
+                    </th> */}
                     <th style={{ background: "white", width: "25%" }}>
                       Data della visita
                     </th>
@@ -195,27 +195,29 @@ export default function LiveVisitServiceModal(props) {
                 </thead>
 
                 <tbody>
-                  {visitList.map((visit, index) => (
-                    <tr
-                      className="tr-lg"
-                      style={{
-                        padding: 30,
-                      }}
-                      onClick={() => handleSelect(visit)}
-                      id={index}
-                    >
-                      <td>{visit.id}</td>
-                      <td>{format(new Date(visit.date), "dd-MM-y")}</td>
-                      <td>{visit.deanonymizedPatient}</td>
-                      <td>
-                        {visit.birthdate ? (
-                          format(new Date(visit.birthdate), "dd-MM-y")
-                        ) : (
-                          <em>N/A</em>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                  {visitList
+                    .filter((e) => e.patient !== "iYHoCDJzYxvw5kDNB42rkX")
+                    .map((visit, index) => (
+                      <tr
+                        className="tr-lg"
+                        style={{
+                          padding: 30,
+                        }}
+                        onClick={() => handleSelect(visit)}
+                        id={index}
+                      >
+                        {/* <td>{visit.id}</td> */}
+                        <td>{format(new Date(visit.date), "dd-MM-y")}</td>
+                        <td>{visit.deanonymizedPatient}</td>
+                        <td>
+                          {visit.birthdate ? (
+                            format(new Date(visit.birthdate), "dd-MM-y")
+                          ) : (
+                            <em>N/A</em>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             )}

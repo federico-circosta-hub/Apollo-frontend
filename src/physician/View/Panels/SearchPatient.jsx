@@ -2,7 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import search from "../../img/icon/search.png";
 import add from "../../img/icon/add-user.png";
 import CircularProgress from "@mui/material/CircularProgress";
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import { PatientContext } from "../../Model/PatientContext";
 import PatientLine from "../OtherComponents/PatientLine";
 import DeanonymizedCC from "../../../common/Model/Communication/DeanonymizedCommunicationController";
@@ -13,7 +19,7 @@ import { SkeletonsList } from "../OtherComponents/SkeletonsList";
 import ModifyPatientModal from "../Modals/ModifyPatientModal";
 
 export default function SearchPatient() {
-  const PATIENTS_AT_TIME = 10;
+  const PATIENTS_AT_TIME = 20;
   const [patientListToShow, setPatientListToShow] = useState([]);
   const [loadingFirstPatients, setLoadingFirstPatients] = useState(false);
   const [loadingOtherPatients, setLoadingOtherPatients] = useState(false);
@@ -23,6 +29,8 @@ export default function SearchPatient() {
   const [searchInput, setSearchInput] = useState("");
   const [disable, setDisable] = useState(false);
   const [patientToMod, setPatientToMod] = useState(null);
+
+  const throttledScroll = useRef(null);
 
   const navigate = useNavigate();
 
@@ -39,36 +47,42 @@ export default function SearchPatient() {
       searchTimeout = setTimeout(() => {
         console.log("cerco", searchInput);
         clearAll();
-        getPatients(searchInput);
+        getPatients(searchInput, 0);
       }, 500);
     } else if (searchInput.length === 0) {
       console.log("cerco tutti");
       clearAll();
-      getPatients();
+      getPatients("", 0);
     }
     return () => clearTimeout(searchTimeout);
   }, [searchInput]);
 
   const clearAll = () => {
+    setOffset(0);
     setPatientListToShow([]);
     setNetworkError(null);
+    setEndReached(false);
   };
 
-  const getPatients = async (searchTerm) => {
+  const getPatients = async (searchTerm, offsetParam) => {
     let params = {
       cnt: PATIENTS_AT_TIME,
-      offset: offset,
+      offset: offsetParam,
       search: searchTerm,
     };
     console.log("infatti qui i parametri:", params);
     try {
       let patients = await DeanonymizedCC.get("patient", params);
       console.log(patients);
+      setOffset(offsetParam);
+      console.log(
+        "patients.length < PATIENTS_AT_TIME?",
+        patients.length < PATIENTS_AT_TIME
+      );
       if (patients.length === 0 || patients.length < PATIENTS_AT_TIME)
         setEndReached(true);
       if (patients.length > 0) {
         setPatientListToShow((prevState) => [...prevState, ...patients]);
-        /* setOffset(offset + PATIENTS_AT_TIME); */
       }
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -86,10 +100,16 @@ export default function SearchPatient() {
 
   const handleScroll = useCallback((e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
-    if (!endReached && (scrollTop + clientHeight) / scrollHeight >= 0.9) {
-      setOffset(offset + PATIENTS_AT_TIME);
-      setLoadingOtherPatients(true);
-      getPatients();
+    if (!endReached && (scrollTop + clientHeight) / scrollHeight >= 0.95) {
+      if (!throttledScroll.current) {
+        throttledScroll.current = setTimeout(() => {
+          console.log("handleScroll setto scroll a", offset + PATIENTS_AT_TIME);
+          setLoadingOtherPatients(true);
+          console.log("handleScroll, chiamo getPatients");
+          getPatients("", offset + PATIENTS_AT_TIME);
+          throttledScroll.current = null;
+        }, 750);
+      }
     }
   });
 
@@ -184,15 +204,21 @@ export default function SearchPatient() {
                   }}
                 >
                   <tr>
-                    <th style={{ background: "white" }}>CF</th>
                     <th style={{ background: "white" }}>Cognome</th>
                     <th style={{ background: "white" }}>Nome</th>
                     <th style={{ background: "white" }}>Data di nascita</th>
+                    <th style={{ background: "white" }}>CF</th>
+                    <th style={{ background: "white" }}></th>
                   </tr>
                 </thead>
                 <tbody onScroll={handleScroll} style={{ textAlign: "center" }}>
                   {patientListToShow
-                    .filter((e) => e.pid !== "iYHoCDJzYxvw5kDNB42rkX")
+                    .filter(
+                      (item, index, self) =>
+                        index === self.findIndex((t) => t.pid === item.pid) &&
+                        item.pid !== "iYHoCDJzYxvw5kDNB42rkX"
+                    )
+                    /* .filter((e) => ) */
                     .map((patient, index) => (
                       <PatientLine
                         key={index}
@@ -221,10 +247,12 @@ export default function SearchPatient() {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                fontSize: 16,
+                fontSize: 14,
               }}
             >
-              <em>Non sono presenti altri pazienti</em>
+              <p>
+                <em>Non sono presenti altri pazienti</em>
+              </p>
             </tfoot>
           )}
         </div>
