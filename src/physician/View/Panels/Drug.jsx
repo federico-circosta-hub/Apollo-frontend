@@ -49,12 +49,15 @@ export default function Drug() {
   const [prophylacticDrug, setProphylacticDrug] = useState(
     newVisit.prophylacticDrug
   );
+  const [frequencies, setFrequencies] = useState();
   const [acuteDrug, setAcuteDrug] = useState(newVisit.acuteDrug);
   const [formModal, setFormModal] = useState(false);
   const [errors, setErrors] = useState({ none: "none" });
   const [loadingOptions, setLoadingOptions] = useState(false);
+  const [loadingFreq, setLoadingFreq] = useState(false);
   const [networkError, setNetworkError] = useState(null);
   const [networkErrorT, setNetworkErrorT] = useState(null);
+  const [networkErrorF, setNetworkErrorF] = useState(null);
   const [endingVisitModal, setEndingVisitModal] = useState(false);
   const [showFinishAlert, setShowFinishAlert] = useState(null);
   const [sending, setSending] = useState(false);
@@ -68,6 +71,7 @@ export default function Drug() {
 
   useEffect(() => {
     getDrugsFromServer();
+    getFrequenciesFromServer();
     if (newVisit.followUp.followUp) getTreatmentFromServer();
   }, []);
 
@@ -97,6 +101,20 @@ export default function Drug() {
       setTreatmentResponses(newT);
     } catch (err) {
       setNetworkErrorT(err || "Errore inatteso");
+    }
+  };
+
+  const getFrequenciesFromServer = async () => {
+    setLoadingFreq(true);
+    setNetworkErrorF(null);
+    try {
+      const f = await CommunicationController.get("drug/frequency", {});
+      console.log(f);
+      setFrequencies(f);
+    } catch (err) {
+      setNetworkErrorF(err || "Errore inatteso");
+    } finally {
+      setLoadingFreq(false);
     }
   };
 
@@ -153,7 +171,7 @@ export default function Drug() {
 
   const handleProphylacticDrugFrequency = (e) => {
     let pd = { ...prophylacticDrug };
-    pd.frequency = Number(e.target.value);
+    pd.frequency = frequencies.find((f) => f.frequency === e.target.value).id;
     setProphylacticDrug(pd);
   };
 
@@ -332,6 +350,10 @@ export default function Drug() {
               handleProphylacticDrugDose={handleProphylacticDrugDose}
               disabledProphylactic={disabledProphylactic}
               handleProphylacticDrugFrequency={handleProphylacticDrugFrequency}
+              networkErrorF={networkErrorF}
+              frequencies={frequencies}
+              loadingFreq={loadingFreq}
+              getFrequenciesFromServer={getFrequenciesFromServer}
             />
 
             <AcuteDrug
@@ -443,6 +465,10 @@ export default function Drug() {
               handleProphylacticDrugDose={handleProphylacticDrugDose}
               disabledProphylactic={disabledProphylactic}
               handleProphylacticDrugFrequency={handleProphylacticDrugFrequency}
+              networkErrorF={networkErrorF}
+              frequencies={frequencies}
+              loadingFreq={loadingFreq}
+              getFrequenciesFromServer={getFrequenciesFromServer}
             />
 
             <AcuteDrug

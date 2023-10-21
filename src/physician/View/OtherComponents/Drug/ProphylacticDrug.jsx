@@ -83,6 +83,7 @@ export default function ProphylacticDrug(props) {
           }
           style={{ background: `#fffacd` }}
         />
+
         <input
           placeholder="Dose"
           defaultValue={props.prophylacticDrug.dose}
@@ -94,15 +95,49 @@ export default function ProphylacticDrug(props) {
         />
       </div>
       <div>
-        <input
-          placeholder="Frequenza"
-          defaultValue={props.prophylacticDrug.frequency}
-          onChange={props.handleProphylacticDrugFrequency}
-          style={{ background: `#fffacd` }}
-          name="prophylacticFrequency"
-          type="number"
-          disabled={props.disabledProphylactic}
-        />
+        {!props.networkErrorF && props.frequencies ? (
+          <FormControl fullWidth disabled={props.disabledProphylactic}>
+            <InputLabel
+              id="demo-simple-select-label"
+              style={{ width: "fit-content" }}
+            >
+              Frequenza
+            </InputLabel>
+            <Select
+              style={{ fontSize: 15 }}
+              id="demo-simple-select"
+              value={
+                props.prophylacticDrug.frequency
+                  ? props.frequencies.find(
+                      (f) => f.id === props.prophylacticDrug.frequency
+                    ).frequency
+                  : ""
+              }
+              onChange={props.handleProphylacticDrugFrequency}
+              label="Frequenza"
+            >
+              {props.frequencies.map((element) => (
+                <MenuItem value={element.frequency}>
+                  {element.frequency}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+            }}
+          >
+            Errore nell'ottenere la lista frequenze
+            <RefreshButton
+              onClick={props.getFrequenciesFromServer}
+              loading={props.loadingFreq}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
