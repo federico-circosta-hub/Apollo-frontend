@@ -17,6 +17,7 @@ export const isDatasetValid = (data: DatasetData): boolean => {
 
 export class DatasetData {
     name: string = "";
+    description: string = "";
     start_date: Dayjs | null;
     end_date: Dayjs | null = dayjs();
     type: MediaType = MediaType.IMAGE;
@@ -45,7 +46,7 @@ export default class Dataset {
         this.start_date = obj.start_date;
         this.end_date = obj.end_date;
         this.type = obj.type;
-        this.media_count = obj.media_count;
+        this.media_count = obj.media_count ?? 0;
         this.completed = obj.completed;
     }
 

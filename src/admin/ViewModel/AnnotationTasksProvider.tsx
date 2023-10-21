@@ -24,8 +24,14 @@ export default function AnnotationToolsProvider({
 
     const getTasks = useCallback(async () => {
         if (!synchronized.current) {
-            const res = await CommunicationController.getAllTasks(true);
+            let res = await CommunicationController.getAllTasks(true);
             synchronized.current = true;
+
+            res = res.filter(
+                (t1) =>
+                    tasks.current.find((t2) => t1.id === t2.id) === undefined
+            );
+
             tasks.current.push(...res);
         }
         return tasks.current;

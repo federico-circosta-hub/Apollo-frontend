@@ -24,8 +24,14 @@ export default function PhysiciansProvider({
 
     const getPhysician = useCallback(async () => {
         if (!synchronized.current) {
-            const res = await DeanonymizedCC.getPhysicians(true);
+            let res = await DeanonymizedCC.getPhysicians(true);
             synchronized.current = true;
+
+            res = res.filter(
+                (u1) =>
+                    users.current.find((u2) => u1.id === u2.id) === undefined
+            );
+
             users.current.push(...res);
         }
         return users.current;

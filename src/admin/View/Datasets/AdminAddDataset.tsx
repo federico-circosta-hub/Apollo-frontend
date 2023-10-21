@@ -18,8 +18,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/it";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import { Typography } from "@mui/material";
+import RadioGroup from "@mui/material/RadioGroup";
+import { Radio, Typography } from "@mui/material";
 
 export default function AdminAddDataset() {
     const [, setTitle] = useContext(HeaderContext);
@@ -36,12 +36,12 @@ export default function AdminAddDataset() {
     const { add: addDataset } = useContext(DatasetsContext);
 
     const exit = useCallback(() => {
-        navigate(-1);
+        navigate("/datasets");
     }, [navigate]);
 
     const saveData = useCallback(async () => {
         setStatus(Status.LOADING);
-		
+
         try {
             await addDataset(dataset);
             setStatus(Status.IDLE);
@@ -65,32 +65,30 @@ export default function AdminAddDataset() {
     return (
         <MainContainer style={style.container}>
             <Box sx={style.row}>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={dataset.type === MediaType.IMAGE}
-                            onChange={(e) =>
-                                updateDataset(
-                                    "type",
-                                    e.target.checked
-                                        ? MediaType.IMAGE
-                                        : MediaType.VIDEO
-                                )
-                            }
-                        />
-                    }
-                    label={
-                        dataset.type === MediaType.IMAGE ? "Immagini" : "Video"
-                    }
-                    sx={style.field}
-                />
+                <RadioGroup
+                    row
+                    value={dataset.type}
+                    onChange={(e) => updateDataset("type", e.target.value)}
+                    sx={style.fieldMargins}
+                >
+                    <FormControlLabel
+                        value={MediaType.IMAGE}
+                        control={<Radio />}
+                        label="Immagini"
+                    />
+                    <FormControlLabel
+                        value={MediaType.VIDEO}
+                        control={<Radio />}
+                        label="Video"
+                    />
+                </RadioGroup>
                 <TextField
                     variant="standard"
                     label="Nome"
                     placeholder="Nome del dataset"
                     value={dataset.name}
                     onChange={(e) => updateDataset("name", e.target.value)}
-                    sx={[style.field, { flex: 7 }]}
+                    sx={[style.fieldMargins, { flexGrow: 1 }]}
                     error={dataset.name === ""}
                 />
             </Box>
@@ -123,6 +121,18 @@ export default function AdminAddDataset() {
                     </Typography>
                 )}
             </Box>
+            <Box sx={style.row}>
+                <TextField
+                    value={dataset.description}
+                    label="Descrizione"
+                    onChange={(e) =>
+                        updateDataset("description", e.target.value)
+                    }
+                    multiline
+                    rows={3}
+                    sx={style.field}
+                />
+            </Box>
             <Box sx={{ flex: 1 }} />
             <ButtonsFooter
                 saveDisabled={!isDatasetDataValid(dataset)}
@@ -149,6 +159,10 @@ const style = {
         flexDirection: "row" as "row",
         justifyContent: "center",
         marginTop: "4px",
+    },
+    fieldMargins: {
+        marginLeft: "16px",
+        marginRight: "16px",
     },
     field: {
         flex: 1,
