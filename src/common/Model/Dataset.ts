@@ -31,6 +31,7 @@ export type DatasetDataKey = keyof DatasetData;
 export default class Dataset {
     id: number;
     name: string;
+    description: string;
     start_date?: string;
     end_date?: string;
     type: MediaType;
@@ -38,12 +39,13 @@ export default class Dataset {
     completed: boolean;
 
     constructor(obj: Dataset) {
-        this.id = obj.id ?? 0;
-        this.name = obj.name ?? "";
+        this.id = obj.id;
+        this.name = obj.name;
+        this.description = obj.description;
         this.start_date = obj.start_date;
         this.end_date = obj.end_date;
-        this.type = obj.type ?? MediaType.IMAGE;
-        this.media_count = obj.media_count ?? 0;
+        this.type = obj.type;
+        this.media_count = obj.media_count;
         this.completed = obj.completed;
     }
 
@@ -63,7 +65,11 @@ export default class Dataset {
     };
 
     filter = (filter: string): boolean => {
-        return this.name.toLowerCase().includes(filter.toLowerCase());
+        filter = filter.toLowerCase();
+        return (
+            this.name.toLowerCase().includes(filter) ||
+            this.description.toLowerCase().includes(filter)
+        );
     };
 
     setCompleted = async (): Promise<boolean> => {

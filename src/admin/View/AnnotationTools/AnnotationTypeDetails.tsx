@@ -3,7 +3,6 @@ import AnnotationType from "../../../common/Model/AnnotationType";
 import TextField from "@mui/material/TextField";
 import Status from "../../../common/Model/Status";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import ResultSnackar from "../../../common/View/ResultSnackbar";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -11,10 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { FunctionsContext } from "../../ViewModel/FunctionsProvider";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import LoadingError from "../../../common/View/LoadingError";
-import Button from "@mui/material/Button";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
-import ConfirmActionModal from "../../../common/View/Modal/ConfirmActionModal";
-import StatusLoadingButton from "../../Components/StatusLoadingButton";
 import ButtonsFooter from "../../Components/ButtonsFooter";
 
 export default function AnnotationTypeDetails({

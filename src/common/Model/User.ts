@@ -1,5 +1,4 @@
 import MainCC from "./Communication/MainCommunicationController";
-import DeanonimizedCC from "./Communication/DeanonymizedCommunicationController";
 import PhysicianTask from "./PhysicianTask";
 
 export enum UserType {
@@ -102,17 +101,8 @@ export default class User {
         return instructions;
     };
 
-    tasks = async (
-        includeCompleted: boolean = false,
-        offset: number = 0,
-        cnt: number = 20
-    ): Promise<PhysicianTask[]> => {
-        return await MainCC.getPhysicianTasks(
-            this.id,
-            includeCompleted,
-            offset,
-            cnt
-        );
+    tasks = (includeCompleted: boolean = false): Promise<PhysicianTask[]> => {
+        return MainCC.getPhysicianTasks(this.id, includeCompleted);
     };
 
     getData = (): UserData => {

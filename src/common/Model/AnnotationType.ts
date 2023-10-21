@@ -3,6 +3,7 @@ import CommunicationController from "./Communication/MainCommunicationController
 export default class AnnotationType {
     id: number;
     name: string;
+    description: string;
     annotation_tool: number;
     print_function: string;
     conflict_function: string;
@@ -12,6 +13,7 @@ export default class AnnotationType {
     constructor(obj: AnnotationType) {
         this.id = obj.id;
         this.name = obj.name;
+        this.description = obj.description;
         this.annotation_tool = obj.annotation_tool;
         this.print_function = obj.print_function;
         this.conflict_function = obj.conflict_function;
