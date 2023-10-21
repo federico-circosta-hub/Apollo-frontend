@@ -208,11 +208,11 @@ export default function Drug() {
     newVisitToSend.setJoints(newVisit);
     console.log("newVisitToSend:", newVisitToSend);
     try {
-      /* const sendedVisit = await CommunicationController.post(
+      const sendedVisit = await CommunicationController.post(
         "visit",
         newVisitToSend
       );
-      console.log("sendedVisit:", sendedVisit); */
+      console.log("sendedVisit:", sendedVisit);
 
       setShowFinishAlert(true);
     } catch (err) {

@@ -189,18 +189,24 @@ export default function EndingVisitModal(props) {
 
         <br />
         <h5>Aricolazioni visitate</h5>
-        {props.visit.joints.map((e) => {
-          return (
-            <>
-              <p>
-                {JointNameChanger.fromSeparateEnglishToSingleStringIta(
-                  e.jointName,
-                  e.side
-                )}
-              </p>
-            </>
-          );
-        })}
+        {props.visit.joints.length > 0 ? (
+          props.visit.joints.map((e) => {
+            return (
+              <>
+                <p>
+                  {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+                    e.jointName,
+                    e.side
+                  )}
+                </p>
+              </>
+            );
+          })
+        ) : (
+          <p>
+            <em>Nessuna articolazione visitata</em>
+          </p>
+        )}
       </Modal.Body>
 
       {footer()}

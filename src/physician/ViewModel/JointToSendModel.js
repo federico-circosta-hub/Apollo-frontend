@@ -1,3 +1,5 @@
+import format from "date-fns/format";
+
 export default class JointToSendModel {
   id; //: number
   name; //: string
@@ -20,7 +22,9 @@ export default class JointToSendModel {
     this.blood =
       joint.distensionCause /*  === null ? undefined : joint.distensionCause */;
     this.distension_amount = joint.distension;
-    this.last_bleeding = joint.lastBleed;
+    this.last_bleeding = joint.lastBleed
+      ? format(joint.lastBleed, "y-MM-dd")
+      : undefined;
     this.difficulty_moving = joint.jointDifficulty;
     this.index_joint = joint.indexJoint;
     this.pain = joint.pain;

@@ -2,7 +2,7 @@ import format from "date-fns/format";
 import JointToSendModel from "./JointToSendModel";
 
 export default class NewVisitToSend {
-  id;
+  //id;
   patient; //string
   physician; //number
   date; //data string
@@ -24,10 +24,10 @@ export default class NewVisitToSend {
   };
 
   constructor(newVisit) {
-    this.id = newVisit.visitId;
+    //this.id = newVisit.visitId;
     this.patient = newVisit.patient;
     this.physician = newVisit.physician;
-    this.date = newVisit.visitDate;
+    this.date = format(newVisit.visitDate, "y-MM-dd");
     this.type = newVisit.isInPresence ? "live" : "expost";
     this.follows = newVisit.followUp.followUp
       ? format(newVisit.previousVisit.date, "y-MM-dd")
