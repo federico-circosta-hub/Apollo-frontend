@@ -1,13 +1,14 @@
+import AppBar from "@mui/material/AppBar";
 import MainContainer from "./MainContainer";
 import Loading from "./Loading";
 
 export default function LoadingScreen() {
     return (
         <>
-            <nav
-                className="navbar bg-body-tertiary"
-                style={{ height: "9vh" }}
-            />
+            <AppBar
+                position="static"
+                sx={{ height: "9vh", backgroundColor: "white" }}
+            ></AppBar>
             <MainContainer>
                 <Loading />
             </MainContainer>
