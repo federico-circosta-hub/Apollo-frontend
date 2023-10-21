@@ -32,7 +32,7 @@ export default function NewVisit() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { selectedPatient } = useContext(PatientContext);
 
-  const [activities, setActivities] = useState([{ name: "Nessuna" }]);
+  const [activities, setActivities] = useState();
   const [traumaticEvents, setTraumaticEvents] = useState([{ name: "Nessuno" }]);
   const [visitDate, setVisitDate] = useState(newVisit.visitDate);
   const [isFollowUp, setIsFollowUp] = useState(newVisit.followUp.followUp);
@@ -58,13 +58,13 @@ export default function NewVisit() {
 
   const getTraumaticEventAndActivitiesFromServer = async () => {
     setLoadingOptions(true);
-    setActivities([{ name: "Nessuna" }]);
+    setActivities();
     setTraumaticEvents([{ name: "Nessuno" }]);
     setNetworkError(null);
     try {
       const acts = await CommunicationController.get("exercise", {});
       const trauma = await CommunicationController.get("traumaEvent", {});
-      setActivities((prevState) => [...prevState, ...acts]);
+      setActivities(acts);
       setTraumaticEvents((prevState) => [...prevState, ...trauma]);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -129,17 +129,14 @@ export default function NewVisit() {
   };
 
   const displayActivityItems = () => {
-    return networkError === null ? (
+    return (
+      activities &&
+      !networkError &&
       activities.map((element) => (
         <MenuItem key={element.name} value={element.name}>
           {element.name}
         </MenuItem>
       ))
-    ) : (
-      <MenuItem>
-        Errore nell'ottenere le attività
-        <RefreshButton onClick={getTraumaticEventAndActivitiesFromServer} />
-      </MenuItem>
     );
   };
   const displayTraumaticItems = () => {
@@ -297,32 +294,36 @@ export default function NewVisit() {
             </LocalizationProvider>
           </div>
           <div>
-            <FormControl
-              fullWidth
-              disabled={disabledLeft}
-              style={{ minWidth: 120, fontSize: 22 }}
-            >
-              <InputLabel id="demo-simple-select-label">
-                Attività fisica
-              </InputLabel>
-
-              <Select
-                style={{ fontSize: 22 }}
-                id="demo-simple-select"
-                label="esercizio"
-                value={physicalActivity.physicalActivityType}
-                onChange={handleActivity}
+            {loadingOptions ? (
+              <CircularProgress style={{ padding: 2 }} color="info" size={25} />
+            ) : networkError && !activities ? (
+              <>
+                Errore nell'ottenere le attività
+                <RefreshButton
+                  onClick={getTraumaticEventAndActivitiesFromServer}
+                />
+              </>
+            ) : (
+              <FormControl
+                fullWidth
+                disabled={disabledLeft}
+                style={{ minWidth: 120, fontSize: 22 }}
               >
-                {loadingOptions && (
-                  <CircularProgress
-                    style={{ padding: 2 }}
-                    color="info"
-                    size={25}
-                  />
-                )}
-                {!loadingOptions && displayActivityItems()}
-              </Select>
-            </FormControl>
+                <InputLabel id="demo-simple-select-label">
+                  Attività fisica
+                </InputLabel>
+
+                <Select
+                  style={{ fontSize: 22 }}
+                  id="demo-simple-select"
+                  label="esercizio"
+                  value={physicalActivity.physicalActivityType ?? ""}
+                  onChange={handleActivity}
+                >
+                  {displayActivityItems()}
+                </Select>
+              </FormControl>
+            )}
           </div>
         </div>
 
@@ -333,29 +334,35 @@ export default function NewVisit() {
             </label>
           </div>
           <div>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label" style={{ width: 160 }}>
-                Evento
-              </InputLabel>
+            {loadingOptions ? (
+              <CircularProgress style={{ padding: 2 }} color="info" size={25} />
+            ) : networkError && traumaticEvents.length < 2 ? (
+              <>
+                Errore nell'ottenere gli eventi traumatici
+                <RefreshButton
+                  onClick={getTraumaticEventAndActivitiesFromServer}
+                />
+              </>
+            ) : (
+              <FormControl fullWidth>
+                <InputLabel
+                  id="demo-simple-select-label"
+                  style={{ width: 160 }}
+                >
+                  Evento
+                </InputLabel>
 
-              <Select
-                style={{ fontSize: 22 }}
-                id="demo-simple-select"
-                label="event"
-                value={traumaticEvent.traumaticEvent}
-                onChange={handleTrauma}
-              >
-                {traumaticEvents.length > 0 ? (
-                  displayTraumaticItems()
-                ) : (
-                  <CircularProgress
-                    style={{ padding: 2 }}
-                    color="info"
-                    size={25}
-                  />
-                )}
-              </Select>
-            </FormControl>
+                <Select
+                  style={{ fontSize: 22 }}
+                  id="demo-simple-select"
+                  label="event"
+                  value={traumaticEvent.traumaticEvent}
+                  onChange={handleTrauma}
+                >
+                  {displayTraumaticItems()}
+                </Select>
+              </FormControl>
+            )}
           </div>
           <div>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">

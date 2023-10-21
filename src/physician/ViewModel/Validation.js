@@ -17,10 +17,10 @@ export const validateForm = (formName, formData, formData2) => {
       return errors;
     case "newVisit":
       if (formData.physicalActivity.physicalActivity) {
-        if (formData.physicalActivity.physicalActivityDate == "") {
+        if (!formData.physicalActivity.physicalActivityDate) {
           errors.physicalActivityDate = "Inserire data attività fisica";
         }
-        if (formData.physicalActivity.physicalActivityType == "") {
+        if (!formData.physicalActivity.physicalActivityType) {
           errors.physicalActivityType = "Inserire tipo di attività fisica";
         }
       }
@@ -28,9 +28,6 @@ export const validateForm = (formName, formData, formData2) => {
         if (formData.traumaticEvent.traumaticEventDate === "") {
           errors.traumaticEvent = "Inserire data evento traumatico";
         }
-      }
-      if (formData.visitDate == null) {
-        errors.visitDate = "Inserire data della visita";
       }
       return errors;
     case "drugs":
