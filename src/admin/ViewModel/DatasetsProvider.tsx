@@ -33,6 +33,7 @@ export default function DatasetsProvider({
             );
 
             datasets.current.push(...res);
+			datasets.current.sort((d1, d2) => d1.name.localeCompare(d2.name))
         }
         return datasets.current;
     }, []);
@@ -40,6 +41,7 @@ export default function DatasetsProvider({
     const addDataset = useCallback(async (data: DatasetData) => {
         const dataset = await CommunicationController.newDataset(data);
         datasets.current.push(dataset);
+		datasets.current.sort((d1, d2) => d1.name.localeCompare(d2.name))
         return dataset;
     }, []);
 

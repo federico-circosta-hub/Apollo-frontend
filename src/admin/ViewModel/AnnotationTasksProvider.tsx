@@ -33,6 +33,7 @@ export default function AnnotationToolsProvider({
             );
 
             tasks.current.push(...res);
+            tasks.current.sort((t1, t2) => t1.name().localeCompare(t2.name()));
         }
         return tasks.current;
     }, []);
@@ -44,6 +45,7 @@ export default function AnnotationToolsProvider({
         };
         const task = await CommunicationController.newAnnotationTask(data);
         tasks.current.push(task);
+        tasks.current.sort((t1, t2) => t1.name().localeCompare(t2.name()));
         return task;
     }, []);
 
