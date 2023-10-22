@@ -28,11 +28,6 @@ export default function AdminUsers() {
 
         try {
             const res = await getUsers();
-            res.sort(
-                (a, b) =>
-                    a.surname?.localeCompare(b.surname ?? "") ||
-                    a.name.localeCompare(b.name)
-            );
 
             console.log(`${res.length} users recevied`);
             setUsers(res);
@@ -63,8 +58,15 @@ export default function AdminUsers() {
 const UserItem = ({ item, onClick }: MasterItemProps) => {
     const user = item as User;
 
+    const [, setTitle] = useContext(HeaderContext);
+
+    const handleClick = useCallback(() => {
+        setTitle(user.fullName());
+        onClick();
+    }, [setTitle, user, onClick]);
+
     return (
-        <ListItemButton onClick={onClick}>
+        <ListItemButton onClick={handleClick}>
             <ListItemAvatar>
                 <Avatar
                     sx={{

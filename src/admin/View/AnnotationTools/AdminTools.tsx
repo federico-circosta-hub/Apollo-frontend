@@ -73,8 +73,15 @@ export default function AdminTools() {
 const AnnotationToolItem = ({ item, onClick, onDelete }: MasterItemProps) => {
     const tool = item as AnnotationTool;
 
+    const [, setTitle] = useContext(HeaderContext);
+
+    const handleClick = useCallback(() => {
+        setTitle(tool.name);
+        onClick();
+    }, [setTitle, tool, onClick]);
+
     return (
-        <ListItemButton onClick={onClick}>
+        <ListItemButton onClick={handleClick}>
             <ListItemText primary={tool.name} />
             <ListItemIcon
                 sx={{ display: "flex", flexDirection: "row-reverse" }}
