@@ -40,11 +40,7 @@ export default function TaskDetailsForm({
                 <AssignModal
                     show={showAssignModal}
                     task={task}
-                    users={users.filter(
-                        (u) =>
-                            task.physicians.find((p) => p.user === u.id) !==
-                            undefined
-                    )}
+                    users={users}
                     onClose={() => setShowAssignModal(false)}
                 />
             </Box>
