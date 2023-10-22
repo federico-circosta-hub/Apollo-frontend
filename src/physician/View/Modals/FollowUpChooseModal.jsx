@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap/";
-import { Alert, AlertTitle } from "@mui/material";
+import { Alert, AlertTitle, Backdrop } from "@mui/material";
 import VisitLine from "../OtherComponents/VisitLine";
 import { useContext, useState } from "react";
 import { NewVisitContext } from "../../Model/NewVisitContext";
@@ -9,6 +9,17 @@ export default function FollowUpChooseModal(props) {
   const { newVisit } = useContext(NewVisitContext);
 
   const [showModal, setShowModal] = useState(true);
+  const [chooseError, setChooseError] = useState(false);
+
+  const handleSelect = (v) => {
+    console.log(new Date(v.date), newVisit.visitDate);
+    if (new Date(v.date) > newVisit.visitDate) {
+      setChooseError(true);
+      return;
+    }
+    props.onChoose(v);
+    setShowModal(false);
+  };
 
   return (
     <Modal show={showModal} animation={true} size={"lg"}>
@@ -26,10 +37,10 @@ export default function FollowUpChooseModal(props) {
             }}
           >
             <tr style={{}}>
-              <th style={{ background: "white", width: "15%" }}>Id visita</th>
-              <th style={{ background: "white", width: "35%" }}>Data</th>
-              <th style={{ background: "white", width: "20%" }}>Medico</th>
-              <th style={{ background: "white", width: "30%" }}>Tipo visita</th>
+              {/* <th style={{ background: "white", width: "15%" }}>Id visita</th> */}
+              <th style={{ background: "white", width: "40%" }}>Data</th>
+              <th style={{ background: "white", width: "25%" }}>Medico</th>
+              <th style={{ background: "white", width: "35%" }}>Tipo visita</th>
             </tr>
           </thead>
 
@@ -41,8 +52,7 @@ export default function FollowUpChooseModal(props) {
                   key={index}
                   visit={visit}
                   onSelectVisit={() => {
-                    props.onChoose(visit);
-                    setShowModal(false);
+                    handleSelect(visit);
                   }}
                 />
               ))}
@@ -63,6 +73,24 @@ export default function FollowUpChooseModal(props) {
           Annulla
         </button>
       </Modal.Footer>
+      {chooseError && (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={chooseError}
+          onClick={() => setChooseError(false)}
+        >
+          <Alert
+            severity="warning"
+            variant="filled"
+            style={{ width: "80%", justifyContent: "center", fontSize: 22 }}
+          >
+            <AlertTitle style={{ fontSize: 22 }}>
+              Non è consentito selezionare una data di follow-up successiva alla
+              data della visita che si sta compilando
+            </AlertTitle>
+          </Alert>
+        </Backdrop>
+      )}
     </Modal>
   );
 }

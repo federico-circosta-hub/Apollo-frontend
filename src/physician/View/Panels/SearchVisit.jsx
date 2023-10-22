@@ -72,6 +72,7 @@ export default function SearchVisit(props) {
     nv.setPreviousVisitList(visitList);
     nv.setVisitDate(new Date(visitDate));
     setNewVisit(nv);
+    console.log(nv);
     navigate("/newVisit");
   };
 

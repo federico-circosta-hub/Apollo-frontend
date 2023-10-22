@@ -71,7 +71,15 @@ export default function Login() {
           />
         </div>
       </div>
-      <div style={{ flex: 0.75 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          flex: 1,
+        }}
+      >
         {status === Status.ERROR && (
           <Alert severity="error" variant="filled" style={{ width: "100%" }}>
             <AlertTitle>
@@ -143,7 +151,7 @@ const style = {
   box: {
     width: "40%",
     padding: "3vh",
-    height: "80vh",
+    height: "65vh",
     borderRadius: "15px",
     background: "white",
     margin: "auto",
@@ -155,7 +163,7 @@ const style = {
     alignItems: "center",
   },
   images: {
-    padding: "3%",
+    padding: "1.5%",
     flex: 2,
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
