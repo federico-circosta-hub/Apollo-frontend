@@ -28,9 +28,9 @@ export default class JointToSendModel {
     this.difficulty_moving = joint.jointDifficulty;
     this.index_joint = joint.indexJoint;
     this.pain = joint.pain;
-    this.cartilagine = joint.cartilage;
-    this.subchondral_bone = joint.subchondralBone;
-    this.sinovite = joint.synovitis;
+    this.cartilagine = joint.cartilagine;
+    this.subchondral_bone = joint.subchondral_bone;
+    this.sinovite = joint.sinovite;
     this.media_ids = [];
   }
 

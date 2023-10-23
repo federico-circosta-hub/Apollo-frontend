@@ -18,33 +18,35 @@ const MyDocument = forwardRef((props, ref) => {
     switch (field) {
       case "sinovite":
         return visit.getJointWithoutMod(joint, side)
-          ? visit.getJointWithoutMod(joint, side).synovitis === fieldValue
+          ? visit.getJointWithoutMod(joint, side).sinovite === fieldValue
             ? fieldValue
             : "-"
           : "-";
       case "cartilagine":
         return visit.getJointWithoutMod(joint, side)
-          ? visit.getJointWithoutMod(joint, side).cartilage === fieldValue
+          ? visit.getJointWithoutMod(joint, side).cartilagine === fieldValue
             ? fieldValue
             : "-"
           : "-";
       case "subchondral":
         return visit.getJointWithoutMod(joint, side)
-          ? visit.getJointWithoutMod(joint, side).subchondralBone === fieldValue
+          ? visit.getJointWithoutMod(joint, side).subchondral_bone ===
+            fieldValue
             ? fieldValue
             : "-"
           : "-";
       case "totalScore":
+        console.log(visit.getJointWithoutMod(joint, side));
         return visit.getJointWithoutMod(joint, side)
-          ? visit.getJointWithoutMod(joint, side).subchondralBone +
-              visit.getJointWithoutMod(joint, side).cartilage +
-              visit.getJointWithoutMod(joint, side).synovitis
+          ? visit.getJointWithoutMod(joint, side).subchondral_bone +
+              visit.getJointWithoutMod(joint, side).cartilagine +
+              visit.getJointWithoutMod(joint, side).sinovite
           : "N/A";
       default:
         return "N/A";
     }
   };
-
+  console.log(visit);
   return (
     <div style={styles.container} ref={ref}>
       <h2>HEAD-US protocol</h2>

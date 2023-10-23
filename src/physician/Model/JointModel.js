@@ -5,9 +5,9 @@ export default class JointModel {
   jointDifficulty;
   pain;
   lastBleed;
-  synovitis;
-  cartilage;
-  subchondralBone;
+  sinovite;
+  cartilagine;
+  subchondral_bone;
   distension;
   distensionCause;
 
@@ -18,9 +18,9 @@ export default class JointModel {
     jointDifficulty,
     pain,
     lastBleed,
-    synovitis,
-    cartilage,
-    subchondralBone,
+    sinovite,
+    cartilagine,
+    subchondral_bone,
     distension,
     distensionCause
   ) {
@@ -30,9 +30,9 @@ export default class JointModel {
     this.jointDifficulty = jointDifficulty;
     this.pain = pain;
     this.lastBleed = lastBleed;
-    this.synovitis = synovitis;
-    this.cartilage = cartilage;
-    this.subchondralBone = subchondralBone;
+    this.sinovite = sinovite;
+    this.cartilagine = cartilagine;
+    this.subchondral_bone = subchondral_bone;
     this.distension = distension;
     this.distensionCause = distensionCause;
   }
@@ -45,9 +45,9 @@ export default class JointModel {
       this.jointDifficulty,
       this.pain,
       this.lastBleed,
-      this.synovitis,
-      this.cartilage,
-      this.subchondralBone,
+      this.sinovite,
+      this.cartilagine,
+      this.subchondral_bone,
       this.distension,
       this.distensionCause
     );
@@ -86,15 +86,15 @@ export default class JointModel {
   }
 
   setSynovitis(s) {
-    this.synovitis = s;
+    this.sinovite = s;
   }
 
   setCartilage(s) {
-    this.cartilage = s;
+    this.cartilagine = s;
   }
 
   setSubchondralBone(s) {
-    this.subchondralBone = s;
+    this.subchondral_bone = s;
   }
 
   setDistension(s) {

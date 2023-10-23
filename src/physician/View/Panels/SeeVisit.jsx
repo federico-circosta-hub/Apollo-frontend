@@ -1,9 +1,9 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { VisitContext } from "../../Model/VisitContext";
 import { format } from "date-fns";
 import it from "date-fns/locale/it";
 import NoContextModal from "../Modals/NoContextModal";
-import VisitObjectGenerator from "../../Model/VisitObjectGenerator";
+import print from "./../../img/icon/print.png";
 import { useNavigate } from "react-router-dom";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import MainContainer from "../../../common/View/MainContainer";
@@ -12,9 +12,14 @@ import JointInfo from "../OtherComponents/SeeVisit/JointInfo";
 import JointNameChanger from "../../ViewModel/JointNameChanger";
 import { CircularProgress } from "@mui/material";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
+import MyDocument from "../../ViewModel/PdfCreator";
+import { useReactToPrint } from "react-to-print";
+import { PatientContext } from "../../Model/PatientContext";
+import NewVisitModel from "../../Model/NewVisitModel";
 
 export default function SeeVisit() {
   const { selectedVisit } = useContext(VisitContext);
+  const { selectedPatient } = useContext(PatientContext);
   const [visit, setVisit] = useState(null);
   const [loadingVisit, setLoadingVisit] = useState(false);
   const [networkError, setNetworkError] = useState(null);
@@ -22,11 +27,25 @@ export default function SeeVisit() {
   const [networkErrorF, setNetworkErrorF] = useState(null);
   const [frequencies, setFrequencies] = useState();
   const [loadingFreq, setLoadingFreq] = useState(false);
+  const [visitToPrint, setVisitToPrint] = useState(null);
 
   useEffect(() => {
     loadVisit();
     getFrequenciesFromServer();
   }, []);
+
+  const componentRef = useRef();
+
+  const handleclick = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  const transformVisit = (v) => {
+    let nvtp = new NewVisitModel();
+    v.report.joints.forEach((e) => nvtp.addJoint(e));
+    nvtp.setVisitDate(new Date(v.date));
+    setVisitToPrint(nvtp);
+  };
 
   const loadVisit = async () => {
     setNetworkError(null);
@@ -37,6 +56,7 @@ export default function SeeVisit() {
       });
       console.log(visitObject);
       setVisit(visitObject);
+      transformVisit(visitObject);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -219,7 +239,14 @@ export default function SeeVisit() {
               </div>
             </div>
           </div>
-          <div style={{ marginBottom: "1%" }}>
+          <div
+            style={{
+              marginBottom: "1%",
+              display: "flex",
+              justifyContent: "center",
+              gap: "5vw",
+            }}
+          >
             <button
               style={{ fontSize: 24 }}
               className="btn btn-danger btn"
@@ -229,6 +256,39 @@ export default function SeeVisit() {
             >
               Chiudi
             </button>
+            <div>
+              {visitToPrint ? (
+                <button
+                  className="btn btn-primary btn-lg"
+                  onClick={() => {
+                    handleclick();
+                    console.log(componentRef);
+                  }}
+                >
+                  <div>
+                    Stampa report HEAD-US{" "}
+                    <img
+                      src={print}
+                      alt="save or print"
+                      width={38}
+                      height={38}
+                      style={{ filter: "invert(100%" }}
+                    />
+                  </div>
+                </button>
+              ) : (
+                <CircularProgress />
+              )}
+            </div>
+          </div>
+          <div style={{ display: "none" }}>
+            {visitToPrint && (
+              <MyDocument
+                patient={selectedPatient}
+                visit={visitToPrint}
+                ref={componentRef}
+              />
+            )}
           </div>
         </>
       )}

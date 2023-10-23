@@ -255,7 +255,8 @@ export default class NewVisitModel {
 
   getJointWithoutMod(jointName, side) {
     return this.joints.find(
-      (e) => e.jointName === jointName && e.side === side
+      (e) =>
+        (e.jointName === jointName || e.name === jointName) && e.side === side
     );
   }
 
