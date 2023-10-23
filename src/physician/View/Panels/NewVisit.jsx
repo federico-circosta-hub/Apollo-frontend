@@ -25,13 +25,14 @@ import MainContainer from "../../../common/View/MainContainer";
 import NoPreviousVisit from "../Modals/NoPreviousVisit";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import FollowUpChooseModal from "../Modals/FollowUpChooseModal";
+import dayjs from "dayjs";
 
 export default function NewVisit() {
   const nav = useNavigate();
 
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { selectedPatient } = useContext(PatientContext);
-
+  const MAX_DATE = dayjs(newVisit.visitDate);
   const [activities, setActivities] = useState();
   const [traumaticEvents, setTraumaticEvents] = useState([{ name: "Nessuno" }]);
   const [visitDate, setVisitDate] = useState(newVisit.visitDate);
@@ -186,6 +187,7 @@ export default function NewVisit() {
     } else {
       return (
         <DatePicker
+          maxDate={MAX_DATE}
           slotProps={{ textField: { size: "small" } }}
           onChange={(newValue) => modifyDate(newValue.$d, s)}
           label={
