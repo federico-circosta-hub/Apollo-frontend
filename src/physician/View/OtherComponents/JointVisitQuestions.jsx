@@ -9,9 +9,12 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import { RefreshButton } from "./RefreshButton";
 import { PatientContext } from "../../Model/PatientContext";
+import dayjs from "dayjs";
+import { NewVisitContext } from "../../Model/NewVisitContext";
 
 export default function JointVisitQuestions(props) {
   const { selectedPatient } = useContext(PatientContext);
+  const { newVisit } = useContext(NewVisitContext);
 
   const synovitisValues = [
     { value: 0, label: "Assente/bassa" },
@@ -274,11 +277,10 @@ export default function JointVisitQuestions(props) {
           <div style={{ flex: "1" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
+                maxDate={dayjs(newVisit.visitDate)}
                 slotProps={{ textField: { size: "small" } }}
                 label={
-                  props.joint.lastBleed !== undefined &&
-                  props.joint.lastBleed !== "" &&
-                  props.joint.lastBleed !== null
+                  props.joint.lastBleed
                     ? format(props.joint.lastBleed, "dd-MM-y")
                     : "DD-MM-YYYY"
                 }
