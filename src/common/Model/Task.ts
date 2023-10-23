@@ -32,8 +32,10 @@ export default class Task {
     id: number;
     dataset: number;
     dataset_name: string;
+    dataset_description: string;
     annotation_type: number;
     annotation_type_name: string;
+    annotation_type_description: string;
     media_count: number;
     type: "image" | "video";
     annotation_tool: number;
@@ -50,7 +52,9 @@ export default class Task {
         this.dataset = obj.dataset;
         this.annotation_type = obj.annotation_type;
         this.dataset_name = obj.dataset_name;
+        this.dataset_description = obj.dataset_description;
         this.annotation_type_name = obj.annotation_type_name;
+        this.annotation_type_description = obj.annotation_type_description;
         this.media_count = obj.media_count;
         this.type = obj.type;
         this.annotation_tool = obj.annotation_tool;
@@ -62,7 +66,12 @@ export default class Task {
     };
 
     filter = (search: string): boolean => {
-        return this.name().toLowerCase().includes(search.toLowerCase());
+        search = search.toLowerCase();
+        return (
+            this.name().toLowerCase().includes(search) ||
+            this.dataset_description.toLowerCase().includes(search) ||
+            this.annotation_type_description.toLowerCase().includes(search)
+        );
     };
 
     getData = (): TaskData => {

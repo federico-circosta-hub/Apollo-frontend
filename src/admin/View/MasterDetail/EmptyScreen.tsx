@@ -1,7 +1,6 @@
 import Typography from "@mui/material/Typography";
 import MainContainer from "../../../common/View/MainContainer";
 import AddButton from "../../Components/AddButton";
-import Box from "@mui/material/Box";
 
 export default function EmptyScreen({
     itemName,

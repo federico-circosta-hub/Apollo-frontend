@@ -28,8 +28,14 @@ export default function AnnotationToolsProvider({
 
     const getTools = useCallback(async () => {
         if (!synchronized.current) {
-            const res = await CommunicationController.getAnnotationTools();
+            let res = await CommunicationController.getAnnotationTools();
             synchronized.current = true;
+
+            res = res.filter(
+                (t1) =>
+                    tools.current.find((t2) => t1.id === t2.id) === undefined
+            );
+
             tools.current.push(...res);
         }
         return tools.current;

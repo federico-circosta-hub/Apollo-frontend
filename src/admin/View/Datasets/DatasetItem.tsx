@@ -10,6 +10,11 @@ import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
+function formatDate(dateStr: string) {
+    const date = new Date(dateStr);
+    return date.toISOString().split("T")[0];
+}
+
 export default function DatasetItem({
     item,
     onClick,
@@ -18,25 +23,41 @@ export default function DatasetItem({
     const dataset = item as Dataset;
 
     return (
-        <ListItemButton onClick={onClick}>
+        <ListItemButton onClick={onClick} sx={style.container}>
             <ListItemText
                 primary={dataset.name}
                 secondary={<CompletedSwitch dataset={dataset} />}
+                sx={style.textItem}
             />
             <ListItemText
                 sx={style.datesText}
                 primary={
-                    dataset.start_date ? `Da: ${dataset.start_date}` : undefined
+                    dataset.start_date
+                        ? `Da: ${formatDate(dataset.start_date)}`
+                        : undefined
                 }
                 secondary={
-                    dataset.end_date ? `A: ${dataset.end_date}` : undefined
+                    dataset.end_date
+                        ? `A: ${formatDate(dataset.end_date)}`
+                        : undefined
                 }
+                primaryTypographyProps={{ align: "right", marginRight: "24px" }}
+                secondaryTypographyProps={{
+                    align: "right",
+                    marginRight: "24px",
+                }}
+            />
+            <ListItemText
+                sx={style.descriptionText}
+                primary={dataset.description}
+                primaryTypographyProps={{ marginLeft: "24px" }}
             />
             <ListItemText
                 primary={dataset.media_count}
                 secondary={dataset.typeStr()}
                 primaryTypographyProps={{ align: "right" }}
                 secondaryTypographyProps={{ align: "right" }}
+                sx={style.textItem}
             />
             <ListItemIcon
                 sx={{ display: "flex", flexDirection: "row-reverse" }}
@@ -81,7 +102,19 @@ const CompletedSwitch = ({ dataset }: { dataset: Dataset }) => {
 };
 
 const style = {
+    container: {
+        display: "flex",
+        flexDirection: "row" as "row",
+    },
+    textItem: {
+        flex: 1,
+    },
     datesText: {
+        flex: 1,
         display: { xs: "none", sm: "block" },
+    },
+    descriptionText: {
+        flex: 2,
+        display: { xs: "none", md: "block" },
     },
 };

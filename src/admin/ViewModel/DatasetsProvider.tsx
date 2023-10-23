@@ -24,8 +24,14 @@ export default function DatasetsProvider({
 
     const getDatasets = useCallback(async () => {
         if (!synchronized.current) {
-            const res = await CommunicationController.getDatasets();
+            let res = await CommunicationController.getDatasets();
             synchronized.current = true;
+			
+			res = res.filter(
+                (d1) =>
+                    datasets.current.find((d2) => d1.id === d2.id) === undefined
+            );
+
             datasets.current.push(...res);
         }
         return datasets.current;

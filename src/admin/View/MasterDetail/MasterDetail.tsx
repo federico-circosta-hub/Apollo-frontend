@@ -20,7 +20,6 @@ export default function MasterDetail({
     onRetry,
     onDelete,
     deleteText,
-    onScroll,
 }: {
     items: any[];
     itemName: string;
@@ -31,11 +30,10 @@ export default function MasterDetail({
     onRetry: () => Promise<void>;
     onDelete?: (item: any) => Promise<any>;
     deleteText?: string;
-    onScroll?: () => void;
 }) {
     const [searchParams] = useSearchParams();
-    const selectedIdStr = parseInt(searchParams.get("id") ?? "");
-    const selectedId = isNaN(selectedIdStr) ? -1 : selectedIdStr;
+    const selectedIdTemp = parseInt(searchParams.get("id") ?? "");
+    const selectedId = isNaN(selectedIdTemp) ? -1 : selectedIdTemp;
 
     const navigate = useNavigate();
     const [selected, setSelected] = useState<number>(-1);
@@ -70,7 +68,6 @@ export default function MasterDetail({
                         onAdd={onAdd}
                         onDelete={onDelete}
                         deleteText={deleteText}
-						onScroll={onScroll}
                     />
                 ) : (
                     <Loading />

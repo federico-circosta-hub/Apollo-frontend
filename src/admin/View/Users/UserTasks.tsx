@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import User from "../../../common/Model/User";
@@ -14,8 +14,6 @@ import Switch from "@mui/material/Switch";
 import Divider from "@mui/material/Divider";
 import LoadingError from "../../../common/View/LoadingError";
 
-const TASK_CNT = 8;
-
 export default function UserTasks({
     user,
     style,
@@ -27,69 +25,23 @@ export default function UserTasks({
 
     const [includeCompleted, setIncludeCompleted] = useState(false);
     const [status, setStatus] = useState<Status>(Status.LOADING);
-    const waitingUpdate = useRef(false);
-    const allGot = useRef(false);
 
-    const fetchData = useCallback(async () => {
+    const fetchData: () => Promise<void> = useCallback(async () => {
         setStatus(Status.LOADING);
 
         try {
-            const res = await user!.tasks(includeCompleted, 0, TASK_CNT);
+            const res = await user!.tasks(includeCompleted);
 
             console.log(`${res.length} task recevied`);
             setTasks(res);
             setStatus(Status.IDLE);
-            allGot.current = false;
         } catch (err: any) {
             setStatus(Status.ERROR);
         }
     }, [user, includeCompleted]);
 
-    const updateTasks = useCallback(
-        async (offset: number) => {
-            if (allGot.current) return;
-            if (waitingUpdate.current) return;
-            waitingUpdate.current = true;
-
-            try {
-                const res = await user!.tasks(
-                    includeCompleted,
-                    offset,
-                    TASK_CNT
-                );
-
-                const newTasks = res.filter(
-                    (task) => tasks.find((t) => t.id === task.id) === undefined
-                );
-
-                waitingUpdate.current = false;
-                if (newTasks.length === 0) {
-                    allGot.current = true;
-                    return;
-                }
-
-                setTasks((prev) => [...prev, ...newTasks]);
-            } catch (err: any) {
-                waitingUpdate.current = false;
-                setStatus(Status.ERROR);
-            }
-        },
-        [user, tasks]
-    );
-
-    const handleScroll = useCallback(
-        (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-            const percent =
-                e.currentTarget.scrollTop /
-                (e.currentTarget as any).scrollTopMax;
-            if (percent > 0.8) updateTasks(tasks.length);
-        },
-        [updateTasks]
-    );
-
     useEffect(() => {
         fetchData();
-
         return () => CommunicationController.abortLast();
     }, [fetchData]);
 
@@ -128,21 +80,15 @@ export default function UserTasks({
                     Nessun task di annotazione ancora assegnato
                 </Typography>
             ) : (
-                <TasksList tasks={tasks} onScroll={handleScroll} />
+                <TasksList tasks={tasks} />
             )}
         </Box>
     );
 }
 
-const TasksList = ({
-    tasks,
-    onScroll,
-}: {
-    tasks: PhysicianTask[];
-    onScroll: (e: React.UIEvent<HTMLDivElement, UIEvent>) => void;
-}) => {
+const TasksList = ({ tasks }: { tasks: PhysicianTask[] }) => {
     return (
-        <Box sx={baseStyle.scrollable} onScroll={onScroll}>
+        <Box sx={baseStyle.scrollable}>
             <List>
                 {tasks.map((task) => (
                     <Box key={task.id}>
@@ -159,7 +105,7 @@ const TaskItem = ({ task }: { task: PhysicianTask }) => {
     const navigate = useNavigate();
 
     const navigateToTask = useCallback(() => {
-        navigate("/admin/tasks/?id=" + task.id);
+        navigate("/tasks?id=" + task.id);
     }, [navigate, task.id]);
 
     return (

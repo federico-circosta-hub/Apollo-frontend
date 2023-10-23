@@ -1,10 +1,4 @@
-import React, {
-    useEffect,
-    useContext,
-    useState,
-    useCallback,
-    useRef,
-} from "react";
+import React, { useEffect, useContext, useState, useCallback } from "react";
 import AnnotationTask from "../OtherComponents/AnnotationTask";
 import {
     Box,
@@ -21,15 +15,11 @@ import MainContainer from "../../../common/View/MainContainer";
 import Loading from "../../../common/View/Loading";
 import Status from "../../../common/Model/Status";
 
-const TASK_CNT = 16;
-
 export default function Annotations() {
     const [user] = useContext(UserContext);
     const [tasks, setTasks] = useState<PhysicianTask[]>([]);
 
     const [status, setStatus] = useState<Status>(Status.LOADING);
-    const waitingUpdate = useRef(false);
-    const allGot = useRef(false);
 
     const [includeCompleted, setIncludeCompleted] = useState<boolean>(false);
     const toggleInclude = () => setIncludeCompleted(!includeCompleted);
@@ -38,62 +28,18 @@ export default function Annotations() {
         setStatus(Status.LOADING);
 
         try {
-            const res = await user!.tasks(includeCompleted, 0, TASK_CNT);
+            const res = await user!.tasks(includeCompleted);
 
             console.log(`${res.length} task recevied`);
             setTasks(res);
             setStatus(Status.IDLE);
-            allGot.current = false;
         } catch (err: any) {
             setStatus(Status.ERROR);
         }
     }, [user, includeCompleted]);
 
-    const updateTasks = useCallback(
-        async (offset: number) => {
-            if (allGot.current) return;
-            if (waitingUpdate.current) return;
-            waitingUpdate.current = true;
-
-            try {
-                const res = await user!.tasks(
-                    includeCompleted,
-                    offset,
-                    TASK_CNT
-                );
-
-                const newTasks = res.filter(
-                    (task) => tasks.find((t) => t.id === task.id) === undefined
-                );
-
-                waitingUpdate.current = false;
-                if (newTasks.length === 0) {
-                    allGot.current = true;
-                    return;
-                }
-
-                setTasks((prev) => [...prev, ...newTasks]);
-            } catch (err: any) {
-                waitingUpdate.current = false;
-                setStatus(Status.ERROR);
-            }
-        },
-        [user, tasks]
-    );
-
-    const handleScroll = useCallback(
-        (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-            const percent =
-                e.currentTarget.scrollTop /
-                (e.currentTarget as any).scrollTopMax;
-            if (percent > 0.8) updateTasks(tasks.length);
-        },
-        [updateTasks]
-    );
-
     useEffect(() => {
         fetchData();
-
         return () => CommunicationController.abortLast();
     }, [fetchData]);
 
@@ -111,7 +57,6 @@ export default function Annotations() {
                 tasks={tasks}
                 includeCompleted={includeCompleted}
                 onToogleInclude={toggleInclude}
-                onScroll={handleScroll}
             />
         </MainContainer>
     );
@@ -143,16 +88,11 @@ const AnnotationGrid = ({
     tasks,
     includeCompleted,
     onToogleInclude,
-    onScroll,
 }: {
     tasks: PhysicianTask[];
     includeCompleted: boolean;
     onToogleInclude: () => void;
-    onScroll: (e: React.UIEvent<HTMLDivElement, UIEvent>) => void;
 }) => {
-    const box = useRef<HTMLInputElement>(null);
-    useEffect(() => {}, [tasks]);
-
     return (
         <>
             <FormControlLabel
@@ -168,7 +108,7 @@ const AnnotationGrid = ({
             {tasks.length === 0 ? (
                 <EmptyScreen />
             ) : (
-                <Box style={style.scrollable} onScroll={onScroll} ref={box}>
+                <Box style={style.scrollable}>
                     <Grid
                         alignItems="top"
                         justifyContent="left"

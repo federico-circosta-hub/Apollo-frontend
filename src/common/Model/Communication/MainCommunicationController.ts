@@ -42,15 +42,11 @@ class MainCommunicationController extends AbstractCommunicationController {
 
     getPhysicianTasks = async (
         id: number,
-        includeCompleted: boolean = false,
-        offset: number = 0,
-        cnt: number = 20
+        includeCompleted: boolean = false
     ): Promise<PhysicianTask[]> => {
         const tasks = await this.get(this.endpoints.GET_TASKS, {
             physician: id,
             includeCompleted,
-            cnt: cnt,
-            offset: offset,
         });
 
         return tasks.map(
@@ -59,14 +55,10 @@ class MainCommunicationController extends AbstractCommunicationController {
     };
 
     getAllTasks = async (
-        includeCompleted: boolean = false,
-        offset: number = 0,
-        cnt: number = 20
+        includeCompleted: boolean = false
     ): Promise<Task[]> => {
         const tasks = await this.get(this.endpoints.GET_TASKS, {
             includeCompleted,
-            cnt: cnt,
-            offset: offset,
         });
 
         return tasks.map((task: any) => new Task(task));

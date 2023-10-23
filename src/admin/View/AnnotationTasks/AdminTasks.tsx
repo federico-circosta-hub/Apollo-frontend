@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { HeaderContext } from "../AdminHeader";
 import Status from "../../../common/Model/Status";
 import Task from "../../../common/Model/Task";
@@ -21,14 +21,10 @@ export default function AdminTasks() {
     }, [setTitle]);
 
     const [status, setStatus] = useState<Status>(Status.LOADING);
-    const waitingUpdate = useRef(false);
-    const allGot = useRef(false);
 
-    const {
-        get: getTasks,
-        delete: deleteTask,
-        update: updateTasks,
-    } = useContext(AnnotationTasksContext);
+    const { get: getTasks, delete: deleteTask } = useContext(
+        AnnotationTasksContext
+    );
     const [tasks, setTasks] = useState<Task[]>([]);
 
     const fetchData = useCallback(async () => {
@@ -40,35 +36,10 @@ export default function AdminTasks() {
             console.log(`${res.length} annotation tasks recevied`);
             setTasks(res);
             setStatus(Status.IDLE);
-            allGot.current = false;
         } catch (err: any) {
             setStatus(Status.ERROR);
         }
     }, [getTasks]);
-
-    const handleUpdate = useCallback(async () => {
-        if (allGot.current || waitingUpdate.current) return;
-        waitingUpdate.current = true;
-
-        try {
-            const res = await updateTasks(tasks.length);
-
-            const newTasks = res.filter(
-                (task) => tasks.find((t) => t.id === task.id) === undefined
-            );
-
-            waitingUpdate.current = false;
-            if (newTasks.length === 0) {
-                allGot.current = true;
-                return;
-            }
-
-            setTasks((prev) => [...prev, ...newTasks]);
-        } catch (err: any) {
-            waitingUpdate.current = false;
-            setStatus(Status.ERROR);
-        }
-    }, [tasks, updateTasks]);
 
     useEffect(() => {
         fetchData();
@@ -95,7 +66,6 @@ export default function AdminTasks() {
             onRetry={fetchData}
             onDelete={handleDelete}
             deleteText="Non è possibile eliminare un task di annotazione se vi sono già delle annotazioni associate."
-            onScroll={handleUpdate}
         />
     );
 }

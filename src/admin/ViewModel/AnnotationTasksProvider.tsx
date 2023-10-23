@@ -4,12 +4,10 @@ import CommunicationController from "../../common/Model/Communication/MainCommun
 
 export const AnnotationTasksContext = createContext<{
     get: () => Promise<Task[]>;
-    update: (offset: number) => Promise<Task[]>;
     delete: (datasetId: number) => Promise<void>;
     add: (dataset: TaskData) => Promise<Task | undefined>;
 }>({
     get: async () => [],
-    update: async () => [],
     add: async () => {
         return undefined;
     },
@@ -26,17 +24,17 @@ export default function AnnotationToolsProvider({
 
     const getTasks = useCallback(async () => {
         if (!synchronized.current) {
-            const res = await CommunicationController.getAllTasks(true);
+            let res = await CommunicationController.getAllTasks(true);
             synchronized.current = true;
+
+            res = res.filter(
+                (t1) =>
+                    tasks.current.find((t2) => t1.id === t2.id) === undefined
+            );
+
             tasks.current.push(...res);
         }
         return tasks.current;
-    }, []);
-
-    const updateTasks = useCallback(async (offset: number) => {
-        const res = await CommunicationController.getAllTasks(true, offset);
-        tasks.current.push(...res);
-        return res;
     }, []);
 
     const addTask = useCallback(async (data: TaskData) => {
@@ -58,7 +56,6 @@ export default function AnnotationToolsProvider({
         <AnnotationTasksContext.Provider
             value={{
                 get: getTasks,
-                update: updateTasks,
                 add: addTask,
                 delete: removeTask,
             }}

@@ -2,6 +2,10 @@ import { useCallback, useContext } from "react";
 import AccountMenu from "./AccountMenu";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../Model/UserContext";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import DeanonymizedCC from "../Model/Communication/DeanonymizedCommunicationController";
 
 export default function Header({ title, leftButton }) {
@@ -15,25 +19,42 @@ export default function Header({ title, leftButton }) {
     }, [setUser, navigate]);
 
     return (
-        <nav className="navbar bg-body-tertiary" style={{ height: "9vh" }}>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "100%",
-                    paddingLeft: "1%",
-                    paddingRight: "1%",
-                }}
-            >
-                <div>{leftButton}</div>
-                <div style={{ display: "flex" }}>
-                    {title != null ? title : null}
-                </div>
-                <div style={{ display: "flex" }}>
-                    <AccountMenu onLogout={onLogout} />
-                </div>
-            </div>
-        </nav>
+        <AppBar position="static">
+            <Toolbar variant="dense" sx={style.container}>
+                {title && (
+                    <Typography
+                        variant="h6"
+                        color="black"
+                        component="div"
+                        sx={style.title}
+                    >
+                        {title}
+                    </Typography>
+                )}
+                {leftButton || <Box />}
+                <AccountMenu onLogout={onLogout} />
+            </Toolbar>
+        </AppBar>
     );
 }
+
+const style = {
+    container: {
+        height: "9vh",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%",
+        paddingLeft: "1%",
+        paddingRight: "1%",
+        backgroundColor: "white",
+    },
+    title: {
+        position: "absolute",
+        left: 0,
+        right: 0,
+        textAlign: "center",
+        userSelect: "none",
+    },
+};
