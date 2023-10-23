@@ -18,11 +18,14 @@ export default function SeeVisit() {
   const [visit, setVisit] = useState(null);
   const [loadingVisit, setLoadingVisit] = useState(false);
   const [networkError, setNetworkError] = useState(null);
-  const [selectedJointForInfo, setSelectedJointForInfo] = useState(null);
   const [selectedJoint, setSelectedJoint] = useState(null);
+  const [networkErrorF, setNetworkErrorF] = useState(null);
+  const [frequencies, setFrequencies] = useState();
+  const [loadingFreq, setLoadingFreq] = useState(false);
 
   useEffect(() => {
     loadVisit();
+    getFrequenciesFromServer();
   }, []);
 
   const loadVisit = async () => {
@@ -38,6 +41,20 @@ export default function SeeVisit() {
       setNetworkError(err || "Errore inatteso");
     } finally {
       setLoadingVisit(false);
+    }
+  };
+
+  const getFrequenciesFromServer = async () => {
+    setLoadingFreq(true);
+    setNetworkErrorF(null);
+    try {
+      const f = await CommunicationController.get("drug/frequency", {});
+      console.log(f);
+      setFrequencies(f);
+    } catch (err) {
+      setNetworkErrorF(err || "Errore inatteso");
+    } finally {
+      setLoadingFreq(false);
     }
   };
 
@@ -189,7 +206,12 @@ export default function SeeVisit() {
                 )}
 
                 {visit !== null && selectedJoint === null && (
-                  <VisitInfo visit={visit} />
+                  <VisitInfo
+                    visit={visit}
+                    frequencies={frequencies}
+                    networkErrorF={networkErrorF}
+                    getFrequenciesFromServer={getFrequenciesFromServer}
+                  />
                 )}
                 {visit === null && selectedJoint === null && (
                   <CircularProgress />

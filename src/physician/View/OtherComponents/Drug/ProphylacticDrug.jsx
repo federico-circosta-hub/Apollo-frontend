@@ -86,7 +86,7 @@ export default function ProphylacticDrug(props) {
 
         <input
           placeholder="Dose"
-          defaultValue={props.prophylacticDrug.dose}
+          value={props.prophylacticDrug.dose}
           onChange={props.handleProphylacticDrugDose}
           style={{ background: `#fffacd` }}
           name="prophylacticDose"

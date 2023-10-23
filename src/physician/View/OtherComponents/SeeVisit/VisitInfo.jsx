@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { VisitContext } from "../../../Model/VisitContext";
 import format from "date-fns/format";
 import it from "date-fns/locale/it";
+import { RefreshButton } from "../RefreshButton";
 
 export default function VisitInfo(props) {
   const { selectedVisit } = useContext(VisitContext);
@@ -21,11 +22,9 @@ export default function VisitInfo(props) {
       </p>
 
       <h3 style={styles.h3}>Dettagli Visita:</h3>
+
       <p>
-        <strong>Paziente:</strong> {selectedVisit.patient}
-      </p>
-      <p>
-        <strong>Medico:</strong> {props.visit.physician}
+        <strong>Id medico:</strong> {props.visit.physician}
       </p>
       <p>
         <strong>Tipo di Visita:</strong> {props.visit.type}
@@ -36,7 +35,10 @@ export default function VisitInfo(props) {
         <strong>Tipo:</strong> {props.visit.report.exercise || "N/A"}
       </p>
       <p>
-        <strong>Data:</strong> {props.visit.report.date_exercise || "N/A"}
+        <strong>Data:</strong>{" "}
+        {props.visit.report.date_exercise
+          ? format(new Date(props.visit.report.date_exercise), "y-MM-dd")
+          : "N/A"}
       </p>
 
       <h3 style={styles.h3}>Evento Traumatico:</h3>
@@ -44,7 +46,10 @@ export default function VisitInfo(props) {
         <strong>Tipo:</strong> {props.visit.report.trauma_event || "N/A"}
       </p>
       <p>
-        <strong>Data:</strong> {props.visit.report.date_trauma || "N/A"}
+        <strong>Data:</strong>{" "}
+        {props.visit.report.date_trauma
+          ? format(new Date(props.visit.report.date_trauma), "y-MM-dd")
+          : "N/A"}
       </p>
 
       <h3 style={styles.h3}>Follow-Up:</h3>
@@ -55,11 +60,23 @@ export default function VisitInfo(props) {
         <strong>Nome:</strong> {props.visit.report.prophylaxis_drug || "N/A"}
       </p>
       <p>
-        <strong>Dose:</strong> {props.visit.report.prophylaxis_dose || "N/A"}
+        <strong>Dose:</strong>{" "}
+        {Math.round(props.visit.report.prophylaxis_dose) || "N/A"}
       </p>
       <p>
         <strong>Frequenza:</strong>{" "}
-        {props.visit.report.prophylaxis_frequency || "N/A"}
+        {props.networkErrorF ? (
+          <>
+            Errore nel reperire frequenza
+            <RefreshButton onClick={props.getFrequenciesFromServer} />
+          </>
+        ) : props.frequencies && props.visit.report.prophylaxis_frequency ? (
+          props.frequencies.find(
+            (f) => f.id === props.visit.report.prophylaxis_frequency
+          ).frequency
+        ) : (
+          "N/A"
+        )}
       </p>
 
       <h3 style={styles.h3}>Farmaco Acuto:</h3>
@@ -67,7 +84,8 @@ export default function VisitInfo(props) {
         <strong>Nome:</strong> {props.visit.report.acute_drug || "N/A"}
       </p>
       <p>
-        <strong>Dose:</strong> {props.visit.report.acute_dose || "N/A"}
+        <strong>Dose:</strong>{" "}
+        {Math.round(props.visit.report.acute_dose) || "N/A"}
       </p>
     </div>
   );

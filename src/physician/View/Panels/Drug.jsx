@@ -416,6 +416,7 @@ export default function Drug() {
             patient={selectedPatient}
             visit={newVisit}
             sending={sending}
+            frequencies={frequencies}
           />
         )}
       </div>
@@ -531,6 +532,7 @@ export default function Drug() {
             patient={selectedPatient}
             visit={newVisit}
             sending={sending}
+            frequencies={frequencies}
           />
         )}
       </div>
