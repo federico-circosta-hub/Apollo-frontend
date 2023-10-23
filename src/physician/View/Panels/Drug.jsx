@@ -109,7 +109,6 @@ export default function Drug() {
     setNetworkErrorF(null);
     try {
       const f = await CommunicationController.get("drug/frequency", {});
-      console.log(f);
       setFrequencies(f);
     } catch (err) {
       setNetworkErrorF(err || "Errore inatteso");
@@ -176,7 +175,6 @@ export default function Drug() {
   };
 
   const handleAcuteDrug = (e) => {
-    console.log(e.target);
     let ad = { ...acuteDrug };
     ad.drug.name = e.target.value;
     if (e.target.value === "Nessuno") {
@@ -188,7 +186,6 @@ export default function Drug() {
       setDisabledAcute(false);
     }
     setAcuteDrug(ad);
-    console.log(ad);
   };
 
   const handleAcuteDrugDose = (e) => {
@@ -229,9 +226,7 @@ export default function Drug() {
     o.needFollowUp = needFollowUp;
     o.prophylacticDrug = prophylacticDrug;
     o.acuteDrug = acuteDrug;
-    console.log(o);
     let e = validateForm("drugs", o);
-    console.log(Object.keys(e));
     if (Object.keys(e).length == 0) {
       newVisit.setNeedFollowUp(needFollowUp);
       newVisit.setProphylacticDrug(prophylacticDrug);

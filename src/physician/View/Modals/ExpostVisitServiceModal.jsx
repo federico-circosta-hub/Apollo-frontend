@@ -33,23 +33,17 @@ export default function ExpostVisitServiceModal(props) {
         "visit/incompleted",
         {}
       );
-      console.log(visitsArray);
       let updatedVisits = [];
       for (let e of visitsArray) {
-        console.log("deanonymized get patient", {
-          pid: e.patient,
-        });
         let patient = await DeanonymizedCC.get("patient", {
           pid: e.patient,
         });
         patient = patient[0];
-        console.log(patient);
         e.deanonymizedPatient = patient.name + " " + patient.surname;
         e.birthdate = patient.birthdate;
         e.gender = patient.gender;
         updatedVisits.push(e);
       }
-      console.log(updatedVisits);
       setVisitList(updatedVisits);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -93,7 +87,6 @@ export default function ExpostVisitServiceModal(props) {
         {loadingVisits && <SkeletonsList />}
         {networkError && (
           <div style={{ marginTop: "1%" }}>
-            {console.log(networkError)}
             Errore nell'ottenere lista visite
             <RefreshButton
               onClick={() => {

@@ -55,14 +55,12 @@ export default function LiveVisitServiceModal(props) {
         let patient = await DeanonymizedCC.get("patient", {
           pid: e.patient,
         });
-        console.log(patient);
         patient = patient[0];
         e.deanonymizedPatient = patient.name + " " + patient.surname;
         e.birthdate = patient.birthdate;
         e.gender = patient.gender;
         updatedVisits.push(e);
       }
-      console.log(updatedVisits);
       setVisitList(updatedVisits);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -157,7 +155,6 @@ export default function LiveVisitServiceModal(props) {
           {loadingVisits && <SkeletonsList />}
           {networkError && (
             <div style={{ marginTop: "1%" }}>
-              {console.log(networkError)}
               Errore nell'ottenere lista visite
               <RefreshButton
                 onClick={() => {

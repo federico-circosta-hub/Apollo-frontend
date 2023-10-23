@@ -176,7 +176,6 @@ export default class NewVisitModel {
   }
 
   jointPresence(obj) {
-    console.log("chiamato jointPresence");
     let b = false;
     this.joints.forEach((e) => {
       if (e.jointName === obj.name && e.side === obj.side) {

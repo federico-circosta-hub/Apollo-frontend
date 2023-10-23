@@ -48,7 +48,6 @@ export default function SearchVisit(props) {
       const visitsArray = await CommunicationController.get("visit", {
         patient: selectedPatient.pid,
       });
-      console.log(visitsArray);
       setVisitList(visitsArray);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -158,7 +157,6 @@ export default function SearchVisit(props) {
           {loadingVisits && <SkeletonsList />}
           {networkError !== null && (
             <div style={{ marginTop: "1%" }}>
-              {console.log(networkError)}
               Errore nell'ottenere lista visite
               <RefreshButton
                 onClick={() => {

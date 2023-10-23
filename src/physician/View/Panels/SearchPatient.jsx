@@ -45,12 +45,10 @@ export default function SearchPatient() {
     if (searchInput.length >= 3) {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
-        console.log("cerco", searchInput);
         clearAll();
         getPatients(searchInput, 0);
       }, 500);
     } else if (searchInput.length === 0) {
-      console.log("cerco tutti");
       clearAll();
       getPatients("", 0);
     }
@@ -70,15 +68,9 @@ export default function SearchPatient() {
       offset: offsetParam,
       search: searchTerm,
     };
-    console.log("infatti qui i parametri:", params);
     try {
       let patients = await DeanonymizedCC.get("patient", params);
-      console.log(patients);
       setOffset(offsetParam);
-      console.log(
-        "patients.length < PATIENTS_AT_TIME?",
-        patients.length < PATIENTS_AT_TIME
-      );
       if (patients.length === 0 || patients.length < PATIENTS_AT_TIME)
         setEndReached(true);
       if (patients.length > 0) {
@@ -103,9 +95,7 @@ export default function SearchPatient() {
     if (!endReached && (scrollTop + clientHeight) / scrollHeight >= 0.95) {
       if (!throttledScroll.current) {
         throttledScroll.current = setTimeout(() => {
-          console.log("handleScroll setto scroll a", offset + PATIENTS_AT_TIME);
           setLoadingOtherPatients(true);
-          console.log("handleScroll, chiamo getPatients");
           getPatients("", offset + PATIENTS_AT_TIME);
           throttledScroll.current = null;
         }, 750);
@@ -187,7 +177,6 @@ export default function SearchPatient() {
               <RefreshButton
                 onClick={() => {
                   getPatients();
-                  console.log(networkError);
                 }}
               />
             </div>

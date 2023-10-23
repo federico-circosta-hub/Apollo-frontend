@@ -87,7 +87,6 @@ export default function EndVisit() {
               className="btn btn-primary btn-lg"
               onClick={() => {
                 handleclick();
-                console.log(componentRef);
               }}
             >
               <div>

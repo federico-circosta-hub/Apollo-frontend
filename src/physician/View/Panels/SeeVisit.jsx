@@ -54,7 +54,6 @@ export default function SeeVisit() {
       const visitObject = await CommunicationController.get("visit/details", {
         id: selectedVisit.id,
       });
-      console.log(visitObject);
       setVisit(visitObject);
       transformVisit(visitObject);
     } catch (err) {
@@ -69,7 +68,6 @@ export default function SeeVisit() {
     setNetworkErrorF(null);
     try {
       const f = await CommunicationController.get("drug/frequency", {});
-      console.log(f);
       setFrequencies(f);
     } catch (err) {
       setNetworkErrorF(err || "Errore inatteso");
@@ -80,7 +78,6 @@ export default function SeeVisit() {
 
   const handleJointSelection = (j) => {
     setSelectedJoint(null);
-    console.log(j);
     setSelectedJoint(j);
   };
 
@@ -102,7 +99,6 @@ export default function SeeVisit() {
           <RefreshButton
             onClick={() => {
               loadVisit();
-              console.log(networkError);
             }}
           />
         </div>
@@ -262,7 +258,6 @@ export default function SeeVisit() {
                   className="btn btn-primary btn-lg"
                   onClick={() => {
                     handleclick();
-                    console.log(componentRef);
                   }}
                 >
                   <div>

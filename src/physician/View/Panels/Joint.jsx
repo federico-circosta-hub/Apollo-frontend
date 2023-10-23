@@ -63,7 +63,6 @@ export default function Joint(props) {
   const saveAndForward = () => {
     setJoint(joint);
     let e = validateForm("jointVisit", joint, newVisit);
-    console.log(Object.keys(e));
     if (Object.keys(e).length == 0) {
       if (
         newVisit.jointPresence({
@@ -97,7 +96,6 @@ export default function Joint(props) {
       date: format(newVisit.visitDate, "y-MM-dd"),
       exclude: ids,
     };
-    console.log(params);
     try {
       const idsFromServer = await CommunicationController.get(
         "media/visit",
@@ -124,7 +122,6 @@ export default function Joint(props) {
         }, 4000);
       }
     } catch (err) {
-      console.log(err);
       setNetworkError(err || "Errore inatteso");
     } finally {
       setLoadingImages(false);

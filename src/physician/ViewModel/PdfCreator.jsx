@@ -36,7 +36,6 @@ const MyDocument = forwardRef((props, ref) => {
             : "-"
           : "-";
       case "totalScore":
-        console.log(visit.getJointWithoutMod(joint, side));
         return visit.getJointWithoutMod(joint, side)
           ? visit.getJointWithoutMod(joint, side).subchondral_bone +
               visit.getJointWithoutMod(joint, side).cartilagine +
@@ -46,7 +45,7 @@ const MyDocument = forwardRef((props, ref) => {
         return "N/A";
     }
   };
-  console.log(visit);
+
   return (
     <div style={styles.container} ref={ref}>
       <h2>HEAD-US protocol</h2>

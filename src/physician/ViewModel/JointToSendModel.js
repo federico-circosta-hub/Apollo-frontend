@@ -37,13 +37,6 @@ export default class JointToSendModel {
   setMediaIds(newVisit) {
     let mediaIds = [];
     newVisit.ecographies.forEach((element) => {
-      console.log(
-        "setMediaIds:",
-        element.realJoint,
-        element.realSide,
-        this.name,
-        this.side
-      );
       if (
         element.realJoint !== undefined &&
         element.realJoint === this.name &&

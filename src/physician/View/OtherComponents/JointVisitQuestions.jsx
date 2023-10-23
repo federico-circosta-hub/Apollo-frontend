@@ -89,9 +89,7 @@ export default function JointVisitQuestions(props) {
       patient: selectedPatient.pid,
     };
     try {
-      console.log(params);
       const i = await CommunicationController.get("joint/index", params);
-      console.log(i);
       props.joint.setIndexJoint(i.index);
     } catch (err) {
       setNetworkErrorIndex(err || "Errore inatteso");

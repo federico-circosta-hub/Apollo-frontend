@@ -12,7 +12,6 @@ export default function FollowUpChooseModal(props) {
   const [chooseError, setChooseError] = useState(false);
 
   const handleSelect = (v) => {
-    console.log(new Date(v.date), newVisit.visitDate);
     if (new Date(v.date) > newVisit.visitDate) {
       setChooseError(true);
       return;

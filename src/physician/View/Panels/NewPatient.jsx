@@ -104,7 +104,6 @@ export default function NewPatient() {
   };
 
   const modifyPatientBirthdate = (date) => {
-    console.log("modifico data nascita", date.$d);
     let p = patient.clone();
     p.setBirthdate(format(date.$d, "y-MM-dd"));
     setPatient(p);
@@ -127,7 +126,6 @@ export default function NewPatient() {
   };
 
   const handleDisplayProthesis = () => {
-    console.log("handleDisplayProthesis al momento mostro %s", showProthesis);
     if (showProthesis === "none") {
       setShowProthesis("flex");
       setProtButtonClass("btn btn-outline-warning");
