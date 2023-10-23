@@ -201,7 +201,7 @@ export default function SearchPatient() {
                     <th style={{ background: "white" }}></th>
                   </tr>
                 </thead>
-                <tbody onScroll={handleScroll} style={{ textAlign: "center" }}>
+                <tbody style={{ textAlign: "center" }}>
                   {patientListToShow
                     .filter(
                       (item, index, self) =>

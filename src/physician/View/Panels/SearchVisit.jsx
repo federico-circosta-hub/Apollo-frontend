@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import newFile from "../../img/icon/new-file.png";
 import newEvent from "../../img/icon/add-event.png";
 import NewVisitModel from "../../Model/NewVisitModel";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import VisitLine from "../OtherComponents/VisitLine";
 import { VisitContext } from "../../Model/VisitContext";
 import { PatientContext } from "../../Model/PatientContext";
@@ -18,43 +18,63 @@ import ExpostVisitServiceModal from "../Modals/ExpostVisitServiceModal";
 import LiveVisitServiceModal from "../Modals/LiveVisitServiceModal";
 
 export default function SearchVisit(props) {
-  const [visitList, setVisitList] = useState(null);
+  const VISITS_AT_TIME = 20;
+  const [visitList, setVisitList] = useState([]);
   const [loadingVisits, setLoadingVisits] = useState(false);
   const [networkError, setNetworkError] = useState(null);
   const [showExpostServiceModal, setShowExpostServiceModal] = useState(false);
   const [showLiveServiceModal, setShowLiveServiceModal] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [endReached, setEndReached] = useState(false);
 
   const { selectedVisit, setSelectedVisit } = useContext(VisitContext);
   const { selectedPatient } = useContext(PatientContext);
 
+  const throttledScroll = useRef(null);
   const navigate = useNavigate();
 
   const { setNewVisit } = useContext(NewVisitContext);
 
   useEffect(() => {
-    getVisits();
+    getVisits(0);
   }, []);
 
-  const clearAll = () => {
-    setVisitList([]);
-    setNetworkError(null);
-  };
-
-  const getVisits = async () => {
+  const getVisits = async (offsetParam) => {
     //let visitsArray = GenerateVisits();
+    let params = {
+      patient: selectedPatient.pid,
+      cnt: VISITS_AT_TIME,
+      offset: offsetParam,
+    };
     setLoadingVisits(true);
-    clearAll();
+    setNetworkError(null);
+    console.log(params);
     try {
-      const visitsArray = await CommunicationController.get("visit", {
-        patient: selectedPatient.pid,
-      });
-      setVisitList(visitsArray);
+      const visitsArray = await CommunicationController.get("visit", params);
+      setOffset(offsetParam);
+      if (visitsArray.length === 0 || visitsArray.length < VISITS_AT_TIME)
+        setEndReached(true);
+      if (visitsArray.length > 0) {
+        setVisitList((prevState) => [...prevState, ...visitsArray]);
+      }
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
       setLoadingVisits(false);
     }
   };
+
+  const handleScroll = useCallback((e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (!endReached && (scrollTop + clientHeight) / scrollHeight >= 0.95) {
+      if (!throttledScroll.current) {
+        throttledScroll.current = setTimeout(() => {
+          getVisits(offset + VISITS_AT_TIME);
+          throttledScroll.current = null;
+        }, 750);
+      }
+    }
+  });
 
   const handleSelect = () => {
     setTimeout(() => {
@@ -126,6 +146,7 @@ export default function SearchVisit(props) {
         </div>
 
         <div
+          onScroll={handleScroll}
           style={{
             width: "100%",
             height: "70vh",
@@ -216,7 +237,11 @@ export default function SearchVisit(props) {
 
                   <tbody>
                     {visitList
-                      .filter((e) => e.physician !== null)
+                      .filter(
+                        (item, index, self) =>
+                          index === self.findIndex((t) => t.id === item.id) &&
+                          item.physician
+                      )
                       .map((visit, index) => (
                         <VisitLine
                           key={index}
@@ -231,6 +256,21 @@ export default function SearchVisit(props) {
                   </tbody>
                 </table>
               )}
+            {endReached &&
+              visitList.filter((e) => e.physician !== null).length > 0 && (
+                <tfoot
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    fontSize: 14,
+                  }}
+                >
+                  <p>
+                    <em>Non sono presenti altre visite</em>
+                  </p>
+                </tfoot>
+              )}
+
             {!loadingVisits &&
               networkError === null &&
               (visitList === null ||
