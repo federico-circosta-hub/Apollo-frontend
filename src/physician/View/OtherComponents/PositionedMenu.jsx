@@ -12,70 +12,73 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
 export default function PositionedMenu(props) {
-    const route = useLocation();
-    const { selectedPatient } = React.useContext(PatientContext);
+  const route = useLocation();
+  const { selectedPatient } = React.useContext(PatientContext);
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    return (
-        <>
-            <Button
-                id="fade-button"
-                aria-controls={open ? "fade-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-            >
-                <MenuIcon />
-            </Button>
-            <Menu
-                id="fade-menu"
-                MenuListProps={{
-                    "aria-labelledby": "fade-button",
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                TransitionComponent={Fade}
-            >
-                {selectedPatient != null ? (
-                    <MenuItem
-                        onClick={() => {
-                            props.setShowModal(true);
-                            handleClose();
-                        }}
-                    >
-                        <ListItemIcon>
-                            <CancelOutlinedIcon />
-                        </ListItemIcon>
-                        Termina con {selectedPatient.name}{" "}
-                        {selectedPatient.surname}
-                    </MenuItem>
-                ) : route.pathname === "/annotations" ? (
-                    <MenuItem onClick={handleClose}>
-                        <ListItemIcon>
-                            <HomeOutlinedIcon />
-                        </ListItemIcon>
-                        <Link to={"/"}>Home</Link>
-                    </MenuItem>
-                ) : (
-                    route.pathname === "/" && (
-                        <MenuItem onClick={handleClose}>
-                            <ListItemIcon>
-                                <NoteAltOutlinedIcon />
-                            </ListItemIcon>
-                            <Link to={"/annotations"}>Annotazioni</Link>
-                        </MenuItem>
-                    )
-                )}
-            </Menu>
-        </>
-    );
+  return (
+    <>
+      <Button
+        id="fade-button"
+        aria-controls={open ? "fade-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <MenuIcon />
+      </Button>
+      <Menu
+        id="fade-menu"
+        MenuListProps={{
+          "aria-labelledby": "fade-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+      >
+        {selectedPatient != null ? (
+          <MenuItem
+            onClick={() => {
+              props.setShowModal(true);
+              handleClose();
+            }}
+          >
+            <ListItemIcon>
+              <CancelOutlinedIcon />
+            </ListItemIcon>
+            Termina con {selectedPatient.name} {selectedPatient.surname}
+          </MenuItem>
+        ) : route.pathname === "/annotations" ? (
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <HomeOutlinedIcon />
+            </ListItemIcon>
+            <Link to={"/"} replace>
+              Home
+            </Link>
+          </MenuItem>
+        ) : (
+          route.pathname === "/" && (
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <NoteAltOutlinedIcon />
+              </ListItemIcon>
+              <Link to={"/annotations"} replace>
+                Annotazioni
+              </Link>
+            </MenuItem>
+          )
+        )}
+      </Menu>
+    </>
+  );
 }

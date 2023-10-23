@@ -58,7 +58,7 @@ export default function Joint(props) {
     setJoint(null);
     setCurrentJoint(null);
     setNewVisit(newVisit);
-    navigate("/newVisit/jointSelection");
+    navigate("/newVisit/jointSelection", { replace: true });
   };
   const saveAndForward = () => {
     setJoint(joint);
@@ -82,7 +82,7 @@ export default function Joint(props) {
       setNewVisit(newVisit);
       setCurrentJoint(null);
       console.log(newVisit);
-      navigate("/newVisit/jointSelection");
+      navigate("/newVisit/jointSelection", { replace: true });
     } else {
       setErrors(e);
       setFormModal(true);

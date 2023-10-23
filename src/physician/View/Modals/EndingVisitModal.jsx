@@ -21,6 +21,7 @@ export default function EndingVisitModal(props) {
             <AlertTitle>Visita inviata con successo!</AlertTitle>
           </Alert>
           <Link
+            replace
             className="btn btn-outline-success btn-lg"
             to={"/newVisit/endVisit"}
           >

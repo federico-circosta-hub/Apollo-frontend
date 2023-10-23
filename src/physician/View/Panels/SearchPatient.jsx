@@ -94,7 +94,7 @@ export default function SearchPatient() {
 
   const handleSelect = () => {
     setTimeout(() => {
-      navigate("/searchVisit");
+      navigate("/searchVisit", { replace: true });
     }, 200);
   };
 
@@ -150,6 +150,7 @@ export default function SearchPatient() {
           >
             <div>
               <Link
+                replace
                 to={"/newPatient"}
                 className="btn btn-primary"
                 style={{ fontSize: 24 }}

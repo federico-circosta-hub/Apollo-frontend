@@ -6,7 +6,10 @@ export default function NewPatientModal(props) {
   const footer = () => {
     if (props.data.showAlert) {
       return (
-        <Alert severity="success" onClose={() => props.data.navigate("/")}>
+        <Alert
+          severity="success"
+          onClose={() => props.data.navigate("/", { replace: true })}
+        >
           <AlertTitle>Paziente aggiunto con successo!</AlertTitle>
           Chiudi per tornare alla <strong>Home</strong>
         </Alert>

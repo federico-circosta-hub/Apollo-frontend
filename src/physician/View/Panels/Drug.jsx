@@ -279,7 +279,7 @@ export default function Drug() {
     newVisit.setAcuteDrug(acuteDrug);
     newVisit.setTreatment(treatment);
     setNewVisit(newVisit);
-    navigate(-1);
+    navigate("/newVisit/jointSelection", { replace: true });
   };
 
   return newVisit.followUp.followUp ? (

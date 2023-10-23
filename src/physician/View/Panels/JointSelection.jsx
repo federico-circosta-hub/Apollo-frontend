@@ -29,7 +29,7 @@ export default function JointSelection() {
     newVisit.setCurrentJoint(obj);
     setNewVisit(newVisit);
     setCurrentJoint(obj);
-    navigate("/newVisit/jointSelection/joint");
+    navigate("/newVisit/jointSelection/joint", { replace: true });
   };
 
   const deleteJoint = (obj) => {
@@ -217,6 +217,7 @@ export default function JointSelection() {
         >
           <div>
             <Link
+              replace
               className="btn btn-primary"
               to={"/newVisit/"}
               style={{ fontSize: 24 }}
@@ -228,6 +229,7 @@ export default function JointSelection() {
             <Link
               className="btn btn-success"
               to={"/newVisit/drug"}
+              replace
               style={{ fontSize: 24 }}
             >
               Avanti

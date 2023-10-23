@@ -3,45 +3,46 @@ import { Button, Modal } from "react-bootstrap/";
 import { Link } from "react-router-dom";
 
 const Keys = [
-    "patient",
-    "visitDate",
-    "physicalActivity",
-    "traumaticEvent",
-    "joints",
+  "patient",
+  "visitDate",
+  "physicalActivity",
+  "traumaticEvent",
+  "joints",
 ];
 
 const EndingJointModal = ({ objectData, show }) => {
-    const renderFields = () => {
-        return Keys.map((key, index) => (
-            <div key={index}>
-                <strong>{key}:</strong> {objectData.toString(key)}
-            </div>
-        ));
-    };
+  const renderFields = () => {
+    return Keys.map((key, index) => (
+      <div key={index}>
+        <strong>{key}:</strong> {objectData.toString(key)}
+      </div>
+    ));
+  };
 
-    return (
-        <Modal show={show.showEndingModal} animation={true}>
-            <Modal.Header>
-                <Modal.Title>Dettagli visita</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>{renderFields()}</Modal.Body>
-            <Modal.Footer>
-                <button
-                    className="btn btn-secondary btn-lg"
-                    onClick={() => show.setShowEndingModal(false)}
-                >
-                    Annulla
-                </button>
-                <Link
-                    to={"/newVisit/drug"}
-                    className="btn btn-success btn-lg"
-                    onClick={() => console.log(objectData)}
-                >
-                    Prosegui
-                </Link>
-            </Modal.Footer>
-        </Modal>
-    );
+  return (
+    <Modal show={show.showEndingModal} animation={true}>
+      <Modal.Header>
+        <Modal.Title>Dettagli visita</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{renderFields()}</Modal.Body>
+      <Modal.Footer>
+        <button
+          className="btn btn-secondary btn-lg"
+          onClick={() => show.setShowEndingModal(false)}
+        >
+          Annulla
+        </button>
+        <Link
+          replace
+          to={"/newVisit/drug"}
+          className="btn btn-success btn-lg"
+          onClick={() => console.log(objectData)}
+        >
+          Prosegui
+        </Link>
+      </Modal.Footer>
+    </Modal>
+  );
 };
 
 export default EndingJointModal;

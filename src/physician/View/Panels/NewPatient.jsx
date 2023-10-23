@@ -384,7 +384,12 @@ export default function NewPatient() {
         }}
       >
         <div>
-          <Link className="btn btn-danger " to={"/"} style={{ fontSize: 24 }}>
+          <Link
+            replace
+            className="btn btn-danger "
+            to={"/"}
+            style={{ fontSize: 24 }}
+          >
             Annulla
           </Link>
         </div>

@@ -46,6 +46,7 @@ const StopPatientProcessModal = ({ show }) => {
           Annulla
         </button>
         <Link
+          replace
           to={"/"}
           className="btn btn-danger btn-lg"
           onClick={() => {

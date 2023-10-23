@@ -73,7 +73,7 @@ export default function SearchVisit(props) {
     nv.setVisitDate(new Date(visitDate));
     setNewVisit(nv);
     console.log(nv);
-    navigate("/newVisit");
+    navigate("/newVisit", { replace: true });
   };
 
   return selectedPatient !== null ? (

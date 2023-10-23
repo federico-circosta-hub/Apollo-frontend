@@ -104,7 +104,7 @@ export default function NewVisit() {
       setNewVisit(newVisit);
       setErrors({});
       console.log(newVisit);
-      nav("/newVisit/jointSelection");
+      nav("/newVisit/jointSelection", { replace: true });
     } else {
       setErrors(e);
       setFormModal(true);
@@ -381,6 +381,7 @@ export default function NewVisit() {
         >
           <div>
             <Link
+              replace
               onClick={() => setNewVisit(null)}
               to={"/searchVisit/"}
               className="btn btn-danger"

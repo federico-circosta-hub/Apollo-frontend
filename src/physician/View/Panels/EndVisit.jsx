@@ -64,6 +64,7 @@ export default function EndVisit() {
         >
           <div>
             <Link
+              replace
               to={"/"}
               className="btn btn-danger btn-lg"
               onClick={() => {
