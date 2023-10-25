@@ -13,10 +13,12 @@ import { Alert, AlertTitle } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import StopPatientProcessModal from "../Modals/StopPatientProcessModal";
 import KeyboardBackspaceOutlinedIcon from "@mui/icons-material/KeyboardBackspaceOutlined";
+import { StepContext } from "../../Model/StepContext";
 
 export default function EndVisit() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
+  const { setCompletedStep } = useContext(StepContext);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -31,6 +33,7 @@ export default function EndVisit() {
     if (newVisit.sended) {
       setNewVisit(null);
       setSelectedPatient(null);
+      setCompletedStep({});
       navigate("/", { replace: true });
     } else {
       setShowModal(true);

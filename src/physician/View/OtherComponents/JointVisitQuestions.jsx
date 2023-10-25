@@ -242,10 +242,10 @@ export default function JointVisitQuestions(props) {
               />
             )}
           </div>
-          <label style={{ fontSize: 20, flex: "1" }}>
+          <label style={{ fontSize: 20, flex: "2" }}>
             Difficoltà movimento
           </label>
-          <div style={{ flex: "1" }}>
+          <div style={{ flex: "2" }}>
             <Switch
               defaultChecked={props.joint.jointDifficulty}
               onChange={(e) => modifyJoint(e, "difficulty")}
@@ -269,10 +269,10 @@ export default function JointVisitQuestions(props) {
             />
           </div>
 
-          <label style={{ fontSize: 20, flex: "1" }}>
+          <label style={{ fontSize: 20, flex: "2" }}>
             Ultimo sanguinamento
           </label>
-          <div style={{ flex: "1" }}>
+          <div style={{ flex: "2" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
                 maxDate={dayjs(newVisit.visitDate)}

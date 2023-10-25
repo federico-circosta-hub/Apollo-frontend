@@ -5,11 +5,13 @@ import { PatientContext } from "../../Model/PatientContext";
 import { NewVisitContext } from "../../Model/NewVisitContext";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import { Alert, AlertTitle } from "@mui/material";
+import { StepContext } from "../../Model/StepContext";
 
 const StopPatientProcessModal = ({ show }) => {
   const { setNewVisit } = useContext(NewVisitContext);
   const { setCurrentJoint } = useContext(CurrentJointContext);
   const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
+  const { setCompletedStep } = useContext(StepContext);
 
   return (
     <Modal show={show.showModal} animation={true}>
@@ -53,6 +55,7 @@ const StopPatientProcessModal = ({ show }) => {
             setSelectedPatient(null);
             setNewVisit(null);
             setCurrentJoint(null);
+            setCompletedStep({});
             show.setShowModal(false);
           }}
         >

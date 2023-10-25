@@ -27,12 +27,15 @@ import { RefreshButton } from "../OtherComponents/RefreshButton";
 import FollowUpChooseModal from "../Modals/FollowUpChooseModal";
 import dayjs from "dayjs";
 import StopPatientProcessModal from "../Modals/StopPatientProcessModal";
+import HorizontalNonLinearStepper from "../OtherComponents/Stepper";
+import { StepContext } from "../../Model/StepContext";
 
 export default function NewVisit() {
   const nav = useNavigate();
 
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { selectedPatient } = useContext(PatientContext);
+  const { completedStep, setCompletedStep } = useContext(StepContext);
   const MAX_DATE = newVisit && dayjs(newVisit.visitDate);
   const [activities, setActivities] = useState();
   const [traumaticEvents, setTraumaticEvents] = useState([{ name: "Nessuno" }]);
@@ -108,6 +111,9 @@ export default function NewVisit() {
       newVisit.setPhysicalActivity(physicalActivity);
       newVisit.setTraumaticEvent(traumaticEvent);
       newVisit.setPreviousVisit(previousVisit);
+      let cs = completedStep;
+      cs[0] = true;
+      setCompletedStep(cs);
       previousVisit !== undefined &&
         newVisit.setLastVisit(new Date(previousVisit.date));
       setNewVisit(newVisit);
@@ -383,8 +389,9 @@ export default function NewVisit() {
         <div
           style={{
             display: "flex",
-            height: "15vh",
-            alignItems: "flex-end",
+            height: "6vh",
+            marginTop: "3vh",
+            alignItems: "center",
             justifyContent: "space-between",
             width: "95%",
           }}
@@ -398,13 +405,14 @@ export default function NewVisit() {
               Annulla
             </button>
           </div>
+          <HorizontalNonLinearStepper />
           <div>
             <button
               className="btn btn-success"
               onClick={forward}
               style={{ fontSize: 24 }}
             >
-              Prosegui
+              Avanti
             </button>
           </div>
         </div>

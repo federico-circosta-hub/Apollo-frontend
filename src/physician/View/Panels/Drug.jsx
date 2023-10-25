@@ -20,6 +20,7 @@ import FollowUpNeeded from "../OtherComponents/Drug/FollowUpNeeded";
 import { VisitContext } from "../../Model/VisitContext";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import NoContextModal from "../Modals/NoContextModal";
+import HorizontalNonLinearStepper from "../OtherComponents/Stepper";
 
 export default function Drug() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -376,10 +377,11 @@ export default function Drug() {
         </div>
         <div
           style={{
-            marginTop: "6vh",
+            marginTop: "5vh",
             display: "flex",
             justifyContent: "space-between",
-            width: "97.5%",
+            width: "91%",
+            alignItems: "center",
           }}
         >
           <div>
@@ -391,6 +393,7 @@ export default function Drug() {
               Indietro
             </button>
           </div>
+          <HorizontalNonLinearStepper />
           <div>
             <button
               disabled={newVisit.sended}
@@ -493,10 +496,10 @@ export default function Drug() {
         </div>
         <div
           style={{
-            marginTop: "1.5vh",
             display: "flex",
             justifyContent: "space-between",
-            width: "97.5%",
+            width: "91%",
+            alignItems: "center",
           }}
         >
           <div>
@@ -508,6 +511,7 @@ export default function Drug() {
               Indietro
             </button>
           </div>
+          <HorizontalNonLinearStepper />
           <div>
             <button
               disabled={newVisit.sended}

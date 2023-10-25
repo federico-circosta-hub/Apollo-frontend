@@ -9,10 +9,13 @@ import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import MainContainer from "../../../common/View/MainContainer";
 import { Skeleton } from "@mui/material";
 import NoContextModal from "../Modals/NoContextModal";
+import HorizontalNonLinearStepper from "../OtherComponents/Stepper";
+import { StepContext } from "../../Model/StepContext";
 
 export default function JointSelection() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { setCurrentJoint } = useContext(CurrentJointContext);
+  const { completedStep, setCompletedStep } = useContext(StepContext);
 
   const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -34,6 +37,12 @@ export default function JointSelection() {
   const deleteJoint = (obj) => {
     newVisit.deleteJoint(obj);
     setNewVisit(newVisit);
+  };
+
+  const forward = () => {
+    let cs = completedStep;
+    cs[1] = true;
+    setCompletedStep(cs);
   };
 
   return (
@@ -213,9 +222,10 @@ export default function JointSelection() {
           </div>
           <div
             style={{
+              marginTop: "5vh",
               display: "flex",
-              height: "15vh",
-              alignItems: "flex-end",
+              height: "6vh",
+              alignItems: "center",
               justifyContent: "space-between",
               width: "95%",
             }}
@@ -230,8 +240,10 @@ export default function JointSelection() {
                 Indietro
               </Link>
             </div>
+            <HorizontalNonLinearStepper />
             <div>
               <Link
+                onClick={() => forward()}
                 className="btn btn-success"
                 to={"/newVisit/drug"}
                 replace
