@@ -78,7 +78,7 @@ export default function ExpostVisitServiceModal(props) {
   };
 
   return page === 1 ? (
-    <Modal show={page == 1} animation={true} size={"lg"}>
+    <Modal show={page == 1} animation={true} size={"lg"} scrollable>
       <Alert severity="info" variant="filled" style={{ width: "100%" }}>
         <AlertTitle>Scegliere la visita da compilare</AlertTitle>
       </Alert>
@@ -192,6 +192,10 @@ export default function ExpostVisitServiceModal(props) {
         {networkError && (
           <Alert severity="error" variant="filled" style={{ width: "100%" }}>
             <AlertTitle>Errore nell'invio</AlertTitle>
+            <em>
+              Tenere presente che lo stesso paziente non può avere due visite
+              trascitte o live nello stesso giorno
+            </em>
           </Alert>
         )}
         <button className="btn btn-secondary btn-lg" onClick={() => setPage(1)}>

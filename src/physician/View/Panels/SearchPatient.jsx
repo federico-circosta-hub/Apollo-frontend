@@ -140,7 +140,6 @@ export default function SearchPatient() {
           >
             <div>
               <Link
-                replace
                 to={"/newPatient"}
                 className="btn btn-primary"
                 style={{ fontSize: 24 }}

@@ -206,7 +206,7 @@ export default function NewPatient() {
               </Select>
             </FormControl>
           </div>
-          <div>
+          <div style={{ display: "none" }}>
             <button
               onClick={() => handleDisplayProthesis()}
               type="button"
@@ -382,14 +382,13 @@ export default function NewPatient() {
         }}
       >
         <div>
-          <Link
-            replace
+          <button
             className="btn btn-danger "
-            to={"/"}
+            onClick={() => navigate(-1)}
             style={{ fontSize: 24 }}
           >
             Annulla
-          </Link>
+          </button>
         </div>
 
         <div>

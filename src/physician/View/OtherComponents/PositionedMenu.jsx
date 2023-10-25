@@ -1,84 +1,223 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import MenuIcon from "@mui/icons-material/Menu";
-import Fade from "@mui/material/Fade";
-import { ListItemIcon } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
-import { PatientContext } from "../../Model/PatientContext";
 import NoteAltOutlinedIcon from "@mui/icons-material/NoteAltOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import AddIcon from "@mui/icons-material/Add";
+import { Button, Divider } from "@mui/material";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { PatientContext } from "../../Model/PatientContext";
+import { NewVisitContext } from "../../Model/NewVisitContext";
+import VaccinesIcon from "@mui/icons-material/Vaccines";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import MonitorHeartOutlinedIcon from "@mui/icons-material/MonitorHeartOutlined";
+import PanToolAltOutlinedIcon from "@mui/icons-material/PanToolAltOutlined";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 
 export default function PositionedMenu(props) {
+  const navigate = useNavigate();
   const route = useLocation();
-  const { selectedPatient } = React.useContext(PatientContext);
+  const { selectedPatient, setSelectedPatient } =
+    React.useContext(PatientContext);
+  const { newVisit } = React.useContext(NewVisitContext);
+  const [open, setOpen] = React.useState(false);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setOpen(open);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+
+  const handleHome = () => {
+    setOpen(false);
+    if (newVisit) {
+      props.setShowModal(true);
+    } else {
+      setSelectedPatient(null);
+      navigate("/", { replace: true });
+    }
   };
 
   return (
     <>
-      <Button
-        id="fade-button"
-        aria-controls={open ? "fade-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-      >
+      <Button onClick={toggleDrawer(true)}>
         <MenuIcon />
       </Button>
-      <Menu
-        id="fade-menu"
-        MenuListProps={{
-          "aria-labelledby": "fade-button",
-        }}
-        anchorEl={anchorEl}
+      <Drawer
+        anchor="left"
         open={open}
-        onClose={handleClose}
-        TransitionComponent={Fade}
+        onClose={toggleDrawer(false)}
+        PaperProps={{
+          sx: {
+            width: "25vw",
+          },
+        }}
       >
-        {selectedPatient != null ? (
-          <MenuItem
-            onClick={() => {
-              props.setShowModal(true);
-              handleClose();
-            }}
-          >
-            <ListItemIcon>
-              <CancelOutlinedIcon />
-            </ListItemIcon>
-            Termina con {selectedPatient.name} {selectedPatient.surname}
-          </MenuItem>
-        ) : route.pathname === "/annotations" ? (
-          <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <HomeOutlinedIcon />
-            </ListItemIcon>
-            <Link to={"/"} replace>
-              Home
-            </Link>
-          </MenuItem>
-        ) : (
-          route.pathname === "/" && (
-            <MenuItem onClick={handleClose}>
+        <List>
+          {route.pathname !== "/annotations" && (
+            <>
+              <ListItemButton
+                onClick={handleHome}
+                style={{
+                  fontSize: 20,
+                  background: route.pathname === "/" ? "lightblue" : "",
+                }}
+              >
+                <ListItemIcon>
+                  <HomeOutlinedIcon />
+                </ListItemIcon>
+                Home
+              </ListItemButton>
+              {route.pathname === "/" && (
+                <ListItemButton
+                  onClick={() => {
+                    navigate("/annotations", { replace: true });
+                    setOpen(false);
+                  }}
+                  style={{
+                    fontSize: 20,
+                  }}
+                >
+                  <ListItemIcon>
+                    <NoteAltOutlinedIcon />
+                  </ListItemIcon>
+                  Annotazioni
+                </ListItemButton>
+              )}
+              <ListItemButton
+                disabled={newVisit}
+                onClick={() => {
+                  navigate("/searchVisit", { replace: true });
+                  setOpen(false);
+                }}
+                style={{
+                  fontSize: 20,
+                  background:
+                    route.pathname === "/searchVisit" ? "lightblue" : "",
+                }}
+              >
+                <ListItemIcon>
+                  <AddIcon />
+                </ListItemIcon>
+                Nuova Visita
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  navigate("/newPatient");
+                  setOpen(false);
+                }}
+                style={{
+                  fontSize: 20,
+                  background:
+                    route.pathname === "/newPatient" ? "lightblue" : "",
+                }}
+              >
+                <ListItemIcon>
+                  <PersonAddAlt1Icon />
+                </ListItemIcon>
+                Nuovo paziente
+              </ListItemButton>
+              <Divider />
+              <label
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  marginTop: 20,
+                  color: "lightgray",
+                }}
+              >
+                Visita
+              </label>
+              <ListItemButton
+                onClick={() => {
+                  navigate("/newVisit", { replace: true });
+                  setOpen(false);
+                }}
+                style={{
+                  fontSize: 20,
+                  background: route.pathname === "/newVisit" ? "lightblue" : "",
+                }}
+              >
+                <ListItemIcon>
+                  <MonitorHeartOutlinedIcon />
+                </ListItemIcon>
+                Anamnesi
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  navigate("/newVisit/jointSelection", { replace: true });
+                  setOpen(false);
+                }}
+                style={{
+                  fontSize: 20,
+                  background:
+                    route.pathname === "/newVisit/jointSelection"
+                      ? "lightblue"
+                      : "",
+                }}
+              >
+                <ListItemIcon>
+                  <PanToolAltOutlinedIcon />
+                </ListItemIcon>
+                Selezione articolazione
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  navigate("/newVisit/drug", { replace: true });
+                  setOpen(false);
+                }}
+                style={{
+                  fontSize: 20,
+                  background:
+                    route.pathname === "/newVisit/drug" ? "lightblue" : "",
+                }}
+              >
+                <ListItemIcon>
+                  <VaccinesIcon />
+                </ListItemIcon>
+                Farmaci
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  navigate("/newVisit/endVisit", { replace: true });
+                  setOpen(false);
+                }}
+                style={{
+                  fontSize: 20,
+                  background:
+                    route.pathname === "/newVisit/endVisit" ? "lightblue" : "",
+                }}
+              >
+                <ListItemIcon>
+                  <DescriptionOutlinedIcon />
+                </ListItemIcon>
+                Report
+              </ListItemButton>
+            </>
+          )}
+          {route.pathname === "/annotations" && (
+            <ListItemButton
+              onClick={() => {
+                navigate("/", { replace: true });
+                setOpen(false);
+              }}
+            >
               <ListItemIcon>
-                <NoteAltOutlinedIcon />
+                <HomeOutlinedIcon />
               </ListItemIcon>
-              <Link to={"/annotations"} replace>
-                Annotazioni
-              </Link>
-            </MenuItem>
-          )
-        )}
-      </Menu>
+              Home
+            </ListItemButton>
+          )}
+        </List>
+      </Drawer>
     </>
   );
 }

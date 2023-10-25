@@ -36,7 +36,7 @@ export default function SearchVisit(props) {
   const { setNewVisit } = useContext(NewVisitContext);
 
   useEffect(() => {
-    getVisits(0);
+    selectedPatient && getVisits(0);
   }, []);
 
   const getVisits = async (offsetParam) => {

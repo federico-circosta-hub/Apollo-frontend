@@ -26,35 +26,43 @@ import NoPreviousVisit from "../Modals/NoPreviousVisit";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import FollowUpChooseModal from "../Modals/FollowUpChooseModal";
 import dayjs from "dayjs";
+import StopPatientProcessModal from "../Modals/StopPatientProcessModal";
 
 export default function NewVisit() {
   const nav = useNavigate();
 
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { selectedPatient } = useContext(PatientContext);
-  const MAX_DATE = dayjs(newVisit.visitDate);
+  const MAX_DATE = newVisit && dayjs(newVisit.visitDate);
   const [activities, setActivities] = useState();
   const [traumaticEvents, setTraumaticEvents] = useState([{ name: "Nessuno" }]);
-  const [visitDate, setVisitDate] = useState(newVisit.visitDate);
-  const [isFollowUp, setIsFollowUp] = useState(newVisit.followUp.followUp);
+  const [visitDate, setVisitDate] = useState(newVisit && newVisit.visitDate);
+  const [isFollowUp, setIsFollowUp] = useState(
+    newVisit && newVisit.followUp.followUp
+  );
   const [disabledLeft, setDisabledLeft] = useState(
-    !newVisit.physicalActivity.physicalActivity
+    newVisit && !newVisit.physicalActivity.physicalActivity
   );
   const [physicalActivity, setPhysicalActivity] = useState(
-    newVisit.physicalActivity
+    newVisit && newVisit.physicalActivity
   );
-  const [traumaticEvent, setTraumaticEvent] = useState(newVisit.traumaticEvent);
+  const [traumaticEvent, setTraumaticEvent] = useState(
+    newVisit && newVisit.traumaticEvent
+  );
   const [disabledRight, setDisabledRight] = useState(
-    newVisit.traumaticEvent.traumaticEvent === "" ? true : false
+    newVisit && newVisit.traumaticEvent.traumaticEvent === "" ? true : false
   );
   const [formModal, setFormModal] = useState(false);
   const [formErrors, setErrors] = useState({ none: "none" });
   const [loadingOptions, setLoadingOptions] = useState(false);
   const [networkError, setNetworkError] = useState(null);
-  const [previousVisit, setPreviousVisit] = useState(newVisit.previousVisit);
+  const [previousVisit, setPreviousVisit] = useState(
+    newVisit && newVisit.previousVisit
+  );
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    getTraumaticEventAndActivitiesFromServer();
+    newVisit && getTraumaticEventAndActivitiesFromServer();
   }, []);
 
   const getTraumaticEventAndActivitiesFromServer = async () => {
@@ -213,7 +221,7 @@ export default function NewVisit() {
     setNewVisit(newVisit);
   };
 
-  return selectedPatient !== null ? (
+  return selectedPatient && newVisit ? (
     <div>
       <MainContainer style={{ paddingTop: 5 }}>
         <div style={style.monoButtons}>
@@ -382,15 +390,13 @@ export default function NewVisit() {
           }}
         >
           <div>
-            <Link
-              replace
-              onClick={() => setNewVisit(null)}
-              to={"/searchVisit/"}
+            <button
+              onClick={() => setShowModal(true)}
               className="btn btn-danger"
               style={{ fontSize: 24 }}
             >
               Annulla
-            </Link>
+            </button>
           </div>
           <div>
             <button
@@ -405,6 +411,7 @@ export default function NewVisit() {
       </MainContainer>
 
       <div>
+        <StopPatientProcessModal show={{ showModal, setShowModal }} />
         {formModal && (
           <FormModal
             formModal={formModal}
@@ -415,7 +422,10 @@ export default function NewVisit() {
       </div>
     </div>
   ) : (
-    <NoContextModal what={" un paziente "} service={" nuova visita "} />
+    <NoContextModal
+      what={!selectedPatient ? " un paziente " : " una nuova visita "}
+      service={" anamnesi "}
+    />
   );
 }
 

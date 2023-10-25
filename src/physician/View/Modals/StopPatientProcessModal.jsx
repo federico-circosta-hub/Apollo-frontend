@@ -30,7 +30,7 @@ const StopPatientProcessModal = ({ show }) => {
           fontSize: 20,
         }}
       >
-        Le eventuali modifiche o visite non completate verranno eliminate
+        L'eventuale visita non completata verrà eliminata
       </Modal.Body>
       <Modal.Footer
         style={{

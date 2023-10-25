@@ -19,6 +19,7 @@ import ProphylacticDrug from "../OtherComponents/Drug/ProphylacticDrug";
 import FollowUpNeeded from "../OtherComponents/Drug/FollowUpNeeded";
 import { VisitContext } from "../../Model/VisitContext";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
+import NoContextModal from "../Modals/NoContextModal";
 
 export default function Drug() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -36,21 +37,23 @@ export default function Drug() {
 
   const [drugs, setDrugs] = useState(null);
   const [disabledProphylactic, setDisabledProphylactic] = useState(
-    newVisit.prophylacticDrug.drug.name == "" ? true : false
+    newVisit && newVisit.prophylacticDrug.drug.name == "" ? true : false
   );
   const [disabledAcute, setDisabledAcute] = useState(
-    newVisit.acuteDrug.drug.name == "" ? true : false
+    newVisit && newVisit.acuteDrug.drug.name == "" ? true : false
   );
   const [needFollowUp, setNeedFollowUp] = useState(
-    newVisit.needFollowUp == undefined
-      ? { needFollowUp: false, followUpDate: "" }
-      : newVisit.needFollowUp
+    newVisit
+      ? newVisit.needFollowUp == undefined
+        ? { needFollowUp: false, followUpDate: "" }
+        : newVisit.needFollowUp
+      : null
   );
   const [prophylacticDrug, setProphylacticDrug] = useState(
-    newVisit.prophylacticDrug
+    newVisit && newVisit.prophylacticDrug
   );
   const [frequencies, setFrequencies] = useState();
-  const [acuteDrug, setAcuteDrug] = useState(newVisit.acuteDrug);
+  const [acuteDrug, setAcuteDrug] = useState(newVisit && newVisit.acuteDrug);
   const [formModal, setFormModal] = useState(false);
   const [errors, setErrors] = useState({ none: "none" });
   const [loadingOptions, setLoadingOptions] = useState(false);
@@ -62,17 +65,21 @@ export default function Drug() {
   const [showFinishAlert, setShowFinishAlert] = useState(null);
   const [sending, setSending] = useState(false);
   const [treatment, setTreatment] = useState(
-    newVisit.followUp.treatmentResponse
+    newVisit
       ? newVisit.followUp.treatmentResponse
-      : 1
+        ? newVisit.followUp.treatmentResponse
+        : 1
+      : null
   );
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    getDrugsFromServer();
-    getFrequenciesFromServer();
-    if (newVisit.followUp.followUp) getTreatmentFromServer();
+    if (newVisit) {
+      getDrugsFromServer();
+      getFrequenciesFromServer();
+      if (newVisit.followUp.followUp) getTreatmentFromServer();
+    }
   }, []);
 
   const getDrugsFromServer = async () => {
@@ -210,7 +217,8 @@ export default function Drug() {
         newVisitToSend
       );
       console.log("sendedVisit:", sendedVisit);
-
+      newVisit.setSended(true);
+      setNewVisit(newVisit);
       setShowFinishAlert(true);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -277,7 +285,9 @@ export default function Drug() {
     navigate("/newVisit/jointSelection", { replace: true });
   };
 
-  return newVisit.followUp.followUp ? (
+  return !newVisit ? (
+    <NoContextModal what={" una nuova visita "} service={" scelta farmaci "} />
+  ) : newVisit.followUp.followUp ? (
     <div>
       <MainContainer
         style={{
@@ -383,11 +393,12 @@ export default function Drug() {
           </div>
           <div>
             <button
+              disabled={newVisit.sended}
               className="btn btn-success"
               onClick={forward}
               style={{ fontSize: 24 }}
             >
-              Termina visita
+              {newVisit.sended ? "Visita già inviata" : "Termina visita"}
             </button>
           </div>
         </div>
@@ -499,11 +510,12 @@ export default function Drug() {
           </div>
           <div>
             <button
+              disabled={newVisit.sended}
               className="btn btn-success"
               onClick={forward}
               style={{ fontSize: 24 }}
             >
-              Termina visita
+              {newVisit.sended ? "Visita già inviata" : "Termina visita"}
             </button>
           </div>
         </div>

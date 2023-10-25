@@ -48,6 +48,7 @@ export default class NewVisitModel {
   previousVisitList;
 
   isInPresence;
+  sended;
 
   ecographies = [];
   ecographiesId = [];
@@ -214,6 +215,10 @@ export default class NewVisitModel {
 
   setIsInPresence(b) {
     this.isInPresence = b;
+  }
+
+  setSended(b) {
+    this.sended = b;
   }
 
   toString(f) {

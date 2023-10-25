@@ -9,10 +9,12 @@ import Header from "../../../common/View/Header";
 import PositionedMenu from "./PositionedMenu";
 import { useLocation } from "react-router-dom";
 import JointNameChanger from "./../../ViewModel/JointNameChanger";
+import { NewVisitContext } from "../../Model/NewVisitContext";
 
 export default function PhysicianHeader(props) {
   const { selectedPatient } = useContext(PatientContext);
   const { currentJoint } = useContext(CurrentJointContext);
+  const { newVisit } = useContext(NewVisitContext);
   const location = useLocation();
 
   const [title, setTitle] = useState(null);
@@ -51,6 +53,14 @@ export default function PhysicianHeader(props) {
                 " " +
                 format(new Date(selectedPatient.birthdate), "(dd/MM/y)")}
             </label>
+            {newVisit && (
+              <label>
+                {" "}
+                {"— [visita "}
+                {format(newVisit.visitDate, "y-MM-dd")}
+                {"]"}{" "}
+              </label>
+            )}
             {joint()}
           </>
         );

@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { NewVisitContext } from "../../Model/NewVisitContext";
 import { PatientContext } from "../../Model/PatientContext";
 import { Link } from "react-router-dom";
@@ -8,21 +8,59 @@ import { useReactToPrint } from "react-to-print";
 import MainContainer from "../../../common/View/MainContainer";
 import exit from "./../../img/icon/logout.png";
 import print from "./../../img/icon/print.png";
+import NoContextModal from "../Modals/NoContextModal";
+import { Alert, AlertTitle } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import StopPatientProcessModal from "../Modals/StopPatientProcessModal";
+import KeyboardBackspaceOutlinedIcon from "@mui/icons-material/KeyboardBackspaceOutlined";
 
 export default function EndVisit() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
 
+  const [showModal, setShowModal] = useState(false);
+
   const componentRef = useRef();
+  const navigate = useNavigate();
 
   const handleclick = useReactToPrint({
     content: () => componentRef.current,
   });
 
-  return (
+  const handleExit = () => {
+    if (newVisit.sended) {
+      setNewVisit(null);
+      setSelectedPatient(null);
+      navigate("/", { replace: true });
+    } else {
+      setShowModal(true);
+    }
+  };
+
+  return !newVisit ? (
+    <NoContextModal service={" report"} />
+  ) : (
     <div>
       <MainContainer>
         <h3>Report</h3>
+        {!newVisit.sended && (
+          <Alert severity="warning" variant="filled" style={{ width: "30%" }}>
+            <AlertTitle style={{ fontSize: 20 }}>Attenzione!</AlertTitle>
+            Visita non ancora completata / inviata <br />
+            <div
+              style={{ margin: 2, background: "white", width: "fit-content" }}
+            >
+              <Link
+                style={{ margin: 2, color: "#ed6c02" }}
+                to={"/newVisit"}
+                replace
+              >
+                <KeyboardBackspaceOutlinedIcon />
+                Torna alla visita
+              </Link>
+            </div>
+          </Alert>
+        )}
         <div
           style={{
             overflow: "auto",
@@ -63,15 +101,7 @@ export default function EndVisit() {
           }}
         >
           <div>
-            <Link
-              replace
-              to={"/"}
-              className="btn btn-danger btn-lg"
-              onClick={() => {
-                setNewVisit(null);
-                setSelectedPatient(null);
-              }}
-            >
+            <button className="btn btn-danger btn-lg" onClick={handleExit}>
               Esci{" "}
               <img
                 src={exit}
@@ -80,7 +110,7 @@ export default function EndVisit() {
                 height={38}
                 style={{ filter: "invert(100%" }}
               />
-            </Link>
+            </button>
           </div>
           <div>
             <button
@@ -102,6 +132,7 @@ export default function EndVisit() {
             </button>
           </div>
         </div>
+        <StopPatientProcessModal show={{ showModal, setShowModal }} />
       </MainContainer>
     </div>
   );
