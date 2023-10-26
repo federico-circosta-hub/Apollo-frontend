@@ -16,6 +16,7 @@ import { SkeletonsList } from "../OtherComponents/SkeletonsList";
 import { TrendingUpRounded } from "@mui/icons-material";
 import ExpostVisitServiceModal from "../Modals/ExpostVisitServiceModal";
 import LiveVisitServiceModal from "../Modals/LiveVisitServiceModal";
+import DeanonymizedCC from "../../../common/Model/Communication/DeanonymizedCommunicationController";
 
 export default function SearchVisit(props) {
   const VISITS_AT_TIME = 20;
@@ -55,6 +56,13 @@ export default function SearchVisit(props) {
       if (visitsArray.length === 0 || visitsArray.length < VISITS_AT_TIME)
         setEndReached(true);
       if (visitsArray.length > 0) {
+        for (let v of visitsArray) {
+          const u = await DeanonymizedCC.get("user", {
+            id: v.physician,
+          });
+          v.physicianName = u.name;
+          v.physicianSurname = u.surname;
+        }
         setVisitList((prevState) => [...prevState, ...visitsArray]);
       }
     } catch (err) {
@@ -87,15 +95,15 @@ export default function SearchVisit(props) {
     nv.setPhysician(props.id);
     nv.setVisitId(visitId);
     nv.setIsInPresence(IsInPresence);
-    nv.setPatient(selectedPatient.pid);
     nv.setPreviousVisitList(visitList);
+    nv.setPatient(selectedPatient.pid);
     nv.setVisitDate(new Date(visitDate));
     setNewVisit(nv);
     console.log(nv);
     navigate("/newVisit", { replace: true });
   };
 
-  return selectedPatient !== null ? (
+  return selectedPatient ? (
     <div>
       <MainContainer>
         <div
@@ -211,15 +219,16 @@ export default function SearchVisit(props) {
                       <th
                         style={{
                           background: "white",
-                          width: "40%",
+                          width: "30%",
                         }}
                       >
                         Data
                       </th>
+
                       <th
                         style={{
                           background: "white",
-                          width: "25%",
+                          width: "35%",
                         }}
                       >
                         Medico
@@ -227,7 +236,15 @@ export default function SearchVisit(props) {
                       <th
                         style={{
                           background: "white",
-                          width: "35%",
+                          width: "15%",
+                        }}
+                      >
+                        Id medico
+                      </th>
+                      <th
+                        style={{
+                          background: "white",
+                          width: "20%",
                         }}
                       >
                         Tipo visita

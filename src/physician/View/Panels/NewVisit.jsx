@@ -236,15 +236,13 @@ export default function NewVisit() {
             <Switch checked={isFollowUp} onChange={followUp} />
           </div>
           <div>
-            {isFollowUp &&
-              previousVisit !== undefined &&
-              newVisit.previousVisitList.length !== 0 && (
-                <FollowUpHelper
-                  onCancel={handleCancel}
-                  seeVisit={saveInfo}
-                  previousVisit={previousVisit}
-                />
-              )}
+            {isFollowUp && previousVisit && (
+              <FollowUpHelper
+                onCancel={handleCancel}
+                seeVisit={saveInfo}
+                previousVisit={previousVisit}
+              />
+            )}
             {isFollowUp &&
               previousVisit === undefined &&
               (newVisit.previousVisitList.length === 0 ||

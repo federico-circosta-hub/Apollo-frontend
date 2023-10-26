@@ -4,12 +4,58 @@ import { Alert, AlertTitle, Backdrop } from "@mui/material";
 import VisitLine from "../OtherComponents/VisitLine";
 import { useContext, useState } from "react";
 import { NewVisitContext } from "../../Model/NewVisitContext";
+import DeanonymizedCC from "../../../common/Model/Communication/DeanonymizedCommunicationController";
+import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
+import { RefreshButton } from "../OtherComponents/RefreshButton";
+import { SkeletonsList } from "../OtherComponents/SkeletonsList";
 
 export default function FollowUpChooseModal(props) {
   const { newVisit } = useContext(NewVisitContext);
-
+  const VISITS_AT_TIME = 20;
+  const [visitList, setVisitList] = useState([]);
+  const [loadingVisits, setLoadingVisits] = useState(false);
+  const [networkError, setNetworkError] = useState(null);
   const [showModal, setShowModal] = useState(true);
   const [chooseError, setChooseError] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [endReached, setEndReached] = useState(false);
+
+  const throttledScroll = React.useRef(null);
+
+  React.useEffect(() => {
+    getVisits(0);
+  }, []);
+
+  const getVisits = async (offsetParam) => {
+    let params = {
+      patient: newVisit.patient,
+      cnt: VISITS_AT_TIME,
+      offset: offsetParam,
+    };
+    setLoadingVisits(true);
+    setNetworkError(null);
+    console.log(params);
+    try {
+      const visitsArray = await CommunicationController.get("visit", params);
+      setOffset(offsetParam);
+      if (visitsArray.length === 0 || visitsArray.length < VISITS_AT_TIME)
+        if (visitsArray.length > 0) {
+          setEndReached(true);
+          for (let v of visitsArray) {
+            const u = await DeanonymizedCC.get("user", {
+              id: v.physician,
+            });
+            v.physicianName = u.name;
+            v.physicianSurname = u.surname;
+          }
+          setVisitList((prevState) => [...prevState, ...visitsArray]);
+        }
+    } catch (err) {
+      setNetworkError(err || "Errore inatteso");
+    } finally {
+      setLoadingVisits(false);
+    }
+  };
 
   const handleSelect = (v) => {
     if (new Date(v.date) > newVisit.visitDate) {
@@ -20,43 +66,69 @@ export default function FollowUpChooseModal(props) {
     setShowModal(false);
   };
 
+  const handleScroll = React.useCallback((e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (!endReached && (scrollTop + clientHeight) / scrollHeight >= 0.95) {
+      if (!throttledScroll.current) {
+        throttledScroll.current = setTimeout(() => {
+          getVisits(offset + VISITS_AT_TIME);
+          throttledScroll.current = null;
+        }, 750);
+      }
+    }
+  });
+
   return (
-    <Modal show={showModal} animation={true} size={"lg"}>
+    <Modal show={showModal} animation={true} size={"lg"} scrollable>
       <Alert severity="info" variant="filled" style={{ width: "100%" }}>
         <AlertTitle>Scegliere la visita</AlertTitle>
       </Alert>
 
-      <Modal.Body style={{ background: "whitesmoke" }}>
-        <table className="table table-primary table-striped table-hover">
-          <thead
-            style={{
-              position: "sticky",
-              top: 0,
-              height: "6vh",
-            }}
-          >
-            <tr style={{}}>
-              {/* <th style={{ background: "white", width: "15%" }}>Id visita</th> */}
-              <th style={{ background: "white", width: "40%" }}>Data</th>
-              <th style={{ background: "white", width: "25%" }}>Medico</th>
-              <th style={{ background: "white", width: "35%" }}>Tipo visita</th>
-            </tr>
-          </thead>
+      <Modal.Body style={{ background: "whitesmoke" }} onScroll={handleScroll}>
+        {loadingVisits ? (
+          <SkeletonsList />
+        ) : networkError ? (
+          <RefreshButton onClick={getVisits} />
+        ) : (
+          <table className="table table-primary table-striped table-hover">
+            <thead
+              style={{
+                position: "sticky",
+                top: 0,
+                height: "6vh",
+              }}
+            >
+              <tr style={{}}>
+                {/* <th style={{ background: "white", width: "15%" }}>Id visita</th> */}
+                <th style={{ background: "white", width: "30%" }}>Data</th>
+                <th style={{ background: "white", width: "35%" }}>Medico</th>
+                <th style={{ background: "white", width: "15%" }}>Id medico</th>
+                <th style={{ background: "white", width: "20%" }}>
+                  Tipo visita
+                </th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {newVisit.previousVisitList
-              .filter((e) => e.physician !== null)
-              .map((visit, index) => (
-                <VisitLine
-                  key={index}
-                  visit={visit}
-                  onSelectVisit={() => {
-                    handleSelect(visit);
-                  }}
-                />
-              ))}
-          </tbody>
-        </table>
+            <tbody>
+              {visitList
+                .filter((e) => e.physician !== null)
+                .map((visit, index) => (
+                  <VisitLine
+                    key={index}
+                    visit={visit}
+                    onSelectVisit={() => {
+                      handleSelect(visit);
+                    }}
+                  />
+                ))}
+            </tbody>
+          </table>
+        )}
+        {endReached && (
+          <p>
+            <em>Non sono presenti altre visite</em>
+          </p>
+        )}
       </Modal.Body>
       <Modal.Footer
         style={{

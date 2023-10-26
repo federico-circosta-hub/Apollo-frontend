@@ -7,15 +7,9 @@ export default function VisitLine(props) {
   };
 
   const formatDate = () => {
-    return (
-      format(new Date(props.visit.date), "dd", { locale: itLocale }) +
-      " " +
-      format(new Date(props.visit.date), "MMMM", { locale: itLocale }).padEnd(
-        12,
-        " "
-      ) +
-      format(new Date(props.visit.date), "y", { locale: itLocale })
-    );
+    return format(new Date(props.visit.date), "cccc dd MMMM y", {
+      locale: itLocale,
+    });
   };
 
   return (
@@ -28,11 +22,13 @@ export default function VisitLine(props) {
     >
       {/*       <td>{props.visit.id}</td> */}
       <td>{formatDate()}</td>
-      <td>{props.visit.physician}</td>
       <td>
-        {props.visit.type !== null
-          ? props.visit.type
-          : "In attesa di trascrizione..."}
+        {props.visit.physicianName} {props.visit.physicianSurname}
+      </td>
+      <td>{props.visit.physician}</td>
+
+      <td>
+        {props.visit.type ? props.visit.type : "In attesa di trascrizione"}
       </td>
     </tr>
   );
