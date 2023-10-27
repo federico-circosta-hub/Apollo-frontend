@@ -7,6 +7,7 @@ import User from "../../../common/Model/User";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
 
 type PhysicianTaskStatus = User & {
     annotated_media: number;
@@ -63,6 +64,13 @@ const TaskStatusItem = ({ item }: MasterItemProps) => {
                     status.annotated_media
                 }/${status.total})`}
                 secondary={status.deadline}
+                secondaryTypographyProps={
+                    dayjs().isAfter(dayjs(status.deadline))
+                        ? {
+                              color: "red",
+                          }
+                        : undefined
+                }
                 sx={{ textAlign: "right" }}
             />
         </ListItem>
