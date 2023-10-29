@@ -243,22 +243,12 @@ export default function NewVisit() {
                 previousVisit={previousVisit}
               />
             )}
-            {isFollowUp &&
-              previousVisit === undefined &&
-              (newVisit.previousVisitList.length === 0 ||
-                newVisit.previousVisitList.filter((e) => e.physician !== null)
-                  .length === 0) && (
-                <NoPreviousVisit setIsFollowUp={() => setIsFollowUp(false)} />
-              )}
-            {isFollowUp &&
-              previousVisit === undefined &&
-              newVisit.previousVisitList.filter((e) => e.physician !== null)
-                .length > 0 && (
-                <FollowUpChooseModal
-                  onCancel={handleCancel}
-                  onChoose={setPreviousVisit}
-                />
-              )}
+            {isFollowUp && !previousVisit && (
+              <FollowUpChooseModal
+                onCancel={handleCancel}
+                onChoose={setPreviousVisit}
+              />
+            )}
           </div>
         </div>
 

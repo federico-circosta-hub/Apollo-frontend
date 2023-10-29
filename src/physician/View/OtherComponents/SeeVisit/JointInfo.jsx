@@ -98,23 +98,11 @@ export default function JointInfo(props) {
         }
         return result;
       case "distensionCause":
-        switch (jointToDisplay.blood) {
-          case 1:
-            result = "Unclear";
-          case 2:
-            result = "Synovial Effusion";
-          case 4:
-            result = "Synovial Effusion + Synovial Hyperplasia";
-          case 5:
-            result = "Vacuum";
-          case 3:
-            result = "Synovial Hyperplasia";
-          case 6:
-            result = "Vacuum + Synovial Hyperplasia";
-          default:
-            result = "N/A";
-        }
-        return result;
+        return jointToDisplay.blood
+          ? props.distensionCauseValues.filter(
+              (e) => e.id === jointToDisplay.blood
+            )[0].name
+          : "N/A";
     }
   };
 
@@ -139,7 +127,13 @@ export default function JointInfo(props) {
     createData("Cartilagine:", valueResolver("cartilagine")),
     createData("Osso subcondrale:", valueResolver("subchondral")),
     createData("Livello di distensione:", valueResolver("distension")),
-    createData("Causa distensione:", valueResolver("distensionCause")),
+    props.distensionCauseValues.length > 0 ? (
+      createData("Causa distensione:", valueResolver("distensionCause"))
+    ) : props.loadingCauses ? (
+      <CircularProgress />
+    ) : (
+      <RefreshButton onClick={props.get} />
+    ),
   ];
 
   return (

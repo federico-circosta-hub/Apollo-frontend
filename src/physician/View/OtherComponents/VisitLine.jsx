@@ -7,9 +7,10 @@ export default function VisitLine(props) {
   };
 
   const formatDate = () => {
-    return format(new Date(props.visit.date), "cccc dd MMMM y", {
+    const dateString = format(new Date(props.visit.date), "cccc dd MMMM y", {
       locale: itLocale,
     });
+    return dateString.charAt(0).toUpperCase() + dateString.slice(1);
   };
 
   return (

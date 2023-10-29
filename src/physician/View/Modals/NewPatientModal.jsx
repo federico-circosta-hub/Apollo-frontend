@@ -39,7 +39,7 @@ export default function NewPatientModal(props) {
       );
     } else {
       return (
-        <Modal.Footer>
+        <Modal.Footer style={{ background: "whitesmoke" }}>
           <Button
             disabled={props.data.disabled}
             variant="secondary"
@@ -63,10 +63,10 @@ export default function NewPatientModal(props) {
 
   return (
     <Modal show={props.data.showModal} animation={true}>
-      <Modal.Header>
-        <Modal.Title>Confermare creazione paziente</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+      <Alert severity="info" variant="filled" style={{ width: "100%" }}>
+        <AlertTitle>Confermare creazione paziente</AlertTitle>
+      </Alert>
+      <Modal.Body style={{ background: "whitesmoke" }}>
         <p>Nome: {props.data.patient.name}</p>
         <p>Cognome: {props.data.patient.surname}</p>
         <p>Codice fiscale: {props.data.patient.CF}</p>

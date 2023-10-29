@@ -98,7 +98,7 @@ export default function FollowUpChooseModal(props) {
                 height: "6vh",
               }}
             >
-              <tr style={{}}>
+              <tr>
                 {/* <th style={{ background: "white", width: "15%" }}>Id visita</th> */}
                 <th style={{ background: "white", width: "30%" }}>Data</th>
                 <th style={{ background: "white", width: "35%" }}>Medico</th>
@@ -110,6 +110,11 @@ export default function FollowUpChooseModal(props) {
             </thead>
 
             <tbody>
+              {visitList.length === 0 && (
+                <tr>
+                  <em>Non sono presenti visite</em>
+                </tr>
+              )}
               {visitList
                 .filter((e) => e.physician !== null)
                 .map((visit, index) => (

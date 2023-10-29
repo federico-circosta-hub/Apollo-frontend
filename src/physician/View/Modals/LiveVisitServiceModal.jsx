@@ -10,8 +10,10 @@ import DeanonymizedCC from "../../../common/Model/Communication/DeanonymizedComm
 import { PatientContext } from "../../Model/PatientContext";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import format from "date-fns/format";
+import itLocale from "date-fns/locale/it";
 
 export default function LiveVisitServiceModal(props) {
+  const MAX_VISITS = 50;
   const { selectedPatient } = useContext(PatientContext);
 
   const [visitList, setVisitList] = useState(null);
@@ -45,23 +47,27 @@ export default function LiveVisitServiceModal(props) {
   const getVisits = async () => {
     setLoadingVisits(true);
     setNetworkError(null);
+    let params = {
+      cnt: MAX_VISITS,
+      date: new Date(),
+    };
     try {
       let visitsArray = await CommunicationController.get(
         "visit/incompleted",
-        {}
+        params
       );
-      let updatedVisits = [];
-      for (let e of visitsArray) {
-        let patient = await DeanonymizedCC.get("patient", {
-          pid: e.patient,
-        });
-        patient = patient[0];
-        e.deanonymizedPatient = patient.name + " " + patient.surname;
-        e.birthdate = patient.birthdate;
-        e.gender = patient.gender;
-        updatedVisits.push(e);
+      if (visitsArray.length > 0) {
+        for (let e of visitsArray) {
+          let patient = await DeanonymizedCC.get("patient", {
+            pid: e.patient,
+          });
+          patient = patient[0];
+          e.deanonymizedPatient = patient.name + " " + patient.surname;
+          e.birthdate = patient.birthdate;
+          e.gender = patient.gender;
+        }
       }
-      setVisitList(updatedVisits);
+      setVisitList(visitsArray);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -101,7 +107,7 @@ export default function LiveVisitServiceModal(props) {
 
   if (page === 0) {
     return (
-      <Modal show={page == 0} animation={true} size={"lg"}>
+      <Modal show={page == 0} animation={true} size={"lg"} scrollable>
         {checking && (
           <Alert
             severity="info"
@@ -140,14 +146,20 @@ export default function LiveVisitServiceModal(props) {
             {selectedPatient.gender == "M" ? "il" : "la"} paziente{" "}
             {selectedPatient.name} {selectedPatient.surname}
           </AlertTitle>
-          <p style={{ fontSize: 21 }}>
+        </Alert>
+        <Alert
+          severity="error"
+          variant="outlined"
+          style={{ width: "100%", background: "whitesmoke" }}
+        >
+          <p style={{ fontSize: 19 }}>
             - esportare le immagini dell'ecografo e assicurarsi del suo corretto
             funzionamento
           </p>
-          <p style={{ fontSize: 18 }}>
+          <p style={{ fontSize: 17 }}>
             <em>oppure</em>
           </p>
-          <p style={{ fontSize: 21 }}>
+          <p style={{ fontSize: 19 }}>
             - Verificare la presenza della visita di riferimento qui sotto
           </p>
         </Alert>
@@ -163,9 +175,19 @@ export default function LiveVisitServiceModal(props) {
               />
             </div>
           )}
+          {visitList && visitList.length === 0 && !networkError && (
+            <p style={{ textAlign: "center" }}>
+              <em>
+                Non sono presenti visite live alla data di oggi{" "}
+                {format(new Date(), "cccc d MMMM y", {
+                  locale: itLocale,
+                })}
+              </em>
+            </p>
+          )}
           {!loadingVisits &&
-            networkError === null &&
-            visitList !== null &&
+            !networkError &&
+            visitList &&
             visitList.length !== 0 && (
               <table className="table table-primary table-striped table-hover">
                 <thead

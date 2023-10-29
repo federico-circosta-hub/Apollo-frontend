@@ -28,10 +28,13 @@ export default function SeeVisit() {
   const [frequencies, setFrequencies] = useState();
   const [loadingFreq, setLoadingFreq] = useState(false);
   const [visitToPrint, setVisitToPrint] = useState(null);
+  const [distensionCauseValues, setDistensionCauseValues] = useState([]);
+  const [loadingCauses, setLoadingCauses] = useState(false);
 
   useEffect(() => {
     loadVisit();
     getFrequenciesFromServer();
+    getDistensionCauseValuesFromServer();
   }, []);
 
   const componentRef = useRef();
@@ -54,6 +57,7 @@ export default function SeeVisit() {
       const visitObject = await CommunicationController.get("visit/details", {
         id: selectedVisit.id,
       });
+      console.log(visitObject);
       setVisit(visitObject);
       transformVisit(visitObject);
     } catch (err) {
@@ -73,6 +77,17 @@ export default function SeeVisit() {
       setNetworkErrorF(err || "Errore inatteso");
     } finally {
       setLoadingFreq(false);
+    }
+  };
+
+  const getDistensionCauseValuesFromServer = async () => {
+    setLoadingCauses(true);
+    try {
+      const dcv = await CommunicationController.get("distensionReason", {});
+      setDistensionCauseValues(dcv);
+    } catch (err) {
+    } finally {
+      setLoadingCauses(false);
     }
   };
 
@@ -218,7 +233,13 @@ export default function SeeVisit() {
             >
               <div>
                 {selectedJoint !== null && (
-                  <JointInfo visit={visit} selectedJoint={selectedJoint} />
+                  <JointInfo
+                    visit={visit}
+                    selectedJoint={selectedJoint}
+                    distensionCauseValues={distensionCauseValues}
+                    loadingCauses={loadingCauses}
+                    get={getDistensionCauseValuesFromServer}
+                  />
                 )}
 
                 {visit !== null && selectedJoint === null && (
