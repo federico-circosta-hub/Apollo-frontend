@@ -37,6 +37,7 @@ export default function LiveVisitServiceModal(props) {
         date: new Date(),
       });
       setSelectedVisit(visit);
+      props.onCreate(true, visit.id, visit.date);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -68,8 +69,10 @@ export default function LiveVisitServiceModal(props) {
         }
       }
       setVisitList(visitsArray);
+      console.log(visitsArray);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
+      console.error(err);
     } finally {
       setLoadingVisits(false);
     }

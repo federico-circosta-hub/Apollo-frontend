@@ -21,6 +21,7 @@ export default function Header({ title, leftButton }) {
   return (
     <AppBar position="static">
       <Toolbar variant="dense" sx={style.container}>
+        {leftButton || <Box />}
         {title && (
           <Typography
             variant="h6"
@@ -31,7 +32,7 @@ export default function Header({ title, leftButton }) {
             {title}
           </Typography>
         )}
-        {leftButton || <Box />}
+
         <AccountMenu onLogout={onLogout} />
       </Toolbar>
     </AppBar>
@@ -51,9 +52,6 @@ const style = {
     backgroundColor: "white",
   },
   title: {
-    position: "absolute",
-    left: 0,
-    right: 0,
     textAlign: "center",
     userSelect: "none",
   },

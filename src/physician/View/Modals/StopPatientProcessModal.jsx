@@ -6,25 +6,35 @@ import { NewVisitContext } from "../../Model/NewVisitContext";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import { Alert, AlertTitle } from "@mui/material";
 import { StepContext } from "../../Model/StepContext";
+import { PropaneSharp } from "@mui/icons-material";
 
-const StopPatientProcessModal = ({ show }) => {
-  const { setNewVisit } = useContext(NewVisitContext);
+const StopPatientProcessModal = ({ show, home }) => {
+  const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { setCurrentJoint } = useContext(CurrentJointContext);
   const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
   const { setCompletedStep } = useContext(StepContext);
 
   return (
     <Modal show={show.showModal} animation={true}>
-      <Alert severity="error" variant="filled" style={{ width: "100%" }}>
-        <AlertTitle style={{ fontSize: 23 }}>
-          Sei sicuro di voler terminare con{" "}
-          {selectedPatient != null && selectedPatient.gender == "M"
-            ? "il"
-            : "la"}{" "}
-          paziente {selectedPatient != null ? selectedPatient.name : ""}{" "}
-          {selectedPatient != null ? selectedPatient.surname : ""}?
-        </AlertTitle>
-      </Alert>
+      {newVisit && newVisit.sended ? (
+        <Alert severity="info" variant="outlined" style={{ width: "100%" }}>
+          <AlertTitle style={{ fontSize: 23 }}>
+            Sei sicuro di voler terminare con{" "}
+            {selectedPatient && selectedPatient.gender == "M" ? "il" : "la"}{" "}
+            paziente {selectedPatient ? selectedPatient.name : ""}{" "}
+            {selectedPatient ? selectedPatient.surname : ""}?
+          </AlertTitle>
+        </Alert>
+      ) : (
+        <Alert severity="error" variant="filled" style={{ width: "100%" }}>
+          <AlertTitle style={{ fontSize: 23 }}>
+            Sei sicuro di voler abbandonare la visita con{" "}
+            {selectedPatient && selectedPatient.gender == "M" ? "il" : "la"}{" "}
+            paziente {selectedPatient ? selectedPatient.name : ""}{" "}
+            {selectedPatient ? selectedPatient.surname : ""}?
+          </AlertTitle>
+        </Alert>
+      )}
 
       <Modal.Body
         style={{
@@ -32,7 +42,9 @@ const StopPatientProcessModal = ({ show }) => {
           fontSize: 20,
         }}
       >
-        L'eventuale visita non completata verrà eliminata
+        {newVisit && newVisit.sended
+          ? "La visita risulta completata, verrai reindirizzato alla home"
+          : "La visita non completata verrà eliminata, potrai comunque ricompilarla in un secondo momento"}
       </Modal.Body>
       <Modal.Footer
         style={{
@@ -49,10 +61,10 @@ const StopPatientProcessModal = ({ show }) => {
         </button>
         <Link
           replace
-          to={"/"}
+          to={home ? "/" : "/searchVisit"}
           className="btn btn-danger btn-lg"
           onClick={() => {
-            setSelectedPatient(null);
+            home && setSelectedPatient(null);
             setNewVisit(null);
             setCurrentJoint(null);
             setCompletedStep({});

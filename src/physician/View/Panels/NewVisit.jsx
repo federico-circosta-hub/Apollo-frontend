@@ -384,15 +384,7 @@ export default function NewVisit() {
             width: "95%",
           }}
         >
-          <div>
-            <button
-              onClick={() => setShowModal(true)}
-              className="btn btn-danger"
-              style={{ fontSize: 24 }}
-            >
-              Annulla
-            </button>
-          </div>
+          <div style={{ width: "10.5%" }}></div>
           <HorizontalNonLinearStepper />
           <div>
             <button
@@ -407,7 +399,10 @@ export default function NewVisit() {
       </MainContainer>
 
       <div>
-        <StopPatientProcessModal show={{ showModal, setShowModal }} />
+        <StopPatientProcessModal
+          show={{ showModal, setShowModal }}
+          home={false}
+        />
         {formModal && (
           <FormModal
             formModal={formModal}

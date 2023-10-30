@@ -135,7 +135,10 @@ export default function EndVisit() {
             </button>
           </div>
         </div>
-        <StopPatientProcessModal show={{ showModal, setShowModal }} />
+        <StopPatientProcessModal
+          show={{ showModal, setShowModal }}
+          home={true}
+        />
       </MainContainer>
     </div>
   );
