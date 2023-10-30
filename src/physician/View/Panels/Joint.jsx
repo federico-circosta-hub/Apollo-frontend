@@ -345,7 +345,7 @@ const style = {
 
   box: {
     width: "98%",
-    height: "91vh",
+    height: "89vh",
     borderRadius: "15px",
     background: "white",
     margin: "auto",
