@@ -19,6 +19,7 @@ import PanToolAltOutlinedIcon from "@mui/icons-material/PanToolAltOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import format from "date-fns/format";
 import { StepContext } from "../../Model/StepContext";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 export default function PositionedMenu(props) {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ export default function PositionedMenu(props) {
     setOpen(false);
     if (newVisit) {
       props.setShowModal(true);
+      props.setHomeRoute(true);
     } else {
       setSelectedPatient(null);
       navigate("/", { replace: true });
@@ -60,7 +62,7 @@ export default function PositionedMenu(props) {
         onClose={toggleDrawer(false)}
         PaperProps={{
           sx: {
-            width: "25vw",
+            width: "fit-content",
           },
         }}
       >
@@ -112,10 +114,10 @@ export default function PositionedMenu(props) {
                 </ListItemIcon>
                 Nuovo paziente
               </ListItemButton>
+              <Divider />
               <ListItemButton
-                disabled={newVisit}
                 onClick={() => {
-                  navigate("/searchVisit", { replace: true });
+                  if (!newVisit) navigate("/searchVisit", { replace: true });
                   setOpen(false);
                 }}
                 style={{
@@ -125,24 +127,20 @@ export default function PositionedMenu(props) {
                 }}
               >
                 <ListItemIcon>
-                  <AddIcon />
+                  {newVisit ? <RemoveIcon /> : <AddIcon />}
                 </ListItemIcon>
-                Nuova Visita
+                {newVisit ? (
+                  <>
+                    Visita {format(newVisit.visitDate, "dd-MM-y")} {" - "}
+                    {selectedPatient.name} {selectedPatient.surname}
+                  </>
+                ) : (
+                  <>Nuova Visita</>
+                )}
               </ListItemButton>
 
               {newVisit && (
-                <>
-                  <Divider />
-                  <label
-                    style={{
-                      width: "100%",
-                      textAlign: "center",
-                      marginTop: 20,
-                      color: "gray",
-                    }}
-                  >
-                    Visita {format(newVisit.visitDate, "dd-MM-y")}
-                  </label>
+                <div style={{ paddingLeft: "15%" }}>
                   <ListItemButton
                     onClick={() => {
                       navigate("/newVisit", { replace: true });
@@ -214,7 +212,7 @@ export default function PositionedMenu(props) {
                     </ListItemIcon>
                     Report
                   </ListItemButton>
-                </>
+                </div>
               )}
             </>
           )}

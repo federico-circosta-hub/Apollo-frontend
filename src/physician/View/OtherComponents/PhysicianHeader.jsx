@@ -62,8 +62,8 @@ export default function PhysicianHeader(props) {
           <img
             src={exit}
             alt="uscita"
-            width={30}
-            style={{ filter: "invert(100%" }}
+            width={25}
+            style={{ filter: "invert(100%)" }}
           />
         </button>
       ) : (
@@ -73,7 +73,10 @@ export default function PhysicianHeader(props) {
     setLeftButton(() => {
       return (
         <div style={{ display: "flex", justifyContent: "left", width: "8%" }}>
-          <PositionedMenu setShowModal={setShowModal} />
+          <PositionedMenu
+            setShowModal={setShowModal}
+            setHomeRoute={setHomeRoute}
+          />
           {otherButton()}
         </div>
       );
@@ -110,7 +113,7 @@ export default function PhysicianHeader(props) {
       } else {
         return (
           <label style={{ fontSize: 20, fontWeight: "500" }}>
-            Elenco pazienti
+            Home — elenco pazienti
           </label>
         );
       }
