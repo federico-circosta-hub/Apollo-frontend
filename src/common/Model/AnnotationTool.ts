@@ -116,6 +116,7 @@ export default class AnnotationTool {
 
     addType = async (data: {
         name: string;
+		description: string;
         annotation_instructions: string;
         annotation_interface: string;
         print_function: string;

@@ -23,6 +23,7 @@ export default class AnnotationType {
 
     update = async (data: {
         name: string;
+        description: string;
         annotation_instructions: string;
         annotation_interface: string;
         print_function: string;
@@ -33,6 +34,7 @@ export default class AnnotationType {
         await CommunicationController.updateAnnotationType(this.id, data);
 
         this.name = data.name;
+        this.description = data.description;
         this.annotation_instructions = data.annotation_instructions;
         this.annotation_interface = data.annotation_interface;
         this.print_function = data.print_function;
@@ -43,12 +45,14 @@ export default class AnnotationType {
 
     private checkDifferences = (data: {
         name: string;
+        description: string;
         annotation_instructions: string;
         annotation_interface: string;
         print_function: string;
         conflict_function: string;
     }) => {
         if (this.name !== data.name) return true;
+        if (this.description !== data.description) return true;
         if (this.annotation_instructions !== data.annotation_instructions)
             return true;
         if (this.annotation_interface !== data.annotation_interface)

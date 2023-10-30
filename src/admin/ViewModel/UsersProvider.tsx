@@ -33,6 +33,9 @@ export default function PhysiciansProvider({
             );
 
             users.current.push(...res);
+            users.current.sort((u1, u2) =>
+                u1.fullName().localeCompare(u2.fullName())
+            );
         }
         return users.current;
     }, []);
@@ -40,6 +43,9 @@ export default function PhysiciansProvider({
     const addPhysician = useCallback(async (data: UserData) => {
         const user = await DeanonymizedCC.newPhysician(data);
         users.current.push(user);
+        users.current.sort((u1, u2) =>
+            u1.fullName().localeCompare(u2.fullName())
+        );
         return user;
     }, []);
 

@@ -30,6 +30,7 @@ class MainCommunicationController extends AbstractCommunicationController {
         NEW_TASK: "/task",
         DELETE_TASK: "/task",
         ASSIGN_TASK: "/task/assign",
+        GET_CONFLICT_MATRIX: "/task/conflicts/compare",
     };
 
     protected getHeaders(): { [key: string]: string } {
@@ -157,6 +158,7 @@ class MainCommunicationController extends AbstractCommunicationController {
         annotation_tool: number,
         data: {
             name: string;
+            description: string;
             annotation_instructions: string;
             annotation_interface: string;
             print_function: string;
@@ -166,6 +168,7 @@ class MainCommunicationController extends AbstractCommunicationController {
         const res = await this.post(this.endpoints.NEW_ANNOTATION_TYPE, {
             annotation_tool,
             name: data.name,
+            description: data.description,
             annotation_instructions: data.annotation_instructions,
             annotation_interface: data.annotation_interface,
             print_function: data.print_function,
@@ -253,6 +256,10 @@ class MainCommunicationController extends AbstractCommunicationController {
         }[]
     > => {
         return this.patch(this.endpoints.ASSIGN_TASK, { id, assignments });
+    };
+
+    getConflictMatrix = (task: number) => {
+        return this.get(this.endpoints.GET_CONFLICT_MATRIX, { task });
     };
 }
 

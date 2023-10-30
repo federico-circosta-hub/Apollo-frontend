@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import CommunicationController from "./Communication/MainCommunicationController";
+import MainCC from "./Communication/MainCommunicationController";
 
 export const isTaskDataValid = (data: TaskData) => {
     return (
@@ -91,10 +91,7 @@ export default class Task {
     ): Promise<boolean> => {
         assignments = this.filterAssignments(assignments);
 
-        const status = await CommunicationController.updateTaskAssignment(
-            this.id,
-            assignments
-        );
+        const status = await MainCC.updateTaskAssignment(this.id, assignments);
 
         this.physicians = status;
 
@@ -114,6 +111,11 @@ export default class Task {
             (acc, p) => acc + p.annotated_media,
             0
         );
-        return (annotations / this.media_count) * this.physicians.length;
+
+        return annotations / (this.media_count * this.physicians.length);
+    };
+
+    conflictMatrix = () => {
+        return MainCC.getConflictMatrix(this.id);
     };
 }

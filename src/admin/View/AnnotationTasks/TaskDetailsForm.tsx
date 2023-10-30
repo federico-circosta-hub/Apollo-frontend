@@ -1,4 +1,4 @@
-import Task, { TaskData } from "../../../common/Model/Task";
+import Task, { TaskData, isTaskDataValid } from "../../../common/Model/Task";
 import TaskAssignment from "./TaskAssignment";
 import Box from "@mui/material/Box";
 import User from "../../../common/Model/User";
@@ -40,11 +40,7 @@ export default function TaskDetailsForm({
                 <AssignModal
                     show={showAssignModal}
                     task={task}
-                    users={users.filter(
-                        (u) =>
-                            task.physicians.find((p) => p.user === u.id) !==
-                            undefined
-                    )}
+                    users={users}
                     onClose={() => setShowAssignModal(false)}
                 />
             </Box>
@@ -70,8 +66,8 @@ const AssignModal = ({
         setStatus(Status.LOADING);
 
         try {
-            setStatus(Status.IDLE);
             await task.updateAssignment(taskData.physicians);
+            setStatus(Status.IDLE);
             onClose();
         } catch (err: any) {
             setStatus(Status.ERROR);

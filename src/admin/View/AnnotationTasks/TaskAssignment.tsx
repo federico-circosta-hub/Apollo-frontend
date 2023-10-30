@@ -14,6 +14,10 @@ import { useCallback, useEffect, useState } from "react";
 import Task, { AssignmentType } from "../../../common/Model/Task";
 import dayjs, { Dayjs } from "dayjs";
 
+function tomorrowStr() {
+    return dayjs().add(1, "day").toISOString();
+}
+
 export default function TaskAssignment({
     task,
     users,
@@ -30,7 +34,7 @@ export default function TaskAssignment({
             return {
                 user: user.id,
                 assign: false,
-                deadline: undefined,
+                deadline: tomorrowStr(),
             };
         })
     );
@@ -48,7 +52,7 @@ export default function TaskAssignment({
                     prev[i].deadline = physician.deadline;
                 } else {
                     prev[i].assign = false;
-                    prev[i].deadline = undefined;
+                    prev[i].deadline = tomorrowStr();
                 }
             }
             return prev;
@@ -65,7 +69,7 @@ export default function TaskAssignment({
                     newData.push({
                         user: user.id,
                         assign: false,
-                        deadline: undefined,
+                        deadline: tomorrowStr(),
                     });
                 }
             }
@@ -85,7 +89,7 @@ export default function TaskAssignment({
             [i]
         );
 
-        const hadleDeadlineChange = useCallback(
+        const handleDeadlineChange = useCallback(
             (date: Dayjs | null) => {
                 data[i].deadline = date?.toISOString();
                 setData([...data]);
@@ -113,13 +117,14 @@ export default function TaskAssignment({
                 >
                     <DatePicker
                         label="Deadline"
-                        value={dayjs(data[i].deadline)}
-                        onChange={(date) => hadleDeadlineChange(date)}
-                        disablePast
+                        value={dayjs(data[i].deadline ?? dayjs().add(1, "day"))}
+                        onChange={(date) => handleDeadlineChange(date)}
+                        minDate={dayjs().add(1, "day")}
                         slotProps={{
                             textField: {
                                 error:
                                     data[i].assign &&
+                                    data[i].deadline !== undefined &&
                                     dayjs(data[i].deadline).isSame(dayjs()),
                             },
                         }}

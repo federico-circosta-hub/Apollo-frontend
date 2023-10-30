@@ -85,6 +85,9 @@ const AnnotationTypeDetailsForm = ({
     const [status, setStatus] = useState<Status>(Status.IDLE);
 
     const [name, setName] = useState<string>(type?.name ?? "");
+    const [description, setDescription] = useState<string>(
+        type?.description ?? ""
+    );
     const [instructions, setInstructions] = useState<string>(
         type?.annotation_instructions ?? ""
     );
@@ -102,12 +105,20 @@ const AnnotationTypeDetailsForm = ({
     const data = useMemo(() => {
         return {
             name,
+            description,
             annotation_instructions: instructions,
             annotation_interface: layout,
             print_function: printFunction,
             conflict_function: conflictFunction,
         };
-    }, [name, instructions, layout, printFunction, conflictFunction]);
+    }, [
+        name,
+        description,
+        instructions,
+        layout,
+        printFunction,
+        conflictFunction,
+    ]);
 
     const newType = useCallback(async () => {
         await tool.addType(data);
@@ -187,6 +198,14 @@ const AnnotationTypeDetailsForm = ({
                         ))}
                     </Select>
                 </FormControl>
+                <TextField
+                    value={description}
+                    label="Descrizione"
+                    onChange={(e) => setDescription(e.target.value)}
+                    multiline
+                    rows={2}
+                    sx={style.marginBig}
+                />
                 <TextField
                     value={instructions}
                     label="Istruzioni di annotazione"

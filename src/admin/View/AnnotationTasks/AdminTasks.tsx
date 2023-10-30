@@ -73,14 +73,21 @@ export default function AdminTasks() {
 const AnnotationTaskItem = ({ item, onClick, onDelete }: MasterItemProps) => {
     const task = item as Task;
 
+    const [, setTitle] = useContext(HeaderContext);
+
+    const handleClick = useCallback(() => {
+        setTitle(task.name());
+        onClick();
+    }, [setTitle, task, onClick]);
+
     return (
-        <ListItemButton onClick={onClick}>
+        <ListItemButton onClick={handleClick}>
             <ListItemText
                 primary={task.dataset_name}
                 secondary={task.annotation_type_name}
             />
             <ListItemText
-                primary={`${task.overallProgress()}%`}
+                primary={`${task.overallProgress() * 100}%`}
                 secondary={
                     task.media_count + (task.type ? " immagini" : " video")
                 }

@@ -35,6 +35,7 @@ export default function AnnotationToolsProvider({
                 (t1) =>
                     tools.current.find((t2) => t1.id === t2.id) === undefined
             );
+            tools.current.sort((t1, t2) => t1.name.localeCompare(t2.name));
 
             tools.current.push(...res);
         }
@@ -44,6 +45,7 @@ export default function AnnotationToolsProvider({
     const addTool = useCallback(async (data: AnnotationToolData) => {
         const tool = await CommunicationController.newAnnotationTool(data);
         tools.current.push(tool);
+        tools.current.sort((t1, t2) => t1.name.localeCompare(t2.name));
         return tool;
     }, []);
 
