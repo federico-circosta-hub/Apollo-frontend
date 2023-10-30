@@ -168,7 +168,8 @@ export default class NewVisitModel {
         0,
         0,
         "absent",
-        null
+        null,
+        false
       );
     } else {
       joint = await jointToClone.clone();

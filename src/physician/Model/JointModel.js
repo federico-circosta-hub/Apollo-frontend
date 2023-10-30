@@ -10,6 +10,7 @@ export default class JointModel {
   subchondral_bone;
   distension;
   distensionCause;
+  modifiedIndex;
 
   constructor(
     jointName,
@@ -22,7 +23,8 @@ export default class JointModel {
     cartilagine,
     subchondral_bone,
     distension,
-    distensionCause
+    distensionCause,
+    modifiedIndex
   ) {
     this.jointName = jointName;
     this.side = side;
@@ -35,6 +37,7 @@ export default class JointModel {
     this.subchondral_bone = subchondral_bone;
     this.distension = distension;
     this.distensionCause = distensionCause;
+    this.modifiedIndex = modifiedIndex;
   }
 
   clone() {
@@ -49,7 +52,8 @@ export default class JointModel {
       this.cartilagine,
       this.subchondral_bone,
       this.distension,
-      this.distensionCause
+      this.distensionCause,
+      this.modifiedIndex
     );
   }
 
@@ -103,5 +107,9 @@ export default class JointModel {
 
   setDistensionCause(s) {
     this.distensionCause = s;
+  }
+
+  setModifiedIndex(b) {
+    this.modifiedIndex = b;
   }
 }

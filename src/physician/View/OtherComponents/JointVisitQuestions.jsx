@@ -63,7 +63,7 @@ export default function JointVisitQuestions(props) {
 
   useEffect(() => {
     getDistensionCauseValuesFromServer();
-    getIsIndex();
+    !props.joint.modifiedIndex && getIsIndex();
   }, []);
 
   const getDistensionCauseValuesFromServer = async () => {
@@ -91,6 +91,7 @@ export default function JointVisitQuestions(props) {
     try {
       const i = await CommunicationController.get("joint/index", params);
       props.joint.setIndexJoint(i.index);
+      props.joint.setModifiedIndex(true);
     } catch (err) {
       setNetworkErrorIndex(err || "Errore inatteso");
     } finally {
