@@ -1,20 +1,19 @@
-import {
-  FormControl,
-  Switch,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
+import question from "./../../../img/icon/question.png";
 
 import response from "../../../img/icon/hydrotherapy.png";
-
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import "dayjs/locale/it";
-
 import Slider from "@mui/material/Slider";
 import { NewVisitContext } from "../../../Model/NewVisitContext";
 import { useContext } from "react";
+import { useState } from "react";
 
 export default function Treatment(props) {
+  const [showDialog, setShowDialog] = useState(false);
   const { newVisit } = useContext(NewVisitContext);
   return (
     <div
@@ -55,14 +54,23 @@ export default function Treatment(props) {
         style={{
           display: "flex",
           justifyContent: "start",
-          gap: 20,
+
           width: "95%",
         }}
       >
         <div>
           <label style={{ fontSize: 18 }}>Risposta al trattamento</label>
+          <button className="btn btn-info" onClick={() => setShowDialog(true)}>
+            <img
+              src={question}
+              alt="question mark"
+              width={25}
+              style={{ filter: "invert(100%" }}
+            />
+          </button>
         </div>
         <Slider
+          style={{ width: "70%" }}
           name="treatment response"
           marks={props.treatmentResponses}
           min={1}
@@ -72,20 +80,57 @@ export default function Treatment(props) {
           onChange={props.onTreatmentChange}
         />
       </div>
-      <div>
-        {/*         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label" style={{ width: "80%" }}>
-            Which <strong>was</strong> the most likely cause of the distension?
-          </InputLabel>
-          <Select
-            style={{ fontSize: 15 }}
-            id="demo-simple-select"
-            label="Which was the most likely cause of the distension?..."
-          >
-            {props.displayDistensionCauses()}
-          </Select>
-        </FormControl> */}
-      </div>
+      {showDialog && (
+        <Dialog
+          open={showDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            <img src={question} width={20} />
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <p>
+                - Eccellente: sollievo completo dal dolore entro 8 ore e/o
+                risoluzione completa dei segni di sanguinamento dopo l'iniezione
+                iniziale e senza necessità di ulteriore terapia sostitutiva per
+                il sollievo di sintomi e segni persistenti nella stessa
+                articolazione entro 72 ore dall'evento.
+              </p>{" "}
+              <p>
+                - Buono: significativo sollievo dal dolore e/o miglioramento dei
+                segni di sanguinamento entro circa 8 ore dopo una singola
+                iniezione, ma richiesta di più di una dose di terapia
+                sostitutiva entro 72 ore dall'evento per la completa
+                risoluzione.
+              </p>{" "}
+              <p>
+                {" "}
+                - Moderato: modesto sollievo dal dolore e/o miglioramento dei
+                segni di sanguinamento entro circa 8 ore dopo l'iniezione
+                iniziale ma richiesta di più di una iniezione entro 72 ore
+                dall'evento, senza risoluzione completa.
+              </p>
+              <p>
+                {" "}
+                - Nessuno: nessun miglioramento o miglioramento minimo, o
+                peggioramento della condizione, entro circa 8 ore dopo
+                l'iniezione iniziale.
+              </p>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <button
+              className="btn btn-primary"
+              onClick={() => setShowDialog(false)}
+              autoFocus
+            >
+              Capito
+            </button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 }

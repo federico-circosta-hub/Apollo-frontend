@@ -30,7 +30,7 @@ export default class NewVisitToSend {
     this.date = format(newVisit.visitDate, "y-MM-dd");
     this.type = newVisit.isInPresence ? "live" : "expost";
     this.follows = newVisit.followUp.followUp
-      ? format(newVisit.previousVisit.date, "y-MM-dd")
+      ? newVisit.previousVisit.id
       : undefined;
     this.report.trauma_event =
       newVisit.traumaticEvent.traumaticEvent === "Nessuno"

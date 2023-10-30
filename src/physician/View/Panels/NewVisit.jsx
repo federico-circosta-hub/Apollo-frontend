@@ -252,7 +252,7 @@ export default function NewVisit() {
           </div>
         </div>
 
-        {!newVisit.isInPresence && (
+        {/*         {!newVisit.isInPresence && (
           <div style={style.monoButtons}>
             <div>
               <label style={{ fontSize: 22 }}>
@@ -276,7 +276,7 @@ export default function NewVisit() {
               </LocalizationProvider>
             </div>
           </div>
-        )}
+        )} */}
 
         <div style={style.buttons}>
           <div style={{ display: "flex" }}>
