@@ -18,6 +18,7 @@ export default function JointInfo(props) {
   const [loadingEcographies, setLoadingEcographies] = useState(false);
   const [networkError, setNetworkError] = useState(null);
   const [showPhotoModal, setShowPhotoModal] = useState(null);
+  const [selectedEco, setSelectedEco] = useState(null);
 
   const jointToDisplay = props.selectedJoint;
 
@@ -207,7 +208,10 @@ export default function JointInfo(props) {
                   key={index}
                   src={item.base64}
                   style={{ width: "100%", margin: 5 }}
-                  onClick={() => setShowPhotoModal(true)}
+                  onClick={() => {
+                    setSelectedEco(item);
+                    setShowPhotoModal(true);
+                  }}
                 />
                 <Modal
                   fullscreen={true}
@@ -217,7 +221,7 @@ export default function JointInfo(props) {
                 >
                   <Modal.Body>
                     <img
-                      src={item.base64}
+                      src={selectedEco && selectedEco.base64}
                       alt={"Ecografia"}
                       style={{
                         width: "100%",
