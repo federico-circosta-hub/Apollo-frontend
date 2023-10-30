@@ -21,11 +21,6 @@ export default function FollowUpHelper(props) {
 
   const checkDate = () => {
     let d = dateDiffInDays(previousVisitDate, new Date());
-    console.log(
-      format(previousVisitDate, "dd-MM-y"),
-      format(new Date(), "dd-MM-y"),
-      d > 30
-    );
     return d > 30;
   };
 

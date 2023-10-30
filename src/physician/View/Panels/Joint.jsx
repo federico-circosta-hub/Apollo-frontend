@@ -58,12 +58,11 @@ export default function Joint(props) {
     setJoint(null);
     setCurrentJoint(null);
     setNewVisit(newVisit);
-    navigate("/newVisit/jointSelection");
+    navigate("/newVisit/jointSelection", { replace: true });
   };
   const saveAndForward = () => {
     setJoint(joint);
     let e = validateForm("jointVisit", joint, newVisit);
-    console.log(Object.keys(e));
     if (Object.keys(e).length == 0) {
       if (
         newVisit.jointPresence({
@@ -82,7 +81,7 @@ export default function Joint(props) {
       setNewVisit(newVisit);
       setCurrentJoint(null);
       console.log(newVisit);
-      navigate("/newVisit/jointSelection");
+      navigate("/newVisit/jointSelection", { replace: true });
     } else {
       setErrors(e);
       setFormModal(true);
@@ -97,7 +96,6 @@ export default function Joint(props) {
       date: format(newVisit.visitDate, "y-MM-dd"),
       exclude: ids,
     };
-    console.log(params);
     try {
       const idsFromServer = await CommunicationController.get(
         "media/visit",
@@ -124,7 +122,6 @@ export default function Joint(props) {
         }, 4000);
       }
     } catch (err) {
-      console.log(err);
       setNetworkError(err || "Errore inatteso");
     } finally {
       setLoadingImages(false);

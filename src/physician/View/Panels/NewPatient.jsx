@@ -104,7 +104,6 @@ export default function NewPatient() {
   };
 
   const modifyPatientBirthdate = (date) => {
-    console.log("modifico data nascita", date.$d);
     let p = patient.clone();
     p.setBirthdate(format(date.$d, "y-MM-dd"));
     setPatient(p);
@@ -127,7 +126,6 @@ export default function NewPatient() {
   };
 
   const handleDisplayProthesis = () => {
-    console.log("handleDisplayProthesis al momento mostro %s", showProthesis);
     if (showProthesis === "none") {
       setShowProthesis("flex");
       setProtButtonClass("btn btn-outline-warning");
@@ -208,7 +206,7 @@ export default function NewPatient() {
               </Select>
             </FormControl>
           </div>
-          <div>
+          <div style={{ display: "none" }}>
             <button
               onClick={() => handleDisplayProthesis()}
               type="button"
@@ -384,9 +382,13 @@ export default function NewPatient() {
         }}
       >
         <div>
-          <Link className="btn btn-danger " to={"/"} style={{ fontSize: 24 }}>
+          <button
+            className="btn btn-danger "
+            onClick={() => navigate(-1)}
+            style={{ fontSize: 24 }}
+          >
             Annulla
-          </Link>
+          </button>
         </div>
 
         <div>

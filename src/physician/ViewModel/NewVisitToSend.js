@@ -83,7 +83,6 @@ export default class NewVisitToSend {
     newVisit.joints.forEach((element) => {
       let jointToSend = new JointToSendModel(element);
       jointToSend.setMediaIds(newVisit);
-      console.log("setJoints, pusho:", jointToSend);
       joints.push(jointToSend);
     });
     this.report.joints = joints;

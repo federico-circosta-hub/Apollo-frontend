@@ -33,23 +33,17 @@ export default function ExpostVisitServiceModal(props) {
         "visit/incompleted",
         {}
       );
-      console.log(visitsArray);
       let updatedVisits = [];
       for (let e of visitsArray) {
-        console.log("deanonymized get patient", {
-          pid: e.patient,
-        });
         let patient = await DeanonymizedCC.get("patient", {
           pid: e.patient,
         });
         patient = patient[0];
-        console.log(patient);
         e.deanonymizedPatient = patient.name + " " + patient.surname;
         e.birthdate = patient.birthdate;
         e.gender = patient.gender;
         updatedVisits.push(e);
       }
-      console.log(updatedVisits);
       setVisitList(updatedVisits);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -84,7 +78,7 @@ export default function ExpostVisitServiceModal(props) {
   };
 
   return page === 1 ? (
-    <Modal show={page == 1} animation={true} size={"lg"}>
+    <Modal show={page == 1} animation={true} size={"lg"} scrollable>
       <Alert severity="info" variant="filled" style={{ width: "100%" }}>
         <AlertTitle>Scegliere la visita da compilare</AlertTitle>
       </Alert>
@@ -93,7 +87,6 @@ export default function ExpostVisitServiceModal(props) {
         {loadingVisits && <SkeletonsList />}
         {networkError && (
           <div style={{ marginTop: "1%" }}>
-            {console.log(networkError)}
             Errore nell'ottenere lista visite
             <RefreshButton
               onClick={() => {
@@ -199,6 +192,10 @@ export default function ExpostVisitServiceModal(props) {
         {networkError && (
           <Alert severity="error" variant="filled" style={{ width: "100%" }}>
             <AlertTitle>Errore nell'invio</AlertTitle>
+            <em>
+              Tenere presente che lo stesso paziente non può avere due visite
+              trascitte o live nello stesso giorno
+            </em>
           </Alert>
         )}
         <button className="btn btn-secondary btn-lg" onClick={() => setPage(1)}>

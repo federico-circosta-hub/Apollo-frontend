@@ -31,6 +31,7 @@ const DeleteJointModal = (props) => {
           Annulla
         </button>
         <Link
+          replace
           to={"/newVisit/jointSelection"}
           className="btn btn-danger btn-lg"
           onClick={() => props.deleteJoint()}

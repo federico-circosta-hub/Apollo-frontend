@@ -94,7 +94,6 @@ export default class PatientModel {
       weight: this.weight,
       cf: this.CF,
     };
-    console.log(params);
     await DeanonymizedCC.post("patient", params);
   }
 
@@ -109,7 +108,6 @@ export default class PatientModel {
       weight: this.weight,
       cf: this.CF,
     };
-    console.log(params);
     await DeanonymizedCC.patch("patient", params);
   }
 

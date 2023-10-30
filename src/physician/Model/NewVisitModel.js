@@ -48,6 +48,7 @@ export default class NewVisitModel {
   previousVisitList;
 
   isInPresence;
+  sended;
 
   ecographies = [];
   ecographiesId = [];
@@ -176,7 +177,6 @@ export default class NewVisitModel {
   }
 
   jointPresence(obj) {
-    console.log("chiamato jointPresence");
     let b = false;
     this.joints.forEach((e) => {
       if (e.jointName === obj.name && e.side === obj.side) {
@@ -217,6 +217,10 @@ export default class NewVisitModel {
     this.isInPresence = b;
   }
 
+  setSended(b) {
+    this.sended = b;
+  }
+
   toString(f) {
     switch (f) {
       case "patient":
@@ -255,7 +259,8 @@ export default class NewVisitModel {
 
   getJointWithoutMod(jointName, side) {
     return this.joints.find(
-      (e) => e.jointName === jointName && e.side === side
+      (e) =>
+        (e.jointName === jointName || e.name === jointName) && e.side === side
     );
   }
 

@@ -21,6 +21,7 @@ export default function EndingVisitModal(props) {
             <AlertTitle>Visita inviata con successo!</AlertTitle>
           </Alert>
           <Link
+            replace
             className="btn btn-outline-success btn-lg"
             to={"/newVisit/endVisit"}
           >
@@ -172,11 +173,16 @@ export default function EndingVisitModal(props) {
           {props.visit.prophylacticDrug.drug.name || "N/A"}
         </p>
         <p>
-          <strong>Dose:</strong> {props.visit.prophylacticDrug.dose || "N/A"}
+          <strong>Dose:</strong>{" "}
+          {Math.round(props.visit.prophylacticDrug.dose) || "N/A"}
         </p>
         <p>
           <strong>Frequenza:</strong>{" "}
-          {props.visit.prophylacticDrug.frequency || "N/A"}
+          {props.visit.prophylacticDrug.frequency
+            ? props.frequencies.find(
+                (f) => f.id === props.visit.prophylacticDrug.frequency
+              ).frequency
+            : "N/A"}
         </p>
         <br />
         <h5>Farmaco Acuto</h5>
@@ -184,7 +190,8 @@ export default function EndingVisitModal(props) {
           <strong>Nome:</strong> {props.visit.acuteDrug.drug.name || "N/A"}
         </p>
         <p>
-          <strong>Dose:</strong> {props.visit.acuteDrug.dose || "N/A"}
+          <strong>Dose:</strong>{" "}
+          {Math.round(props.visit.acuteDrug.dose) || "N/A"}
         </p>
 
         <br />

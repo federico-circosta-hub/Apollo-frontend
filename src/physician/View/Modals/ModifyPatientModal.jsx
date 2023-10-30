@@ -54,7 +54,6 @@ export default function ModifyPatientModal(props) {
   };
 
   const modifyPatientBirthdate = (date) => {
-    console.log("modifico data nascita", date.$d);
     let p = patient.clone();
     p.setBirthdate(format(date.$d, "y-MM-dd"));
     setPatient(p);

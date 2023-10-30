@@ -25,35 +25,47 @@ import MainContainer from "../../../common/View/MainContainer";
 import NoPreviousVisit from "../Modals/NoPreviousVisit";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import FollowUpChooseModal from "../Modals/FollowUpChooseModal";
+import dayjs from "dayjs";
+import StopPatientProcessModal from "../Modals/StopPatientProcessModal";
+import HorizontalNonLinearStepper from "../OtherComponents/Stepper";
+import { StepContext } from "../../Model/StepContext";
 
 export default function NewVisit() {
   const nav = useNavigate();
 
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { selectedPatient } = useContext(PatientContext);
-
+  const { completedStep, setCompletedStep } = useContext(StepContext);
+  const MAX_DATE = newVisit && dayjs(newVisit.visitDate);
   const [activities, setActivities] = useState();
   const [traumaticEvents, setTraumaticEvents] = useState([{ name: "Nessuno" }]);
-  const [visitDate, setVisitDate] = useState(newVisit.visitDate);
-  const [isFollowUp, setIsFollowUp] = useState(newVisit.followUp.followUp);
+  const [visitDate, setVisitDate] = useState(newVisit && newVisit.visitDate);
+  const [isFollowUp, setIsFollowUp] = useState(
+    newVisit && newVisit.followUp.followUp
+  );
   const [disabledLeft, setDisabledLeft] = useState(
-    !newVisit.physicalActivity.physicalActivity
+    newVisit && !newVisit.physicalActivity.physicalActivity
   );
   const [physicalActivity, setPhysicalActivity] = useState(
-    newVisit.physicalActivity
+    newVisit && newVisit.physicalActivity
   );
-  const [traumaticEvent, setTraumaticEvent] = useState(newVisit.traumaticEvent);
+  const [traumaticEvent, setTraumaticEvent] = useState(
+    newVisit && newVisit.traumaticEvent
+  );
   const [disabledRight, setDisabledRight] = useState(
-    newVisit.traumaticEvent.traumaticEvent === "" ? true : false
+    newVisit && newVisit.traumaticEvent.traumaticEvent === "" ? true : false
   );
   const [formModal, setFormModal] = useState(false);
   const [formErrors, setErrors] = useState({ none: "none" });
   const [loadingOptions, setLoadingOptions] = useState(false);
   const [networkError, setNetworkError] = useState(null);
-  const [previousVisit, setPreviousVisit] = useState(newVisit.previousVisit);
+  const [previousVisit, setPreviousVisit] = useState(
+    newVisit && newVisit.previousVisit
+  );
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    getTraumaticEventAndActivitiesFromServer();
+    newVisit && getTraumaticEventAndActivitiesFromServer();
   }, []);
 
   const getTraumaticEventAndActivitiesFromServer = async () => {
@@ -99,12 +111,15 @@ export default function NewVisit() {
       newVisit.setPhysicalActivity(physicalActivity);
       newVisit.setTraumaticEvent(traumaticEvent);
       newVisit.setPreviousVisit(previousVisit);
+      let cs = completedStep;
+      cs[0] = true;
+      setCompletedStep(cs);
       previousVisit !== undefined &&
         newVisit.setLastVisit(new Date(previousVisit.date));
       setNewVisit(newVisit);
       setErrors({});
       console.log(newVisit);
-      nav("/newVisit/jointSelection");
+      nav("/newVisit/jointSelection", { replace: true });
     } else {
       setErrors(e);
       setFormModal(true);
@@ -186,6 +201,7 @@ export default function NewVisit() {
     } else {
       return (
         <DatePicker
+          maxDate={MAX_DATE}
           slotProps={{ textField: { size: "small" } }}
           onChange={(newValue) => modifyDate(newValue.$d, s)}
           label={
@@ -211,7 +227,7 @@ export default function NewVisit() {
     setNewVisit(newVisit);
   };
 
-  return selectedPatient !== null ? (
+  return selectedPatient && newVisit ? (
     <div>
       <MainContainer style={{ paddingTop: 5 }}>
         <div style={style.monoButtons}>
@@ -220,31 +236,19 @@ export default function NewVisit() {
             <Switch checked={isFollowUp} onChange={followUp} />
           </div>
           <div>
-            {isFollowUp &&
-              previousVisit !== undefined &&
-              newVisit.previousVisitList.length !== 0 && (
-                <FollowUpHelper
-                  onCancel={handleCancel}
-                  seeVisit={saveInfo}
-                  previousVisit={previousVisit}
-                />
-              )}
-            {isFollowUp &&
-              previousVisit === undefined &&
-              (newVisit.previousVisitList.length === 0 ||
-                newVisit.previousVisitList.filter((e) => e.physician !== null)
-                  .length === 0) && (
-                <NoPreviousVisit setIsFollowUp={() => setIsFollowUp(false)} />
-              )}
-            {isFollowUp &&
-              previousVisit === undefined &&
-              newVisit.previousVisitList.filter((e) => e.physician !== null)
-                .length > 0 && (
-                <FollowUpChooseModal
-                  onCancel={handleCancel}
-                  onChoose={setPreviousVisit}
-                />
-              )}
+            {isFollowUp && previousVisit && (
+              <FollowUpHelper
+                onCancel={handleCancel}
+                seeVisit={saveInfo}
+                previousVisit={previousVisit}
+              />
+            )}
+            {isFollowUp && !previousVisit && (
+              <FollowUpChooseModal
+                onCancel={handleCancel}
+                onChoose={setPreviousVisit}
+              />
+            )}
           </div>
         </div>
 
@@ -373,35 +377,32 @@ export default function NewVisit() {
         <div
           style={{
             display: "flex",
-            height: "15vh",
-            alignItems: "flex-end",
+            height: "6vh",
+            marginTop: "3vh",
+            alignItems: "center",
             justifyContent: "space-between",
             width: "95%",
           }}
         >
-          <div>
-            <Link
-              onClick={() => setNewVisit(null)}
-              to={"/searchVisit/"}
-              className="btn btn-danger"
-              style={{ fontSize: 24 }}
-            >
-              Annulla
-            </Link>
-          </div>
+          <div style={{ width: "10.5%" }}></div>
+          <HorizontalNonLinearStepper />
           <div>
             <button
               className="btn btn-success"
               onClick={forward}
               style={{ fontSize: 24 }}
             >
-              Prosegui
+              Avanti
             </button>
           </div>
         </div>
       </MainContainer>
 
       <div>
+        <StopPatientProcessModal
+          show={{ showModal, setShowModal }}
+          home={false}
+        />
         {formModal && (
           <FormModal
             formModal={formModal}
@@ -412,7 +413,10 @@ export default function NewVisit() {
       </div>
     </div>
   ) : (
-    <NoContextModal what={" un paziente "} service={" nuova visita "} />
+    <NoContextModal
+      what={!selectedPatient ? " un paziente " : " una nuova visita "}
+      service={" anamnesi "}
+    />
   );
 }
 

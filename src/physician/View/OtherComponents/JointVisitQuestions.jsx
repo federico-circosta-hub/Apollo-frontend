@@ -9,9 +9,12 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import { RefreshButton } from "./RefreshButton";
 import { PatientContext } from "../../Model/PatientContext";
+import dayjs from "dayjs";
+import { NewVisitContext } from "../../Model/NewVisitContext";
 
 export default function JointVisitQuestions(props) {
   const { selectedPatient } = useContext(PatientContext);
+  const { newVisit } = useContext(NewVisitContext);
 
   const synovitisValues = [
     { value: 0, label: "Assente/bassa" },
@@ -86,9 +89,7 @@ export default function JointVisitQuestions(props) {
       patient: selectedPatient.pid,
     };
     try {
-      console.log(params);
       const i = await CommunicationController.get("joint/index", params);
-      console.log(i);
       props.joint.setIndexJoint(i.index);
     } catch (err) {
       setNetworkErrorIndex(err || "Errore inatteso");
@@ -241,10 +242,10 @@ export default function JointVisitQuestions(props) {
               />
             )}
           </div>
-          <label style={{ fontSize: 20, flex: "1" }}>
+          <label style={{ fontSize: 20, flex: "2" }}>
             Difficoltà movimento
           </label>
-          <div style={{ flex: "1" }}>
+          <div style={{ flex: "2" }}>
             <Switch
               defaultChecked={props.joint.jointDifficulty}
               onChange={(e) => modifyJoint(e, "difficulty")}
@@ -268,17 +269,16 @@ export default function JointVisitQuestions(props) {
             />
           </div>
 
-          <label style={{ fontSize: 20, flex: "1" }}>
+          <label style={{ fontSize: 20, flex: "2" }}>
             Ultimo sanguinamento
           </label>
-          <div style={{ flex: "1" }}>
+          <div style={{ flex: "2" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
+                maxDate={dayjs(newVisit.visitDate)}
                 slotProps={{ textField: { size: "small" } }}
                 label={
-                  props.joint.lastBleed !== undefined &&
-                  props.joint.lastBleed !== "" &&
-                  props.joint.lastBleed !== null
+                  props.joint.lastBleed
                     ? format(props.joint.lastBleed, "dd-MM-y")
                     : "DD-MM-YYYY"
                 }

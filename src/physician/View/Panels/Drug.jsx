@@ -19,6 +19,8 @@ import ProphylacticDrug from "../OtherComponents/Drug/ProphylacticDrug";
 import FollowUpNeeded from "../OtherComponents/Drug/FollowUpNeeded";
 import { VisitContext } from "../../Model/VisitContext";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
+import NoContextModal from "../Modals/NoContextModal";
+import HorizontalNonLinearStepper from "../OtherComponents/Stepper";
 
 export default function Drug() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -36,21 +38,23 @@ export default function Drug() {
 
   const [drugs, setDrugs] = useState(null);
   const [disabledProphylactic, setDisabledProphylactic] = useState(
-    newVisit.prophylacticDrug.drug.name == "" ? true : false
+    newVisit && newVisit.prophylacticDrug.drug.name == "" ? true : false
   );
   const [disabledAcute, setDisabledAcute] = useState(
-    newVisit.acuteDrug.drug.name == "" ? true : false
+    newVisit && newVisit.acuteDrug.drug.name == "" ? true : false
   );
   const [needFollowUp, setNeedFollowUp] = useState(
-    newVisit.needFollowUp == undefined
-      ? { needFollowUp: false, followUpDate: "" }
-      : newVisit.needFollowUp
+    newVisit
+      ? newVisit.needFollowUp == undefined
+        ? { needFollowUp: false, followUpDate: "" }
+        : newVisit.needFollowUp
+      : null
   );
   const [prophylacticDrug, setProphylacticDrug] = useState(
-    newVisit.prophylacticDrug
+    newVisit && newVisit.prophylacticDrug
   );
   const [frequencies, setFrequencies] = useState();
-  const [acuteDrug, setAcuteDrug] = useState(newVisit.acuteDrug);
+  const [acuteDrug, setAcuteDrug] = useState(newVisit && newVisit.acuteDrug);
   const [formModal, setFormModal] = useState(false);
   const [errors, setErrors] = useState({ none: "none" });
   const [loadingOptions, setLoadingOptions] = useState(false);
@@ -62,17 +66,21 @@ export default function Drug() {
   const [showFinishAlert, setShowFinishAlert] = useState(null);
   const [sending, setSending] = useState(false);
   const [treatment, setTreatment] = useState(
-    newVisit.followUp.treatmentResponse
+    newVisit
       ? newVisit.followUp.treatmentResponse
-      : 1
+        ? newVisit.followUp.treatmentResponse
+        : 1
+      : null
   );
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    getDrugsFromServer();
-    getFrequenciesFromServer();
-    if (newVisit.followUp.followUp) getTreatmentFromServer();
+    if (newVisit) {
+      getDrugsFromServer();
+      getFrequenciesFromServer();
+      if (newVisit.followUp.followUp) getTreatmentFromServer();
+    }
   }, []);
 
   const getDrugsFromServer = async () => {
@@ -109,7 +117,6 @@ export default function Drug() {
     setNetworkErrorF(null);
     try {
       const f = await CommunicationController.get("drug/frequency", {});
-      console.log(f);
       setFrequencies(f);
     } catch (err) {
       setNetworkErrorF(err || "Errore inatteso");
@@ -176,7 +183,6 @@ export default function Drug() {
   };
 
   const handleAcuteDrug = (e) => {
-    console.log(e.target);
     let ad = { ...acuteDrug };
     ad.drug.name = e.target.value;
     if (e.target.value === "Nessuno") {
@@ -188,7 +194,6 @@ export default function Drug() {
       setDisabledAcute(false);
     }
     setAcuteDrug(ad);
-    console.log(ad);
   };
 
   const handleAcuteDrugDose = (e) => {
@@ -213,7 +218,8 @@ export default function Drug() {
         newVisitToSend
       );
       console.log("sendedVisit:", sendedVisit);
-
+      newVisit.setSended(true);
+      setNewVisit(newVisit);
       setShowFinishAlert(true);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -229,9 +235,7 @@ export default function Drug() {
     o.needFollowUp = needFollowUp;
     o.prophylacticDrug = prophylacticDrug;
     o.acuteDrug = acuteDrug;
-    console.log(o);
     let e = validateForm("drugs", o);
-    console.log(Object.keys(e));
     if (Object.keys(e).length == 0) {
       newVisit.setNeedFollowUp(needFollowUp);
       newVisit.setProphylacticDrug(prophylacticDrug);
@@ -279,10 +283,12 @@ export default function Drug() {
     newVisit.setAcuteDrug(acuteDrug);
     newVisit.setTreatment(treatment);
     setNewVisit(newVisit);
-    navigate(-1);
+    navigate("/newVisit/jointSelection", { replace: true });
   };
 
-  return newVisit.followUp.followUp ? (
+  return !newVisit ? (
+    <NoContextModal what={" una nuova visita "} service={" scelta farmaci "} />
+  ) : newVisit.followUp.followUp ? (
     <div>
       <MainContainer
         style={{
@@ -371,10 +377,11 @@ export default function Drug() {
         </div>
         <div
           style={{
-            marginTop: "6vh",
+            marginTop: "5vh",
             display: "flex",
             justifyContent: "space-between",
-            width: "97.5%",
+            width: "91%",
+            alignItems: "center",
           }}
         >
           <div>
@@ -386,13 +393,15 @@ export default function Drug() {
               Indietro
             </button>
           </div>
+          <HorizontalNonLinearStepper />
           <div>
             <button
+              disabled={newVisit.sended}
               className="btn btn-success"
               onClick={forward}
               style={{ fontSize: 24 }}
             >
-              Termina visita
+              {newVisit.sended ? "Visita già inviata" : "Termina visita"}
             </button>
           </div>
         </div>
@@ -416,6 +425,7 @@ export default function Drug() {
             patient={selectedPatient}
             visit={newVisit}
             sending={sending}
+            frequencies={frequencies}
           />
         )}
       </div>
@@ -486,10 +496,10 @@ export default function Drug() {
         </div>
         <div
           style={{
-            marginTop: "1.5vh",
             display: "flex",
             justifyContent: "space-between",
-            width: "97.5%",
+            width: "91%",
+            alignItems: "center",
           }}
         >
           <div>
@@ -501,13 +511,15 @@ export default function Drug() {
               Indietro
             </button>
           </div>
+          <HorizontalNonLinearStepper />
           <div>
             <button
+              disabled={newVisit.sended}
               className="btn btn-success"
               onClick={forward}
               style={{ fontSize: 24 }}
             >
-              Termina visita
+              {newVisit.sended ? "Visita già inviata" : "Termina visita"}
             </button>
           </div>
         </div>
@@ -531,6 +543,7 @@ export default function Drug() {
             patient={selectedPatient}
             visit={newVisit}
             sending={sending}
+            frequencies={frequencies}
           />
         )}
       </div>
