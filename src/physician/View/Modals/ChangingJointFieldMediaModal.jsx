@@ -50,7 +50,7 @@ export default function ChangingJointFieldMediaModal(props) {
     setLoadingOptions(true);
     setScanItems([]);
     setNetworkError(null);
-    let params = { joint: props.savedJointName };
+    let params = { joint: props.actualJointName };
     try {
       const st = await CommunicationController.get("scan", params);
       setScanItems(st);

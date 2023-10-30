@@ -54,11 +54,7 @@ export default function ExpostVisitServiceModal(props) {
 
   const handleSelect = (v) => {
     setSelectedVisit(v);
-    if (
-      v.deanonymizedPatient ==
-      selectedPatient.name + " " + selectedPatient.surname
-    )
-      props.onCreate(false, v.id, v.date);
+    if (v.patient == selectedPatient.pid) props.onCreate(false, v.id, v.date);
     else setPage(2);
   };
 
