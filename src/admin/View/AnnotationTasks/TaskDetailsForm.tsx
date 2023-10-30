@@ -1,4 +1,4 @@
-import Task, { TaskData, isTaskDataValid } from "../../../common/Model/Task";
+import Task, { TaskData } from "../../../common/Model/Task";
 import TaskAssignment from "./TaskAssignment";
 import Box from "@mui/material/Box";
 import User from "../../../common/Model/User";
@@ -12,6 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import StatusLoadingButton from "../../Components/StatusLoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
+import TaskConflictMatrix from "./TaskConflictMatrix";
 
 export default function TaskDetailsForm({
     task,
@@ -26,8 +27,11 @@ export default function TaskDetailsForm({
 
     return (
         <Box sx={style.box}>
-            <TaskStatus task={task} users={users} />
-            <Box sx={{ m: 1 }} />
+            <TaskStatus
+                task={task}
+                users={users}
+                style={{ maxHeight: "40%" }}
+            />
 
             <Box sx={style.footer}>
                 <Button
@@ -44,6 +48,13 @@ export default function TaskDetailsForm({
                     onClose={() => setShowAssignModal(false)}
                 />
             </Box>
+
+            <Box sx={{ m: 1 }} />
+            <TaskConflictMatrix
+                task={task}
+                users={users}
+                style={{ maxHeight: "40%" }}
+            />
         </Box>
     );
 }
