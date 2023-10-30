@@ -155,31 +155,31 @@ export default function JointVisitQuestions(props) {
     let n = 0;
     switch (s) {
       case "synovitis":
-        if (props.joint.synovitis != undefined) {
+        if (props.joint.sinovite) {
           let synovitis = synovitisValues.find(
-            (element) => element.value == props.joint.synovitis
+            (element) => element.value == props.joint.sinovite
           );
           n = synovitis.value;
         }
         return n;
       case "cartilage":
-        if (props.joint.cartilage != undefined) {
+        if (props.joint.cartilagine) {
           let cartilage = cartilageValues.find(
-            (element) => element.value == props.joint.cartilage
+            (element) => element.value == props.joint.cartilagine
           );
           n = cartilage.value;
         }
         return n;
       case "subchondral":
-        if (props.joint.subchondralBone != undefined) {
+        if (props.joint.subchondral_bone) {
           let subchondral = subchondralValues.find(
-            (element) => element.value == props.joint.subchondralBone
+            (element) => element.value == props.joint.subchondral_bone
           );
           n = subchondral.value;
         }
         return n;
       case "distension":
-        if (props.joint.distension != undefined) {
+        if (props.joint.distension) {
           let distension = distensionValues.find(
             (element) => element.db == props.joint.distension
           );
