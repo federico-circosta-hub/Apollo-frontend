@@ -88,15 +88,14 @@ export default function JointInfo(props) {
       case "distension":
         switch (jointToDisplay.distension_amount) {
           case "absent":
-            result = "Assente";
+            return "Assente";
           case "minimum":
-            result = "Leggera";
+            return "Leggera";
           case "moderate":
-            result = "Media";
+            return "Media";
           case "severe":
-            result = "Grave";
+            return "Grave";
         }
-        return result;
       case "distensionCause":
         return jointToDisplay.blood
           ? props.distensionCauseValues.filter(
