@@ -88,6 +88,8 @@ export default function Login() {
                   ? "Utente inesistente"
                   : networkError.response.data.message.includes("password")
                   ? "Password non corretta"
+                  : networkError.response.data.message.includes("session")
+                  ? "Sessione scaduta, effettuare nuovamente il login"
                   : "Errore di rete"
                 : "Errore di rete"}
             </AlertTitle>
