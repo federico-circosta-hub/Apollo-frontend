@@ -91,33 +91,11 @@ export default function Treatment(props) {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              <p>
-                - Eccellente: sollievo completo dal dolore entro 8 ore e/o
-                risoluzione completa dei segni di sanguinamento dopo l'iniezione
-                iniziale e senza necessità di ulteriore terapia sostitutiva per
-                il sollievo di sintomi e segni persistenti nella stessa
-                articolazione entro 72 ore dall'evento.
-              </p>{" "}
-              <p>
-                - Buono: significativo sollievo dal dolore e/o miglioramento dei
-                segni di sanguinamento entro circa 8 ore dopo una singola
-                iniezione, ma richiesta di più di una dose di terapia
-                sostitutiva entro 72 ore dall'evento per la completa
-                risoluzione.
-              </p>{" "}
-              <p>
-                {" "}
-                - Moderato: modesto sollievo dal dolore e/o miglioramento dei
-                segni di sanguinamento entro circa 8 ore dopo l'iniezione
-                iniziale ma richiesta di più di una iniezione entro 72 ore
-                dall'evento, senza risoluzione completa.
-              </p>
-              <p>
-                {" "}
-                - Nessuno: nessun miglioramento o miglioramento minimo, o
-                peggioramento della condizione, entro circa 8 ore dopo
-                l'iniezione iniziale.
-              </p>
+              {props.treatmentResponses.map((e) => (
+                <p>
+                  <strong>{e.label}:</strong> {e.description}
+                </p>
+              ))}
             </DialogContentText>
           </DialogContent>
           <DialogActions>

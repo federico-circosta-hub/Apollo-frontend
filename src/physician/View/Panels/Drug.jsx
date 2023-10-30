@@ -102,10 +102,12 @@ export default function Drug() {
       const t = await CommunicationController.get("treatment", {});
       let newT = t.map((obj) => {
         return {
-          value: obj.code,
+          value: obj.id,
           label: obj.name,
+          description: obj.description,
         };
       });
+      console.log(newT);
       setTreatmentResponses(newT);
     } catch (err) {
       setNetworkErrorT(err || "Errore inatteso");
@@ -244,6 +246,7 @@ export default function Drug() {
       setNewVisit(newVisit);
       setErrors({});
       setEndingVisitModal(true);
+      console.log(newVisit);
     } else {
       setErrors(e);
       setFormModal(true);
