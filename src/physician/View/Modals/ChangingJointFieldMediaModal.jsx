@@ -91,7 +91,7 @@ export default function ChangingJointFieldMediaModal(props) {
 
   return (
     <Modal show={props.show} animation={true}>
-      <Alert severity="error">
+      <Alert severity="warning" variant="filled">
         <AlertTitle>
           {displayScan ? "Selezionare scan" : "Attenzione!"}
         </AlertTitle>
@@ -117,12 +117,18 @@ export default function ChangingJointFieldMediaModal(props) {
         ) : (
           <>
             <p>
-              Da sistema risulta che l'attuale ecografia sia associata al{" "}
-              {JointNameChanger.fromEngToItaName(props.savedJointName)}
+              Questa immagine è stata annotata come{" "}
+              {JointNameChanger.fromEngToItaName(
+                props.savedJointName
+              ).toLowerCase()}
+              .
             </p>
             <p>
-              Sei sicuro di volerla invece associare al{" "}
-              {JointNameChanger.fromEngToItaName(props.actualJointName)}?
+              Sei sicuro di volerla selezionare come{" "}
+              {JointNameChanger.fromEngToItaName(
+                props.actualJointName
+              ).toLowerCase()}
+              ?
             </p>
           </>
         )}
