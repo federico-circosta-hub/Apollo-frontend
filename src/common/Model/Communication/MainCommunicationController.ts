@@ -4,7 +4,7 @@ import PhysicianTask from "../PhysicianTask";
 import Dataset, { DatasetData } from "../Dataset";
 import AnnotationTool, { AnnotationToolData } from "../AnnotationTool";
 import AnnotationType from "../AnnotationType";
-import Task, { AssignmentType, TaskData } from "../Task";
+import Task, { AssignmentType, TaskConflictsMatrix, TaskData } from "../Task";
 import AbstractCommunicationController from "./AbstractCommunicationController";
 import DeanonymizedCC from "./DeanonymizedCommunicationController";
 
@@ -258,7 +258,7 @@ class MainCommunicationController extends AbstractCommunicationController {
         return this.patch(this.endpoints.ASSIGN_TASK, { id, assignments });
     };
 
-    getConflictMatrix = (task: number) => {
+    getConflictMatrix = (task: number): Promise<TaskConflictsMatrix> => {
         return this.get(this.endpoints.GET_CONFLICT_MATRIX, { task });
     };
 }

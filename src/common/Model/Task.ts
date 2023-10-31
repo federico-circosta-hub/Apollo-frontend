@@ -28,6 +28,15 @@ export class TaskData {
 
 export type TaskDataKey = keyof TaskData;
 
+export type TaskConflictsMatrix = {
+    [key: number]: {
+        [key: number]: {
+            common_annotations: number;
+            conflict_degree: number;
+        };
+    };
+};
+
 export default class Task {
     id: number;
     dataset: number;
@@ -112,10 +121,12 @@ export default class Task {
             0
         );
 
-        return annotations / (this.media_count * this.physicians.length);
+        const percent =
+            annotations / (this.media_count * this.physicians.length);
+        return Math.round(percent * 10000) / 10000;
     };
 
-    conflictMatrix = () => {
+    conflictMatrix = (): Promise<TaskConflictsMatrix> => {
         return MainCC.getConflictMatrix(this.id);
     };
 }
