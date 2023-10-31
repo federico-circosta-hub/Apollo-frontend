@@ -72,6 +72,9 @@ export default function ModifyPatientModal(props) {
       await patient.modifyPatient(props.patient.pid);
       setShowAlert(true);
       props.setPatient(null);
+      props.clear();
+      props.setSearchInput("");
+      props.getPatients();
     } catch (err) {
       setNetworkError(err);
       setShowAlert(false);

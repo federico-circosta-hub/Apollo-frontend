@@ -249,6 +249,9 @@ export default function SearchPatient() {
           <ModifyPatientModal
             patient={patientToMod}
             setPatient={setPatientToMod}
+            setSearchInput={setSearchInput}
+            clear={clearAll}
+            getPatients={getPatients}
           />
         )}
       </MainContainer>
