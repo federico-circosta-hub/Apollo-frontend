@@ -5,121 +5,121 @@ type Params = { [key: string]: any };
 type Result = any;
 
 enum HttpMethod {
-  GET = "GET",
-  POST = "POST",
-  DELETE = "DELETE",
-  PUT = "PUT",
-  PATCH = "PATCH",
+    GET = "GET",
+    POST = "POST",
+    DELETE = "DELETE",
+    PUT = "PUT",
+    PATCH = "PATCH",
 }
 
 abstract class AbstractCommunicationController {
-  private controller: AxiosInstance;
+    private controller: AxiosInstance;
 
-  constructor(url: string) {
-    this.controller = axios.create({
-      baseURL: url,
-      timeout: 20000,
-      withCredentials: config.NODE_ENV === "production",
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+    constructor(url: string) {
+        this.controller = axios.create({
+            baseURL: url,
+            timeout: 20000,
+            withCredentials: config.NODE_ENV === "production",
+            headers: { "Content-Type": "application/json" },
+        });
+    }
 
-  signalController?: AbortController;
+    signalController?: AbortController;
 
-  protected getHeaders(): { [key: string]: string } {
-    return {};
-  }
+    protected getHeaders(): { [key: string]: string } {
+        return {};
+    }
 
-  private baseCall = async (
-    method: HttpMethod,
-    endpoint: string,
-    data: Params
-  ): Promise<Result> => {
-    console.log(`Axios call: ${method} ${endpoint}`);
+    private baseCall = async (
+        method: HttpMethod,
+        endpoint: string,
+        data: Params
+    ): Promise<Result> => {
+        console.log(`Axios call: ${method} ${endpoint}`);
 
-    this.signalController = new AbortController();
-    const config = {
-      headers: this.getHeaders(),
-      signal: this.signalController.signal,
+        this.signalController = new AbortController();
+        const config = {
+            headers: this.getHeaders(),
+            signal: this.signalController.signal,
+        };
+
+        let fn = this.getFunctionByHttpMethod(method);
+
+        try {
+            let res: any;
+            if (method === HttpMethod.GET)
+                res = await fn(endpoint + this.formatGetData(data), config);
+            else if (method === HttpMethod.DELETE)
+                res = await fn(endpoint, { ...config, data: data });
+            else res = await fn(endpoint, data, config);
+
+            return res.data;
+        } catch (err: any) {
+            console.error(`Axios error: ${err.message}`);
+            if (err.response) {
+                // status not in 2xx range
+                console.error(`Response error: ${err.response.data.message}`);
+            } else if (err.request) {
+                console.error(`Request error: no response received`);
+            }
+            throw err;
+        }
     };
 
-    let fn = this.getFunctionByHttpMethod(method);
+    get = (endpoint: string, data: Params = {}): Promise<Result> => {
+        return this.baseCall(HttpMethod.GET, endpoint, data);
+    };
 
-    try {
-      let res: any;
-      if (method === HttpMethod.GET)
-        res = await fn(endpoint + "/" + this.formatGetData(data), config);
-      else if (method === HttpMethod.DELETE)
-        res = await fn(endpoint, { ...config, data: data });
-      else res = await fn(endpoint, data, config);
+    post = (endpoint: string, data: Params = {}): Promise<Result> => {
+        return this.baseCall(HttpMethod.POST, endpoint, data);
+    };
 
-      return res.data;
-    } catch (err: any) {
-      console.error(`Axios error: ${err.message}`);
-      if (err.response) {
-        // status not in 2xx range
-        console.error(`Response error: ${err.response.data.message}`);
-      } else if (err.request) {
-        console.error(`Request error: no response received`);
-      }
-      throw err;
-    }
-  };
+    put = (endpoint: string, data: Params = {}): Promise<Result> => {
+        return this.baseCall(HttpMethod.PUT, endpoint, data);
+    };
 
-  get = (endpoint: string, data: Params = {}): Promise<Result> => {
-    return this.baseCall(HttpMethod.GET, endpoint, data);
-  };
+    patch = (endpoint: string, data: Params = {}): Promise<Result> => {
+        return this.baseCall(HttpMethod.PATCH, endpoint, data);
+    };
 
-  post = (endpoint: string, data: Params = {}): Promise<Result> => {
-    return this.baseCall(HttpMethod.POST, endpoint, data);
-  };
+    delete = (endpoint: string, data: Params = {}): Promise<Result> => {
+        return this.baseCall(HttpMethod.DELETE, endpoint, data);
+    };
 
-  put = (endpoint: string, data: Params = {}): Promise<Result> => {
-    return this.baseCall(HttpMethod.PUT, endpoint, data);
-  };
+    abortLast = () => {
+        this.signalController?.abort();
+    };
 
-  patch = (endpoint: string, data: Params = {}): Promise<Result> => {
-    return this.baseCall(HttpMethod.PATCH, endpoint, data);
-  };
+    private formatGetData = (data: Params): string => {
+        let result = "?";
 
-  delete = (endpoint: string, data: Params = {}): Promise<Result> => {
-    return this.baseCall(HttpMethod.DELETE, endpoint, data);
-  };
+        Object.entries(data)
+            .filter(([_key, value]) => value !== undefined && value !== null)
+            .forEach(([key, value]) => {
+                result +=
+                    key +
+                    "=" +
+                    (typeof value == "object" ? JSON.stringify(value) : value) +
+                    "&";
+            });
 
-  abortLast = () => {
-    this.signalController?.abort();
-  };
+        return result;
+    };
 
-  private formatGetData = (data: Params): string => {
-    let result = "?";
-
-    Object.entries(data)
-      .filter(([_key, value]) => value !== undefined && value !== null)
-      .forEach(([key, value]) => {
-        result +=
-          key +
-          "=" +
-          (typeof value == "object" ? JSON.stringify(value) : value) +
-          "&";
-      });
-
-    return result;
-  };
-
-  private getFunctionByHttpMethod = (method: HttpMethod) => {
-    switch (method) {
-      case HttpMethod.GET:
-        return this.controller.get;
-      case HttpMethod.POST:
-        return this.controller.post;
-      case HttpMethod.PUT:
-        return this.controller.put;
-      case HttpMethod.PATCH:
-        return this.controller.patch;
-      case HttpMethod.DELETE:
-        return this.controller.delete;
-    }
-  };
+    private getFunctionByHttpMethod = (method: HttpMethod) => {
+        switch (method) {
+            case HttpMethod.GET:
+                return this.controller.get;
+            case HttpMethod.POST:
+                return this.controller.post;
+            case HttpMethod.PUT:
+                return this.controller.put;
+            case HttpMethod.PATCH:
+                return this.controller.patch;
+            case HttpMethod.DELETE:
+                return this.controller.delete;
+        }
+    };
 }
 
 export default AbstractCommunicationController;
