@@ -73,26 +73,22 @@ export default function ProphylacticDrug(props) {
           </div>
         )}
       </div>
-      <div style={{ display: "flex" }}>
-        <input
-          disabled
-          placeholder={
-            props.prophylacticDrug.unit !== ""
-              ? props.prophylacticDrug.unit
-              : "Unità"
-          }
-          style={{ background: `#fffacd` }}
-        />
-
+      <div style={{ display: "flex", gap: 20 }}>
         <input
           placeholder="Dose"
           value={props.prophylacticDrug.dose}
           onChange={props.handleProphylacticDrugDose}
-          style={{ background: `#fffacd` }}
+          style={{ background: `#fffacd`, flex: 1.5 }}
           name="prophylacticDose"
           type="number"
           disabled={props.disabledProphylactic}
         />
+
+        <label style={{ flex: 1 }}>
+          {props.prophylacticDrug.unit && (
+            <> Unità: {props.prophylacticDrug.unit}</>
+          )}
+        </label>
       </div>
       <div>
         {!props.networkErrorF && props.frequencies ? (

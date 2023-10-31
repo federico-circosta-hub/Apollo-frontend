@@ -67,23 +67,19 @@ export default function AcuteDrug(props) {
           </div>
         )}
       </div>
-      <div style={{ display: "flex" }}>
-        <input
-          disabled
-          placeholder={
-            props.acuteDrug.unit !== "" ? props.acuteDrug.unit : "Unità"
-          }
-          style={{ background: `#ffe4e1` }}
-        />
+      <div style={{ display: "flex", gap: 20 }}>
         <input
           placeholder="Dose"
-          style={{ background: `#ffe4e1` }}
+          style={{ background: `#ffe4e1`, flex: 1.5 }}
           value={props.acuteDrug.dose}
           name="AcuteDose"
           type="number"
           onChange={props.handleAcuteDrugDose}
           disabled={props.disabledAcute}
         />
+        <label style={{ flex: 1 }}>
+          {props.acuteDrug.unit && <>Unità: {props.acuteDrug.unit}</>}
+        </label>
       </div>
     </div>
   );
