@@ -58,6 +58,7 @@ export default function NewPatient() {
     try {
       await patient.register();
       setShowAlert(true);
+      navigate("/", { replace: true });
     } catch (err) {
       setNetworkError(err);
       setShowAlert(false);
