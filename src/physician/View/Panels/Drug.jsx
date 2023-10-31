@@ -223,6 +223,8 @@ export default function Drug() {
       newVisit.setSended(true);
       setNewVisit(newVisit);
       setShowFinishAlert(true);
+      setEndingVisitModal(false);
+      navigate("/newVisit/endVisit", { replace: true });
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
       console.error("sendsAllAndFinish", err);
