@@ -49,43 +49,38 @@ export default function JointInfo(props) {
   };
 
   const valueResolver = (s) => {
-    let result = "";
     switch (s) {
       case "sinovite":
         switch (jointToDisplay.sinovite) {
           case 0:
-            result = "Assente/bassa";
+            return "Assente/bassa";
           case 1:
-            result = "Media";
+            return "Media";
           case 2:
-            result = "Grave";
+            return "Grave";
         }
-
-        return result;
       case "cartilagine":
         switch (jointToDisplay.cartilagine) {
           case 0:
-            result = "Normale";
+            return "Normale";
           case 1:
-            result = "Perdita <25%";
+            return "Perdita <25%";
           case 2:
-            result = "Perdita <50%";
+            return "Perdita <50%";
           case 3:
-            result = "Perdita <50%";
+            return "Perdita <50%";
           case 4:
-            result = "Perdita totale";
+            return "Perdita totale";
         }
-        return result;
       case "subchondral":
         switch (jointToDisplay.subchondral_bone) {
           case 0:
-            result = "Normale";
+            return "Normale";
           case 1:
-            result = "Irregolarità medie";
+            return "Irregolarità medie";
           case 2:
-            result = "Osteofite";
+            return "Osteofite";
         }
-        return result;
       case "distension":
         switch (jointToDisplay.distension_amount) {
           case "absent":
