@@ -19,8 +19,11 @@ const AnnotationTask = ({ task }: { task: PhysicianTask }) => {
         <Card style={style.card} raised>
             <CardActionArea onClick={openTask}>
                 <CardContent>
-                    <Typography variant="h6" component="div" sx={style.title}>
-                        {task.name()}
+                    <Typography variant="h5" sx={style.title}>
+                        {task.dataset_name}
+                    </Typography>
+                    <Typography variant="h6" sx={style.title}>
+                        {task.annotation_type_name}
                     </Typography>
                     <Typography sx={{ fontSize: 18 }} gutterBottom>
                         Deadline: {task.deadline}
