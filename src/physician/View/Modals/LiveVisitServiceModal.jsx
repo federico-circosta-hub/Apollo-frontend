@@ -59,13 +59,23 @@ export default function LiveVisitServiceModal(props) {
       );
       if (visitsArray.length > 0) {
         for (let e of visitsArray) {
-          let patient = await DeanonymizedCC.get("patient", {
-            pid: e.patient,
-          });
-          patient = patient[0];
-          e.deanonymizedPatient = patient.name + " " + patient.surname;
-          e.birthdate = patient.birthdate;
-          e.gender = patient.gender;
+          try {
+            let patient = await DeanonymizedCC.get("patient", {
+              pid: e.patient,
+            });
+            patient = patient[0];
+            e.deanonymizedPatient = patient.name + " " + patient.surname;
+            e.birthdate = patient.birthdate;
+            e.gender = patient.gender;
+          } catch (patientError) {
+            console.error(
+              "Errore durante il recupero dei dati del paziente:",
+              patientError
+            );
+            e.deanonymizedPatient = null;
+            e.birthdate = null;
+            e.gender = null;
+          }
         }
       }
       setVisitList(visitsArray);
@@ -218,7 +228,11 @@ export default function LiveVisitServiceModal(props) {
 
                 <tbody>
                   {visitList
-                    .filter((e) => e.patient !== "iYHoCDJzYxvw5kDNB42rkX")
+                    .filter(
+                      (e) =>
+                        e.patient !== "iYHoCDJzYxvw5kDNB42rkX" &&
+                        e.deanonymizedPatient
+                    )
                     .map((visit, index) => (
                       <tr
                         className="tr-lg"

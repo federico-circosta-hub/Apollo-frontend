@@ -12,6 +12,7 @@ import JointNameChanger from "./../../ViewModel/JointNameChanger";
 import { NewVisitContext } from "../../Model/NewVisitContext";
 import { useNavigate } from "react-router-dom";
 import exit from "./../../img/icon/logout.png";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 export default function PhysicianHeader(props) {
   const { selectedPatient } = useContext(PatientContext);
@@ -45,7 +46,7 @@ export default function PhysicianHeader(props) {
           className="btn btn-primary"
           onClick={() => navigate("/", { replace: true })}
         >
-          Home
+          <HomeOutlinedIcon />
         </button>
       ) : location.pathname == "/newVisit" ||
         location.pathname == "/newVisit/" ||
