@@ -6,7 +6,7 @@ import { DatasetsContext } from "../../ViewModel/DatasetsProvider";
 import { AnnotationToolsContext } from "../../ViewModel/AnnotationToolsProvider";
 import Dataset from "../../../common/Model/Dataset";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
-import Loading from "../../../common/View/Loading";
+import LoadingSpinner from "../../../common/View/LoadingSpinner";
 import ErrorScreen from "../../../common/View/ErrorScreen";
 import AnnotationTaskAddForm from "./TaskAddForm";
 import User from "../../../common/Model/User";
@@ -57,7 +57,7 @@ export default function AdminAddTask() {
     if (status === Status.LOADING)
         return (
             <MainContainer>
-                <Loading />
+                <LoadingSpinner />
             </MainContainer>
         );
 

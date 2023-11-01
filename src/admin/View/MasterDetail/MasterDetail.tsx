@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import MasterComponent, { MasterItemProps } from "./MasterComponent";
 import Divider from "@mui/material/Divider";
 import MainContainer from "../../../common/View/MainContainer";
-import Loading from "../../../common/View/Loading";
+import LoadingSpinner from "../../../common/View/LoadingSpinner";
 import DetailComponent, { DetailItemProps } from "./DetailComponent";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Status from "../../../common/Model/Status";
@@ -70,7 +70,7 @@ export default function MasterDetail({
                         deleteText={deleteText}
                     />
                 ) : (
-                    <Loading />
+                    <LoadingSpinner />
                 )}
             </Box>
             <Divider orientation="vertical" flexItem sx={style.divider} />

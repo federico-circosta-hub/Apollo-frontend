@@ -4,7 +4,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { PhysiciansContext } from "../../ViewModel/UsersProvider";
 import User from "../../../common/Model/User";
 import Status from "../../../common/Model/Status";
-import Loading from "../../../common/View/Loading";
+import LoadingSpinner from "../../../common/View/LoadingSpinner";
 import ErrorScreen from "../../../common/View/ErrorScreen";
 import TaskDetailsForm from "./TaskDetailsForm";
 
@@ -44,7 +44,7 @@ export default function AnnotationTaskDetails({ item }: DetailItemProps) {
         fetchData();
     }, [fetchData]);
 
-    if (status === Status.LOADING) return <Loading />;
+    if (status === Status.LOADING) return <LoadingSpinner />;
 
     if (status === Status.ERROR) return <ErrorScreen onRetry={fetchData} />;
 
