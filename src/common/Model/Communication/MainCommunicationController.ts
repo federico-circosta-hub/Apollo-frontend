@@ -1,7 +1,7 @@
 import config from "../../../config";
 import { AnnotationToolAccess } from "../User";
 import PhysicianTask from "../PhysicianTask";
-import Dataset, { DatasetData } from "../Dataset";
+import Dataset, { DatasetData, MediaStats } from "../Dataset";
 import AnnotationTool, { AnnotationToolData } from "../AnnotationTool";
 import AnnotationType from "../AnnotationType";
 import Task, { AssignmentType, TaskConflictsMatrix, TaskData } from "../Task";
@@ -31,6 +31,7 @@ class MainCommunicationController extends AbstractCommunicationController {
         DELETE_TASK: "/task",
         ASSIGN_TASK: "/task/assign",
         GET_CONFLICT_MATRIX: "/task/conflicts/compare",
+        GET_MEDIA_STATS: "/media/stats",
     };
 
     protected getHeaders(): { [key: string]: string } {
@@ -261,6 +262,10 @@ class MainCommunicationController extends AbstractCommunicationController {
     getConflictMatrix = (task: number): Promise<TaskConflictsMatrix> => {
         return this.get(this.endpoints.GET_CONFLICT_MATRIX, { task });
     };
+
+    getMediaStats = (): Promise<MediaStats> => {
+        return this.get(this.endpoints.GET_MEDIA_STATS);
+    }
 }
 
 const instance = new MainCommunicationController(config.MAIN_API_URL);

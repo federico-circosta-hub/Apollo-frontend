@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
 import * as Muicon from "@mui/icons-material";
@@ -28,24 +27,22 @@ export default function NavigationCard({
     const Icon = Muicon[icon];
 
     return (
-        <Grid item xs={12} sm={6}>
-            <Card style={style.card} raised>
-                <CardActionArea onClick={open}>
-                    <CardContent style={style.cardContent}>
-                        <Typography
-                            variant="h6"
-                            component="div"
-                            align="center"
-                            sx={style.title}
-                        >
-                            {name}
-                        </Typography>
-                        <Box sx={{ m: 1 }} />
-                        <Icon sx={{ fontSize: 64 }} />
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        </Grid>
+        <Card style={style.card} raised>
+            <CardActionArea onClick={open}>
+                <CardContent style={style.cardContent}>
+                    <Typography
+                        variant="h6"
+                        component="div"
+                        align="center"
+                        sx={style.title}
+                    >
+                        {name}
+                    </Typography>
+                    <Box sx={{ m: 1 }} />
+                    <Icon sx={{ fontSize: 64 }} />
+                </CardContent>
+            </CardActionArea>
+        </Card>
     );
 }
 

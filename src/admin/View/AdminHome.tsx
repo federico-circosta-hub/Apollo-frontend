@@ -23,28 +23,43 @@ export default function AdminHome() {
                     sx={style.grid}
                 >
                     <Grid container item spacing={2}>
-                        <NavigationCard
-                            name="Utenti"
-                            to="/users"
-                            icon="PersonOutlined"
-                        />
-                        <NavigationCard
-                            name="Dataset"
-                            to="/datasets"
-                            icon="ImageOutlined"
-                        />
+                        <Grid item xs={12} sm={4}>
+                            <NavigationCard
+                                name="Utenti"
+                                to="/users"
+                                icon="PersonOutlined"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <NavigationCard
+                                name="Stats"
+                                to="/mediaStats"
+                                icon="Storage"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <NavigationCard
+                                name="Dataset"
+                                to="/datasets"
+                                icon="ImageOutlined"
+                            />
+                        </Grid>
                     </Grid>
                     <Grid container item spacing={2}>
-                        <NavigationCard
-                            name="Task di annotazione"
-                            to="/tasks"
-                            icon="EventNoteOutlined"
-                        />
-                        <NavigationCard
-                            name="Tool di annotazione"
-                            to="/tools"
-                            icon="CreateOutlined"
-                        />
+                        <Grid item xs={12} sm={6}>
+                            <NavigationCard
+                                name="Task di annotazione"
+                                to="/tasks"
+                                icon="EventNoteOutlined"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <NavigationCard
+                                name="Tool di annotazione"
+                                to="/tools"
+                                icon="CreateOutlined"
+                            />
+                        </Grid>
                     </Grid>
                 </Grid>
             </Box>

@@ -6,6 +6,20 @@ export enum MediaType {
     VIDEO = "video",
 }
 
+export type StatsKeys = "invalidImgs" | "invalidVideos" | "validImgs" | "validVideos";
+
+export type MediaStats = Record<StatsKeys, number> & {
+    totImgs: number;
+    totVideos: number;
+    joints: {
+        [key: string]: Record<StatsKeys, number> & {
+            scans: {
+                [key: string]: Record<StatsKeys, number>;
+            };
+        };
+    };
+};
+
 export const isDatasetValid = (data: DatasetData): boolean => {
     return (
         data.name.trim() !== "" &&
