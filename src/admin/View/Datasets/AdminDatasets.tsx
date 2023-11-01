@@ -6,7 +6,7 @@ import Dataset from "../../../common/Model/Dataset";
 import { DatasetsContext } from "../../ViewModel/DatasetsProvider";
 import MasterComponent from "../MasterDetail/MasterComponent";
 import { useNavigate } from "react-router-dom";
-import Loading from "../../../common/View/Loading";
+import LoadingSpinner from "../../../common/View/LoadingSpinner";
 import ErrorScreen from "../../../common/View/ErrorScreen";
 import MainContainer from "../../../common/View/MainContainer";
 import DatasetItem from "./DatasetItem";
@@ -76,7 +76,7 @@ export default function AdminDatasets() {
                     onDelete={handleDelete}
                 />
             ) : (
-                <Loading />
+                <LoadingSpinner />
             )}
         </MainContainer>
     );

@@ -4,7 +4,7 @@ import Status from "../Model/Status";
 import Box from "@mui/material/Box";
 import StatusLoadingButton from "../../admin/Components/StatusLoadingButton";
 
-export default function LoadingError({
+export default function LoadingOrError({
     status,
     errorMsg,
     onReload,

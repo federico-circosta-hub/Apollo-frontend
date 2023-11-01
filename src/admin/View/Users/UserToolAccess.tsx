@@ -9,7 +9,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
-import LoadingError from "../../../common/View/LoadingError";
+import LoadingOrError from "../../../common/View/LoadingOrError";
 import StatusLoadingButton from "../../Components/StatusLoadingButton";
 
 export default function UserToolAccess({
@@ -41,7 +41,7 @@ export default function UserToolAccess({
 
     if (status !== Status.IDLE) {
         return (
-            <LoadingError
+            <LoadingOrError
                 status={status}
                 errorMsg="Errore nel caricamento dei tool di annotazione"
                 onReload={fetchData}

@@ -12,7 +12,7 @@ import User from "../../../common/Model/User";
 import Status from "../../../common/Model/Status";
 import { Paper } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import LoadingError from "../../../common/View/LoadingError";
+import LoadingOrError from "../../../common/View/LoadingOrError";
 
 function getData(u1: number, u2: number, matrix: TaskConflictsMatrix) {
     if (u1 !== u2) console.log(matrix[u1][u2].common_annotations);
@@ -87,7 +87,7 @@ export default function TaskConflictMatrix({
 
     if (status !== Status.IDLE)
         return (
-            <LoadingError
+            <LoadingOrError
                 status={status}
                 errorMsg="Errore nel caricamento della tabella dei conflitti"
                 onReload={fetchData}

@@ -12,7 +12,7 @@ import CommunicationController from "../../../common/Model/Communication/MainCom
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Divider from "@mui/material/Divider";
-import LoadingError from "../../../common/View/LoadingError";
+import LoadingOrError from "../../../common/View/LoadingOrError";
 
 export default function UserTasks({
     user,
@@ -47,7 +47,7 @@ export default function UserTasks({
 
     if (status !== Status.IDLE) {
         return (
-            <LoadingError
+            <LoadingOrError
                 status={status}
                 errorMsg="Errore nel caricamento dei task di annotazione"
                 onReload={fetchData}

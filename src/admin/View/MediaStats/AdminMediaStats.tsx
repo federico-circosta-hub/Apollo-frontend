@@ -9,7 +9,6 @@ import {
     MediaType,
     StatsKeys,
 } from "../../../common/Model/Dataset";
-import LoadingError from "../../../common/View/LoadingError";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -21,6 +20,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 import ErrorScreen from "../../../common/View/ErrorScreen";
+import LoadingScreen from "../../../common/View/LoadingScreen";
 
 function getPercent(a: number, b: number) {
     if (b === 0) return "0%";
@@ -59,7 +59,8 @@ export default function AdminMediaStats() {
         return () => CommunicationController.abortLast();
     }, [fetchData]);
 
-    if (status !== Status.IDLE || !stats)
+    if (status === Status.LOADING) return <LoadingScreen />;
+    if (status === Status.ERROR || !stats)
         return <ErrorScreen onRetry={fetchData} />;
 
     return (

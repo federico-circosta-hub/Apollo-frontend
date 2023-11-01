@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import User from "../../../common/Model/User";
 import { useCallback, useState } from "react";
 import Status from "../../../common/Model/Status";
-import Loading from "../../../common/View/Loading";
+import LoadingSpinner from "../../../common/View/LoadingSpinner";
 import TaskStatus from "./TaskStatus";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -23,7 +23,7 @@ export default function TaskDetailsForm({
 }) {
     const [showAssignModal, setShowAssignModal] = useState<boolean>(false);
 
-    if (users.length === 0) return <Loading />;
+    if (users.length === 0) return <LoadingSpinner />;
 
     return (
         <Box sx={style.box}>

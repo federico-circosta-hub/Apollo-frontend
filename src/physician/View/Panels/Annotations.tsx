@@ -12,7 +12,7 @@ import PhysicianTask from "../../../common/Model/PhysicianTask";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import UserContext from "../../../common/Model/UserContext";
 import MainContainer from "../../../common/View/MainContainer";
-import Loading from "../../../common/View/Loading";
+import LoadingSpinner from "../../../common/View/LoadingSpinner";
 import Status from "../../../common/Model/Status";
 
 export default function Annotations() {
@@ -46,7 +46,7 @@ export default function Annotations() {
     if (status === Status.LOADING)
         return (
             <MainContainer>
-                <Loading />
+                <LoadingSpinner />
             </MainContainer>
         );
     if (status === Status.ERROR) return <Error onRetry={fetchData} />;

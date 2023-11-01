@@ -9,7 +9,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { FunctionsContext } from "../../ViewModel/FunctionsProvider";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
-import LoadingError from "../../../common/View/LoadingError";
+import LoadingOrError from "../../../common/View/LoadingOrError";
 import AnnotationTool from "../../../common/Model/AnnotationTool";
 import ButtonsFooter from "../../Components/ButtonsFooter";
 
@@ -50,7 +50,7 @@ export default function AnnotationTypeDetails({
 
     if (status !== Status.IDLE) {
         return (
-            <LoadingError
+            <LoadingOrError
                 status={status}
                 onReload={fetchData}
                 errorMsg="Errore nel caricamento delle funzioni di annotazione"

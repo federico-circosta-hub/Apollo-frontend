@@ -5,7 +5,7 @@ import AnnotationType from "../../../common/Model/AnnotationType";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import LoadingError from "../../../common/View/LoadingError";
+import LoadingOrError from "../../../common/View/LoadingOrError";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
@@ -43,7 +43,7 @@ export default function AnnotationToolTypes({
     }, [fetchData]);
 
     if (status !== Status.IDLE) {
-        <LoadingError
+        <LoadingOrError
             status={status}
             errorMsg="Errore nel caricamento dei tipi di annotazione supportati"
             onReload={fetchData}

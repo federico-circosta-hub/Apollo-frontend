@@ -4,13 +4,13 @@ import "./App.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import LoadingScreen from "./common/View/LoadingScreen";
+import StartupLoadingScreen from "./common/View/StartupLoadingScreen";
 import config from "./config";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <BrowserRouter basename={config.ENDPOINT}>
-        <Suspense fallback={<LoadingScreen />}>
+        <Suspense fallback={<StartupLoadingScreen />}>
             <App />
         </Suspense>
     </BrowserRouter>
