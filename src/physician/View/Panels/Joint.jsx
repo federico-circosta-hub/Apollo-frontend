@@ -101,6 +101,7 @@ export default function Joint(props) {
         "media/visit",
         params
       );
+      console.log(idsFromServer);
       if (idsFromServer.length > 0) {
         setIsThereNewImage(true);
         console.log(idsFromServer);
@@ -108,11 +109,14 @@ export default function Joint(props) {
           let eco = await CommunicationController.get("media", {
             id: e,
           });
-          eco.realJoint = undefined;
-          eco.realSide = undefined;
-          eco.actualModified = { value: false, select: null };
-          console.log("ottenuta eco:", eco);
-          setPhotos((prevState) => [...prevState, eco]);
+          console.log("eco appena arrivata", eco, typeof eco);
+          if (eco && Object.keys(eco).length > 0) {
+            eco.realJoint = undefined;
+            eco.realSide = undefined;
+            eco.actualModified = { value: false, select: null };
+            console.log("ottenuta eco:", eco);
+            setPhotos((prevState) => [...prevState, eco]);
+          }
           setIds((prevState) => [...prevState, e]);
         });
       } else {
