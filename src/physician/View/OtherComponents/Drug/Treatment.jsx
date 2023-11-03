@@ -11,6 +11,7 @@ import Slider from "@mui/material/Slider";
 import { NewVisitContext } from "../../../Model/NewVisitContext";
 import { useContext } from "react";
 import { useState } from "react";
+import { format } from "date-fns";
 
 export default function Treatment(props) {
   const [showDialog, setShowDialog] = useState(false);
@@ -46,9 +47,18 @@ export default function Treatment(props) {
         }}
       >
         <div>
-          <label style={{ fontSize: 18 }}>Visita precedente</label>
+          {newVisit.previousVisit.id === -1 ? (
+            <label style={{ fontSize: 18 }}>
+              Visita precedente impostata manualmente del:{" "}
+              {format(newVisit.previousVisit.date, "dd-MM-y")}
+            </label>
+          ) : (
+            <label style={{ fontSize: 18 }}>Visita precedente:</label>
+          )}
         </div>
-        <div>{props.visitButtonResolver()}</div>
+        {newVisit.previousVisit.id !== -1 && (
+          <div>{props.visitButtonResolver()}</div>
+        )}
       </div>
       <div
         style={{

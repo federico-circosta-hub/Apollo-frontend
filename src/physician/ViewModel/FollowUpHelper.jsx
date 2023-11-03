@@ -28,17 +28,24 @@ export default function FollowUpHelper(props) {
 
   return !showModal ? (
     <div style={{ display: "flex", width: "100%", gap: "1%" }}>
-      <Link
-        onClick={() => {
-          setSelectedVisit(props.previousVisit);
-          props.seeVisit();
-        }}
-        to={"/seeVisit"}
-        className="btn btn-info"
-      >
-        <img width={22} src={eye} alt="" /> {"Visualizza visita "}
-        {format(previousVisitDate, "dd-MM-y")}
-      </Link>
+      {props.previousVisit.id === -1 ? (
+        <p>
+          Visita impostata manualmente del{" "}
+          {format(previousVisitDate, "dd-MM-y")}
+        </p>
+      ) : (
+        <Link
+          onClick={() => {
+            setSelectedVisit(props.previousVisit);
+            props.seeVisit();
+          }}
+          to={"/seeVisit"}
+          className="btn btn-info"
+        >
+          <img width={22} src={eye} alt="" /> {"Visualizza visita "}
+          {format(previousVisitDate, "dd-MM-y")}
+        </Link>
+      )}
     </div>
   ) : (
     <Modal show={showModal} animation={true}>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap/";
-import { Alert, AlertTitle, Backdrop } from "@mui/material";
+import question from "./../../img/icon/question.png";
+import { Alert, AlertTitle, Backdrop, TextField } from "@mui/material";
 import VisitLine from "../OtherComponents/VisitLine";
 import { useContext, useState } from "react";
 import { NewVisitContext } from "../../Model/NewVisitContext";
@@ -8,9 +9,16 @@ import DeanonymizedCC from "../../../common/Model/Communication/DeanonymizedComm
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import { SkeletonsList } from "../OtherComponents/SkeletonsList";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import "dayjs/locale/it";
+import dayjs from "dayjs";
+import format from "date-fns/format";
 
 export default function FollowUpChooseModal(props) {
   const { newVisit } = useContext(NewVisitContext);
+  const MAX_DATE = dayjs(newVisit.visitDate);
   const VISITS_AT_TIME = 20;
   const [visitList, setVisitList] = useState([]);
   const [loadingVisits, setLoadingVisits] = useState(false);
@@ -19,6 +27,17 @@ export default function FollowUpChooseModal(props) {
   const [chooseError, setChooseError] = useState(false);
   const [offset, setOffset] = useState(0);
   const [endReached, setEndReached] = useState(false);
+  const [otherVisit, setOtherVisit] = useState(false);
+  const [otherVisitDate, setOtherVisitDate] = useState(
+    newVisit.previousVisit && !newVisit.previousVisit.physician
+      ? newVisit.previousVisit.date
+      : null
+  );
+  const [otherVisitDescription, setOtherVisitDescription] = useState(
+    newVisit.previousVisit && !newVisit.previousVisit.physician
+      ? newVisit.previousVisit.description
+      : ""
+  );
 
   const throttledScroll = React.useRef(null);
 
@@ -66,6 +85,16 @@ export default function FollowUpChooseModal(props) {
     setShowModal(false);
   };
 
+  const handleAdd = () => {
+    let v = {
+      date: otherVisitDate,
+      description: otherVisitDescription,
+      id: -1,
+    };
+    props.onChoose(v);
+    setShowModal(false);
+  };
+
   const handleScroll = React.useCallback((e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
     if (!endReached && (scrollTop + clientHeight) / scrollHeight >= 0.95) {
@@ -79,60 +108,112 @@ export default function FollowUpChooseModal(props) {
   });
 
   return (
-    <Modal show={showModal} animation={true} size={"lg"} scrollable>
+    <Modal show={showModal} animation={true} size={"lg"} scrollable={true}>
       <Alert severity="info" variant="filled" style={{ width: "100%" }}>
         <AlertTitle>Scegliere la visita</AlertTitle>
       </Alert>
 
       <Modal.Body style={{ background: "whitesmoke" }} onScroll={handleScroll}>
-        {loadingVisits ? (
+        {otherVisit ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+              gap: "1.5vh",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1.5vh",
+              }}
+            >
+              <label style={{ fontSize: 18 }}>Data della visita:</label>
+
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="it"
+              >
+                <DatePicker
+                  maxDate={MAX_DATE}
+                  sx={{ background: "white" }}
+                  slotProps={{ textField: { size: "small" } }}
+                  onChange={(newValue) => setOtherVisitDate(newValue.$d)}
+                  label={
+                    otherVisitDate ? format(otherVisitDate, "dd-MM-y") : ""
+                  }
+                />
+              </LocalizationProvider>
+            </div>
+
+            <TextField
+              style={{ width: "45%", background: "white" }}
+              id="outlined-multiline-static"
+              label="Descrizione"
+              value={otherVisitDescription}
+              onChange={(e) => setOtherVisitDescription(e.target.value)}
+              placeholder="Descrizione...
+              Luogo visita?
+              Tipologia di visita?
+              Evento traumatico?"
+              rows={4}
+              multiline
+            />
+          </div>
+        ) : loadingVisits ? (
           <SkeletonsList />
         ) : networkError ? (
           <RefreshButton onClick={getVisits} />
         ) : (
-          <table className="table table-primary table-striped table-hover">
-            <thead
-              style={{
-                position: "sticky",
-                top: 0,
-                height: "6vh",
-              }}
-            >
-              <tr>
-                {/* <th style={{ background: "white", width: "15%" }}>Id visita</th> */}
-                <th style={{ background: "white", width: "30%" }}>Data</th>
-                <th style={{ background: "white", width: "35%" }}>Medico</th>
-                <th style={{ background: "white", width: "15%" }}>Id medico</th>
-                <th style={{ background: "white", width: "20%" }}>
-                  Tipo visita
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {visitList.length === 0 && (
+          <>
+            <table className="table table-primary table-striped table-hover">
+              <thead
+                style={{
+                  position: "sticky",
+                  top: 0,
+                  height: "6vh",
+                }}
+              >
                 <tr>
-                  <em>Non sono presenti visite</em>
+                  {/* <th style={{ background: "white", width: "15%" }}>Id visita</th> */}
+                  <th style={{ background: "white", width: "30%" }}>Data</th>
+                  <th style={{ background: "white", width: "35%" }}>Medico</th>
+                  <th style={{ background: "white", width: "15%" }}>
+                    Id medico
+                  </th>
+                  <th style={{ background: "white", width: "20%" }}>
+                    Tipo visita
+                  </th>
                 </tr>
-              )}
-              {visitList
-                .filter((e) => e.physician !== null)
-                .map((visit, index) => (
-                  <VisitLine
-                    key={index}
-                    visit={visit}
-                    onSelectVisit={() => {
-                      handleSelect(visit);
-                    }}
-                  />
-                ))}
-            </tbody>
-          </table>
-        )}
-        {endReached && (
-          <p>
-            <em>Non sono presenti altre visite</em>
-          </p>
+              </thead>
+
+              <tbody>
+                {visitList
+                  .filter((e) => e.physician !== null)
+                  .map((visit, index) => (
+                    <VisitLine
+                      key={index}
+                      visit={visit}
+                      onSelectVisit={() => {
+                        handleSelect(visit);
+                      }}
+                    />
+                  ))}
+              </tbody>
+            </table>
+            {visitList.length === 0 && (
+              <p style={{ textAlign: "center", fontSize: 20 }}>
+                <em>Non sono presenti visite</em>
+              </p>
+            )}
+            {endReached && (
+              <p>
+                <em>Non sono presenti altre visite</em>
+              </p>
+            )}
+          </>
         )}
       </Modal.Body>
       <Modal.Footer
@@ -142,12 +223,61 @@ export default function FollowUpChooseModal(props) {
           background: "whitesmoke",
         }}
       >
-        <button
-          className="btn btn-secondary btn-lg"
-          onClick={() => props.onCancel()}
-        >
-          Annulla
-        </button>
+        {otherVisit ? (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <button
+              className="btn btn-primary btn-lg"
+              onClick={() => setOtherVisit(false)}
+            >
+              Indietro
+            </button>
+            <button
+              className="btn btn-secondary btn-lg"
+              onClick={() => props.onCancel()}
+            >
+              Annulla
+            </button>
+            <button
+              disabled={!(otherVisitDate && otherVisitDescription)}
+              className="btn btn-success btn-lg"
+              onClick={() => handleAdd()}
+            >
+              Conferma
+            </button>
+          </div>
+        ) : (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+            }}
+          >
+            <div style={{ flex: 1 }}></div>
+            <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+              <button
+                className="btn btn-secondary btn-lg"
+                onClick={() => props.onCancel()}
+              >
+                Annulla
+              </button>
+            </div>
+            <div style={{ flex: 1, display: "flex", justifyContent: "right" }}>
+              <button
+                className="btn btn-warning"
+                onClick={() => setOtherVisit(true)}
+              >
+                Non presente{" "}
+                <img src={question} alt="question mark" width={25} />
+              </button>
+            </div>
+          </div>
+        )}
       </Modal.Footer>
       {chooseError && (
         <Backdrop
