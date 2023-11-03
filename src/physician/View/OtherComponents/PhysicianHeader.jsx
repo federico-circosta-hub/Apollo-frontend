@@ -13,9 +13,10 @@ import { NewVisitContext } from "../../Model/NewVisitContext";
 import { useNavigate } from "react-router-dom";
 import exit from "./../../img/icon/logout.png";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import nameChecker from "../../ViewModel/NameChecker";
 
 export default function PhysicianHeader(props) {
-  const { selectedPatient } = useContext(PatientContext);
+  const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
   const { currentJoint } = useContext(CurrentJointContext);
   const { newVisit } = useContext(NewVisitContext);
   const location = useLocation();
@@ -44,7 +45,10 @@ export default function PhysicianHeader(props) {
       return location.pathname === "/searchVisit" ? (
         <button
           className="btn btn-primary"
-          onClick={() => navigate("/", { replace: true })}
+          onClick={() => {
+            setSelectedPatient(null);
+            navigate("/", { replace: true });
+          }}
         >
           <HomeOutlinedIcon />
         </button>
@@ -94,9 +98,9 @@ export default function PhysicianHeader(props) {
           <>
             <label style={{ fontSize: 20, fontWeight: "500" }}>
               <img src={heartbeat} width={40} style={{ marginRight: 5 }} />
-              {selectedPatient.name +
+              {nameChecker(selectedPatient.name) +
                 " " +
-                selectedPatient.surname +
+                nameChecker(selectedPatient.surname) +
                 " " +
                 format(new Date(selectedPatient.birthdate), "(dd/MM/y)")}
             </label>
@@ -114,7 +118,7 @@ export default function PhysicianHeader(props) {
       } else {
         return (
           <label style={{ fontSize: 20, fontWeight: "500" }}>
-            Home — elenco pazienti
+            Home — Elenco pazienti
           </label>
         );
       }

@@ -11,6 +11,7 @@ import { PatientContext } from "../../Model/PatientContext";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import format from "date-fns/format";
 import itLocale from "date-fns/locale/it";
+import nameChecker from "../../ViewModel/NameChecker";
 
 export default function LiveVisitServiceModal(props) {
   const MAX_VISITS = 50;
@@ -157,7 +158,8 @@ export default function LiveVisitServiceModal(props) {
           <AlertTitle style={{ fontSize: 25 }}>
             Attenzione! Non esiste una visita in corso con{" "}
             {selectedPatient.gender == "M" ? "il" : "la"} paziente{" "}
-            {selectedPatient.name} {selectedPatient.surname}
+            {nameChecker(selectedPatient.name)}{" "}
+            {nameChecker(selectedPatient.surname)}
           </AlertTitle>
         </Alert>
         <Alert
@@ -244,7 +246,7 @@ export default function LiveVisitServiceModal(props) {
                       >
                         {/* <td>{visit.id}</td> */}
                         <td>{format(new Date(visit.date), "dd-MM-y")}</td>
-                        <td>{visit.deanonymizedPatient}</td>
+                        <td>{nameChecker(visit.deanonymizedPatient)}</td>
                         <td>
                           {visit.birthdate ? (
                             format(new Date(visit.birthdate), "dd-MM-y")
@@ -279,23 +281,25 @@ export default function LiveVisitServiceModal(props) {
       <Modal show={page == 2} animation={true} size={"lg"}>
         <Alert severity="warning" variant="filled" style={{ width: "100%" }}>
           <AlertTitle style={{ fontSize: 25 }}>
-            Associa visita selezionata a {selectedPatient.name}{" "}
-            {selectedPatient.surname}
+            Associa visita selezionata a {nameChecker(selectedPatient.name)}{" "}
+            {nameChecker(selectedPatient.surname)}
           </AlertTitle>
         </Alert>
         <Modal.Body style={{ background: "whitesmoke", fontSize: 21 }}>
           La visita selezionata appartiene{" "}
           {selectedPatient.gender == "M" ? "al" : "alla"} paziente{" "}
-          {selectedVisit.deanonymizedPatient}, confermando, tutte le visite a{" "}
-          {selectedVisit.gender == "M" ? "lui" : "lei"} associate verranno
-          attribuite a {selectedPatient.name} {selectedPatient.surname}
+          {nameChecker(selectedVisit.deanonymizedPatient)}, confermando, tutte
+          le visite a {selectedVisit.gender == "M" ? "lui" : "lei"} associate
+          verranno attribuite a {nameChecker(selectedPatient.name)}{" "}
+          {nameChecker(selectedPatient.surname)}
           <br />
           <br />
           <strong>
             <em>
               Se durante la visita occorre usare nuovamente l'ecografo
               ricordarsi di esportare con il nome corretto:{" "}
-              {selectedPatient.name} {selectedPatient.surname}
+              {nameChecker(selectedPatient.name)}{" "}
+              {nameChecker(selectedPatient.surname)}
             </em>
           </strong>
         </Modal.Body>

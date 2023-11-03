@@ -12,6 +12,9 @@ class JointNameChanger {
       case "elbow":
         newName = "Gomito";
         break;
+      case "shoulder":
+        newName = "Spalla";
+        break;
       default:
         newName = name;
         break;
@@ -76,6 +79,9 @@ class JointNameChanger {
         break;
       case "elbow":
         newName = "Gomito";
+        break;
+      case "shoulder":
+        newName = "Spalla";
         break;
       default:
         newName = name;

@@ -10,6 +10,7 @@ import DeanonymizedCC from "../../../common/Model/Communication/DeanonymizedComm
 import { PatientContext } from "../../Model/PatientContext";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import format from "date-fns/format";
+import nameChecker from "../../ViewModel/NameChecker";
 
 export default function ExpostVisitServiceModal(props) {
   const { selectedPatient } = useContext(PatientContext);
@@ -147,7 +148,7 @@ export default function ExpostVisitServiceModal(props) {
                     >
                       {/* <td>{visit.id}</td> */}
                       <td>{format(new Date(visit.date), "dd-MM-y")}</td>
-                      <td>{visit.deanonymizedPatient}</td>
+                      <td>{nameChecker(visit.deanonymizedPatient)}</td>
                       <td>
                         {visit.birthdate ? (
                           format(new Date(visit.birthdate), "dd-MM-y")

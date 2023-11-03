@@ -23,6 +23,8 @@ export default function ChangingJointFieldMediaModal(props) {
   const [sending, setSending] = useState(null);
 
   useEffect(() => {
+    if (!props.savedJointName || props.savedJointName === "other")
+      setDisplayScan(true);
     getScanTypesFromServer();
   }, []);
 
@@ -78,7 +80,7 @@ export default function ChangingJointFieldMediaModal(props) {
     return networkError === null && scanItems !== null ? (
       scanItems.map((element) => (
         <MenuItem key={element.name} value={element.name}>
-          {element.name}
+          {element.name.includes("other") ? "Altro" : element.name}
         </MenuItem>
       ))
     ) : (

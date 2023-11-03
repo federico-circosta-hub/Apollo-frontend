@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import editUser from "./../../img/icon/edit-user.png";
 import { useState } from "react";
 import ModifyPatientModal from "../Modals/ModifyPatientModal";
+import nameChecker from "../../ViewModel/NameChecker";
 
 export default function PatientLine(props) {
   const select = () => {
@@ -21,14 +22,14 @@ export default function PatientLine(props) {
           select();
         }}
       >
-        {props.patient.surname}
+        {nameChecker(props.patient.surname)}
       </td>
       <td
         onClick={() => {
           select();
         }}
       >
-        {props.patient.name}
+        {nameChecker(props.patient.name)}
       </td>
       <td
         onClick={() => {

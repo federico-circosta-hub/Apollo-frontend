@@ -9,6 +9,7 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import format from "date-fns/format";
+import nameChecker from "./NameChecker";
 
 const MyDocument = forwardRef((props, ref) => {
   const visit = props.visit;
@@ -20,29 +21,29 @@ const MyDocument = forwardRef((props, ref) => {
         return visit.getJointWithoutMod(joint, side)
           ? visit.getJointWithoutMod(joint, side).sinovite === fieldValue
             ? fieldValue
-            : "-"
-          : "-";
+            : "0"
+          : "0";
       case "cartilagine":
         return visit.getJointWithoutMod(joint, side)
           ? visit.getJointWithoutMod(joint, side).cartilagine === fieldValue
             ? fieldValue
-            : "-"
-          : "-";
+            : "0"
+          : "0";
       case "subchondral":
         return visit.getJointWithoutMod(joint, side)
           ? visit.getJointWithoutMod(joint, side).subchondral_bone ===
             fieldValue
             ? fieldValue
-            : "-"
-          : "-";
-      case "totalScore":
+            : "0"
+          : "0";
+      case "totalJointScore":
         return visit.getJointWithoutMod(joint, side)
           ? visit.getJointWithoutMod(joint, side).subchondral_bone +
               visit.getJointWithoutMod(joint, side).cartilagine +
               visit.getJointWithoutMod(joint, side).sinovite
-          : "N/A";
+          : "0";
       default:
-        return "N/A";
+        return "0";
     }
   };
 
@@ -74,7 +75,8 @@ const MyDocument = forwardRef((props, ref) => {
               }}
             >
               <p style={styles.text}>
-                Paziente: {patient.name} {patient.surname}
+                Paziente: {nameChecker(patient.name)}{" "}
+                {nameChecker(patient.surname)}
               </p>
               <p style={styles.text}>
                 Data di nascita:{" "}
@@ -441,24 +443,24 @@ const MyDocument = forwardRef((props, ref) => {
             </tr>
             <tr>
               <td style={styles.th}>Total score</td>
-              <td style={styles.values}>0</td>
-              <td style={styles.totalScore}>
-                {getResult("totalScore", 0, "elbow", "RIGHT")}
+              <td style={styles.totalScore}>{visit.headUsTotalScore()}</td>
+              <td style={styles.totalJointScore}>
+                {getResult("totalJointScore", 0, "elbow", "RIGHT")}
               </td>
-              <td style={styles.totalScore}>
-                {getResult("totalScore", 0, "elbow", "LEFT")}
+              <td style={styles.totalJointScore}>
+                {getResult("totalJointScore", 0, "elbow", "LEFT")}
               </td>
-              <td style={styles.totalScore}>
-                {getResult("totalScore", 0, "knee", "RIGHT")}
+              <td style={styles.totalJointScore}>
+                {getResult("totalJointScore", 0, "knee", "RIGHT")}
               </td>
-              <td style={styles.totalScore}>
-                {getResult("totalScore", 0, "knee", "LEFT")}
+              <td style={styles.totalJointScore}>
+                {getResult("totalJointScore", 0, "knee", "LEFT")}
               </td>
-              <td style={styles.totalScore}>
-                {getResult("totalScore", 0, "ankle", "RIGHT")}
+              <td style={styles.totalJointScore}>
+                {getResult("totalJointScore", 0, "ankle", "RIGHT")}
               </td>
-              <td style={styles.totalScore}>
-                {getResult("totalScore", 0, "ankle", "LEFT")}
+              <td style={styles.totalJointScore}>
+                {getResult("totalJointScore", 0, "ankle", "LEFT")}
               </td>
             </tr>
           </tbody>
@@ -519,10 +521,16 @@ const styles = StyleSheet.create({
     fontWeight: 550,
     border: "1px solid lightgray",
   },
-  totalScore: {
-    fontSize: 18,
+  totalJointScore: {
+    fontSize: 17,
     textAlign: "center",
     fontWeight: 600,
+    border: "1px solid lightgray",
+  },
+  totalScore: {
+    fontSize: 19,
+    textAlign: "center",
+    fontWeight: 700,
     border: "1px solid lightgray",
   },
 });

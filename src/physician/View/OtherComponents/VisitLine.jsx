@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import itLocale from "date-fns/locale/it";
+import nameChecker from "../../ViewModel/NameChecker";
 
 export default function VisitLine(props) {
   const select = () => {
@@ -24,7 +25,8 @@ export default function VisitLine(props) {
       {/*       <td>{props.visit.id}</td> */}
       <td>{formatDate()}</td>
       <td>
-        {props.visit.physicianName} {props.visit.physicianSurname}
+        {nameChecker(props.visit.physicianName)}{" "}
+        {nameChecker(props.visit.physicianSurname)}
       </td>
       <td>{props.visit.physician}</td>
 

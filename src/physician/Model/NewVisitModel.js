@@ -278,4 +278,12 @@ export default class NewVisitModel {
     });
     return arr;
   }
+
+  headUsTotalScore() {
+    let total = 0;
+    this.joints.forEach((j) => {
+      total += j.sinovite + j.cartilagine + j.subchondral_bone;
+    });
+    return total;
+  }
 }

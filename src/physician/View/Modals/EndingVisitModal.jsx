@@ -4,6 +4,7 @@ import format from "date-fns/format";
 import documentSend from "../../img/icon/document-send.png";
 import { Link } from "react-router-dom";
 import JointNameChanger from "../../ViewModel/JointNameChanger";
+import nameChecker from "../../ViewModel/NameChecker";
 
 export default function EndingVisitModal(props) {
   const footer = () => {
@@ -117,11 +118,11 @@ export default function EndingVisitModal(props) {
         <h5>Info generali</h5>
         <p>
           <strong>Nome: </strong>
-          {props.patient.name}
+          {nameChecker(props.patient.name)}
         </p>
         <p>
           <strong>Cognome: </strong>
-          {props.patient.surname}
+          {nameChecker(props.patient.surname)}
         </p>
         <p>
           <strong>
