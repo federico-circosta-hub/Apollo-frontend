@@ -32,10 +32,10 @@ export default function Treatment(props) {
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h4>
+        <label style={{ fontSize: 22 }}>
           <img src={response} width={50} alt="" />
           Risposta al trattamento
-        </h4>
+        </label>
         <button className="btn btn-info" onClick={() => setShowDialog(true)}>
           <img
             src={question}

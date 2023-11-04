@@ -23,6 +23,7 @@ export default function ChangingJointFieldMediaModal(props) {
   const [sending, setSending] = useState(null);
 
   useEffect(() => {
+    console.log(props.savedJointName);
     if (!props.savedJointName || props.savedJointName === "other")
       setDisplayScan(true);
     getScanTypesFromServer();
@@ -118,13 +119,15 @@ export default function ChangingJointFieldMediaModal(props) {
           </Select>
         ) : (
           <>
-            <p>
-              Questa immagine è stata annotata come{" "}
-              {JointNameChanger.fromEngToItaName(
-                props.savedJointName
-              ).toLowerCase()}
-              .
-            </p>
+            {props.savedJointName && (
+              <p>
+                Questa immagine è stata annotata come{" "}
+                {JointNameChanger.fromEngToItaName(
+                  props.savedJointName
+                ).toLowerCase()}
+                .
+              </p>
+            )}
             <p>
               Sei sicuro di volerla selezionare come{" "}
               {JointNameChanger.fromEngToItaName(

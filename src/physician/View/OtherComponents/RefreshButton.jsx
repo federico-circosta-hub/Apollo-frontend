@@ -1,5 +1,5 @@
 import { Button, CircularProgress } from "@mui/material";
-import reload from "../../img/icon/reload.png";
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 
 export const RefreshButton = ({ onClick, loading }) => {
   return (
@@ -11,8 +11,9 @@ export const RefreshButton = ({ onClick, loading }) => {
       }}
     >
       <Button
-        variant="outlined"
+        variant="contained"
         color="primary"
+        endIcon={<RefreshOutlinedIcon />}
         onClick={onClick}
         disabled={loading}
         style={{ margin: "10px" }}
@@ -24,10 +25,7 @@ export const RefreshButton = ({ onClick, loading }) => {
             color="inherit"
           />
         ) : (
-          <>
-            {" "}
-            ricarica <img src={reload} width={20} />
-          </>
+          <>ricarica</>
         )}
       </Button>
     </div>

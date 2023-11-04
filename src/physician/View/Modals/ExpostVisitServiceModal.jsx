@@ -14,7 +14,7 @@ import nameChecker from "../../ViewModel/NameChecker";
 
 export default function ExpostVisitServiceModal(props) {
   const { selectedPatient } = useContext(PatientContext);
-  const VISITS_AT_TIME = 15;
+  const VISITS_AT_TIME = 20;
   const [visitList, setVisitList] = useState([]);
   const [loadingVisits, setLoadingVisits] = useState(false);
   const [loadingOtherVisits, setLoadingOtherVisits] = useState(false);

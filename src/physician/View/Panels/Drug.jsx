@@ -301,9 +301,8 @@ export default function Drug() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          flexDirection: "space-around",
+          flexDirection: "start",
           padding: "1.5vw",
-          paddingTop: "6vh",
         }}
       >
         {newVisit.followUp.followUp && (
