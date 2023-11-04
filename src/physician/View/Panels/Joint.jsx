@@ -34,7 +34,6 @@ export default function Joint(props) {
   const [isThereNewImage, setIsThereNewImage] = useState(null);
   const [networkError, setNetworkError] = useState(null);
   const [displayMerger, setDisplayMerger] = useState(false);
-  const [displayMerger, setDisplayMerger] = useState(false);
 
   const navigate = useNavigate();
 
