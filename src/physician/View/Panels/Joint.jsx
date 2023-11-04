@@ -101,7 +101,7 @@ export default function Joint(props) {
     };
     try {
       const idsFromServer = await CommunicationController.get(
-        "media/visit",
+        "media/visit/img",
         params
       );
       console.log(idsFromServer);
