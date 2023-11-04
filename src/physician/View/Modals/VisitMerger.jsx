@@ -12,40 +12,21 @@ import { RefreshButton } from "../OtherComponents/RefreshButton";
 import format from "date-fns/format";
 import itLocale from "date-fns/locale/it";
 import nameChecker from "../../ViewModel/NameChecker";
-import FastForwardOutlinedIcon from "@mui/icons-material/FastForwardOutlined";
 
-export default function LiveVisitServiceModal(props) {
+export default function VisitMerger(props) {
   const MAX_VISITS = 50;
   const { selectedPatient } = useContext(PatientContext);
 
   const [visitList, setVisitList] = useState(null);
   const [loadingVisits, setLoadingVisits] = useState(false);
   const [networkError, setNetworkError] = useState(null);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [selectedVisit, setSelectedVisit] = useState();
   const [merging, setMerging] = useState(false);
-  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
-    checkVisit();
+    getVisits();
   }, []);
-
-  const checkVisit = async () => {
-    setChecking(true);
-    setNetworkError(null);
-    try {
-      let visit = await CommunicationController.get("visit/incompleted", {
-        patient: selectedPatient.pid,
-        date: new Date(),
-      });
-      setSelectedVisit(visit);
-      props.onCreate(true, visit.id, visit.date);
-    } catch (err) {
-      setNetworkError(err || "Errore inatteso");
-    } finally {
-      setChecking(false);
-    }
-  };
 
   const getVisits = async () => {
     setLoadingVisits(true);
@@ -92,8 +73,7 @@ export default function LiveVisitServiceModal(props) {
 
   const handleSelect = (v) => {
     setSelectedVisit(v);
-    if (v.patient == selectedPatient.pid) props.onCreate(true, v.id, v.date);
-    else setPage(2);
+    setPage(2);
   };
 
   const mergePatient = async () => {
@@ -103,7 +83,7 @@ export default function LiveVisitServiceModal(props) {
         oldPatient: selectedVisit.patient,
         newPatient: selectedPatient.pid,
       });
-      props.onCreate(false, selectedVisit.id, selectedVisit.date);
+      props.setShow(false);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -111,69 +91,20 @@ export default function LiveVisitServiceModal(props) {
     }
   };
 
-  const handleError = () => {
-    getVisits();
-    setPage(1);
-  };
-
-  if (page === 0) {
+  if (page === 1) {
     return (
-      <Modal show={page == 0} animation={true} size={"lg"} scrollable>
-        {checking && (
-          <Alert
-            severity="info"
-            variant="filled"
-            style={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <AlertTitle style={{ fontSize: 23 }}>
-              Recuperando la visita live...
-            </AlertTitle>
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <CircularProgress sx={{ color: "white" }} />
-            </div>
-          </Alert>
-        )}
-        {networkError && handleError()}
-      </Modal>
-    );
-  } else if (page === 1) {
-    return (
-      <Modal show={page == 1} animation={true} size={"lg"}>
-        <Alert severity="error" variant="filled" style={{ width: "100%" }}>
+      <Modal show={props.show} animation={true} size={"lg"}>
+        <Alert
+          severity="warning"
+          variant="filled"
+          style={{ display: "flex", alignItems: "center", width: "100%" }}
+        >
           <AlertTitle style={{ fontSize: 25 }}>
-            Attenzione! Non esiste una visita in corso con{" "}
+            Attenzione! Verificare visita di riferimento per{" "}
             {selectedPatient.gender == "M" ? "il" : "la"} paziente{" "}
             {nameChecker(selectedPatient.name)}{" "}
             {nameChecker(selectedPatient.surname)}
           </AlertTitle>
-        </Alert>
-        <Alert
-          severity="error"
-          variant="outlined"
-          style={{ width: "100%", background: "whitesmoke" }}
-        >
-          <p style={{ fontSize: 19 }}>
-            - esportare le immagini dell'ecografo e assicurarsi del suo corretto
-            funzionamento
-          </p>
-          <p style={{ fontSize: 17 }}>
-            <em>oppure</em>
-          </p>
-          <p style={{ fontSize: 19 }}>
-            - Verificare la presenza della visita di riferimento qui sotto
-          </p>
         </Alert>
         <Modal.Body style={{ background: "whitesmoke" }}>
           {loadingVisits && <SkeletonsList />}
@@ -224,7 +155,6 @@ export default function LiveVisitServiceModal(props) {
                     </th>
                   </tr>
                 </thead>
-
                 <tbody>
                   {visitList
                     .filter(
@@ -265,24 +195,12 @@ export default function LiveVisitServiceModal(props) {
             background: "whitesmoke",
           }}
         >
-          <div style={{ flex: 1 }}></div>
           <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <button
               className="btn btn-secondary btn-lg"
-              onClick={() => props.onCancel()}
+              onClick={() => props.setShow(false)}
             >
               Annulla
-            </button>
-          </div>
-          <div style={{ flex: 1, display: "flex", justifyContent: "right" }}>
-            <button
-              className="btn btn-warning"
-              onClick={() => {
-                props.onCreate(true, null, new Date());
-                setPage(-1);
-              }}
-            >
-              Esporto successivamente <FastForwardOutlinedIcon />
             </button>
           </div>
         </Modal.Footer>
@@ -290,7 +208,7 @@ export default function LiveVisitServiceModal(props) {
     );
   } else {
     return (
-      <Modal show={page == 2} animation={true} size={"lg"}>
+      <Modal show={props.show} animation={true} size={"lg"}>
         <Alert severity="warning" variant="filled" style={{ width: "100%" }}>
           <AlertTitle style={{ fontSize: 25 }}>
             Associa visita selezionata a {nameChecker(selectedPatient.name)}{" "}

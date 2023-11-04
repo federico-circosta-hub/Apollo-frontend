@@ -13,8 +13,10 @@ import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import { validateForm } from "../../ViewModel/Validation";
 import format from "date-fns/format";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
-import { Alert, AlertTitle } from "@mui/material";
+import { Alert, AlertTitle, Button } from "@mui/material";
 import { Skeletons } from "../OtherComponents/Skeletons";
+import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
+import VisitMerger from "../Modals/VisitMerger";
 
 export default function Joint(props) {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -31,6 +33,7 @@ export default function Joint(props) {
   const [loadingImages, setLoadingImages] = useState(false);
   const [isThereNewImage, setIsThereNewImage] = useState(null);
   const [networkError, setNetworkError] = useState(null);
+  const [displayMerger, setDisplayMerger] = useState(false);
 
   const navigate = useNavigate();
 
@@ -190,12 +193,30 @@ export default function Joint(props) {
                   borderStartStartRadius: "20px",
                 }}
               >
-                <RefreshButton
-                  onClick={() => {
-                    getNewImages();
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-around",
                   }}
-                  loading={loadingImages}
-                />
+                >
+                  <RefreshButton
+                    onClick={() => {
+                      getNewImages();
+                    }}
+                    loading={loadingImages}
+                  />
+                  <Button
+                    variant="outlined"
+                    color="warning"
+                    onClick={() => setDisplayMerger(true)}
+                    style={{ margin: "10px" }}
+                    endIcon={<HelpOutlineOutlinedIcon />}
+                  >
+                    Non trovi le ecografie
+                  </Button>
+                </div>
+
                 {isThereNewImage === false && (
                   <Alert
                     severity="warning"
@@ -246,8 +267,11 @@ export default function Joint(props) {
                 photos.length === 0 &&
                 !loadingImages &&
                 networkError === null &&
-                "Non ci sono ecografie"}
+                "No ecografie"}
             </div>
+            {displayMerger && (
+              <VisitMerger show={displayMerger} setShow={setDisplayMerger} />
+            )}
           </div>
 
           <div style={{ height: "78vh", flex: 2 }}>
