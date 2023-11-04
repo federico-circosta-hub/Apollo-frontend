@@ -105,6 +105,7 @@ export default function NewPatient() {
   };
 
   const modifyPatientBirthdate = (date) => {
+    if (isNaN(date.$d.getTime())) return;
     let p = patient.clone();
     p.setBirthdate(format(date.$d, "y-MM-dd"));
     setPatient(p);

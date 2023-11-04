@@ -283,7 +283,9 @@ export default function JointVisitQuestions(props) {
                     ? format(props.joint.lastBleed, "dd-MM-y")
                     : "DD-MM-YYYY"
                 }
-                onChange={(newValue) => lastBleed(newValue.$d)}
+                onChange={(newValue) =>
+                  !isNaN(newValue.$d.getTime()) && lastBleed(newValue.$d)
+                }
               />
             </LocalizationProvider>
           </div>

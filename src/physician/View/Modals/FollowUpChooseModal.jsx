@@ -140,7 +140,10 @@ export default function FollowUpChooseModal(props) {
                   maxDate={MAX_DATE}
                   sx={{ background: "white" }}
                   slotProps={{ textField: { size: "small" } }}
-                  onChange={(newValue) => setOtherVisitDate(newValue.$d)}
+                  onChange={(newValue) =>
+                    !isNaN(newValue.$d.getTime()) &&
+                    setOtherVisitDate(newValue.$d)
+                  }
                   label={
                     otherVisitDate ? format(otherVisitDate, "dd-MM-y") : ""
                   }

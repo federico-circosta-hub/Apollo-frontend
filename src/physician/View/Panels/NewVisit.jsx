@@ -127,6 +127,7 @@ export default function NewVisit() {
   };
 
   const modifyDate = (date, whatDate) => {
+    if (isNaN(date.getTime())) return;
     switch (whatDate) {
       case "physicalActivityDate":
         physicalActivity.physicalActivityDate = format(date, "y-MM-dd");
