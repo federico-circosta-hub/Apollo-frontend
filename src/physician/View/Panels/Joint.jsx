@@ -34,6 +34,7 @@ export default function Joint(props) {
   const [isThereNewImage, setIsThereNewImage] = useState(null);
   const [networkError, setNetworkError] = useState(null);
   const [displayMerger, setDisplayMerger] = useState(false);
+  const [displayMerger, setDisplayMerger] = useState(false);
 
   const navigate = useNavigate();
 
@@ -267,8 +268,11 @@ export default function Joint(props) {
                 photos.length === 0 &&
                 !loadingImages &&
                 networkError === null &&
-                "Non ci sono ecografie"}
+                "No ecografie"}
             </div>
+            {displayMerger && (
+              <VisitMerger show={displayMerger} setShow={setDisplayMerger} />
+            )}
             {displayMerger && (
               <VisitMerger show={displayMerger} setShow={setDisplayMerger} />
             )}
