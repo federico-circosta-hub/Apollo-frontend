@@ -2,7 +2,8 @@ import { useContext } from "react";
 import { NewVisitContext } from "../../../Model/NewVisitContext";
 import {
   FormControl,
-  Switch,
+  TextField,
+  InputAdornment,
   InputLabel,
   Select,
   MenuItem,
@@ -28,7 +29,7 @@ export default function ProphylacticDrug(props) {
           Medicinale di profilassi
         </label>
       </div>
-      <div>
+      <div style={{ display: "flex", gap: "2vw" }}>
         {!props.networkError && props.drugs ? (
           <FormControl fullWidth>
             <InputLabel
@@ -72,23 +73,24 @@ export default function ProphylacticDrug(props) {
             />
           </div>
         )}
-      </div>
-      <div style={{ display: "flex", gap: 20 }}>
-        <input
-          placeholder="Dose"
+
+        <TextField
+          disabled={props.disabledProphylactic}
           value={props.prophylacticDrug.dose}
           onChange={props.handleProphylacticDrugDose}
-          style={{ background: `#fffacd`, flex: 1.5 }}
-          name="prophylacticDose"
           type="number"
-          disabled={props.disabledProphylactic}
+          placeholder="Dose"
+          label="Dose"
+          id="outlined-start-adornment"
+          sx={{ width: "25ch" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                {props.prophylacticDrug && props.prophylacticDrug.unit}
+              </InputAdornment>
+            ),
+          }}
         />
-
-        <label style={{ flex: 1 }}>
-          {props.prophylacticDrug.unit && (
-            <> Unità: {props.prophylacticDrug.unit}</>
-          )}
-        </label>
       </div>
       <div>
         {!props.networkErrorF && props.frequencies ? (
@@ -140,29 +142,29 @@ export default function ProphylacticDrug(props) {
 }
 
 const style = {
-  prophylacticButtons: {
+  prophylacticButtonsFU: {
     background: `#fffacd`,
-    width: "55vw",
+    width: "65vw",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     borderRadius: "20px",
-    padding: "4%",
-    height: "32vh",
+    padding: "1.5%",
+    gap: "2vh",
     margin: "1%",
     border: "0.5px solid #daa520",
     boxShadow: "2px 2px 4px #daa520",
   },
-  prophylacticButtonsFU: {
+  prophylacticButtons: {
     background: `#fffacd`,
-    width: "47vw",
+    width: "65vw",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     borderRadius: "20px",
-    padding: "4%",
-    height: "32vh",
-    margin: "1%",
+    padding: "2.5%",
+    gap: "4vh",
+    margin: "2%",
     border: "0.5px solid #daa520",
     boxShadow: "2px 2px 4px #daa520",
   },

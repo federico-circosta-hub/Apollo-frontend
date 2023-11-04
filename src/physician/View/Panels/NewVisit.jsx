@@ -377,14 +377,14 @@ export default function NewVisit() {
         <div
           style={{
             display: "flex",
-            height: "6vh",
-            marginTop: "3vh",
+            position: "fixed",
+            bottom: 50,
             alignItems: "center",
             justifyContent: "space-between",
-            width: "95%",
+            width: "91%",
           }}
         >
-          <div style={{ width: "10.5%" }}></div>
+          <div style={{ width: "8.5%" }}></div>
           <HorizontalNonLinearStepper />
           <div>
             <button

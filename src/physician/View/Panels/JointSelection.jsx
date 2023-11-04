@@ -222,12 +222,12 @@ export default function JointSelection() {
           </div>
           <div
             style={{
-              marginTop: "5vh",
+              position: "fixed",
+              bottom: 50,
               display: "flex",
-              height: "6vh",
               alignItems: "center",
               justifyContent: "space-between",
-              width: "95%",
+              width: "91%",
             }}
           >
             <div>

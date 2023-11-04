@@ -1,4 +1,11 @@
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
 import a_drugs from "../../../img/icon/a_drugs.png";
 import "dayjs/locale/it";
 import { RefreshButton } from "../RefreshButton";
@@ -11,9 +18,7 @@ export default function AcuteDrug(props) {
   return (
     <div
       style={
-        newVisit.followUp.followUp
-          ? style.acuteButtonsFollowup
-          : style.acuteButtons
+        newVisit.followUp.followUp ? style.acuteButtonsFU : style.acuteButtons
       }
     >
       <div>
@@ -22,7 +27,7 @@ export default function AcuteDrug(props) {
           Medicinale acuto
         </label>
       </div>
-      <div>
+      <div style={{ display: "flex", gap: "2vw" }}>
         {props.networkError === null && props.drugs !== null ? (
           <FormControl fullWidth>
             <InputLabel
@@ -66,50 +71,52 @@ export default function AcuteDrug(props) {
             />
           </div>
         )}
-      </div>
-      <div style={{ display: "flex", gap: 20 }}>
-        <input
-          placeholder="Dose"
-          style={{ background: `#ffe4e1`, flex: 1.5 }}
+
+        <TextField
           value={props.acuteDrug.dose}
           name="AcuteDose"
           type="number"
           onChange={props.handleAcuteDrugDose}
           disabled={props.disabledAcute}
+          placeholder="Dose"
+          label="Dose"
+          id="outlined-start-adornment"
+          sx={{ width: "25ch" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                {props.acuteDrug && props.acuteDrug.unit}
+              </InputAdornment>
+            ),
+          }}
         />
-        <label style={{ flex: 1 }}>
-          {props.acuteDrug.unit && <>Unità: {props.acuteDrug.unit}</>}
-        </label>
       </div>
     </div>
   );
 }
 
 const style = {
-  acuteButtonsFollowup: {
+  acuteButtonsFU: {
     background: `#ffe4e1`,
-    width: "47vw",
+    width: "65vw",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     borderRadius: "20px",
-    padding: "4%",
-    height: "27vh",
-    margin: "1%",
+    padding: "1.5%",
+    gap: "2vh",
     border: "0.5px solid #b22222",
     boxShadow: "2px 2px 4px #b22222",
   },
-
   acuteButtons: {
     background: `#ffe4e1`,
-    width: "55vw",
+    width: "65vw",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     borderRadius: "20px",
-    padding: "4%",
-    height: "27vh",
-    margin: "1%",
+    padding: "2.5%",
+    gap: "4vh",
     border: "0.5px solid #b22222",
     boxShadow: "2px 2px 4px #b22222",
   },

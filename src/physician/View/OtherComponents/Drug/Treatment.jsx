@@ -19,24 +19,31 @@ export default function Treatment(props) {
   return (
     <div
       style={{
-        width: "47vw",
+        width: "65vw",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "left",
-        gap: "4vh",
+        justifyContent: "space-between",
         border: "0.5px solid #56AEC9",
         boxShadow: "2px 2px 4px #56AEC9",
         borderRadius: "20px",
-        height: "38vh",
-        padding: "4%",
+        gap: "2vh",
+        padding: "1.5%",
         background: "#edfdff",
       }}
     >
-      <div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h4>
           <img src={response} width={50} alt="" />
           Risposta al trattamento
         </h4>
+        <button className="btn btn-info" onClick={() => setShowDialog(true)}>
+          <img
+            src={question}
+            alt="question mark"
+            width={25}
+            style={{ filter: "invert(100%" }}
+          />
+        </button>
       </div>
       <div
         style={{
@@ -64,20 +71,12 @@ export default function Treatment(props) {
         style={{
           display: "flex",
           justifyContent: "start",
-
+          gap: "2vw",
           width: "95%",
         }}
       >
         <div>
           <label style={{ fontSize: 18 }}>Risposta al trattamento</label>
-          <button className="btn btn-info" onClick={() => setShowDialog(true)}>
-            <img
-              src={question}
-              alt="question mark"
-              width={25}
-              style={{ filter: "invert(100%" }}
-            />
-          </button>
         </div>
         <Slider
           style={{ width: "70%" }}
