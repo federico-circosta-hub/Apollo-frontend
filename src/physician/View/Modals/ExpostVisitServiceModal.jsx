@@ -11,25 +11,33 @@ import { PatientContext } from "../../Model/PatientContext";
 import { RefreshButton } from "../OtherComponents/RefreshButton";
 import format from "date-fns/format";
 import nameChecker from "../../ViewModel/NameChecker";
+import { HelpOutlineOutlined, QuestionMarkOutlined } from "@mui/icons-material";
 
 export default function ExpostVisitServiceModal(props) {
   const { selectedPatient } = useContext(PatientContext);
   const VISITS_AT_TIME = 20;
+  const [visitListP, setVisitListP] = useState([]);
   const [visitList, setVisitList] = useState([]);
   const [loadingVisits, setLoadingVisits] = useState(false);
   const [loadingOtherVisits, setLoadingOtherVisits] = useState(false);
   const [networkError, setNetworkError] = useState(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [selectedVisit, setSelectedVisit] = useState();
   const [merging, setMerging] = useState(false);
   const [offset, setOffset] = useState(0);
   const [patientOffset, setPatientOffset] = useState(0);
   const [endReached, setEndReached] = useState(false);
   const [patientEndReached, setPatientEndReached] = useState(false);
+  const throttledScrollP = React.useRef(null);
   const throttledScroll = React.useRef(null);
   useEffect(() => {
     getVisitsByPatient(0);
+    getVisits(0);
   }, []);
+
+  useEffect(() => {
+    if (visitListP.length === 0 && patientEndReached) setPage(1);
+  }, [patientEndReached]);
 
   const getVisitsByPatient = async (offsetParam) => {
     offsetParam === 0 ? setLoadingVisits(true) : setLoadingOtherVisits(true);
@@ -42,6 +50,7 @@ export default function ExpostVisitServiceModal(props) {
       });
       console.log(visitsArray);
       setPatientOffset(offsetParam);
+      if (visitsArray.length < VISITS_AT_TIME) setPatientEndReached(true);
       let updatedVisits = [];
       for (let e of visitsArray) {
         e.deanonymizedPatient =
@@ -50,11 +59,7 @@ export default function ExpostVisitServiceModal(props) {
         e.gender = selectedPatient.gender;
         updatedVisits.push(e);
       }
-      if (updatedVisits.length < VISITS_AT_TIME) {
-        setPatientEndReached(true);
-        getVisits(0);
-      }
-      setVisitList((prevState) => [...prevState, ...updatedVisits]);
+      setVisitListP((prevState) => [...prevState, ...updatedVisits]);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -73,7 +78,7 @@ export default function ExpostVisitServiceModal(props) {
       });
       setOffset(offsetParam);
       if (visitsArray.length < VISITS_AT_TIME) setEndReached(true);
-      let updatedVisits = [];
+      console.log(visitsArray);
       for (let e of visitsArray) {
         if (e.patient === selectedPatient.pid) continue;
         try {
@@ -85,17 +90,11 @@ export default function ExpostVisitServiceModal(props) {
           e.birthdate = patient.birthdate;
           e.gender = patient.gender;
         } catch (patientError) {
-          console.error(
-            "Errore durante il recupero dei dati del paziente:",
-            patientError
-          );
+          console.log("errore visita", e.id);
           e.deanonymizedPatient = null;
-          e.birthdate = null;
-          e.gender = null;
         }
-        updatedVisits.push(e);
+        setVisitList((prevState) => [...prevState, e]);
       }
-      setVisitList((prevState) => [...prevState, ...updatedVisits]);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -105,23 +104,27 @@ export default function ExpostVisitServiceModal(props) {
 
   const handleScroll = React.useCallback((e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
-    if (!patientEndReached) {
-      if (!throttledScroll.current) {
-        throttledScroll.current = setTimeout(() => {
-          getVisitsByPatient(patientOffset + VISITS_AT_TIME);
-          throttledScroll.current = null;
-        }, 750);
-      }
-    }
-    if (
-      !endReached &&
-      patientEndReached &&
-      (scrollTop + clientHeight) / scrollHeight >= 0.85
-    ) {
+
+    if (!endReached && (scrollTop + clientHeight) / scrollHeight >= 0.85) {
       if (!throttledScroll.current) {
         throttledScroll.current = setTimeout(() => {
           getVisits(offset + VISITS_AT_TIME);
           throttledScroll.current = null;
+        }, 750);
+      }
+    }
+  });
+
+  const handleScrollP = React.useCallback((e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (
+      !patientEndReached &&
+      (scrollTop + clientHeight) / scrollHeight >= 0.85
+    ) {
+      if (!throttledScrollP.current) {
+        throttledScrollP.current = setTimeout(() => {
+          getVisitsByPatient(patientOffset + VISITS_AT_TIME);
+          throttledScrollP.current = null;
         }, 750);
       }
     }
@@ -148,13 +151,16 @@ export default function ExpostVisitServiceModal(props) {
     }
   };
 
-  return page === 1 ? (
-    <Modal show={page == 1} animation={true} size={"lg"} scrollable={true}>
+  return page === 0 ? (
+    <Modal show={page == 0} animation={true} size={"lg"} scrollable={true}>
       <Alert severity="info" variant="filled" style={{ width: "100%" }}>
         <AlertTitle>Scegliere la visita da compilare</AlertTitle>
       </Alert>
 
-      <Modal.Body style={{ background: "whitesmoke" }} onScroll={handleScroll}>
+      <Modal.Body
+        style={{ background: "whitesmoke", height: "40vh" }}
+        onScroll={handleScrollP}
+      >
         {loadingVisits && <SkeletonsList />}
         {networkError && (
           <div style={{ marginTop: "1%" }}>
@@ -168,82 +174,196 @@ export default function ExpostVisitServiceModal(props) {
         )}
         {!loadingVisits &&
           networkError === null &&
-          visitList !== null &&
-          visitList.length !== 0 && (
-            <>
-              <table className="table table-primary table-striped table-hover">
-                <thead
-                  style={{
-                    position: "sticky",
-                    top: 0,
-                    height: "6vh",
-                  }}
-                >
-                  <tr style={{}}>
-                    {/* <th style={{ background: "white", width: "15%" }}>
-                    Id visita
-                  </th> */}
-                    <th style={{ background: "white", width: "25%" }}>
-                      Data della visita
-                    </th>
-                    <th style={{ background: "white", width: "35%" }}>
-                      Paziente
-                    </th>
-                    <th style={{ background: "white", width: "25%" }}>
-                      Data di nascita
-                    </th>
-                  </tr>
-                </thead>
+          visitListP !== null &&
+          visitListP.length !== 0 && (
+            <table className="table table-primary table-striped table-hover">
+              <thead
+                style={{
+                  position: "sticky",
+                  top: 0,
+                  height: "6vh",
+                }}
+              >
+                <tr style={{}}>
+                  <th style={{ background: "white", width: "25%" }}>
+                    Data della visita
+                  </th>
+                  <th style={{ background: "white", width: "35%" }}>
+                    Paziente
+                  </th>
+                  <th style={{ background: "white", width: "25%" }}>
+                    Data di nascita
+                  </th>
+                </tr>
+              </thead>
 
-                <tbody>
-                  {visitList
-                    .filter(
-                      (e) =>
-                        e.patient !== "iYHoCDJzYxvw5kDNB42rkX" &&
-                        e.deanonymizedPatient
-                    )
-                    .map((visit, index) => (
-                      <tr
-                        className="tr-lg"
-                        style={{
-                          padding: 30,
-                        }}
-                        onClick={() => handleSelect(visit)}
-                        id={index}
-                      >
-                        {/* <td>{visit.id}</td> */}
-                        <td>{format(new Date(visit.date), "dd-MM-y")}</td>
-                        <td>{nameChecker(visit.deanonymizedPatient)}</td>
-                        <td>
-                          {visit.birthdate ? (
-                            format(new Date(visit.birthdate), "dd-MM-y")
-                          ) : (
-                            <em>N/A</em>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-              {loadingOtherVisits && <CircularProgress />}
-              {visitList.length === 0 && (
-                <p style={{ textAlign: "center", fontSize: 20 }}>
-                  <em>Non sono presenti visite</em>
-                </p>
-              )}
-              {endReached && (
-                <p>
-                  <em>Non sono presenti altre visite</em>
-                </p>
-              )}
-            </>
+              <tbody>
+                {visitListP
+                  .filter(
+                    (e) =>
+                      e.patient !== "iYHoCDJzYxvw5kDNB42rkX" &&
+                      e.deanonymizedPatient
+                  )
+                  .map((visit, index) => (
+                    <tr
+                      className="tr-lg"
+                      style={{
+                        padding: 30,
+                      }}
+                      onClick={() => handleSelect(visit)}
+                      id={index}
+                    >
+                      {/* <td>{visit.id}</td> */}
+                      <td>{format(new Date(visit.date), "dd-MM-y")}</td>
+                      <td>{nameChecker(visit.deanonymizedPatient)}</td>
+                      <td>
+                        {visit.birthdate ? (
+                          format(new Date(visit.birthdate), "dd-MM-y")
+                        ) : (
+                          <em>N/A</em>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           )}
+        {loadingOtherVisits && <CircularProgress />}
+        {visitListP.length === 0 && (
+          <p style={{ textAlign: "center", fontSize: 20 }}>
+            <em>Non sono presenti visite</em>
+          </p>
+        )}
+        {endReached && (
+          <p style={{ textAlign: "center", fontSize: 20 }}>
+            <em>Non sono presenti altre visite</em>
+          </p>
+        )}
       </Modal.Body>
       <Modal.Footer
         style={{
           display: "flex",
-          justifyContent: "center",
           background: "whitesmoke",
+          width: "100%",
+        }}
+      >
+        <div style={{ flex: 1 }}></div>
+        <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+          <button
+            className="btn btn-secondary btn-lg"
+            onClick={() => props.onCancel()}
+          >
+            Annulla
+          </button>
+        </div>
+        <div style={{ flex: 1, display: "flex", justifyContent: "right" }}>
+          <button className="btn btn-warning" onClick={() => setPage(1)}>
+            Visita non presente <HelpOutlineOutlined />
+          </button>
+        </div>
+      </Modal.Footer>
+    </Modal>
+  ) : page === 1 ? (
+    <Modal show={page === 1} animation={true} size={"lg"} scrollable={true}>
+      <Alert severity="warning" variant="filled" style={{ width: "100%" }}>
+        <AlertTitle>
+          {visitListP.length === 0 ? (
+            <>
+              Nessuna visita per {nameChecker(selectedPatient.name)}{" "}
+              {nameChecker(selectedPatient.surname)}, controlla tra queste:{" "}
+            </>
+          ) : (
+            "Controlla tra queste:"
+          )}
+        </AlertTitle>
+      </Alert>
+
+      <Modal.Body
+        style={{ background: "whitesmoke", height: "40vh" }}
+        onScroll={handleScroll}
+      >
+        {networkError && (
+          <div style={{ marginTop: "1%" }}>
+            Errore nell'ottenere lista visite
+            <RefreshButton
+              onClick={() => {
+                getVisits();
+              }}
+            />
+          </div>
+        )}
+        {networkError === null &&
+          visitList !== null &&
+          visitList.length !== 0 && (
+            <table className="table table-primary table-striped table-hover">
+              <thead
+                style={{
+                  position: "sticky",
+                  top: 0,
+                  height: "6vh",
+                }}
+              >
+                <tr style={{}}>
+                  <th style={{ background: "white", width: "25%" }}>
+                    Data della visita
+                  </th>
+                  <th style={{ background: "white", width: "35%" }}>
+                    Paziente
+                  </th>
+                  <th style={{ background: "white", width: "25%" }}>
+                    Data di nascita
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {visitList
+                  .filter(
+                    (e) =>
+                      e.patient !== "iYHoCDJzYxvw5kDNB42rkX" &&
+                      e.deanonymizedPatient
+                  )
+                  .map((visit, index) => (
+                    <tr
+                      className="tr-lg"
+                      style={{
+                        padding: 30,
+                      }}
+                      onClick={() => handleSelect(visit)}
+                      id={index}
+                    >
+                      {/* <td>{visit.id}</td> */}
+                      <td>{format(new Date(visit.date), "dd-MM-y")}</td>
+                      <td>{nameChecker(visit.deanonymizedPatient)}</td>
+                      <td>
+                        {visit.birthdate ? (
+                          format(new Date(visit.birthdate), "dd-MM-y")
+                        ) : (
+                          <em>N/A</em>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          )}
+        {loadingOtherVisits && <CircularProgress />}
+        {visitList.length === 0 && (
+          <p style={{ textAlign: "center", fontSize: 20 }}>
+            <em>Non sono presenti visite</em>
+          </p>
+        )}
+        {endReached && !loadingOtherVisits && (
+          <p style={{ textAlign: "center", fontSize: 20 }}>
+            <em>Non sono presenti altre visite</em>
+          </p>
+        )}
+      </Modal.Body>
+      <Modal.Footer
+        style={{
+          display: "flex",
+          background: "whitesmoke",
+          width: "100%",
         }}
       >
         <button
