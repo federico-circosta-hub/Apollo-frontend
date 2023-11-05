@@ -34,6 +34,7 @@ export default function Joint(props) {
   const [isThereNewImage, setIsThereNewImage] = useState(null);
   const [networkError, setNetworkError] = useState(null);
   const [displayMerger, setDisplayMerger] = useState(false);
+  const [networkErrorIndex, setNetworkErrorIndex] = useState(null);
 
   const navigate = useNavigate();
 
@@ -101,7 +102,7 @@ export default function Joint(props) {
     };
     try {
       const idsFromServer = await CommunicationController.get(
-        "media/visit",
+        "media/visit/img",
         params
       );
       console.log(idsFromServer);
@@ -268,12 +269,16 @@ export default function Joint(props) {
               {photos !== null &&
                 photos.length === 0 &&
                 !loadingImages &&
-                networkError === null &&
-                "No ecografie"}
+                networkError === null && (
+                  <Alert
+                    severity="error"
+                    variant="filled"
+                    style={{ width: "100%" }}
+                  >
+                    Nessuna ecografia
+                  </Alert>
+                )}
             </div>
-            {displayMerger && (
-              <VisitMerger show={displayMerger} setShow={setDisplayMerger} />
-            )}
             {displayMerger && (
               <VisitMerger show={displayMerger} setShow={setDisplayMerger} />
             )}
@@ -281,7 +286,12 @@ export default function Joint(props) {
 
           <div style={{ height: "78vh", flex: 2 }}>
             {joint !== null ? (
-              <JointVisitQuestions joint={joint} setJoint={setJoint} />
+              <JointVisitQuestions
+                joint={joint}
+                setJoint={setJoint}
+                networkErrorIndex={networkErrorIndex}
+                setNetworkErrorIndex={setNetworkErrorIndex}
+              />
             ) : (
               "Caricamento..."
             )}
@@ -310,6 +320,7 @@ export default function Joint(props) {
           </div>
           <div>
             <button
+              disabled={networkErrorIndex}
               style={style.forwardButton}
               className="btn btn-success btn-lg"
               onClick={() => {

@@ -10,6 +10,7 @@ export default class JointToSendModel {
   difficulty_moving; //: boolean
   index_joint; //: boolean
   pain; //: boolean
+  prothesis;
   cartilagine; //: 0 | 1 | 2 | 3 | 4
   subchondral_bone; //: 0 | 1 | 2
   sinovite; //: 0 | 1 | 2
@@ -28,8 +29,11 @@ export default class JointToSendModel {
     this.difficulty_moving = joint.jointDifficulty;
     this.index_joint = joint.indexJoint;
     this.pain = joint.pain;
-    this.cartilagine = joint.cartilagine;
-    this.subchondral_bone = joint.subchondral_bone;
+    this.prothesis = joint.prothesis;
+    this.cartilagine = joint.prothesis ? undefined : joint.cartilagine;
+    this.subchondral_bone = joint.prothesis
+      ? undefined
+      : joint.subchondral_bone;
     this.sinovite = joint.sinovite;
     this.media_ids = [];
   }

@@ -59,11 +59,13 @@ export default function JointVisitQuestions(props) {
   const [loadingOptions, setLoadingOptions] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState(false);
   const [networkError, setNetworkError] = useState(null);
-  const [networkErrorIndex, setNetworkErrorIndex] = useState(null);
+
+  const [prothesisDisabled, setProthesisDisabled] = useState(false);
+  const [PTstatus, setPTstatus] = useState(props.joint.prothesis);
 
   useEffect(() => {
     getDistensionCauseValuesFromServer();
-    !props.joint.modifiedIndex && getIsIndex();
+    !props.joint.modifiedIndex && getLastReport();
   }, []);
 
   const getDistensionCauseValuesFromServer = async () => {
@@ -80,8 +82,8 @@ export default function JointVisitQuestions(props) {
     }
   };
 
-  const getIsIndex = async () => {
-    setNetworkErrorIndex(null);
+  const getLastReport = async () => {
+    props.setNetworkErrorIndex(null);
     setLoadingIndex(true);
     let params = {
       name: props.joint.jointName,
@@ -89,11 +91,14 @@ export default function JointVisitQuestions(props) {
       patient: selectedPatient.pid,
     };
     try {
-      const i = await CommunicationController.get("joint/index", params);
-      props.joint.setIndexJoint(i.index);
+      const j = await CommunicationController.get("joint/lastReport", params);
+      props.joint.setIndexJoint(j.index_joint);
+      props.joint.setProthesis(j.prothesis);
+      setProthesisDisabled(j.prothesis);
       props.joint.setModifiedIndex(true);
     } catch (err) {
-      setNetworkErrorIndex(err || "Errore inatteso");
+      if (!(err.response && err.response.status === 404))
+        props.setNetworkErrorIndex(err || "Errore inatteso");
     } finally {
       setLoadingIndex(false);
     }
@@ -108,6 +113,10 @@ export default function JointVisitQuestions(props) {
         return props.joint.setJointDiffuculty(b);
       case "pain":
         return props.joint.setPain(b);
+      case "prothesis":
+        props.joint.setProthesis(b);
+        setPTstatus(b);
+        return;
     }
     props.setJoint(props.joint);
   };
@@ -230,10 +239,11 @@ export default function JointVisitQuestions(props) {
             display: "flex",
             justifyContent: "start",
             width: "100%",
+            alignItems: "center",
           }}
         >
-          <label style={{ fontSize: 20, flex: "1" }}>Index Joint</label>
-          <div style={{ flex: "1" }}>
+          <label style={{ fontSize: 20, flex: 1 }}>Index Joint</label>
+          <div style={{ flex: 1 }}>
             {loadingIndex ? (
               <CircularProgress />
             ) : (
@@ -243,14 +253,26 @@ export default function JointVisitQuestions(props) {
               />
             )}
           </div>
-          <label style={{ fontSize: 20, flex: "2" }}>
-            Difficoltà movimento
-          </label>
-          <div style={{ flex: "2" }}>
+          <label style={{ fontSize: 20, flex: 2 }}>Difficoltà movimento</label>
+          <div style={{ flex: 1.5 }}>
             <Switch
               defaultChecked={props.joint.jointDifficulty}
               onChange={(e) => modifyJoint(e, "difficulty")}
             />
+          </div>
+          <label style={{ fontSize: 20, flex: 0.5 }}>PT</label>
+          <div style={{ flex: 1 }}>
+            {loadingIndex ? (
+              <CircularProgress />
+            ) : props.networkErrorIndex ? (
+              <RefreshButton onClick={getLastReport} />
+            ) : (
+              <Switch
+                disabled={prothesisDisabled}
+                defaultChecked={props.joint.prothesis}
+                onChange={(e) => modifyJoint(e, "prothesis")}
+              />
+            )}
           </div>
         </div>
 
@@ -260,20 +282,21 @@ export default function JointVisitQuestions(props) {
             justifyContent: "start",
             paddingBottom: "10px",
             width: "100%",
+            alignItems: "center",
           }}
         >
-          <label style={{ fontSize: 20, flex: "1" }}>Dolore</label>
-          <div style={{ flex: "1" }}>
+          <label style={{ fontSize: 20, flex: 1 }}>Dolore</label>
+          <div style={{ flex: 1 }}>
             <Switch
               defaultChecked={props.joint.pain}
               onChange={(e) => modifyJoint(e, "pain")}
             />
           </div>
 
-          <label style={{ fontSize: 20, flex: "2" }}>
+          <label style={{ fontSize: 20, flex: 2.25 }}>
             Ultimo sanguinamento
           </label>
-          <div style={{ flex: "2" }}>
+          <div style={{ flex: 1.75 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
                 maxDate={dayjs(newVisit.visitDate)}
@@ -289,6 +312,7 @@ export default function JointVisitQuestions(props) {
               />
             </LocalizationProvider>
           </div>
+          <div style={{ flex: 1 }}></div>
         </div>
       </div>
 
@@ -342,7 +366,7 @@ export default function JointVisitQuestions(props) {
           <div style={{ flex: "2.5" }}>
             <Slider
               name="cartilage"
-              disabled={false}
+              disabled={PTstatus || prothesisDisabled}
               marks={cartilageValues}
               min={0}
               max={4}
@@ -365,7 +389,7 @@ export default function JointVisitQuestions(props) {
           <div style={{ flex: "2.5" }}>
             <Slider
               name="subchondral"
-              disabled={false}
+              disabled={PTstatus || prothesisDisabled}
               marks={subchondralValues}
               min={0}
               max={2}
@@ -422,7 +446,7 @@ export default function JointVisitQuestions(props) {
         >
           {networkError ? (
             <>
-              Errore nell'ottenere gli eventi traumatici
+              Errore nell'ottenere le cause di distensione
               <RefreshButton
                 onClick={getDistensionCauseValuesFromServer}
                 loading={loadingOptions}
