@@ -20,6 +20,7 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import format from "date-fns/format";
 import { StepContext } from "../../Model/StepContext";
 import RemoveIcon from "@mui/icons-material/Remove";
+import nameChecker from "../../ViewModel/NameChecker";
 
 export default function PositionedMenu(props) {
   const navigate = useNavigate();
@@ -132,7 +133,8 @@ export default function PositionedMenu(props) {
                 {newVisit ? (
                   <>
                     Visita {format(newVisit.visitDate, "dd-MM-y")} {" - "}
-                    {selectedPatient.name} {selectedPatient.surname}
+                    {nameChecker(selectedPatient.name)}{" "}
+                    {nameChecker(selectedPatient.surname)}
                   </>
                 ) : (
                   <>Nuova Visita</>

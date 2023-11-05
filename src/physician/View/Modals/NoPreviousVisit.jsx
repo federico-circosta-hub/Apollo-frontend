@@ -2,6 +2,7 @@ import { Modal } from "react-bootstrap";
 import { PatientContext } from "../../Model/PatientContext";
 import { useContext, useState } from "react";
 import { Alert, AlertTitle } from "@mui/material";
+import nameChecker from "../../ViewModel/NameChecker";
 
 export default function NoPreviousVisit(props) {
   const { selectedPatient } = useContext(PatientContext);
@@ -16,8 +17,8 @@ export default function NoPreviousVisit(props) {
       <Modal.Body style={{ background: "whitesmoke", fontSize: 20 }}>
         <p>
           {selectedPatient.gender === "M" ? "Il" : "La"} paziente{" "}
-          {selectedPatient.name} {selectedPatient.surname} non ha visite
-          precedenti
+          {nameChecker(selectedPatient.name)}{" "}
+          {nameChecker(selectedPatient.surname)} non ha visite precedenti
         </p>
       </Modal.Body>
       <Modal.Footer

@@ -378,8 +378,8 @@ export default function ExpostVisitServiceModal(props) {
     <Modal show={page == 2} animation={true} size={"lg"}>
       <Alert severity="warning" variant="filled" style={{ width: "100%" }}>
         <AlertTitle style={{ fontSize: 25 }}>
-          Associa visita selezionata a {selectedPatient.name}{" "}
-          {selectedPatient.surname}
+          Associa visita selezionata a {nameChecker(selectedPatient.name)}{" "}
+          {nameChecker(selectedPatient.surname)}
         </AlertTitle>
       </Alert>
       <Modal.Body style={{ background: "whitesmoke", fontSize: 21 }}>
@@ -387,7 +387,8 @@ export default function ExpostVisitServiceModal(props) {
         {selectedVisit.gender == "M" ? "al" : "alla"} paziente{" "}
         {selectedVisit.deanonymizedPatient}, confermando, tutte le visite a{" "}
         {selectedVisit.gender == "M" ? "lui" : "lei"} associate verranno
-        attribuite a {selectedPatient.name} {selectedPatient.surname}
+        attribuite a {nameChecker(selectedPatient.name)}{" "}
+        {nameChecker(selectedPatient.surname)}
       </Modal.Body>
 
       <Modal.Footer

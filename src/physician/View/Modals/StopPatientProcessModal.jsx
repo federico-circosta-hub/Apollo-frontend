@@ -7,6 +7,7 @@ import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import { Alert, AlertTitle } from "@mui/material";
 import { StepContext } from "../../Model/StepContext";
 import { PropaneSharp } from "@mui/icons-material";
+import nameChecker from "../../ViewModel/NameChecker";
 
 const StopPatientProcessModal = ({ show, home }) => {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
@@ -21,8 +22,8 @@ const StopPatientProcessModal = ({ show, home }) => {
           <AlertTitle style={{ fontSize: 23 }}>
             Sei sicuro di voler terminare con{" "}
             {selectedPatient && selectedPatient.gender == "M" ? "il" : "la"}{" "}
-            paziente {selectedPatient ? selectedPatient.name : ""}{" "}
-            {selectedPatient ? selectedPatient.surname : ""}?
+            paziente {selectedPatient ? nameChecker(selectedPatient.name) : ""}{" "}
+            {selectedPatient ? nameChecker(selectedPatient.surname) : ""}?
           </AlertTitle>
         </Alert>
       ) : (
@@ -30,8 +31,8 @@ const StopPatientProcessModal = ({ show, home }) => {
           <AlertTitle style={{ fontSize: 23 }}>
             Sei sicuro di voler abbandonare la visita con{" "}
             {selectedPatient && selectedPatient.gender == "M" ? "il" : "la"}{" "}
-            paziente {selectedPatient ? selectedPatient.name : ""}{" "}
-            {selectedPatient ? selectedPatient.surname : ""}?
+            paziente {selectedPatient ? nameChecker(selectedPatient.name) : ""}{" "}
+            {selectedPatient ? nameChecker(selectedPatient.surname) : ""}?
           </AlertTitle>
         </Alert>
       )}
