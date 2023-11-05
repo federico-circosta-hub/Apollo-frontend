@@ -16,6 +16,8 @@ import MyDocument from "../../ViewModel/PdfCreator";
 import { useReactToPrint } from "react-to-print";
 import { PatientContext } from "../../Model/PatientContext";
 import NewVisitModel from "../../Model/NewVisitModel";
+import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
+import { Typography, Popover, Button } from "@mui/material";
 
 export default function SeeVisit() {
   const { selectedVisit } = useContext(VisitContext);
@@ -30,13 +32,23 @@ export default function SeeVisit() {
   const [visitToPrint, setVisitToPrint] = useState(null);
   const [distensionCauseValues, setDistensionCauseValues] = useState([]);
   const [loadingCauses, setLoadingCauses] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
     loadVisit();
     getFrequenciesFromServer();
     getDistensionCauseValuesFromServer();
   }, []);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
   const componentRef = useRef();
 
   const handleclick = useReactToPrint({
@@ -107,7 +119,11 @@ export default function SeeVisit() {
         padding: 0,
       }}
     >
-      {loadingVisit && visit === null && <h3>Loading...</h3>}
+      {loadingVisit && visit === null && (
+        <div style={{ display: "flex", marginTop: "5%" }}>
+          <CircularProgress />
+        </div>
+      )}
       {networkError !== null && (
         <div style={{ marginTop: "5%" }}>
           Errore nell'ottenere la visita
@@ -188,27 +204,55 @@ export default function SeeVisit() {
                 visit.report.joints.map((item, index) => (
                   <div
                     style={{
+                      display: "flex",
                       width: "100%",
                       textAlign: "center",
-                      padding: "2vh",
+                      alignItems: "center",
+                      paddingTop: "2vh",
+                      paddingBottom: "2vh",
                       background: selectedJoint == item ? "#87cefa" : "white",
                       borderRadius: 15,
                     }}
                   >
-                    <button
-                      onClick={() => handleJointSelection(item)}
-                      className={
-                        selectedJoint != item
-                          ? "btn btn-lg btn-primary"
-                          : "btn btn-lg btn-light"
-                      }
-                      key={index}
-                    >
-                      {JointNameChanger.fromSeparateEnglishToSingleStringIta(
-                        item.name,
-                        item.side
+                    <div style={{ flex: 1 }}>
+                      {item.prothesis && (
+                        <div>
+                          <Button onClick={handleClick}>
+                            <ErrorOutlineOutlinedIcon />
+                          </Button>
+                          <Popover
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                          >
+                            <Typography sx={{ p: 2 }}>
+                              Articolazione con protesi
+                            </Typography>
+                          </Popover>
+                        </div>
                       )}
-                    </button>
+                    </div>
+                    <div style={{ flex: 4 }}>
+                      <button
+                        onClick={() => handleJointSelection(item)}
+                        className={
+                          selectedJoint != item
+                            ? "btn btn-lg btn-primary"
+                            : "btn btn-lg btn-light"
+                        }
+                        key={index}
+                      >
+                        {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+                          item.name,
+                          item.side
+                        )}
+                      </button>
+                    </div>
+                    <div style={{ flex: 1 }}></div>
                   </div>
                 ))}
             </div>
