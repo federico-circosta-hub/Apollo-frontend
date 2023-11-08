@@ -6,13 +6,14 @@ export default class JointModel {
   pain;
   lastBleed;
   sinovite;
-  powerDopler;
+  powerDoppler;
   cartilagine;
   subchondral_bone;
   distension;
   distensionCause;
   modifiedIndex;
   prothesis;
+  lastReport;
 
   constructor(
     jointName,
@@ -22,13 +23,14 @@ export default class JointModel {
     pain,
     lastBleed,
     sinovite,
-    powerDopler,
+    powerDoppler,
     cartilagine,
     subchondral_bone,
     distension,
     distensionCause,
     modifiedIndex,
-    prothesis
+    prothesis,
+    lastReport
   ) {
     this.jointName = jointName;
     this.side = side;
@@ -37,13 +39,14 @@ export default class JointModel {
     this.pain = pain;
     this.lastBleed = lastBleed;
     this.sinovite = sinovite;
-    this.powerDopler = powerDopler;
+    this.powerDoppler = powerDoppler;
     this.cartilagine = cartilagine;
     this.subchondral_bone = subchondral_bone;
     this.distension = distension;
     this.distensionCause = distensionCause;
     this.modifiedIndex = modifiedIndex;
     this.prothesis = prothesis;
+    this.lastReport = lastReport;
   }
 
   clone() {
@@ -55,13 +58,14 @@ export default class JointModel {
       this.pain,
       this.lastBleed,
       this.sinovite,
-      this.powerDopler,
+      this.powerDoppler,
       this.cartilagine,
       this.subchondral_bone,
       this.distension,
       this.distensionCause,
       this.modifiedIndex,
-      this.prothesis
+      this.prothesis,
+      this.lastReport
     );
   }
 
@@ -125,7 +129,11 @@ export default class JointModel {
     this.prothesis = b;
   }
 
-  setPowerDopler(n) {
-    this.powerDopler = n;
+  setPowerDoppler(n) {
+    this.powerDoppler = n;
+  }
+
+  setLastReport(lr) {
+    this.lastReport = lr;
   }
 }

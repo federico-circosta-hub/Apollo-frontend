@@ -16,37 +16,12 @@ export default function JointVisitQuestions(props) {
   const { selectedPatient } = useContext(PatientContext);
   const { newVisit } = useContext(NewVisitContext);
 
-  const synovitisValues = [
-    { value: 0, label: "Assente/bassa" },
-    { value: 1, label: "Media" },
-    { value: 2, label: "Grave" },
-  ];
-  const cartilageValues = [
-    { value: 0, label: "Normale" },
-    { value: 1, label: "perdita <25%" },
-    { value: 2, label: "perdita <50%" },
-    { value: 3, label: "perdita >50%" },
-    { value: 4, label: "Perdita totale" },
-  ];
-  const subchondralValues = [
-    { value: 0, label: "Normale" },
-    { value: 1, label: "Irregolarità medie" },
-    { value: 2, label: "Osteofite" },
-  ];
   const distensionValues = [
     { value: 0, label: "Assente", db: "absent" },
     { value: 1, label: "Leggera", db: "minimum" },
     { value: 2, label: "Media", db: "moderate" },
     { value: 3, label: "Grave", db: "severe" },
   ];
-  /*   const distensionCauseValues = [
-    "Unclear",
-    "Synovial Effusion",
-    "Synovial Effusion + Synovial Hyperplasia",
-    "Vacuum",
-    "Vacuum + Synovial Hyperplasia",
-    "Synovial Hyperplasia",
-  ]; */
 
   const [disableDistensionCauses, setDisableDistensionCauses] = useState(
     props.joint.distension == "absent" ||
@@ -89,6 +64,7 @@ export default function JointVisitQuestions(props) {
       name: props.joint.jointName,
       side: props.joint.side,
       patient: selectedPatient.pid,
+      date: format(newVisit.visitDate, "y-MM-d"),
     };
     try {
       const j = await CommunicationController.get("joint/lastReport", params);
@@ -96,9 +72,15 @@ export default function JointVisitQuestions(props) {
       props.joint.setProthesis(j.prothesis);
       setProthesisDisabled(j.prothesis);
       props.joint.setModifiedIndex(true);
+      props.joint.setLastReport(j);
+      props.joint.setSynovitis(j.sinovite);
+      props.joint.setPowerDoppler(j.power_doppler);
+      props.joint.setCartilage(j.cartilagine);
+      props.joint.setSubchondralBone(j.subchondral_bone);
     } catch (err) {
       if (!(err.response && err.response.status === 404))
         props.setNetworkErrorIndex(err || "Errore inatteso");
+      console.log(err);
     } finally {
       setLoadingIndex(false);
     }
@@ -129,26 +111,17 @@ export default function JointVisitQuestions(props) {
   const modifyPatientSliders = (e) => {
     switch (e.target.name) {
       case "synovitis":
-        let synovitis = synovitisValues.find(
-          (element) => element.value == e.target.value
-        );
-        props.joint.setSynovitis(synovitis.value);
-        return props.setJoint(props.joint);
+        props.joint.setSynovitis(e.target.value);
+        return props.setJoint(props.joint.clone());
       case "power":
-        props.joint.setPowerDopler(e.target.value);
-        return props.setJoint(props.joint);
+        props.joint.setPowerDoppler(e.target.value);
+        return props.setJoint(props.joint.clone());
       case "cartilage":
-        let cartilage = cartilageValues.find(
-          (element) => element.value == e.target.value
-        );
-        props.joint.setCartilage(cartilage.value);
-        return props.setJoint(props.joint);
+        props.joint.setCartilage(e.target.value);
+        return props.setJoint(props.joint.clone());
       case "subchondral":
-        let subchondralBone = subchondralValues.find(
-          (element) => element.value == e.target.value
-        );
-        props.joint.setSubchondralBone(subchondralBone.value);
-        return props.setJoint(props.joint);
+        props.joint.setSubchondralBone(e.target.value);
+        return props.setJoint(props.joint.clone());
       case "distension":
         let distension = distensionValues.find(
           (element) => element.value == e.target.value
@@ -167,30 +140,6 @@ export default function JointVisitQuestions(props) {
   const valueResolver = (s) => {
     let n = 0;
     switch (s) {
-      case "synovitis":
-        if (props.joint.sinovite) {
-          let synovitis = synovitisValues.find(
-            (element) => element.value == props.joint.sinovite
-          );
-          n = synovitis.value;
-        }
-        return n;
-      case "cartilage":
-        if (props.joint.cartilagine) {
-          let cartilage = cartilageValues.find(
-            (element) => element.value == props.joint.cartilagine
-          );
-          n = cartilage.value;
-        }
-        return n;
-      case "subchondral":
-        if (props.joint.subchondral_bone) {
-          let subchondral = subchondralValues.find(
-            (element) => element.value == props.joint.subchondral_bone
-          );
-          n = subchondral.value;
-        }
-        return n;
       case "distension":
         if (props.joint.distension) {
           let distension = distensionValues.find(
@@ -207,9 +156,20 @@ export default function JointVisitQuestions(props) {
     return (
       distensionCauseValues &&
       distensionCauseValues.map((element) => (
-        <MenuItem value={element.name}>{element.name}</MenuItem>
+        <MenuItem value={element.name}>
+          {props.joint.lastReport &&
+          props.joint.lastReport.blood === element.id ? (
+            <>(*) {element.name}</>
+          ) : (
+            element.name
+          )}
+        </MenuItem>
       ))
     );
+  };
+
+  const displayText = (value) => {
+    return value === 1 ? "ciao" : "addio";
   };
 
   return (
@@ -346,13 +306,40 @@ export default function JointVisitQuestions(props) {
             <Slider
               name="synovitis"
               disabled={false}
-              marks={synovitisValues}
+              marks={[
+                {
+                  value: 0,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.sinovite === 0
+                      ? "(*) Assente/bassa"
+                      : "Assente/bassa",
+                },
+                {
+                  value: 1,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.sinovite === 1
+                      ? "(*) Media"
+                      : "Media",
+                },
+                {
+                  value: 2,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.sinovite === 2
+                      ? "(*) Grave"
+                      : "Grave",
+                },
+              ]}
               min={0}
               max={2}
               step={1}
-              defaultValue={() => valueResolver("synovitis")}
+              value={props.joint.sinovite}
               className="MuiSlider-markLabel"
               onChange={(e) => modifyPatientSliders(e)}
+              valueLabelDisplay="auto"
+              getAriaValueText={displayText}
             />
           </div>
         </div>
@@ -364,21 +351,42 @@ export default function JointVisitQuestions(props) {
             paddingRight: "1vw",
           }}
         >
-          <label style={{ fontSize: 20, flex: "1" }}>Power dopler</label>
+          <label style={{ fontSize: 20, flex: "1" }}>Power doppler</label>
 
           <div style={{ flex: "2.5" }}>
             <Slider
               name="power"
               disabled={false}
               marks={[
-                { label: "Grado 0", value: 0 },
-                { label: "Grado I", value: 1 },
-                { label: "Grado II", value: 2 },
+                {
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.power_doppler === 0
+                      ? "(*) Grado 0"
+                      : "Grado 0",
+                  value: 0,
+                },
+                {
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.power_doppler === 1
+                      ? "(*) Grado I"
+                      : "Grado I",
+                  value: 1,
+                },
+                {
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.power_doppler === 2
+                      ? "(*) Grado II"
+                      : "Grado II",
+                  value: 2,
+                },
               ]}
               min={0}
               max={2}
               step={1}
-              defaultValue={props.joint.powerDopler}
+              value={props.joint.powerDoppler}
               className="MuiSlider-markLabel"
               onChange={(e) => modifyPatientSliders(e)}
             />
@@ -398,11 +406,52 @@ export default function JointVisitQuestions(props) {
             <Slider
               name="cartilage"
               disabled={PTstatus || prothesisDisabled}
-              marks={cartilageValues}
+              marks={[
+                {
+                  value: 0,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.cartilagine === 0
+                      ? "(*) Normale"
+                      : "Normale",
+                },
+                {
+                  value: 1,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.cartilagine === 1
+                      ? "(*) Perdita <25%"
+                      : "Perdita <25%",
+                },
+                {
+                  value: 2,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.cartilagine === 2
+                      ? "(*) Perdita <50%"
+                      : "Perdita <50%",
+                },
+                {
+                  value: 3,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.cartilagine === 3
+                      ? "(*) Perdita >50%"
+                      : "Perdita >50%",
+                },
+                {
+                  value: 4,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.cartilagine === 4
+                      ? "(*) Perdita totale"
+                      : "Perdita totale",
+                },
+              ]}
               min={0}
               max={4}
               step={1}
-              defaultValue={() => valueResolver("cartilage")}
+              value={props.joint.cartilagine}
               onChange={(e) => modifyPatientSliders(e)}
             />
           </div>
@@ -421,11 +470,36 @@ export default function JointVisitQuestions(props) {
             <Slider
               name="subchondral"
               disabled={PTstatus || prothesisDisabled}
-              marks={subchondralValues}
+              marks={[
+                {
+                  value: 0,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.subchondral_bone === 0
+                      ? "(*) Normale"
+                      : "Normale",
+                },
+                {
+                  value: 1,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.subchondral_bone === 1
+                      ? "(*) Irregolarità medie"
+                      : "Irregolarità medie",
+                },
+                {
+                  value: 2,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.subchondral_bone === 2
+                      ? "(*) Osteofite"
+                      : "Osteofite",
+                },
+              ]}
               min={0}
               max={2}
               step={1}
-              defaultValue={() => valueResolver("subchondral")}
+              value={props.joint.subchondral_bone}
               onChange={(e) => modifyPatientSliders(e)}
             />
           </div>
@@ -459,7 +533,44 @@ export default function JointVisitQuestions(props) {
             <Slider
               name="distension"
               disabled={false}
-              marks={distensionValues}
+              marks={[
+                {
+                  value: 0,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.distension_amount === "absent"
+                      ? "(*) Assente"
+                      : "Assente",
+                  db: "absent",
+                },
+                {
+                  value: 1,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.distension_amount === "minimum"
+                      ? "(*) Leggera"
+                      : "Leggera",
+                  db: "minimum",
+                },
+                {
+                  value: 2,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.distension_amount === "moderate"
+                      ? "(*) Media"
+                      : "Media",
+                  db: "moderate",
+                },
+                {
+                  value: 3,
+                  label:
+                    props.joint.lastReport &&
+                    props.joint.lastReport.distension_amount === "severe"
+                      ? "(*) Grave"
+                      : "Grave",
+                  db: "severe",
+                },
+              ]}
               min={0}
               max={3}
               step={1}
@@ -498,7 +609,7 @@ export default function JointVisitQuestions(props) {
               </InputLabel>
               <Select
                 value={
-                  props.joint.distensionCause !== null &&
+                  props.joint.distensionCause &&
                   distensionCauseValues.length !== 0
                     ? distensionCauseValues.filter(
                         (d) => d.id === props.joint.distensionCause
