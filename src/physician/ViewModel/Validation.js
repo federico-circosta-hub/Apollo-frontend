@@ -11,8 +11,12 @@ export const validateForm = (formName, formData, formData2) => {
       if (formData.birthdate == "") {
         errors.birthdate = "Inserire data di nascita valida";
       }
-      if (formData.CF.trim().length !== 16) {
-        errors.CF = "Inserire codice fiscale valido";
+      console.log(
+        "(formData.CF.trim().length !== 16 || formData.CF.trim().length !== 0)",
+        formData.CF.trim().length !== 16 || formData.CF.trim().length !== 0
+      );
+      if (formData.CF.trim().length !== 16 && formData.CF.trim().length !== 0) {
+        errors.CF = "Inserire codice fiscale valido oppure lasciare vuoto";
       }
       return errors;
     case "newVisit":

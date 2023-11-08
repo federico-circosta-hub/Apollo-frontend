@@ -1,5 +1,5 @@
 import PatientModel from "../../Model/PatientModel";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import male from "../../img/male.png";
 import question from "../../img/icon/question.png";
 import Slider from "@mui/material/Slider";
@@ -18,6 +18,7 @@ import { validateForm } from "../../ViewModel/Validation";
 import FormModal from "../Modals/FormModal";
 import FakeSecurityModule from "./../../Model/FakeSecurityModule";
 import MainContainer from "../../../common/View/MainContainer";
+import { PatientContext } from "../../Model/PatientContext";
 
 export default function NewPatient() {
   const marksH = [
@@ -41,8 +42,6 @@ export default function NewPatient() {
   const [patient, setPatient] = useState(
     new PatientModel("", "", "", "", "M", 170, 75, [])
   );
-  const [protButtonClass, setProtButtonClass] = useState("btn btn-warning");
-  const [showProthesis, setShowProthesis] = useState("none");
   const [showModal, setShowModal] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [sendingButton, setSendingButton] = useState("Conferma e procedi");
@@ -52,13 +51,16 @@ export default function NewPatient() {
   const [errors, setErrors] = useState({ none: "none" });
   const navigate = useNavigate();
 
+  const { setSelectedPatient } = useContext(PatientContext);
+
   const handleNew = async () => {
     setDisabled(true);
     setSendingButton("Inviando...");
     try {
-      await patient.register();
+      let p = await patient.register();
+      setSelectedPatient(p);
       setShowAlert(true);
-      navigate("/", { replace: true });
+      navigate("/searchVisit", { replace: true });
     } catch (err) {
       setNetworkError(err);
       setShowAlert(false);
@@ -115,26 +117,6 @@ export default function NewPatient() {
     let p = patient.clone();
     p.setGender(event.target.value);
     setPatient(p);
-  };
-
-  const handleProthesis = (event) => {
-    let p = patient.clone();
-    if (event.target.checked) {
-      p.addProthesis(event.target.name);
-    } else {
-      p.deleteProthesis(event.target.name);
-    }
-    setPatient(p);
-  };
-
-  const handleDisplayProthesis = () => {
-    if (showProthesis === "none") {
-      setShowProthesis("flex");
-      setProtButtonClass("btn btn-outline-warning");
-    } else {
-      setShowProthesis("none");
-      setProtButtonClass("btn btn-warning");
-    }
   };
 
   return (
@@ -210,15 +192,6 @@ export default function NewPatient() {
               </Select>
             </FormControl>
           </div>
-          <div style={{ display: "none" }}>
-            <button
-              onClick={() => handleDisplayProthesis()}
-              type="button"
-              className={protButtonClass}
-            >
-              Protesi <img src={question} alt="question mark" width={"10%"} />
-            </button>
-          </div>
         </div>
         <div
           style={{
@@ -236,50 +209,6 @@ export default function NewPatient() {
               justifyContent: "center",
             }}
           >
-            <div style={style.protLeft}>
-              <div style={{ display: showProthesis }}>
-                <label>
-                  <Checkbox
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 40,
-                      },
-                    }}
-                    name="Gom-dx"
-                    onChange={handleProthesis}
-                  />
-                  Gom dx
-                </label>
-              </div>
-              <div style={{ display: showProthesis }}>
-                <label>
-                  <Checkbox
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 40,
-                      },
-                    }}
-                    name="Gin-dx"
-                    onChange={handleProthesis}
-                  />
-                  Gin dx
-                </label>
-              </div>
-              <div style={{ display: showProthesis }}>
-                <label>
-                  <Checkbox
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 40,
-                      },
-                    }}
-                    name="Cav-dx"
-                    onChange={handleProthesis}
-                  />
-                  Cav dx
-                </label>
-              </div>
-            </div>
             <div
               style={{
                 display: "flex",
@@ -294,51 +223,6 @@ export default function NewPatient() {
                 width={"80%"}
                 style={{ maxHeight: "70vh" }}
               />
-            </div>
-
-            <div style={style.prot}>
-              <div style={{ display: showProthesis }}>
-                <label>
-                  <Checkbox
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 40,
-                      },
-                    }}
-                    name="Gom-sx"
-                    onChange={handleProthesis}
-                  />
-                  Gom sx
-                </label>
-              </div>
-              <div style={{ display: showProthesis }}>
-                <label>
-                  <Checkbox
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 40,
-                      },
-                    }}
-                    name="Gin-sx"
-                    onChange={handleProthesis}
-                  />
-                  Gin sx
-                </label>
-              </div>
-              <div style={{ display: showProthesis }}>
-                <label>
-                  <Checkbox
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 40,
-                      },
-                    }}
-                    name="Cav-sx"
-                    onChange={handleProthesis}
-                  />
-                  Cav sx
-                </label>
-              </div>
             </div>
           </div>
           <div style={{ width: "3%" }}></div>

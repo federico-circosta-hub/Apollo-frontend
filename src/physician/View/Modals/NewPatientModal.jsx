@@ -69,7 +69,10 @@ export default function NewPatientModal(props) {
       <Modal.Body style={{ background: "whitesmoke" }}>
         <p>Nome: {props.data.patient.name}</p>
         <p>Cognome: {props.data.patient.surname}</p>
-        <p>Codice fiscale: {props.data.patient.CF}</p>
+        <p>
+          Codice fiscale:{" "}
+          {props.data.patient.CF ? props.data.patient.CF : "N/A"}
+        </p>
         <p>
           {props.data.patient.gender === "F" ? "Nata il: " : "Nato il: "}
           {props.data.patient.birthdate}
@@ -77,12 +80,6 @@ export default function NewPatientModal(props) {
         <p>Genere: {props.data.patient.gender}</p>
         <p>Altezza: {props.data.patient.height}</p>
         <p>Peso: {props.data.patient.weight}</p>
-        <p>
-          Protesi:{" "}
-          {props.data.patient.prothesis.length !== 0
-            ? props.data.patient.prothesis.toString()
-            : "nessuna"}
-        </p>
       </Modal.Body>
 
       {footer()}
