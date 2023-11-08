@@ -137,6 +137,8 @@ export default function ModifyPatientModal(props) {
             <br />
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
+                openTo="year"
+                views={["year", "month", "day"]}
                 sx={{ background: "white" }}
                 label={
                   patient.birthdate

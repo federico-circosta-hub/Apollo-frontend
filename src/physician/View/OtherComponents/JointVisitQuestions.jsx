@@ -299,6 +299,8 @@ export default function JointVisitQuestions(props) {
           <div style={{ flex: 1.75 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
+                openTo="year"
+                views={["year", "month", "day"]}
                 maxDate={dayjs(newVisit.visitDate)}
                 slotProps={{ textField: { size: "small" } }}
                 label={

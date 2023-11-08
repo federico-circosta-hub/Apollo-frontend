@@ -186,6 +186,8 @@ export default function NewPatient() {
             <br />
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
+                openTo="year"
+                views={["year", "month", "day"]}
                 slotProps={{ textField: { size: "small" } }}
                 onChange={modifyPatientBirthdate}
               />

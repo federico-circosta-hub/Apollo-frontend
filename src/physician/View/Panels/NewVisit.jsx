@@ -202,6 +202,8 @@ export default function NewVisit() {
     } else {
       return (
         <DatePicker
+          openTo="year"
+          views={["year", "month", "day"]}
           maxDate={MAX_DATE}
           slotProps={{ textField: { size: "small" } }}
           onChange={(newValue) => modifyDate(newValue.$d, s)}
@@ -252,32 +254,6 @@ export default function NewVisit() {
             )}
           </div>
         </div>
-
-        {/*         {!newVisit.isInPresence && (
-          <div style={style.monoButtons}>
-            <div>
-              <label style={{ fontSize: 22 }}>
-                Qual è la data della visita?
-              </label>
-            </div>
-            <div>
-              <LocalizationProvider
-                dateAdapter={AdapterDayjs}
-                adapterLocale="it"
-              >
-                <DatePicker
-                  disabled
-                  slotProps={{ textField: { size: "small" } }}
-                  label={
-                    newVisit.visitDate
-                      ? format(new Date(newVisit.visitDate), "dd-MM-Y")
-                      : "DD-MM-YYYY"
-                  }
-                />
-              </LocalizationProvider>
-            </div>
-          </div>
-        )} */}
 
         <div style={style.buttons}>
           <div style={{ display: "flex" }}>

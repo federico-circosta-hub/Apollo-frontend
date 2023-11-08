@@ -137,6 +137,8 @@ export default function FollowUpChooseModal(props) {
                 adapterLocale="it"
               >
                 <DatePicker
+                  openTo="year"
+                  views={["year", "month", "day"]}
                   maxDate={MAX_DATE}
                   sx={{ background: "white" }}
                   slotProps={{ textField: { size: "small" } }}
