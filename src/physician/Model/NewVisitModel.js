@@ -167,6 +167,7 @@ export default class NewVisitModel {
         0,
         0,
         0,
+        0,
         "absent",
         null,
         false,

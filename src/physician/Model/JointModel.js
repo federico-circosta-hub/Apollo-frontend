@@ -6,6 +6,7 @@ export default class JointModel {
   pain;
   lastBleed;
   sinovite;
+  powerDopler;
   cartilagine;
   subchondral_bone;
   distension;
@@ -21,6 +22,7 @@ export default class JointModel {
     pain,
     lastBleed,
     sinovite,
+    powerDopler,
     cartilagine,
     subchondral_bone,
     distension,
@@ -35,6 +37,7 @@ export default class JointModel {
     this.pain = pain;
     this.lastBleed = lastBleed;
     this.sinovite = sinovite;
+    this.powerDopler = powerDopler;
     this.cartilagine = cartilagine;
     this.subchondral_bone = subchondral_bone;
     this.distension = distension;
@@ -52,6 +55,7 @@ export default class JointModel {
       this.pain,
       this.lastBleed,
       this.sinovite,
+      this.powerDopler,
       this.cartilagine,
       this.subchondral_bone,
       this.distension,
@@ -119,5 +123,9 @@ export default class JointModel {
 
   setProthesis(b) {
     this.prothesis = b;
+  }
+
+  setPowerDopler(n) {
+    this.powerDopler = n;
   }
 }

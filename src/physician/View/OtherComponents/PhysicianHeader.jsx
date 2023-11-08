@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import exit from "./../../img/icon/logout.png";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import nameChecker from "../../ViewModel/NameChecker";
+import { useRef } from "react";
 
 export default function PhysicianHeader(props) {
   const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
@@ -30,13 +31,26 @@ export default function PhysicianHeader(props) {
   useEffect(() => {
     const joint = () => {
       return currentJoint != null && currentJoint !== "" ? (
-        <label>
-          <img src={joints} width={40} height={40} style={{ marginRight: 5 }} />
-          {JointNameChanger.fromSeparateEnglishToSingleStringIta(
-            currentJoint.name,
-            currentJoint.side
-          )}
-        </label>
+        <>
+          <label style={{ marginRight: 10 }}>
+            <img
+              src={joints}
+              width={40}
+              height={40}
+              style={{ marginRight: 5 }}
+            />
+            {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+              currentJoint.name,
+              currentJoint.side
+            )}
+          </label>
+          <button
+            className="btn btn-success"
+            onClick={() => props.activateButton(2)}
+          >
+            Salva
+          </button>
+        </>
       ) : (
         ""
       );
@@ -55,7 +69,6 @@ export default function PhysicianHeader(props) {
       ) : location.pathname == "/newVisit" ||
         location.pathname == "/newVisit/" ||
         location.pathname === "/newVisit/jointSelection" ||
-        location.pathname === "/newVisit/jointSelection/joint" ||
         location.pathname === "/newVisit/drug" ? (
         <button
           className="btn btn-danger"
@@ -71,6 +84,15 @@ export default function PhysicianHeader(props) {
             style={{ filter: "invert(100%)" }}
           />
         </button>
+      ) : location.pathname === "/newVisit/jointSelection/joint" ? (
+        <div style={{ display: "flex" }}>
+          <button
+            className="btn btn-danger"
+            onClick={() => props.activateButton(1)}
+          >
+            Annulla
+          </button>
+        </div>
       ) : (
         ""
       );
@@ -95,7 +117,7 @@ export default function PhysicianHeader(props) {
         );
       } else if (selectedPatient != null) {
         return (
-          <>
+          <div style={{ diplay: "flex" }}>
             <label style={{ fontSize: 20, fontWeight: "500" }}>
               <img src={heartbeat} width={40} style={{ marginRight: 5 }} />
               {nameChecker(selectedPatient.name) +
@@ -113,7 +135,7 @@ export default function PhysicianHeader(props) {
               </label>
             )}
             {joint()}
-          </>
+          </div>
         );
       } else {
         return (

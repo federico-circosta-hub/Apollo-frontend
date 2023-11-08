@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { NewVisitContext } from "../../Model/NewVisitContext";
 import { PatientContext } from "../../Model/PatientContext";
 import NoContextModal from "../Modals/NoContextModal";
@@ -23,6 +23,9 @@ export default function Joint(props) {
   const { selectedPatient } = useContext(PatientContext);
   const { currentJoint, setCurrentJoint } = useContext(CurrentJointContext);
 
+  const buttonCancel = useRef(null);
+  const buttonSave = useRef(null);
+
   const [joint, setJoint] = useState(null);
   const [photos, setPhotos] = useState(newVisit.ecographies);
   const [ids, setIds] = useState(newVisit.ecographiesId);
@@ -45,6 +48,11 @@ export default function Joint(props) {
     }
   }, []);
 
+  useEffect(() => {
+    if (props.isCancelButtonActive) cancel();
+    if (props.isForwardButtonActive) saveAndForward();
+  }, [props.isCancelButtonActive, props.isForwardButtonActive]);
+
   const cancel = () => {
     let photosModified = [...photos];
     photosModified.forEach((e) => {
@@ -62,6 +70,7 @@ export default function Joint(props) {
     setJoint(null);
     setCurrentJoint(null);
     setNewVisit(newVisit);
+    props.setCancelButtonActive(false);
     navigate("/newVisit/jointSelection", { replace: true });
   };
   const saveAndForward = () => {
@@ -85,6 +94,7 @@ export default function Joint(props) {
       setNewVisit(newVisit);
       setCurrentJoint(null);
       console.log(newVisit);
+      props.setForwardButtonActive(false);
       navigate("/newVisit/jointSelection", { replace: true });
     } else {
       setErrors(e);
@@ -157,7 +167,7 @@ export default function Joint(props) {
     setPhotos(newPhotos);
   };
 
-  return selectedPatient !== null ? (
+  return selectedPatient ? (
     <div>
       <div className="box-bianco" style={style.box}>
         <div
@@ -177,7 +187,7 @@ export default function Joint(props) {
             <div
               style={{
                 overflow: "auto",
-                height: "78vh",
+                height: "85vh",
                 width: "100%",
                 textAlign: "center",
                 border: "1px solid #dcdcdc",
@@ -285,7 +295,7 @@ export default function Joint(props) {
             )}
           </div>
 
-          <div style={{ height: "78vh", flex: 2 }}>
+          <div style={{ height: "85vh", flex: 2 }}>
             {joint !== null ? (
               <JointVisitQuestions
                 joint={joint}
@@ -301,7 +311,7 @@ export default function Joint(props) {
 
         <div
           style={{
-            display: "flex",
+            display: "none",
             justifyContent: "space-between",
             width: "95%",
             alignItems: "center",
@@ -309,6 +319,7 @@ export default function Joint(props) {
         >
           <div>
             <button
+              ref={buttonCancel}
               to={"/newVisit/jointSelection"}
               style={style.forwardButton}
               className="btn btn-danger btn-lg"
@@ -321,6 +332,7 @@ export default function Joint(props) {
           </div>
           <div>
             <button
+              ref={buttonSave}
               disabled={networkErrorIndex}
               style={style.forwardButton}
               className="btn btn-success btn-lg"

@@ -134,6 +134,9 @@ export default function JointVisitQuestions(props) {
         );
         props.joint.setSynovitis(synovitis.value);
         return props.setJoint(props.joint);
+      case "power":
+        props.joint.setPowerDopler(e.target.value);
+        return props.setJoint(props.joint);
       case "cartilage":
         let cartilage = cartilageValues.find(
           (element) => element.value == e.target.value
@@ -254,13 +257,13 @@ export default function JointVisitQuestions(props) {
             )}
           </div>
           <label style={{ fontSize: 20, flex: 2 }}>Difficoltà movimento</label>
-          <div style={{ flex: 1.5 }}>
+          <div style={{ flex: 1.25 }}>
             <Switch
               defaultChecked={props.joint.jointDifficulty}
               onChange={(e) => modifyJoint(e, "difficulty")}
             />
           </div>
-          <label style={{ fontSize: 20, flex: 0.5 }}>PT</label>
+          <label style={{ fontSize: 20, flex: 0.5 }}>Protesi</label>
           <div style={{ flex: 1 }}>
             {loadingIndex ? (
               <CircularProgress />
@@ -293,10 +296,8 @@ export default function JointVisitQuestions(props) {
             />
           </div>
 
-          <label style={{ fontSize: 20, flex: 2.25 }}>
-            Ultimo sanguinamento
-          </label>
-          <div style={{ flex: 1.75 }}>
+          <label style={{ fontSize: 20, flex: 2 }}>Ultimo sanguinamento</label>
+          <div style={{ flex: 1.5 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
               <DatePicker
                 openTo="year"
@@ -314,7 +315,7 @@ export default function JointVisitQuestions(props) {
               />
             </LocalizationProvider>
           </div>
-          <div style={{ flex: 1 }}></div>
+          <div style={{ flex: 1.25 }}></div>
         </div>
       </div>
 
@@ -328,7 +329,7 @@ export default function JointVisitQuestions(props) {
           boxShadow: "1px 2px 6px #dcdcdc",
           borderRadius: "15px",
           padding: 10,
-          height: "35vh",
+          height: "43vh",
         }}
       >
         <div
@@ -350,6 +351,34 @@ export default function JointVisitQuestions(props) {
               max={2}
               step={1}
               defaultValue={() => valueResolver("synovitis")}
+              className="MuiSlider-markLabel"
+              onChange={(e) => modifyPatientSliders(e)}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "start",
+            width: "96%",
+            paddingRight: "1vw",
+          }}
+        >
+          <label style={{ fontSize: 20, flex: "1" }}>Power dopler</label>
+
+          <div style={{ flex: "2.5" }}>
+            <Slider
+              name="power"
+              disabled={false}
+              marks={[
+                { label: "Grado 0", value: 0 },
+                { label: "Grado I", value: 1 },
+                { label: "Grado II", value: 2 },
+              ]}
+              min={0}
+              max={2}
+              step={1}
+              defaultValue={props.joint.powerDopler}
               className="MuiSlider-markLabel"
               onChange={(e) => modifyPatientSliders(e)}
             />
