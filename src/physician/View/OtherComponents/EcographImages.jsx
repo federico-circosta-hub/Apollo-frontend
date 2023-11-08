@@ -1,14 +1,17 @@
-import { Checkbox } from "@mui/material";
+import { Button, Checkbox } from "@mui/material";
 import { useState, useContext } from "react";
 import ChangingJointFieldMediaModal from "../Modals/ChangingJointFieldMediaModal";
 import { NewVisitContext } from "../../Model/NewVisitContext";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
+import EditIcon from "@mui/icons-material/Edit";
 
 const EcographImages = (props) => {
   const { currentJoint } = useContext(CurrentJointContext);
   const [idToChange, setIdToChange] = useState(-1);
   const [showChangingJointFieldModal, setShowChangingJointFieldModal] =
     useState(false);
+  const [scan, setScan] = useState(false);
+
   const handleSelect = (e, photo) => {
     const index = props.photos.findIndex((p) => p.id === photo.id);
     let newPhotos = [...props.photos];
@@ -26,6 +29,16 @@ const EcographImages = (props) => {
       newPhotos[index].actualModified = { value: true, select: false };
     }
     props.setPhotos(newPhotos);
+  };
+
+  const handleEditScan = (photo) => {
+    const index = props.photos.findIndex((p) => p.id === photo.id);
+    let newPhotos = [...props.photos];
+    newPhotos[index].realJoint = props.joint.joint.jointName;
+    newPhotos[index].realSide = props.joint.joint.side;
+    setScan(true);
+    setIdToChange(photo.id);
+    setShowChangingJointFieldModal(true);
   };
 
   const sortByJoint = (arr) => {
@@ -83,6 +96,16 @@ const EcographImages = (props) => {
               width={"100%"}
               style={{ borderRadius: "5px" }}
             />
+            {photo.joint === "knee" && (
+              <Button
+                onClick={() => handleEditScan(photo)}
+                endIcon={<EditIcon />}
+                style={{ textTransform: "none" }}
+                variant="outlined"
+              >
+                {photo.scan}
+              </Button>
+            )}
             <Checkbox
               checked={props.photos
                 .filter(
@@ -92,7 +115,7 @@ const EcographImages = (props) => {
                 )
                 .includes(photo)}
               onChange={(e) => handleSelect(e, photo)}
-            ></Checkbox>
+            />
           </div>
         ))}
       </div>
@@ -104,6 +127,8 @@ const EcographImages = (props) => {
           actualJointName={
             props.photos.filter((p) => p.id === idToChange)[0].realJoint
           }
+          scan={scan}
+          setScan={setScan}
           show={showChangingJointFieldModal}
           setShow={setShowChangingJointFieldModal}
           id={idToChange}

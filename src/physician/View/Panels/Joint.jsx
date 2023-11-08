@@ -146,11 +146,12 @@ export default function Joint(props) {
     setShowPhotoModal(true);
   };
 
-  const setJointFieldInPhotos = (id, joint) => {
+  const setJointFieldInPhotos = (id, joint, scan) => {
     let newPhotos = photos;
     newPhotos.forEach((e) => {
       if (e.id === id) {
         e.joint = joint;
+        e.scan = scan;
       }
     });
     setPhotos(newPhotos);

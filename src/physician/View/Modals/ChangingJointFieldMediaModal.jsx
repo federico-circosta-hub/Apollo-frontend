@@ -24,7 +24,7 @@ export default function ChangingJointFieldMediaModal(props) {
 
   useEffect(() => {
     console.log(props.savedJointName);
-    if (!props.savedJointName || props.savedJointName === "other")
+    if (!props.savedJointName || props.savedJointName === "other" || props.scan)
       setDisplayScan(true);
     getScanTypesFromServer();
   }, []);
@@ -35,7 +35,8 @@ export default function ChangingJointFieldMediaModal(props) {
     try {
       const patch = { id: props.id, scan: selectedOption };
       await CommunicationController.patch("media/scan", patch);
-      props.setJointField(props.id, props.actualJointName);
+      props.setJointField(props.id, props.actualJointName, selectedOption);
+      props.setScan(false);
       props.setShow(false);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
@@ -73,6 +74,7 @@ export default function ChangingJointFieldMediaModal(props) {
         e.realSide = undefined;
       }
     });
+    props.setScan(false);
     props.setPhotos(newPhotos);
     props.setShow(false);
   };
@@ -128,13 +130,15 @@ export default function ChangingJointFieldMediaModal(props) {
                 .
               </p>
             )}
-            <p>
-              Sei sicuro di volerla selezionare come{" "}
-              {JointNameChanger.fromEngToItaName(
-                props.actualJointName
-              ).toLowerCase()}
-              ?
-            </p>
+            {props.actualJointName && (
+              <p>
+                Sei sicuro di volerla selezionare come{" "}
+                {JointNameChanger.fromEngToItaName(
+                  props.actualJointName
+                ).toLowerCase()}
+                ?
+              </p>
+            )}
           </>
         )}
         {sended === false && (
