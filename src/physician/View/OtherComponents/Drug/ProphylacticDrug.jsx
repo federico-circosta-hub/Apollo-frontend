@@ -76,10 +76,11 @@ export default function ProphylacticDrug(props) {
 
         <TextField
           disabled={props.disabledProphylactic}
-          value={props.prophylacticDrug.dose}
+          defaultValue={props.prophylacticDrug.dose}
           onChange={props.handleProphylacticDrugDose}
           placeholder="Dose"
           label="Dose"
+          type="email"
           id="outlined-start-adornment"
           sx={{ width: "25ch" }}
           InputProps={{

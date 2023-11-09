@@ -17,6 +17,7 @@ import { TrendingUpRounded } from "@mui/icons-material";
 import ExpostVisitServiceModal from "../Modals/ExpostVisitServiceModal";
 import LiveVisitServiceModal from "../Modals/LiveVisitServiceModal";
 import DeanonymizedCC from "../../../common/Model/Communication/DeanonymizedCommunicationController";
+import { isSameDay, parseISO } from "date-fns";
 
 export default function SearchVisit(props) {
   const VISITS_AT_TIME = 20;
@@ -103,6 +104,15 @@ export default function SearchVisit(props) {
     navigate("/newVisit", { replace: true });
   };
 
+  const liveAlreadyExist = () => {
+    return visitList.filter((e) => e.physician).length > 0
+      ? isSameDay(
+          parseISO(visitList.filter((e) => e.physician)[0].date),
+          new Date()
+        )
+      : false;
+  };
+
   return selectedPatient ? (
     <div>
       <MainContainer>
@@ -122,9 +132,10 @@ export default function SearchVisit(props) {
           <div style={{ display: "flex", gap: 20 }}>
             <div>
               <button
+                disabled={liveAlreadyExist()}
                 className="btn btn-primary"
                 style={{ fontSize: 24 }}
-                onClick={() => setShowLiveServiceModal(true)}
+                onClick={() => createNewVisit(true, undefined, new Date())}
               >
                 Nuova visita{" "}
                 <img

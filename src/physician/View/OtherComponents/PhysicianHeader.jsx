@@ -15,11 +15,13 @@ import exit from "./../../img/icon/logout.png";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import nameChecker from "../../ViewModel/NameChecker";
 import { useRef } from "react";
+import { VisitContext } from "../../Model/VisitContext";
 
 export default function PhysicianHeader(props) {
   const { selectedPatient, setSelectedPatient } = useContext(PatientContext);
   const { currentJoint } = useContext(CurrentJointContext);
   const { newVisit } = useContext(NewVisitContext);
+  const { selectedVisit } = useContext(VisitContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -130,7 +132,15 @@ export default function PhysicianHeader(props) {
               <label>
                 {" "}
                 {"— [visita "}
-                {format(newVisit.visitDate, "y-MM-dd")}
+                {format(newVisit.visitDate, "dd-MM-y")}
+                {"]"}{" "}
+              </label>
+            )}
+            {selectedVisit && location.pathname === "/seeVisit" && (
+              <label>
+                {" "}
+                {"— [visita "}
+                {format(new Date(selectedVisit.date), "dd-MM-y")}
                 {"]"}{" "}
               </label>
             )}

@@ -73,7 +73,7 @@ export default function AcuteDrug(props) {
         )}
 
         <TextField
-          value={props.acuteDrug.dose}
+          defaultValue={props.acuteDrug.dose}
           name="AcuteDose"
           onChange={props.handleAcuteDrugDose}
           disabled={props.disabledAcute}
