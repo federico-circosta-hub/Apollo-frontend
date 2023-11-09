@@ -37,6 +37,7 @@ export default function JointInfo(props) {
           const eco = await CommunicationController.get("media", {
             id: e,
           });
+          console.log(eco);
           return eco;
         })
       );

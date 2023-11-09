@@ -78,7 +78,6 @@ export default function ProphylacticDrug(props) {
           disabled={props.disabledProphylactic}
           value={props.prophylacticDrug.dose}
           onChange={props.handleProphylacticDrugDose}
-          type="number"
           placeholder="Dose"
           label="Dose"
           id="outlined-start-adornment"

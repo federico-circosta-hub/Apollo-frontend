@@ -75,7 +75,6 @@ export default function AcuteDrug(props) {
         <TextField
           value={props.acuteDrug.dose}
           name="AcuteDose"
-          type="number"
           onChange={props.handleAcuteDrugDose}
           disabled={props.disabledAcute}
           placeholder="Dose"
