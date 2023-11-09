@@ -378,7 +378,7 @@ export default function Drug() {
               onClick={forward}
               style={{ fontSize: 24 }}
             >
-              {newVisit.sended ? "Visita già inviata" : "Termina visita"}
+              {newVisit.sended ? "Visita già conclusa" : "Concludi visita"}
             </button>
           </div>
         </div>

@@ -19,7 +19,7 @@ export default function EndingVisitModal(props) {
           }}
         >
           <Alert severity="success" variant="filled" style={{ width: "100%" }}>
-            <AlertTitle>Visita inviata con successo!</AlertTitle>
+            <AlertTitle>Visita conclusa con successo!</AlertTitle>
           </Alert>
           <Link
             replace
@@ -54,7 +54,7 @@ export default function EndingVisitModal(props) {
             onClick={props.sends}
             style={{ fontSize: 24 }}
           >
-            {props.sending ? "Inviando... " : "Invia "}
+            {props.sending ? "Concludendo... " : "Concludi "}
             <img
               src={documentSend}
               alt="document send"
@@ -84,7 +84,7 @@ export default function EndingVisitModal(props) {
             }}
             variant="filled"
           >
-            <AlertTitle>Errore nell'invio</AlertTitle>
+            <AlertTitle>Errore durante la conclusione</AlertTitle>
           </Alert>
           <button
             className={
@@ -95,7 +95,7 @@ export default function EndingVisitModal(props) {
             disabled={props.sending}
             onClick={props.sends}
           >
-            {props.sending ? "Inviando..." : "Riprova"}
+            {props.sending ? "Concludendo..." : "Riprova"}
           </button>
         </Modal.Footer>
       );
@@ -105,7 +105,7 @@ export default function EndingVisitModal(props) {
   return (
     <Modal show={props.showModal} animation={true} scrollable={true} size="lg">
       <Modal.Header style={{ background: "#f0f8ff" }}>
-        <Modal.Title>Confermare invio visita</Modal.Title>
+        <Modal.Title>Confermare conclusione visita</Modal.Title>
       </Modal.Header>
       <Modal.Body
         style={{
