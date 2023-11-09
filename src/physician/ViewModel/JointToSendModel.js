@@ -14,6 +14,7 @@ export default class JointToSendModel {
   cartilagine; //: 0 | 1 | 2 | 3 | 4
   subchondral_bone; //: 0 | 1 | 2
   sinovite; //: 0 | 1 | 2
+  power_doppler;
   media_ids; //: lista dei media id associati alla diagnosi dell'articolazione
 
   constructor(joint) {
@@ -35,6 +36,7 @@ export default class JointToSendModel {
       ? undefined
       : joint.subchondral_bone;
     this.sinovite = joint.sinovite;
+    this.power_doppler = joint.powerDoppler;
     this.media_ids = [];
   }
 

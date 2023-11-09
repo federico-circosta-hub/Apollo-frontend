@@ -63,6 +63,20 @@ export default function NewVisit() {
     newVisit && newVisit.previousVisit
   );
   const [showModal, setShowModal] = useState(false);
+  const [emergency, setEmergency] = useState(
+    newVisit.isCheckUp === undefined
+      ? false
+      : newVisit.isCheckUp === false
+      ? true
+      : false
+  );
+  const [followDisabled, setFollowDisabled] = useState(
+    newVisit.isCheckUp === undefined
+      ? true
+      : newVisit.isCheckUp === false
+      ? false
+      : true
+  );
 
   useEffect(() => {
     newVisit && getTraumaticEventAndActivitiesFromServer();
@@ -111,11 +125,11 @@ export default function NewVisit() {
       newVisit.setPhysicalActivity(physicalActivity);
       newVisit.setTraumaticEvent(traumaticEvent);
       newVisit.setPreviousVisit(previousVisit);
+      newVisit.setIsCheckUp(!emergency);
       let cs = completedStep;
       cs[0] = true;
       setCompletedStep(cs);
-      previousVisit !== undefined &&
-        newVisit.setLastVisit(new Date(previousVisit.date));
+      previousVisit && newVisit.setLastVisit(new Date(previousVisit.date));
       setNewVisit(newVisit);
       setErrors({});
       console.log(newVisit);
@@ -194,6 +208,12 @@ export default function NewVisit() {
     if (!e.target.checked) setPreviousVisit(undefined);
   };
 
+  const handleCheckUp = (e) => {
+    setEmergency(e.target.checked);
+    setFollowDisabled(!e.target.checked);
+    if (!e.target.checked) handleCancel();
+  };
+
   const datePickerResolver = (b, s) => {
     if (b) {
       return (
@@ -233,28 +253,44 @@ export default function NewVisit() {
   return selectedPatient && newVisit ? (
     <div>
       <MainContainer style={{ paddingTop: 5 }}>
-        <div style={style.monoButtons}>
-          <div style={{ alignItems: "center", display: "flex" }}>
-            <label style={{ fontSize: 22 }}>È una visita di follow-up?</label>
-            <Switch checked={isFollowUp} onChange={followUp} />
+        <div style={{ display: "flex", width: "85%", gap: 20 }}>
+          <div style={style.monoButtons}>
+            <div style={{ alignItems: "center", display: "flex", gap: 20 }}>
+              <label style={{ fontSize: 22 }}>Visita di check-up</label>
+              <Switch
+                color="error"
+                checked={emergency}
+                onChange={handleCheckUp}
+              />
+              <label style={{ fontSize: 22 }}>Visita urgente</label>
+            </div>
           </div>
-          <div>
-            {isFollowUp && previousVisit && (
-              <FollowUpHelper
-                onCancel={handleCancel}
-                seeVisit={saveInfo}
-                previousVisit={previousVisit}
+          <div style={style.monoButtons}>
+            <div style={{ alignItems: "center", display: "flex" }}>
+              <label style={{ fontSize: 22 }}>È un follow-up?</label>
+              <Switch
+                checked={isFollowUp}
+                onChange={followUp}
+                disabled={followDisabled}
               />
-            )}
-            {isFollowUp && !previousVisit && (
-              <FollowUpChooseModal
-                onCancel={handleCancel}
-                onChoose={setPreviousVisit}
-              />
-            )}
+            </div>
+            <div>
+              {isFollowUp && previousVisit && (
+                <FollowUpHelper
+                  onCancel={handleCancel}
+                  seeVisit={saveInfo}
+                  previousVisit={previousVisit}
+                />
+              )}
+              {isFollowUp && !previousVisit && (
+                <FollowUpChooseModal
+                  onCancel={handleCancel}
+                  onChoose={setPreviousVisit}
+                />
+              )}
+            </div>
           </div>
         </div>
-
         <div style={style.buttons}>
           <div style={{ display: "flex" }}>
             <label style={{ fontSize: 22 }}>
@@ -401,7 +437,7 @@ const style = {
   monoButtons: {
     display: "flex",
     flexDirection: "row",
-    width: "70%",
+    width: "85%",
     height: "10vh",
     padding: "1.5%",
     justifyContent: "space-between",
@@ -412,7 +448,7 @@ const style = {
   },
 
   buttons: {
-    width: "70%",
+    width: "85%",
     height: "27vh",
     display: "flex",
     flexDirection: "column",

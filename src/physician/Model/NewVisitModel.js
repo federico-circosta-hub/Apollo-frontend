@@ -22,7 +22,8 @@ export default class NewVisitModel {
     treatmentResponse: "",
     lastVisit: "",
   };
-
+  isCheckUp;
+  followsDescription;
   joints = [];
 
   needFollowUp = {
@@ -223,6 +224,10 @@ export default class NewVisitModel {
 
   setSended(b) {
     this.sended = b;
+  }
+
+  setIsCheckUp(b) {
+    this.isCheckUp = b;
   }
 
   toString(f) {

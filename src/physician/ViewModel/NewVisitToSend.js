@@ -7,7 +7,9 @@ export default class NewVisitToSend {
   physician; //number
   date; //data string
   type; // live | remote | expost
+  is_checkup;
   follows; // id della visita seguita da questa
+  follows_description;
   report = {
     /* date: visitDate, // string | undefined	(maggiore o uguale alla data della visita, se non definito viene salvata quella della visita) */
     trauma_event: "trauma_event", // string | undefined	(se non esiste e non date_trauma non è undefined lo crea)
@@ -29,9 +31,21 @@ export default class NewVisitToSend {
     this.physician = newVisit.physician;
     this.date = format(newVisit.visitDate, "y-MM-dd");
     this.type = newVisit.isInPresence ? "live" : "expost";
+    this.is_checkup = newVisit.isCheckUp;
     this.follows =
-      newVisit.followUp.followUp && newVisit.previousVisit.id !== -1
+      !newVisit.isCheckUp &&
+      newVisit.followUp.followUp &&
+      newVisit.previousVisit.id !== -1
         ? newVisit.previousVisit.id
+        : undefined;
+    this.follows_description =
+      !newVisit.isCheckUp &&
+      newVisit.followUp.followUp &&
+      newVisit.previousVisit.id === -1
+        ? "Visita del " +
+          format(newVisit.previousVisit.date, "d-MM-y") +
+          "\n" +
+          newVisit.previousVisit.description
         : undefined;
     this.report.trauma_event =
       newVisit.traumaticEvent.traumaticEvent === "Nessuno"
