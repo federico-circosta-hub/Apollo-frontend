@@ -86,16 +86,27 @@ const EcographImages = (props) => {
               borderRadius: "5px",
             }}
           >
-            <img
-              onLoad={() => {
-                props.setLoadingImages(false);
-              }}
-              onClick={() => props.handleClick(photo.id)}
-              src={photo.base64}
-              alt={`Photo ${index}`}
-              width={"100%"}
-              style={{ borderRadius: "5px" }}
-            />
+            {photo.type === "image" && (
+              <img
+                onLoad={() => {
+                  props.setLoadingImages(false);
+                }}
+                onClick={() => props.handleClick(photo.id)}
+                src={photo.base64}
+                alt={`Photo ${index}`}
+                width={"100%"}
+                style={{ borderRadius: "5px" }}
+              />
+            )}
+            {photo.type === "video" && (
+              <video
+                width={"100%"}
+                controls
+                onClick={() => props.handleClick(photo.id)}
+              >
+                <source src={photo.base64} type="video/avi" />
+              </video>
+            )}
             {photo.joint === "knee" && (
               <Button
                 onClick={() => handleEditScan(photo)}

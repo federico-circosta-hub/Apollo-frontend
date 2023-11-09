@@ -111,10 +111,11 @@ export default function Joint(props) {
       exclude: ids,
     };
     try {
-      const idsFromServer = await CommunicationController.get(
-        "media/visit/img",
+      const idsObject = await CommunicationController.get(
+        "media/visit",
         params
       );
+      const idsFromServer = [...idsObject.imgs, ...idsObject.videos];
       console.log(idsFromServer);
       if (idsFromServer.length > 0) {
         setIsThereNewImage(true);
@@ -128,6 +129,7 @@ export default function Joint(props) {
             eco.realJoint = undefined;
             eco.realSide = undefined;
             eco.actualModified = { value: false, select: null };
+
             console.log("ottenuta eco:", eco);
             setPhotos((prevState) => [...prevState, eco]);
           }
