@@ -19,13 +19,36 @@ export default function ModifyPatientModal(props) {
       props.patient.birthdate,
       props.patient.gender,
       props.patient.height,
-      props.patient.weight
+      props.patient.weight,
+      props.patient.hemophilia,
+      props.patient.hemophilia_gravity
     )
   );
   const [disabled, setDisabled] = useState(false);
   const [sendingButton, setSendingButton] = useState("Conferma");
   const [showAlert, setShowAlert] = useState(null);
   const [networkError, setNetworkError] = useState(null);
+  const [hemophiliaEdited, setHemophiliaEdited] = useState(false);
+  const [hemophiliaDisabled, setHemophiliaDisabled] = useState(
+    patient.hemophilia && !hemophiliaEdited
+  );
+
+  const modifyHemophilia = (event) => {
+    setHemophiliaEdited(true);
+    let p = patient.clone();
+    p.setHemophilia(event.target.value);
+    if (!event.target.value) {
+      p.setHemophiliaGravity("");
+    }
+    setPatient(p);
+  };
+
+  const modifyHemophiliaGravity = (event) => {
+    setHemophiliaEdited(true);
+    let p = patient.clone();
+    p.setHemophiliaGravity(event.target.value);
+    setPatient(p);
+  };
 
   const modifyCF = (event) => {
     let p = patient.clone();
@@ -70,6 +93,7 @@ export default function ModifyPatientModal(props) {
     setSendingButton("Inviando");
     setDisabled(true);
     try {
+      console.log(patient);
       await patient.modifyPatient(props.patient.pid);
       setShowAlert(true);
       props.setPatient(null);
@@ -90,7 +114,7 @@ export default function ModifyPatientModal(props) {
       <Alert severity="info" variant="filled" style={{ width: "100%" }}>
         <AlertTitle>Confermare modifica paziente</AlertTitle>
       </Alert>
-
+      {console.log(patient)}
       <Modal.Body style={{ background: "whitesmoke" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "2vh" }}>
           <div>
@@ -201,6 +225,68 @@ export default function ModifyPatientModal(props) {
               value={patient.weight}
               onChange={modifyPatientDimensions}
             />
+          </div>
+          <div>
+            {" "}
+            {hemophiliaDisabled ? (
+              <p>
+                Tipo di emofilia:{" "}
+                {patient.hemophilia ? patient.hemophilia : "N/A"}
+              </p>
+            ) : (
+              <FormControl style={{ background: "white" }} fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Tipo di emofilia
+                </InputLabel>
+                <Select
+                  size="small"
+                  value={patient.hemophilia}
+                  onChange={modifyHemophilia}
+                  label="Tipo di emofilia"
+                >
+                  <MenuItem value={""}>Nessuno</MenuItem>
+                  <MenuItem value="A">A</MenuItem>
+                  <MenuItem value="B">B</MenuItem>
+                  <MenuItem value="C">C</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+          </div>
+          <div>
+            {hemophiliaDisabled ? (
+              <p>
+                Gravità emofilia:{" "}
+                {[0, 1, 2].includes(patient.hemophilia_gravity)
+                  ? patient.hemophilia_gravity === 0
+                    ? "Lieve"
+                    : patient.hemophilia_gravity === 1
+                    ? "Moderata"
+                    : patient.hemophilia_gravity === 2
+                    ? "Grave"
+                    : "N/A"
+                  : "N/A"}
+              </p>
+            ) : (
+              <FormControl
+                style={{ background: "white" }}
+                disabled={!patient.hemophilia}
+                fullWidth
+              >
+                <InputLabel id="demo-simple-select-label">
+                  Gravità emofilia
+                </InputLabel>
+                <Select
+                  size="small"
+                  value={patient.hemophilia_gravity}
+                  onChange={modifyHemophiliaGravity}
+                  label="Gravità emofilia"
+                >
+                  <MenuItem value={0}>Lieve</MenuItem>
+                  <MenuItem value={1}>Moderata</MenuItem>
+                  <MenuItem value={2}>Grave</MenuItem>
+                </Select>
+              </FormControl>
+            )}
           </div>
         </div>
       </Modal.Body>

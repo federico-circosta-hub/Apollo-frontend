@@ -40,7 +40,7 @@ export default function NewPatient() {
     { value: 150, label: "150kg" },
   ];
   const [patient, setPatient] = useState(
-    new PatientModel("", "", "", "", "M", 170, 75, [])
+    new PatientModel("", "", "", "", "M", 170, 75, "", "")
   );
   const [showModal, setShowModal] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -83,6 +83,21 @@ export default function NewPatient() {
   const modifyCF = (event) => {
     let p = patient.clone();
     p.setCF(event.target.value.toUpperCase());
+    setPatient(p);
+  };
+
+  const modifyHemophilia = (event) => {
+    let p = patient.clone();
+    p.setHemophilia(event.target.value);
+    if (!event.target.value) {
+      p.setHemophiliaGravity("");
+    }
+    setPatient(p);
+  };
+
+  const modifyHemophiliaGravity = (event) => {
+    let p = patient.clone();
+    p.setHemophiliaGravity(event.target.value);
     setPatient(p);
   };
 
@@ -189,6 +204,42 @@ export default function NewPatient() {
               >
                 <MenuItem value="M">Maschio</MenuItem>
                 <MenuItem value="F">Femmina</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Tipo di emofilia
+              </InputLabel>
+              <Select
+                label="Tipo di emofilia"
+                size="small"
+                value={patient.hemophilia}
+                onChange={modifyHemophilia}
+              >
+                <MenuItem value={""}>Nessuno</MenuItem>
+                <MenuItem value="A">A</MenuItem>
+                <MenuItem value="B">B</MenuItem>
+                <MenuItem value="C">C</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div>
+            <FormControl fullWidth disabled={!patient.hemophilia}>
+              <InputLabel id="demo-simple-select-label">
+                Gravità emofilia
+              </InputLabel>
+              <Select
+                label="Gravità emofilia"
+                size="small"
+                defaultValue=""
+                value={patient.hemophilia_gravity}
+                onChange={modifyHemophiliaGravity}
+              >
+                <MenuItem value={0}>Lieve</MenuItem>
+                <MenuItem value={1}>Moderata</MenuItem>
+                <MenuItem value={2}>Grave</MenuItem>
               </Select>
             </FormControl>
           </div>

@@ -8,8 +8,20 @@ export default class PatientModel {
   gender;
   height;
   weight;
+  hemophilia;
+  hemophilia_gravity;
 
-  constructor(name, surname, CF, birthdate, gender, height, weight, prothesis) {
+  constructor(
+    name,
+    surname,
+    CF,
+    birthdate,
+    gender,
+    height,
+    weight,
+    hemophilia,
+    hemophilia_gravity
+  ) {
     this.name = name;
     this.surname = surname;
     this.CF = CF;
@@ -17,6 +29,8 @@ export default class PatientModel {
     this.gender = gender;
     this.height = height;
     this.weight = weight;
+    this.hemophilia = hemophilia;
+    this.hemophilia_gravity = hemophilia_gravity;
   }
 
   setName(s) {
@@ -47,6 +61,14 @@ export default class PatientModel {
     this.weight = w;
   }
 
+  setHemophilia(h) {
+    this.hemophilia = h;
+  }
+
+  setHemophiliaGravity(hg) {
+    this.hemophilia_gravity = hg;
+  }
+
   toString() {
     console.log(
       "My name is %s %s I was born in %s, I'm %s, my height is %d and my weight is %d, I've %s prothesis",
@@ -68,7 +90,8 @@ export default class PatientModel {
       this.gender,
       this.height,
       this.weight,
-      this.prothesis
+      this.hemophilia,
+      this.hemophilia_gravity
     );
   }
 
@@ -81,7 +104,10 @@ export default class PatientModel {
       height: this.height,
       weight: this.weight,
       cf: this.CF,
+      hemophilia: this.hemophilia,
+      hemophilia_gravity: this.hemophilia_gravity,
     };
+    console.log(params);
     return await DeanonymizedCC.post("patient", params);
   }
 
@@ -95,6 +121,8 @@ export default class PatientModel {
       height: this.height,
       weight: this.weight,
       cf: this.CF,
+      hemophilia: this.hemophilia,
+      hemophilia_gravity: this.hemophilia_gravity,
     };
     await DeanonymizedCC.patch("patient", params);
   }
@@ -104,10 +132,8 @@ export default class PatientModel {
       !this.name ||
       !this.surname ||
       !this.birthdate ||
-      !this.gender ||
-      !this.height ||
-      !this.weight ||
-      !this.CF
+      (this.CF && ![0, 16].includes(this.CF.trim().length)) ||
+      (this.hemophilia && ![0, 1, 2].includes(this.hemophilia_gravity))
     )
       return false;
     else {

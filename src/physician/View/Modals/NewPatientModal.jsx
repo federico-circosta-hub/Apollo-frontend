@@ -80,6 +80,24 @@ export default function NewPatientModal(props) {
         <p>Genere: {props.data.patient.gender}</p>
         <p>Altezza: {props.data.patient.height}</p>
         <p>Peso: {props.data.patient.weight}</p>
+        <p>
+          Tipo di emofilia:{" "}
+          {props.data.patient.hemophilia
+            ? props.data.patient.hemophilia
+            : "N/A"}
+        </p>
+        <p>
+          Gravità emofilia:{" "}
+          {[0, 1, 2].includes(props.data.patient.hemophilia_gravity)
+            ? props.data.patient.hemophilia_gravity === 0
+              ? "Lieve"
+              : props.data.patient.hemophilia_gravity === 1
+              ? "Moderata"
+              : props.data.patient.hemophilia_gravity === 2
+              ? "Grave"
+              : "N/A"
+            : "N/A"}
+        </p>
       </Modal.Body>
 
       {footer()}

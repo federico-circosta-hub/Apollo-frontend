@@ -11,12 +11,14 @@ export const validateForm = (formName, formData, formData2) => {
       if (formData.birthdate == "") {
         errors.birthdate = "Inserire data di nascita valida";
       }
-      console.log(
-        "(formData.CF.trim().length !== 16 || formData.CF.trim().length !== 0)",
-        formData.CF.trim().length !== 16 || formData.CF.trim().length !== 0
-      );
       if (formData.CF.trim().length !== 16 && formData.CF.trim().length !== 0) {
         errors.CF = "Inserire codice fiscale valido oppure lasciare vuoto";
+      }
+      if (
+        formData.hemophilia &&
+        ![0, 1, 2].includes(formData.hemophilia_gravity)
+      ) {
+        errors.hemophilia = "Inserire gravità emofilia";
       }
       return errors;
     case "newVisit":
