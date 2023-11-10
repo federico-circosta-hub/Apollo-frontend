@@ -137,7 +137,9 @@ export default function SearchVisit(props) {
                 style={{ fontSize: 24 }}
                 onClick={() => createNewVisit(true, undefined, new Date())}
               >
-                Nuova visita{" "}
+                {liveAlreadyExist()
+                  ? "Visita odierna conclusa "
+                  : "Nuova visita "}
                 <img
                   src={newFile}
                   alt="search"
