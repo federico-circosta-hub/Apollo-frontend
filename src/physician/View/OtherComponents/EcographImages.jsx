@@ -104,7 +104,7 @@ const EcographImages = (props) => {
                 controls
                 onClick={() => props.handleClick(photo.id)}
               >
-                <source src={photo.base64} type="video/avi" />
+                <source src={photo.base64} type="video/mp4" />
               </video>
             )}
             {photo.joint === "knee" && (
