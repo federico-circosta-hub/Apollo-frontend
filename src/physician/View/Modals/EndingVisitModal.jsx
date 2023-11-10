@@ -5,8 +5,11 @@ import documentSend from "../../img/icon/document-send.png";
 import { Link } from "react-router-dom";
 import JointNameChanger from "../../ViewModel/JointNameChanger";
 import nameChecker from "../../ViewModel/NameChecker";
+import { useState } from "react";
 
 export default function EndingVisitModal(props) {
+  const [selectedJoint, setSelectedJoint] = useState(null);
+
   const footer = () => {
     if (props.showAlert) {
       return (
@@ -109,112 +112,224 @@ export default function EndingVisitModal(props) {
       </Modal.Header>
       <Modal.Body
         style={{
+          height: "60vh",
           display: "flex",
+          gap: "3vw",
           background: "whitesmoke",
-          flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <h5>Info generali</h5>
-        <p>
-          <strong>Nome: </strong>
-          {nameChecker(props.patient.name)}
-        </p>
-        <p>
-          <strong>Cognome: </strong>
-          {nameChecker(props.patient.surname)}
-        </p>
-        <p>
-          <strong>
-            {props.patient.gender === "F" ? "Nata il: " : "Nato il: "}
-          </strong>{" "}
-          {format(new Date(props.patient.birthdate), "dd-MM-y")}
-        </p>
-        <p>
-          <strong>Data visita: </strong>
-          {format(props.visit.visitDate, "dd-MM-y")}
-        </p>
-        <p>
-          <strong>Medico:</strong> {props.visit.physician}
-        </p>
-
-        <br />
-        <h5>Attività Fisica</h5>
-        <p>
-          <strong>Tipo:</strong>{" "}
-          {props.visit.physicalActivity.physicalActivityType || "N/A"}
-        </p>
-        <p>
-          <strong>Data:</strong>{" "}
-          {props.visit.physicalActivity.physicalActivityDate || "N/A"}
-        </p>
-        <br />
-        <h5>Evento Traumatico</h5>
-        <p>
-          <strong>Tipo:</strong>{" "}
-          {props.visit.traumaticEvent.traumaticEvent || "N/A"}
-        </p>
-        <p>
-          <strong>Data:</strong>{" "}
-          {props.visit.traumaticEvent.traumaticEventDate || "N/A"}
-        </p>
-
-        <br />
-        <h5>Follow-Up</h5>
-
-        <p>
-          {props.visit.previousVisit !== undefined
-            ? format(new Date(props.visit.previousVisit.date), "dd-MM-y")
-            : "N/A"}
-        </p>
-        <br />
-        <h5>Farmaco di Profilassi</h5>
-        <p>
-          <strong>Nome:</strong>{" "}
-          {props.visit.prophylacticDrug.drug.name || "N/A"}
-        </p>
-        <p>
-          <strong>Dose:</strong>{" "}
-          {Math.round(props.visit.prophylacticDrug.dose) || "N/A"}
-        </p>
-        <p>
-          <strong>Frequenza:</strong>{" "}
-          {props.visit.prophylacticDrug.frequency
-            ? props.frequencies.find(
-                (f) => f.id === props.visit.prophylacticDrug.frequency
-              ).frequency
-            : "N/A"}
-        </p>
-        <br />
-        <h5>Farmaco Acuto</h5>
-        <p>
-          <strong>Nome:</strong> {props.visit.acuteDrug.drug.name || "N/A"}
-        </p>
-        <p>
-          <strong>Dose:</strong>{" "}
-          {Math.round(props.visit.acuteDrug.dose) || "N/A"}
-        </p>
-
-        <br />
-        <h5>Aricolazioni visitate</h5>
-        {props.visit.joints.length > 0 ? (
-          props.visit.joints.map((e) => {
-            return (
-              <>
-                <p>
-                  {JointNameChanger.fromSeparateEnglishToSingleStringIta(
-                    e.jointName,
-                    e.side
-                  )}
-                </p>
-              </>
-            );
-          })
-        ) : (
+        <div
+          style={{
+            height: "100%",
+            flex: 1,
+            display: "flex",
+            background: "whitesmoke",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "start",
+          }}
+        >
+          {" "}
+          <h5>Info generali</h5>
           <p>
-            <em>Nessuna articolazione visitata</em>
+            <strong>Nome: </strong>
+            {nameChecker(props.patient.name)}
           </p>
-        )}
+          <p>
+            <strong>Cognome: </strong>
+            {nameChecker(props.patient.surname)}
+          </p>
+          <p>
+            <strong>
+              {props.patient.gender === "F" ? "Nata il: " : "Nato il: "}
+            </strong>{" "}
+            {format(new Date(props.patient.birthdate), "dd-MM-y")}
+          </p>
+          <p>
+            <strong>Data visita: </strong>
+            {format(props.visit.visitDate, "dd-MM-y")}
+          </p>
+          <p>
+            <strong>Medico:</strong> {props.visit.physician}
+          </p>
+          <br />
+          <h5>Attività Fisica</h5>
+          <p>
+            <strong>Tipo:</strong>{" "}
+            {props.visit.physicalActivity.physicalActivityType || "N/A"}
+          </p>
+          <p>
+            <strong>Data:</strong>{" "}
+            {props.visit.physicalActivity.physicalActivityDate || "N/A"}
+          </p>
+          <br />
+          <h5>Evento Traumatico</h5>
+          <p>
+            <strong>Tipo:</strong>{" "}
+            {props.visit.traumaticEvent.traumaticEvent || "N/A"}
+          </p>
+          <p>
+            <strong>Data:</strong>{" "}
+            {props.visit.traumaticEvent.traumaticEventDate || "N/A"}
+          </p>
+        </div>
+
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            flex: 1,
+            background: "whitesmoke",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "start",
+          }}
+        >
+          <h5>Follow-Up</h5>
+
+          <p>
+            {props.visit.previousVisit !== undefined
+              ? format(new Date(props.visit.previousVisit.date), "dd-MM-y")
+              : "N/A"}
+          </p>
+          <br />
+          <h5>Farmaco di Profilassi</h5>
+          <p>
+            <strong>Nome:</strong>{" "}
+            {props.visit.prophylacticDrug.drug.name || "N/A"}
+          </p>
+          <p>
+            <strong>Dose:</strong>{" "}
+            {Math.round(props.visit.prophylacticDrug.dose) || "N/A"}
+          </p>
+          <p>
+            <strong>Frequenza:</strong>{" "}
+            {props.visit.prophylacticDrug.frequency
+              ? props.frequencies.find(
+                  (f) => f.id === props.visit.prophylacticDrug.frequency
+                ).frequency
+              : "N/A"}
+          </p>
+          <br />
+          <h5>Farmaco Acuto</h5>
+          <p>
+            <strong>Nome:</strong> {props.visit.acuteDrug.drug.name || "N/A"}
+          </p>
+          <p>
+            <strong>Dose:</strong>{" "}
+            {Math.round(props.visit.acuteDrug.dose) || "N/A"}
+          </p>
+
+          <br />
+          <h5>Aricolazioni visitate</h5>
+          {props.visit.joints.length > 0 ? (
+            props.visit.joints.map((e) => {
+              return (
+                <>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setSelectedJoint(e)}
+                  >
+                    {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+                      e.jointName,
+                      e.side
+                    )}
+                  </button>
+                </>
+              );
+            })
+          ) : (
+            <p>
+              <em>Nessuna articolazione visitata</em>
+            </p>
+          )}
+          <div>
+            {selectedJoint && (
+              <button
+                className="btn btn-warning"
+                onClick={() => setSelectedJoint(null)}
+              >
+                Ecografie non utilizzate
+              </button>
+            )}
+          </div>
+        </div>
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            flex: 1,
+            background: "whitesmoke",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "start",
+          }}
+        >
+          <h5>
+            {selectedJoint ? (
+              <>
+                Ecografie{" "}
+                {JointNameChanger.fromSeparateEnglishToSingleStringIta(
+                  selectedJoint.jointName,
+                  selectedJoint.side
+                )}{" "}
+              </>
+            ) : (
+              <> Ecografie non utilizzate: </>
+            )}
+          </h5>
+
+          {selectedJoint ? (
+            <div
+              style={{
+                padding: 10,
+                display: "flex",
+                flexDirection: "column",
+                overflowY: "scroll",
+              }}
+            >
+              {" "}
+              {props.visit.ecographies
+                .filter(
+                  (e) =>
+                    e.realJoint === selectedJoint.jointName &&
+                    e.realSide === selectedJoint.side
+                )
+                .map((item, index) => (
+                  <>
+                    {console.log(item)}
+                    <img
+                      key={index}
+                      src={item.base64}
+                      style={{ width: "100%", margin: 5 }}
+                    />
+                  </>
+                ))}
+            </div>
+          ) : (
+            <div
+              style={{
+                padding: 10,
+                display: "flex",
+                flexDirection: "column",
+                overflowY: "scroll",
+              }}
+            >
+              {props.visit.ecographies
+                .filter((e) => !e.realJoint)
+                .map((item, index) => (
+                  <>
+                    <img
+                      key={index}
+                      src={item.base64}
+                      style={{ width: "100%", margin: 5 }}
+                    />
+                  </>
+                ))}
+            </div>
+          )}
+        </div>
       </Modal.Body>
 
       {footer()}
