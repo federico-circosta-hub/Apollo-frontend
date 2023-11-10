@@ -1,9 +1,9 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { VisitContext } from "../../Model/VisitContext";
-import { format } from "date-fns";
-import it from "date-fns/locale/it";
+import { Alert, Snackbar } from "@mui/material";
 import NoContextModal from "../Modals/NoContextModal";
 import print from "./../../img/icon/print.png";
+import copy from "./../../img/icon/copy.png";
 import { useNavigate } from "react-router-dom";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 import MainContainer from "../../../common/View/MainContainer";
@@ -34,6 +34,7 @@ export default function SeeVisit() {
   const [loadingCauses, setLoadingCauses] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [prevVisit, setPrevVisit] = useState();
+  const [tempDisplay, setTempDisplay] = useState("none");
 
   useEffect(() => {
     loadVisit();
@@ -55,6 +56,19 @@ export default function SeeVisit() {
   const handleclick = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  const handleCopy = () => {
+    const range = document.createRange();
+    range.selectNode(componentRef.current);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand("copy");
+    selection.removeAllRanges();
+    setTimeout(() => {
+      setTempDisplay("none");
+    }, 1500);
+  };
 
   const transformVisit = (v) => {
     let nvtp = new NewVisitModel();
@@ -334,31 +348,79 @@ export default function SeeVisit() {
             >
               Chiudi
             </button>
-            <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "5vw",
+              }}
+            >
               {visitToPrint ? (
-                <button
-                  className="btn btn-primary btn-lg"
-                  onClick={() => {
-                    handleclick();
-                  }}
-                >
-                  <div>
-                    Stampa report HEAD-US{" "}
-                    <img
-                      src={print}
-                      alt="save or print"
-                      width={38}
-                      height={38}
-                      style={{ filter: "invert(100%" }}
-                    />
-                  </div>
-                </button>
+                <>
+                  <button
+                    className="btn btn-success btn-lg"
+                    onClick={() => {
+                      setTempDisplay("flex");
+                      setTimeout(() => {
+                        handleCopy();
+                      }, 100);
+                    }}
+                  >
+                    <div>
+                      Copia report HEAD-US{" "}
+                      <img
+                        src={copy}
+                        alt="copy"
+                        width={38}
+                        height={38}
+                        style={{ filter: "invert(100%" }}
+                      />
+                    </div>
+                  </button>
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={() => {
+                      handleclick();
+                    }}
+                  >
+                    <div>
+                      Stampa report HEAD-US{" "}
+                      <img
+                        src={print}
+                        alt="save or print"
+                        width={38}
+                        height={38}
+                        style={{ filter: "invert(100%" }}
+                      />
+                    </div>
+                  </button>
+                </>
               ) : (
                 <CircularProgress />
               )}
             </div>
+            <Snackbar
+              open={tempDisplay !== "none"}
+              autoHideDuration={1500}
+              anchorOrigin={{
+                open: tempDisplay === "none",
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
+                HEAD-US copiato!
+              </Alert>
+            </Snackbar>
           </div>
-          <div style={{ display: "none" }}>
+
+          <div
+            style={{
+              display: tempDisplay,
+              position: "absolute",
+              margin: "auto",
+            }}
+          >
             {visitToPrint && (
               <MyDocument
                 patient={selectedPatient}

@@ -8,6 +8,7 @@ import { useReactToPrint } from "react-to-print";
 import MainContainer from "../../../common/View/MainContainer";
 import exit from "./../../img/icon/logout.png";
 import print from "./../../img/icon/print.png";
+import copy from "./../../img/icon/copy.png";
 import NoContextModal from "../Modals/NoContextModal";
 import { Alert, AlertTitle } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +29,17 @@ export default function EndVisit() {
   const handleclick = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  const handleCopy = () => {
+    const range = document.createRange();
+    range.selectNode(componentRef.current);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand("copy");
+    selection.removeAllRanges();
+    alert("Testo copiato negli appunti!");
+  };
 
   const handleExit = () => {
     if (newVisit.sended) {
@@ -109,6 +121,18 @@ export default function EndVisit() {
               <img
                 src={exit}
                 alt="uscita"
+                width={38}
+                height={38}
+                style={{ filter: "invert(100%" }}
+              />
+            </button>
+          </div>
+          <div>
+            <button className="btn btn-success btn-lg" onClick={handleCopy}>
+              Copia{" "}
+              <img
+                src={copy}
+                alt="copia"
                 width={38}
                 height={38}
                 style={{ filter: "invert(100%" }}

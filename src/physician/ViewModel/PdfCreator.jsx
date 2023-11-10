@@ -65,38 +65,44 @@ const MyDocument = forwardRef((props, ref) => {
               justifyContent: "space-between",
             }}
           >
-            <div
-              style={{
-                border: "0.5px solid lightgray",
-                borderRadius: 10,
-                width: "8cm",
-                padding: 2,
-                marginBottom: 5,
-              }}
-            >
-              <p style={styles.text}>
-                Paziente: {nameChecker(patient.name)}{" "}
-                {nameChecker(patient.surname)}
-              </p>
-              <p style={styles.text}>
-                Data di nascita:{" "}
-                {format(new Date(patient.birthdate), "dd-MM-y")}
-              </p>
-            </div>
+            <p style={styles.text}>
+              Paziente: {nameChecker(patient.name)}{" "}
+              {nameChecker(patient.surname)} (
+              {format(new Date(patient.birthdate), "dd-MM-y")})
+            </p>
+
             <div>
-              <h5>Data della visita: {format(visit.visitDate, "dd-MM-y")}</h5>
+              <p style={styles.text}>
+                Data della visita: {format(visit.visitDate, "dd-MM-y")}
+              </p>
             </div>
           </div>
           <p style={styles.text}>
             Valutazione ecografica osteoarticolare di gomiti, ginocchia e
             caviglie nell'artropatia emofilica, protoccolo HEAD-US (Martinoli C
-            et al 2013)
+            et al 2013). Indagine eseguita mediante Philips Affiniti 50, sonda
+            lineare 5-12 MHz
           </p>
           <p style={styles.text}>
-            Indagine eseguita mediante Philips Affiniti 50, sonda lineare 5-12
-            MHz
+            Diagnosi:{" "}
+            {patient.hemophilia ? (
+              <>
+                {" "}
+                emofilia: {patient.hemophilia}, gravità:{" "}
+                {[0, 1, 2].includes(patient.hemophilia_gravity)
+                  ? patient.hemophilia_gravity === 0
+                    ? "Lieve"
+                    : patient.hemophilia_gravity === 1
+                    ? "Moderata"
+                    : patient.hemophilia_gravity === 2
+                    ? "Grave"
+                    : "N/A"
+                  : "N/A"}
+              </>
+            ) : (
+              ""
+            )}
           </p>
-          <p style={styles.text}>Diagnosi:</p>
           <p style={styles.text}>
             Index joint(s):{visit.getIndexJoints().toString()}
           </p>
@@ -124,31 +130,16 @@ const MyDocument = forwardRef((props, ref) => {
             <col style={{ width: "1.7cm" }} />
             <col style={{ width: "1.7cm" }} />
           </colgroup>
-          <thead>
-            <tr>
-              <th></th>
-              <th></th>
-              <th colspan="2" style={styles.th}>
-                Gomito
-              </th>
-              <th colspan="2" style={styles.th}>
-                Ginocchio
-              </th>
-              <th colspan="2" style={styles.th}>
-                Caviglia
-              </th>
-            </tr>
-          </thead>
           <tbody>
             <tr>
               <td></td>
               <td style={styles.th}>Valore </td>
-              <td style={styles.th}>DX</td>
-              <td style={styles.th}>SX</td>
-              <td style={styles.th}>DX</td>
-              <td style={styles.th}>SX</td>
-              <td style={styles.th}>DX</td>
-              <td style={styles.th}>SX</td>
+              <td style={styles.th}>Gom DX</td>
+              <td style={styles.th}>Gin SX</td>
+              <td style={styles.th}>Gin DX</td>
+              <td style={styles.th}>Gin SX</td>
+              <td style={styles.th}>Cav DX</td>
+              <td style={styles.th}>Cav SX</td>
             </tr>
             <tr>
               <td style={styles.th}>Sinovite</td>
@@ -472,9 +463,9 @@ const MyDocument = forwardRef((props, ref) => {
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth: "21cm",
+    maxWidth: "20cm",
     padding: "0.5cm",
-    height: "29.6cm",
+    height: "28cm",
     display: "flex",
     flexDirection: "column",
     background: "white",
@@ -483,7 +474,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   title: {
-    fontSize: 20,
+    fontSize: 16,
   },
   text: {
     fontSize: 12,
@@ -493,7 +484,7 @@ const styles = StyleSheet.create({
   },
 
   th: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: "center",
     fontWeight: 600,
     border: "0.1cm solid lightgray",
@@ -516,19 +507,19 @@ const styles = StyleSheet.create({
     border: "1px solid lightgray",
   },
   result: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: "center",
     fontWeight: 550,
     border: "1px solid lightgray",
   },
   totalJointScore: {
-    fontSize: 17,
+    fontSize: 15,
     textAlign: "center",
     fontWeight: 600,
     border: "1px solid lightgray",
   },
   totalScore: {
-    fontSize: 19,
+    fontSize: 16,
     textAlign: "center",
     fontWeight: 700,
     border: "1px solid lightgray",
