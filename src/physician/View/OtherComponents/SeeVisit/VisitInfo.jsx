@@ -1,12 +1,20 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { VisitContext } from "../../../Model/VisitContext";
 import format from "date-fns/format";
 import it from "date-fns/locale/it";
 import { RefreshButton } from "../RefreshButton";
+import { useNavigate } from "react-router-dom";
 
 export default function VisitInfo(props) {
-  const { selectedVisit } = useContext(VisitContext);
-
+  const { selectedVisit, setSelectedVisit } = useContext(VisitContext);
+  const navigate = useNavigate();
+  const redirect = () => {
+    setSelectedVisit(props.prevVisit);
+    navigate("/", { replace: true });
+    setTimeout(() => {
+      navigate("/seeVisit", { replace: true });
+    }, 100);
+  };
   return (
     <div
       style={{
@@ -53,7 +61,15 @@ export default function VisitInfo(props) {
       </p>
 
       <h3 style={styles.h3}>Follow-Up:</h3>
-      <p>{props.visit.report.followUp || "N/A"}</p>
+      {props.visit.follows && props.prevVisit ? (
+        <p>
+          <button className="btn btn-primary" onClick={() => redirect()}>
+            {format(new Date(props.prevVisit.date), "dd-MM-y")}
+          </button>
+        </p>
+      ) : (
+        <p>{props.visit.follows_description || "N/A"}</p>
+      )}
 
       <h3 style={styles.h3}>Farmaco di Profilassi:</h3>
       <p>

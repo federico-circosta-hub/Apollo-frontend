@@ -33,6 +33,7 @@ export default function SeeVisit() {
   const [distensionCauseValues, setDistensionCauseValues] = useState([]);
   const [loadingCauses, setLoadingCauses] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [prevVisit, setPrevVisit] = useState();
 
   useEffect(() => {
     loadVisit();
@@ -69,6 +70,7 @@ export default function SeeVisit() {
       const visitObject = await CommunicationController.get("visit/details", {
         id: selectedVisit.id,
       });
+      loadPrevVisit(visitObject);
       console.log(visitObject);
       setVisit(visitObject);
       transformVisit(visitObject);
@@ -76,6 +78,20 @@ export default function SeeVisit() {
       setNetworkError(err || "Errore inatteso");
     } finally {
       setLoadingVisit(false);
+    }
+  };
+
+  const loadPrevVisit = async (v) => {
+    if (!v.follows) return;
+    let params = {
+      patient: selectedPatient.pid,
+      id: v.follows,
+    };
+    try {
+      const pv = await CommunicationController.get("visit", params);
+      setPrevVisit(pv);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -292,6 +308,7 @@ export default function SeeVisit() {
                     frequencies={frequencies}
                     networkErrorF={networkErrorF}
                     getFrequenciesFromServer={getFrequenciesFromServer}
+                    prevVisit={prevVisit}
                   />
                 )}
                 {visit === null && selectedJoint === null && (
