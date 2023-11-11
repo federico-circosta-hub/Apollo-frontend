@@ -634,6 +634,20 @@ export default function JointVisitQuestions(props) {
           )}
         </div>
       </div>
+
+      {props.joint.lastReport && (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+          }}
+        >
+          <p>
+            (*) Valore di riferimento dell'ultima visita (
+            {format(new Date(props.joint.lastReport.visit_date), "dd-MM-y")})
+          </p>
+        </div>
+      )}
     </div>
   );
 }
