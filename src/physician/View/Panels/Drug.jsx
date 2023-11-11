@@ -318,7 +318,7 @@ export default function Drug() {
             ) : networkErrorT ? (
               <RefreshButton onClick={getTreatmentFromServer} />
             ) : (
-              <Skeleton variant="rectangular" width={"47vw"} height={"38vh"} />
+              <Skeleton variant="rectangular" width={"65vw"} />
             )}
           </>
         )}

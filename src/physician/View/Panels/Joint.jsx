@@ -13,8 +13,8 @@ import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import { validateForm } from "../../ViewModel/Validation";
 import format from "date-fns/format";
 import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
-import { Alert, AlertTitle, Button } from "@mui/material";
-import { Skeletons } from "../OtherComponents/Skeletons";
+import { Alert, AlertTitle, Button, CircularProgress } from "@mui/material";
+
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import VisitMerger from "../Modals/VisitMerger";
 
@@ -43,7 +43,7 @@ export default function Joint(props) {
 
   useEffect(() => {
     loadJoint();
-    if (newVisit.ecographies.length === 0) {
+    if (photos.length === 0) {
       getNewImages();
     }
   }, []);
@@ -119,22 +119,27 @@ export default function Joint(props) {
       console.log(idsFromServer);
       if (idsFromServer.length > 0) {
         setIsThereNewImage(true);
-        console.log(idsFromServer);
-        await idsFromServer.forEach(async (e) => {
-          let eco = await CommunicationController.get("media", {
-            id: e,
-          });
-          console.log("eco appena arrivata", eco, typeof eco);
-          if (eco && Object.keys(eco).length > 0) {
-            eco.realJoint = undefined;
-            eco.realSide = undefined;
-            eco.actualModified = { value: false, select: null };
-
+        const fetchImagePromises = idsFromServer.map(async (e) => {
+          try {
+            let params = { id: e };
+            if (idsObject.videos.includes(e)) {
+              params.videoFormat = "mp4";
+            }
+            let eco = await CommunicationController.get("media/base64", params);
+            if (eco && Object.keys(eco).length > 0) {
+              eco.realJoint = undefined;
+              eco.realSide = undefined;
+              eco.actualModified = { value: false, select: null };
+              setPhotos((prevState) => [...prevState, eco]);
+            }
             console.log("ottenuta eco:", eco);
-            setPhotos((prevState) => [...prevState, eco]);
+            setIds((prevState) => [...prevState, e]);
+          } catch (error) {
+            console.error("Errore durante il recupero dell'immagine:", error);
+            if (!error.response) getNewImages();
           }
-          setIds((prevState) => [...prevState, e]);
         });
+        await Promise.all(fetchImagePromises);
       } else {
         setIsThereNewImage(false);
         setTimeout(() => {
@@ -143,6 +148,7 @@ export default function Joint(props) {
       }
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
+      if (!err.response) getNewImages();
     } finally {
       setLoadingImages(false);
     }
@@ -242,8 +248,8 @@ export default function Joint(props) {
                     <AlertTitle>Nessuna nuova ecografia</AlertTitle>
                   </Alert>
                 )}
-                {loadingImages && <Skeletons />}
-                {joint === null && "Caricamento..."}
+
+                {joint === null && <CircularProgress />}
                 {networkError !== null &&
                   networkError.response === undefined && (
                     <Alert
@@ -267,7 +273,7 @@ export default function Joint(props) {
                     </Alert>
                   )}
               </div>
-              {joint !== null && !loadingImages && photos !== null && (
+              {joint && photos && (
                 <EcographImages
                   handleClick={(e) => openModal(e)}
                   photos={photos}

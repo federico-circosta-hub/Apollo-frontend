@@ -4,6 +4,7 @@ import ChangingJointFieldMediaModal from "../Modals/ChangingJointFieldMediaModal
 import { NewVisitContext } from "../../Model/NewVisitContext";
 import { CurrentJointContext } from "../../Model/CurrentJointContext";
 import EditIcon from "@mui/icons-material/Edit";
+import { Skeletons } from "../OtherComponents/Skeletons";
 
 const EcographImages = (props) => {
   const { currentJoint } = useContext(CurrentJointContext);
@@ -127,6 +128,7 @@ const EcographImages = (props) => {
                 .includes(photo)}
               onChange={(e) => handleSelect(e, photo)}
             />
+            {props.loadingImages && <Skeletons />}
           </div>
         ))}
       </div>

@@ -11,11 +11,15 @@ import { Skeleton } from "@mui/material";
 import NoContextModal from "../Modals/NoContextModal";
 import HorizontalNonLinearStepper from "../OtherComponents/Stepper";
 import { StepContext } from "../../Model/StepContext";
+import { PatientContext } from "../../Model/PatientContext";
+import format from "date-fns/format";
+import CommunicationController from "../../../common/Model/Communication/MainCommunicationController";
 
 export default function JointSelection() {
   const { newVisit, setNewVisit } = useContext(NewVisitContext);
   const { setCurrentJoint } = useContext(CurrentJointContext);
   const { completedStep, setCompletedStep } = useContext(StepContext);
+  const { selectedPatient } = useContext(PatientContext);
 
   const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -25,7 +29,7 @@ export default function JointSelection() {
     setTimeout(() => {
       setImgLoaded(true);
     }, 200);
-  });
+  }, []);
 
   const handleJoint = (obj) => {
     newVisit.setCurrentJoint(obj);
@@ -62,7 +66,7 @@ export default function JointSelection() {
             }}
           >
             <div>
-              <h3>Seleziona l'articolazione da visitare: </h3>
+              <h3>Seleziona l'articolazione da visitare:</h3>
             </div>
           </div>
 
