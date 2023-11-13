@@ -127,36 +127,6 @@ export default function Drug() {
     }
   };
 
-  const datePickerResolver = (b, s) => {
-    if (b) {
-      return (
-        <DatePicker
-          slotProps={{ textField: { size: "small" } }}
-          value={"DD-MM-YYYY"}
-          disabled
-        />
-      );
-    } else {
-      return (
-        <DatePicker
-          slotProps={{ textField: { size: "small" } }}
-          onChange={(newValue) => modifyDate(newValue.$d, s)}
-        />
-      );
-    }
-  };
-
-  const modifyDate = (date) => {
-    needFollowUp.followUpDate = format(date, "y-MM-dd");
-    setNeedFollowUp(needFollowUp);
-  };
-
-  const handleChange = (e) => {
-    let nfu = { ...needFollowUp };
-    nfu.needFollowUp = e.target.checked;
-    setNeedFollowUp(nfu);
-  };
-
   const handleProphylacticDrug = (e) => {
     let pd = { ...prophylacticDrug };
     pd.drug.name = e.target.value;
@@ -226,6 +196,11 @@ export default function Drug() {
       setEndingVisitModal(false);
       navigate("/newVisit/endVisit", { replace: true });
     } catch (err) {
+      if (err.response && err.response.status === 409) {
+        alert(
+          "Attenzione, la visita scelta per il follow-up risulta già utilizzata!\nSi prega di selezionarne un'altra"
+        );
+      }
       setNetworkError(err || "Errore inatteso");
       console.error("sendsAllAndFinish", err);
       setShowFinishAlert(false);

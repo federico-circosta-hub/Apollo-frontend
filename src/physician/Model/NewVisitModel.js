@@ -107,21 +107,13 @@ export default class NewVisitModel {
   setIsFollowUp(b) {
     this.followUp = {
       followUp: b,
-      treatmentResponse: Number,
-      lastVisit: Date,
+      treatmentResponse: this.followUp.treatmentResponse,
+      lastVisit: this.followUp.lastVisit,
     };
   }
 
   setJoints(a) {
     this.joints = a;
-  }
-
-  setFollowUp(t, l) {
-    this.followUp = {
-      followUp: this.followUp.followUp,
-      treatmentResponse: t,
-      lastVisit: l,
-    };
   }
 
   setLastVisit(d) {
