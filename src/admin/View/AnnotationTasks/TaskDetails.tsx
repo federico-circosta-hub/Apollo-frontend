@@ -13,6 +13,7 @@ export default function AnnotationTaskDetails({ item }: DetailItemProps) {
 
     const hasUserAccessToTool = useCallback(
         (user: User): boolean => {
+            // Assume che sia già stata chiamato il metodo fetchToolsAccess di User
             return (
                 user.toolsAccess.find(
                     (t) => t.id === task.annotation_tool && t.access

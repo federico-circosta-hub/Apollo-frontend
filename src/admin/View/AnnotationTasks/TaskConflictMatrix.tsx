@@ -15,7 +15,6 @@ import Tooltip from "@mui/material/Tooltip";
 import LoadingOrError from "../../../common/View/LoadingOrError";
 
 function getData(u1: number, u2: number, matrix: TaskConflictsMatrix) {
-    if (u1 !== u2) console.log(matrix[u1][u2].common_annotations);
     return u1 === u2
         ? ["---", "---"]
         : [

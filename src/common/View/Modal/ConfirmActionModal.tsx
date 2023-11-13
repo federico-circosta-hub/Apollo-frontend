@@ -4,7 +4,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Status from "../../Model/Status";
 import StatusLoadingButton from "../../../admin/Components/StatusLoadingButton";
 
@@ -34,6 +34,10 @@ export default function ConfirmActionModal({
             setStatus(Status.ERROR);
         }
     }, [onConfirm, onClose]);
+
+    useEffect(() => {
+        setStatus(Status.IDLE);
+    }, [onConfirm]);
 
     return (
         <Dialog

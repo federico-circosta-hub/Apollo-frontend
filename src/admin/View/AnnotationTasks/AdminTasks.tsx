@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { HeaderContext } from "../AdminHeader";
 import Status from "../../../common/Model/Status";
 import Task from "../../../common/Model/Task";
@@ -80,6 +80,8 @@ const AnnotationTaskItem = ({ item, onClick, onDelete }: MasterItemProps) => {
         onClick();
     }, [setTitle, task, onClick]);
 
+    const progres = useMemo(() => task.overallProgress(), [task]);
+
     return (
         <ListItemButton onClick={handleClick}>
             <ListItemText
@@ -87,7 +89,7 @@ const AnnotationTaskItem = ({ item, onClick, onDelete }: MasterItemProps) => {
                 secondary={task.annotation_type_name}
             />
             <ListItemText
-                primary={`${task.overallProgress() * 100}%`}
+                primary={`${progres * 100}%`}
                 secondary={
                     task.media_count + (task.type ? " immagini" : " video")
                 }
@@ -96,8 +98,10 @@ const AnnotationTaskItem = ({ item, onClick, onDelete }: MasterItemProps) => {
             <ListItemIcon
                 sx={{ display: "flex", flexDirection: "row-reverse" }}
             >
-                <IconButton onClick={onDelete}>
-                    <DeleteForeverIcon color="error" />
+                <IconButton onClick={onDelete} disabled={progres > 0}>
+                    <DeleteForeverIcon
+                        color={progres > 0 ? "error" : undefined}
+                    />
                 </IconButton>
             </ListItemIcon>
         </ListItemButton>
