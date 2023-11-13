@@ -15,7 +15,7 @@ import Tooltip from "@mui/material/Tooltip";
 import LoadingOrError from "../../../common/View/LoadingOrError";
 
 function getData(u1: number, u2: number, matrix: TaskConflictsMatrix) {
-    return u1 === u2
+    return u1 === u2 || !matrix[u1] || !matrix[u1][u2]
         ? ["---", "---"]
         : [
               `${Math.round(matrix[u1][u2].conflict_degree * 10000) / 100}%`,
@@ -23,7 +23,7 @@ function getData(u1: number, u2: number, matrix: TaskConflictsMatrix) {
           ];
 }
 
-export default function TaskConflictMatrix({
+export default function TaskConflictsMatrixTable({
     task,
     users,
     style,
@@ -44,47 +44,13 @@ export default function TaskConflictMatrix({
         } catch {
             setStatus(Status.ERROR);
         }
-    }, [task]);
+    }, [task, task.id]);
 
     useEffect(() => {
         fetchData();
-        return () => MainCC.abortLast();
     }, [fetchData]);
 
-    const UserRow = ({ user: userId }: { user: number }) => {
-        const user = users.find((u) => u.id === userId);
-        if (!user || !matrix) return <></>;
-
-        return (
-            <StyledTableRow
-                sx={{
-                    "&:last-child td, &:last-child th": {
-                        border: 0,
-                    },
-                }}
-            >
-                <StyledTableCell component="th" scope="row">
-                    {user.fullName()}
-                </StyledTableCell>
-                {task.physicians.map((p) => {
-                    const [percent, commons] = getData(user.id, p.user, matrix);
-
-                    return (
-                        <Tooltip
-                            key={p.user}
-                            title={`Annotazioni in comune: ${commons}`}
-                        >
-                            <StyledTableCell align="right">
-                                {percent}
-                            </StyledTableCell>
-                        </Tooltip>
-                    );
-                })}
-            </StyledTableRow>
-        );
-    };
-
-    if (status !== Status.IDLE)
+    if (status !== Status.IDLE || !matrix)
         return (
             <LoadingOrError
                 status={status}
@@ -124,7 +90,11 @@ export default function TaskConflictMatrix({
                         {task.physicians.map((userStatus) => (
                             <UserRow
                                 key={userStatus.user}
-                                user={userStatus.user}
+                                task={task}
+                                user={users.find(
+                                    (u) => u.id === userStatus.user
+                                )}
+                                matrix={matrix}
                             />
                         ))}
                     </TableBody>
@@ -133,6 +103,46 @@ export default function TaskConflictMatrix({
         </Paper>
     );
 }
+
+const UserRow = ({
+    task,
+    user,
+    matrix,
+}: {
+    task: Task;
+    user?: User;
+    matrix?: TaskConflictsMatrix;
+}) => {
+    if (!user || !matrix) return <></>;
+
+    return (
+        <StyledTableRow
+            sx={{
+                "&:last-child td, &:last-child th": {
+                    border: 0,
+                },
+            }}
+        >
+            <StyledTableCell component="th" scope="row">
+                {user.fullName()}
+            </StyledTableCell>
+            {task.physicians.map((p) => {
+                const [percent, commons] = getData(user.id, p.user, matrix);
+
+                return (
+                    <Tooltip
+                        key={p.user}
+                        title={`Annotazioni in comune: ${commons}`}
+                    >
+                        <StyledTableCell align="right">
+                            {percent}
+                        </StyledTableCell>
+                    </Tooltip>
+                );
+            })}
+        </StyledTableRow>
+    );
+};
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {

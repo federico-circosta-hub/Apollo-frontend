@@ -12,7 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import StatusLoadingButton from "../../Components/StatusLoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
-import TaskConflictMatrix from "./TaskConflictMatrix";
+import TaskConflictsMatrixTable from "./TaskConflictMatrix";
 
 export default function TaskDetailsForm({
     task,
@@ -50,7 +50,7 @@ export default function TaskDetailsForm({
             </Box>
 
             <Box sx={{ m: 1 }} />
-            <TaskConflictMatrix
+            <TaskConflictsMatrixTable
                 task={task}
                 users={users}
                 style={{ maxHeight: "40%" }}
