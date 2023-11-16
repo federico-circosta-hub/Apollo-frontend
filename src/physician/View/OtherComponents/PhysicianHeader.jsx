@@ -150,7 +150,7 @@ export default function PhysicianHeader(props) {
       } else {
         return (
           <label style={{ fontSize: 20, fontWeight: "500" }}>
-            Home — Elenco pazienti
+            Elenco pazienti
           </label>
         );
       }

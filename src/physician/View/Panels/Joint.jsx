@@ -360,23 +360,38 @@ export default function Joint(props) {
         centered
       >
         <Modal.Body>
-          <img
-            src={
-              currentPhoto !== null
-                ? photos.find((e) => e.id === currentPhoto).base64
-                : null
-            }
-            alt={"Ecografia " + currentJoint.name + " " + currentJoint.side}
-            style={{
-              width: "100%",
-              height: "auto",
-              objectFit: "contain",
-            }}
-            onClick={() => {
-              setShowPhotoModal(false);
-              setCurrentPhoto(null);
-            }}
-          />
+          {currentPhoto &&
+            photos.find((e) => e.id === currentPhoto).type === "video" && (
+              <video
+                width={"100%"}
+                controls
+                onClick={() => {
+                  setShowPhotoModal(false);
+                  setCurrentPhoto(null);
+                }}
+              >
+                <source
+                  src={photos.find((e) => e.id === currentPhoto).base64}
+                  type="video/mp4"
+                />
+              </video>
+            )}
+          {currentPhoto &&
+            photos.find((e) => e.id === currentPhoto).type === "image" && (
+              <img
+                src={photos.find((e) => e.id === currentPhoto).base64}
+                alt={"Ecografia " + currentJoint.name + " " + currentJoint.side}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "contain",
+                }}
+                onClick={() => {
+                  setShowPhotoModal(false);
+                  setCurrentPhoto(null);
+                }}
+              />
+            )}
         </Modal.Body>
       </Modal>
       <div>

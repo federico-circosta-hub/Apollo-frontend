@@ -108,16 +108,16 @@ const EcographImages = (props) => {
                 <source src={photo.base64} type="video/mp4" />
               </video>
             )}
-            {photo.joint === "knee" && (
-              <Button
-                onClick={() => handleEditScan(photo)}
-                endIcon={<EditIcon />}
-                style={{ textTransform: "none" }}
-                variant="outlined"
-              >
-                {photo.scan}
-              </Button>
-            )}
+
+            <Button
+              onClick={() => handleEditScan(photo)}
+              endIcon={<EditIcon />}
+              style={{ textTransform: "none" }}
+              variant="outlined"
+            >
+              {photo.scan || "Altro"}
+            </Button>
+
             <Checkbox
               checked={props.photos
                 .filter(

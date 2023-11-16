@@ -10,10 +10,14 @@ import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import UserContext from "../Model/UserContext";
+import PasswordIcon from "@mui/icons-material/Password";
+import EditPswModal from "../../physician/View/Modals/EditPswModal";
 
 export default function AccountMenu(props) {
   const [user] = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [showEditPswModal, setShoEditPswModal] = useState(false);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -93,12 +97,13 @@ export default function AccountMenu(props) {
 
         <Divider />
 
-        {/* <MenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                        <Settings />
-                    </ListItemIcon>
-                    Impostazioni
-                </MenuItem> */}
+        <MenuItem onClick={() => setShoEditPswModal(true)}>
+          <ListItemIcon>
+            <PasswordIcon />
+          </ListItemIcon>
+          Cambia password
+        </MenuItem>
+        <Divider />
         <MenuItem onClick={props.onLogout}>
           <ListItemIcon>
             <Logout />
@@ -106,6 +111,7 @@ export default function AccountMenu(props) {
           Logout
         </MenuItem>
       </Menu>
+      <EditPswModal show={showEditPswModal} setShow={setShoEditPswModal} />
     </>
   );
 }
