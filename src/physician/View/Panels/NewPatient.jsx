@@ -143,7 +143,6 @@ export default function NewPatient() {
           flexDirection: "row",
           justifyContent: "space-between",
           width: "95%",
-          height: "60vh",
         }}
       >
         <div style={style.leftButtons}>
@@ -271,8 +270,7 @@ export default function NewPatient() {
               <img
                 src={male}
                 alt="male human silhouette"
-                width={"80%"}
-                style={{ maxHeight: "70vh" }}
+                style={{ maxHeight: "60vh" }}
               />
             </div>
           </div>
@@ -377,7 +375,7 @@ const style = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    marginBottom: "10%",
+    marginBottom: "2%",
     alignItems: "left",
   },
   prot: {
