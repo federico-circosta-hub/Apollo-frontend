@@ -57,17 +57,22 @@ export default function SeeVisit() {
     content: () => componentRef.current,
   });
 
-  const handleCopy = () => {
-    const range = document.createRange();
-    range.selectNode(componentRef.current);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    document.execCommand("copy");
-    selection.removeAllRanges();
-    setTimeout(() => {
-      setTempDisplay("none");
-    }, 1500);
+  const handleCopy = async () => {
+    try {
+      const html = componentRef.current;
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html": new Blob([html.innerHTML], {
+            type: "text/html",
+          }),
+        }),
+      ]);
+      setTimeout(() => {
+        setTempDisplay("none");
+      }, 1500);
+    } catch (e) {
+      console.log("Fail", e);
+    }
   };
 
   const transformVisit = (v) => {

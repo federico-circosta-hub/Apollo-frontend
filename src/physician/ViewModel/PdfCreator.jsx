@@ -49,7 +49,6 @@ const MyDocument = forwardRef((props, ref) => {
 
   return (
     <div style={styles.container} ref={ref}>
-      <h2>HEAD-US protocol</h2>
       <div
         style={{
           width: "100%",
@@ -58,6 +57,7 @@ const MyDocument = forwardRef((props, ref) => {
         }}
       >
         <div>
+          {/* <p style={styles.text}>HEAD-US protocol</p> */}
           <div
             style={{
               display: "flex",
@@ -68,18 +68,13 @@ const MyDocument = forwardRef((props, ref) => {
             <p style={styles.text}>
               Paziente: {nameChecker(patient.name)}{" "}
               {nameChecker(patient.surname)} (
-              {format(new Date(patient.birthdate), "dd-MM-y")})
+              {format(new Date(patient.birthdate), "dd-MM-y")}){", "}
+              Data della visita: {format(visit.visitDate, "dd-MM-y")}
             </p>
-
-            <div>
-              <p style={styles.text}>
-                Data della visita: {format(visit.visitDate, "dd-MM-y")}
-              </p>
-            </div>
           </div>
           <p style={styles.text}>
             Valutazione ecografica osteoarticolare di gomiti, ginocchia e
-            caviglie nell'artropatia emofilica, protoccolo HEAD-US (Martinoli C
+            caviglie nell'artropatia emofilica, protocollo HEAD-US (Martinoli C
             et al 2013). Indagine eseguita mediante Philips Affiniti 50, sonda
             lineare 5-12 MHz
           </p>
@@ -474,52 +469,52 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
   },
   text: {
-    fontSize: 12,
+    fontSize: 10,
   },
   link: {
-    fontSize: 12,
+    fontSize: 10,
   },
 
   th: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: "center",
     fontWeight: 600,
     border: "0.1cm solid lightgray",
   },
 
   keys: {
-    fontSize: 12,
+    fontSize: 10,
     textAlign: "left",
     border: "1px solid lightgray",
   },
 
   descriptions: {
-    fontSize: 12,
+    fontSize: 10,
     textAlign: "center",
     border: "1px solid lightgray",
   },
   values: {
-    fontSize: 12,
+    fontSize: 10,
     textAlign: "center",
     border: "1px solid lightgray",
   },
   result: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: "center",
     fontWeight: 550,
     border: "1px solid lightgray",
   },
   totalJointScore: {
-    fontSize: 15,
+    fontSize: 13,
     textAlign: "center",
     fontWeight: 600,
     border: "1px solid lightgray",
   },
   totalScore: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: "center",
     fontWeight: 700,
     border: "1px solid lightgray",

@@ -30,15 +30,20 @@ export default function EndVisit() {
     content: () => componentRef.current,
   });
 
-  const handleCopy = () => {
-    const range = document.createRange();
-    range.selectNode(componentRef.current);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    document.execCommand("copy");
-    selection.removeAllRanges();
-    alert("Testo copiato negli appunti!");
+  const handleCopy = async () => {
+    try {
+      const html = componentRef.current;
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html": new Blob([html.innerHTML], {
+            type: "text/html",
+          }),
+        }),
+      ]);
+      alert("Testo copiato negli appunti!");
+    } catch (e) {
+      console.log("Fail", e);
+    }
   };
 
   const handleExit = () => {
