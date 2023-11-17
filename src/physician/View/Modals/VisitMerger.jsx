@@ -37,7 +37,7 @@ export default function VisitMerger(props) {
     };
     try {
       let visitsArray = await CommunicationController.get(
-        "visit/incompleted",
+        "visit/mediaOnly",
         params
       );
       if (visitsArray.length > 0) {

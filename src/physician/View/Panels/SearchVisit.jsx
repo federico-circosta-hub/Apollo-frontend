@@ -52,7 +52,10 @@ export default function SearchVisit(props) {
     setNetworkError(null);
     console.log(params);
     try {
-      const visitsArray = await CommunicationController.get("visit", params);
+      const visitsArray = await CommunicationController.get(
+        "visit/inPerson",
+        params
+      );
       setOffset(offsetParam);
       if (visitsArray.length === 0 || visitsArray.length < VISITS_AT_TIME)
         setEndReached(true);

@@ -107,7 +107,7 @@ export default function SeeVisit() {
       id: v.follows,
     };
     try {
-      const pv = await CommunicationController.get("visit", params);
+      const pv = await CommunicationController.get("visit/inPerson", params);
       setPrevVisit(pv);
     } catch (err) {
       console.log(err);

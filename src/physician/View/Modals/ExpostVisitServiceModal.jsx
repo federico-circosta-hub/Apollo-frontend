@@ -43,7 +43,7 @@ export default function ExpostVisitServiceModal(props) {
     offsetParam === 0 ? setLoadingVisits(true) : setLoadingOtherVisits(true);
     setNetworkError(null);
     try {
-      let visitsArray = await CommunicationController.get("visit/incompleted", {
+      let visitsArray = await CommunicationController.get("visit/mediaOnly", {
         patient: selectedPatient.pid,
         offset: offsetParam,
         cnt: VISITS_AT_TIME,
@@ -72,7 +72,7 @@ export default function ExpostVisitServiceModal(props) {
     setLoadingOtherVisits(true);
     setNetworkError(null);
     try {
-      let visitsArray = await CommunicationController.get("visit/incompleted", {
+      let visitsArray = await CommunicationController.get("visit/mediaOnly", {
         offset: offsetParam,
         cnt: VISITS_AT_TIME,
       });

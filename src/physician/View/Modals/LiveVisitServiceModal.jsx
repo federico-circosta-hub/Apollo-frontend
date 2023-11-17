@@ -34,7 +34,7 @@ export default function LiveVisitServiceModal(props) {
     setChecking(true);
     setNetworkError(null);
     try {
-      let visit = await CommunicationController.get("visit/incompleted", {
+      let visit = await CommunicationController.get("visit/mediaOnly", {
         patient: selectedPatient.pid,
         date: new Date(),
       });
@@ -56,7 +56,7 @@ export default function LiveVisitServiceModal(props) {
     };
     try {
       let visitsArray = await CommunicationController.get(
-        "visit/incompleted",
+        "visit/mediaOnly",
         params
       );
       if (visitsArray.length > 0) {
