@@ -34,7 +34,7 @@ export default function JointInfo(props) {
     try {
       const updatedEcographies = await Promise.all(
         jointToDisplay.media_ids.map(async (e) => {
-          const eco = await CommunicationController.get("media", {
+          const eco = await CommunicationController.get("media/base64", {
             id: e,
           });
           console.log(eco);
@@ -200,15 +200,29 @@ export default function JointInfo(props) {
             networkError === null &&
             ecographies.map((item, index) => (
               <>
-                <img
-                  key={index}
-                  src={item.base64}
-                  style={{ width: "100%", margin: 5 }}
-                  onClick={() => {
-                    setSelectedEco(item);
-                    setShowPhotoModal(true);
-                  }}
-                />
+                {item.type === "image" && (
+                  <img
+                    key={index}
+                    src={item.base64}
+                    style={{ width: "100%", margin: 5 }}
+                    onClick={() => {
+                      setSelectedEco(item);
+                      setShowPhotoModal(true);
+                    }}
+                  />
+                )}
+                {item.type === "video" && (
+                  <video
+                    width={"100%"}
+                    controls
+                    onClick={() => {
+                      setSelectedEco(item);
+                      setShowPhotoModal(true);
+                    }}
+                  >
+                    <source src={item.base64} type="video/mp4" />
+                  </video>
+                )}
                 <Modal
                   fullscreen={true}
                   show={showPhotoModal}
@@ -216,18 +230,34 @@ export default function JointInfo(props) {
                   centered
                 >
                   <Modal.Body>
-                    <img
-                      src={selectedEco && selectedEco.base64}
-                      alt={"Ecografia"}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        objectFit: "contain",
-                      }}
-                      onClick={() => {
-                        setShowPhotoModal(false);
-                      }}
-                    />
+                    {selectedEco && selectedEco.type === "image" && (
+                      <img
+                        src={selectedEco && selectedEco.base64}
+                        alt={"Ecografia"}
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                          objectFit: "contain",
+                        }}
+                        onClick={() => {
+                          setShowPhotoModal(false);
+                        }}
+                      />
+                    )}
+                    {selectedEco && selectedEco.type === "video" && (
+                      <video
+                        width={"100%"}
+                        controls
+                        onClick={() => {
+                          setShowPhotoModal(false);
+                        }}
+                      >
+                        <source
+                          src={selectedEco && selectedEco.base64}
+                          type="video/mp4"
+                        />
+                      </video>
+                    )}
                   </Modal.Body>
                 </Modal>
               </>

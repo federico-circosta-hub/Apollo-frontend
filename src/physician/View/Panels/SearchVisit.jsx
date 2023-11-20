@@ -107,14 +107,14 @@ export default function SearchVisit(props) {
     navigate("/newVisit", { replace: true });
   };
 
-  const liveAlreadyExist = () => {
+  /*   const liveAlreadyExist = () => {
     return visitList.filter((e) => e.physician).length > 0
       ? isSameDay(
           parseISO(visitList.filter((e) => e.physician)[0].date),
           new Date()
         )
       : false;
-  };
+  }; */
 
   return selectedPatient ? (
     <div>
@@ -135,14 +135,16 @@ export default function SearchVisit(props) {
           <div style={{ display: "flex", gap: 20 }}>
             <div>
               <button
-                disabled={liveAlreadyExist()}
+                //disabled={liveAlreadyExist()}
                 className="btn btn-primary"
                 style={{ fontSize: 24 }}
                 onClick={() => createNewVisit(true, undefined, new Date())}
               >
-                {liveAlreadyExist()
+                {
+                  /* liveAlreadyExist()
                   ? "Visita odierna conclusa "
-                  : "Nuova visita "}
+                  : */ "Nuova visita "
+                }
                 <img
                   src={newFile}
                   alt="search"
@@ -235,7 +237,7 @@ export default function SearchVisit(props) {
                       <th
                         style={{
                           background: "white",
-                          width: "30%",
+                          width: "35%",
                         }}
                       >
                         Data
@@ -260,7 +262,7 @@ export default function SearchVisit(props) {
                       <th
                         style={{
                           background: "white",
-                          width: "20%",
+                          width: "15%",
                         }}
                       >
                         Tipo visita
@@ -328,14 +330,14 @@ export default function SearchVisit(props) {
             />
           )}
         </div>
-        <div>
+        {/*         <div>
           {showLiveServiceModal && (
             <LiveVisitServiceModal
               onCancel={() => setShowLiveServiceModal(false)}
               onCreate={createNewVisit}
             />
           )}
-        </div>
+        </div> */}
       </MainContainer>
     </div>
   ) : (
