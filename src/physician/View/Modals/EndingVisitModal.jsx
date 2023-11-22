@@ -316,6 +316,12 @@ export default function EndingVisitModal(props) {
                 overflowY: "scroll",
               }}
             >
+              {props.visit.ecographies.filter((e) => !e.realJoint).length ===
+                0 && (
+                <p>
+                  <em>Nessuna ecografia scartata</em>
+                </p>
+              )}
               {props.visit.ecographies
                 .filter((e) => !e.realJoint)
                 .map((item, index) => (

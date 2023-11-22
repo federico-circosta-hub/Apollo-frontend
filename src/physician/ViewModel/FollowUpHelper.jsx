@@ -11,6 +11,7 @@ export default function FollowUpHelper(props) {
   const { setSelectedVisit } = useContext(VisitContext);
 
   const previousVisitDate = new Date(props.previousVisit.date);
+  const { newVisit } = useContext(NewVisitContext);
 
   function dateDiffInDays(a, b) {
     const _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -20,7 +21,7 @@ export default function FollowUpHelper(props) {
   }
 
   const checkDate = () => {
-    let d = dateDiffInDays(previousVisitDate, new Date());
+    let d = dateDiffInDays(previousVisitDate, newVisit.visitDate);
     return d > 30;
   };
 

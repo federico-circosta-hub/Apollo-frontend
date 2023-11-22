@@ -66,6 +66,7 @@ export default function JointVisitQuestions(props) {
       patient: selectedPatient.pid,
       date: format(newVisit.visitDate, "y-MM-d"),
     };
+    console.log(params);
     try {
       const j = await CommunicationController.get("joint/lastReport", params);
       props.joint.setIndexJoint(j.index_joint);
