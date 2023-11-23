@@ -26,14 +26,14 @@ export default function Treatment(props) {
         border: "0.5px solid #56AEC9",
         boxShadow: "2px 2px 4px #56AEC9",
         borderRadius: "20px",
-        gap: "2vh",
-        padding: "1.5%",
+        gap: "1vh",
+        padding: "1%",
         background: "#edfdff",
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <label style={{ fontSize: 22 }}>
-          <img src={response} width={50} alt="" />
+        <label style={{ fontSize: 20 }}>
+          <img src={response} width={45} alt="" />
           Risposta al trattamento
         </label>
         <button className="btn btn-info" onClick={() => setShowDialog(true)}>
@@ -49,7 +49,7 @@ export default function Treatment(props) {
         style={{
           display: "flex",
           justifyContent: "start",
-          gap: 20,
+          gap: 10,
           alignItems: "center",
         }}
       >

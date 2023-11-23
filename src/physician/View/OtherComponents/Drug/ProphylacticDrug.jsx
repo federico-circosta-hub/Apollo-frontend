@@ -24,8 +24,8 @@ export default function ProphylacticDrug(props) {
       }
     >
       <div>
-        <label style={{ fontSize: 22 }}>
-          <img src={p_drugs} width={50} alt="" />
+        <label style={{ fontSize: 20 }}>
+          <img src={p_drugs} width={45} alt="" />
           Medicinale di profilassi
         </label>
       </div>
@@ -149,8 +149,8 @@ const style = {
     flexDirection: "column",
     justifyContent: "space-between",
     borderRadius: "20px",
-    padding: "1.5%",
-    gap: "2vh",
+    padding: "1%",
+    gap: "1vh",
     margin: "1%",
     border: "0.5px solid #daa520",
     boxShadow: "2px 2px 4px #daa520",

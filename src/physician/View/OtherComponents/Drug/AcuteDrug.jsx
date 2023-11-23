@@ -22,8 +22,8 @@ export default function AcuteDrug(props) {
       }
     >
       <div>
-        <label style={{ fontSize: 22 }}>
-          <img src={a_drugs} width={50} alt="" />
+        <label style={{ fontSize: 20 }}>
+          <img src={a_drugs} width={45} alt="" />
           Medicinale acuto
         </label>
       </div>
@@ -102,8 +102,8 @@ const style = {
     flexDirection: "column",
     justifyContent: "space-between",
     borderRadius: "20px",
-    padding: "1.5%",
-    gap: "2vh",
+    padding: "1%",
+    gap: "1vh",
     border: "0.5px solid #b22222",
     boxShadow: "2px 2px 4px #b22222",
   },
