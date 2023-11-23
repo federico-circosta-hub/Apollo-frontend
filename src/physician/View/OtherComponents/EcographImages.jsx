@@ -99,7 +99,7 @@ const EcographImages = (props) => {
                 style={{ borderRadius: "5px" }}
               />
             )}
-            {photo.type === "video" && (
+            {/* {photo.type === "video" && (
               <video
                 width={"100%"}
                 controls
@@ -107,7 +107,7 @@ const EcographImages = (props) => {
               >
                 <source src={photo.base64} type="video/mp4" />
               </video>
-            )}
+            )} */}
 
             <Button
               onClick={() => handleEditScan(photo)}

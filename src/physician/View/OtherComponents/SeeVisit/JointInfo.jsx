@@ -211,7 +211,7 @@ export default function JointInfo(props) {
                     }}
                   />
                 )}
-                {item.type === "video" && (
+                {/* {item.type === "video" && (
                   <video
                     width={"100%"}
                     controls
@@ -222,7 +222,7 @@ export default function JointInfo(props) {
                   >
                     <source src={item.base64} type="video/mp4" />
                   </video>
-                )}
+                )} */}
                 <Modal
                   fullscreen={true}
                   show={showPhotoModal}
@@ -244,7 +244,7 @@ export default function JointInfo(props) {
                         }}
                       />
                     )}
-                    {selectedEco && selectedEco.type === "video" && (
+                    {/* {selectedEco && selectedEco.type === "video" && (
                       <video
                         width={"100%"}
                         controls
@@ -257,7 +257,7 @@ export default function JointInfo(props) {
                           type="video/mp4"
                         />
                       </video>
-                    )}
+                    )} */}
                   </Modal.Body>
                 </Modal>
               </>
