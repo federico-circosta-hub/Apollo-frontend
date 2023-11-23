@@ -34,10 +34,13 @@ export default function LiveVisitServiceModal(props) {
     setChecking(true);
     setNetworkError(null);
     try {
-      let visit = await CommunicationController.get("visit/mediaOnly", {
-        patient: selectedPatient.pid,
-        date: new Date(),
-      });
+      let visit = await CommunicationController.get(
+        "visit/inPerson/mediaOnly",
+        {
+          patient: selectedPatient.pid,
+          date: new Date(),
+        }
+      );
       setSelectedVisit(visit);
       props.onCreate(true, visit.id, visit.date);
     } catch (err) {
@@ -56,7 +59,7 @@ export default function LiveVisitServiceModal(props) {
     };
     try {
       let visitsArray = await CommunicationController.get(
-        "visit/mediaOnly",
+        "visit/inPerson/mediaOnly",
         params
       );
       if (visitsArray.length > 0) {

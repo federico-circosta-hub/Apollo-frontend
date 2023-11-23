@@ -186,7 +186,7 @@ export default function Drug() {
     console.log("newVisitToSend:", newVisitToSend);
     try {
       const sendedVisit = await CommunicationController.post(
-        "visit",
+        "visit/inPerson/",
         newVisitToSend
       );
       console.log("sendedVisit:", sendedVisit);
