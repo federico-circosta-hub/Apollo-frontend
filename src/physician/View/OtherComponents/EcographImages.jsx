@@ -67,40 +67,39 @@ const EcographImages = (props) => {
               (e.realJoint === currentJoint.name &&
                 e.realSide === currentJoint.side)
           )
-        ).map(
-          (photo, index) =>
-            photo.type === "image" && (
-              <div
-                key={index}
-                style={{
-                  padding: "10px",
-                  display: "flex",
-                  flexDirection: "column",
-                  margin: 2,
-                  background: props.photos
-                    .filter(
-                      (e) =>
-                        e.realJoint === currentJoint.name &&
-                        e.realSide === currentJoint.side
-                    )
-                    .includes(photo)
-                    ? "#90ee90"
-                    : "",
-                  borderRadius: "5px",
+        ).map((photo, index) => (
+          <div
+            key={index}
+            style={{
+              padding: "10px",
+              display: "flex",
+              flexDirection: "column",
+              margin: 2,
+              background: props.photos
+                .filter(
+                  (e) =>
+                    e.realJoint === currentJoint.name &&
+                    e.realSide === currentJoint.side
+                )
+                .includes(photo)
+                ? "#90ee90"
+                : "",
+              borderRadius: "5px",
+            }}
+          >
+            {photo.type === "image" && (
+              <img
+                onLoad={() => {
+                  props.setLoadingImages(false);
                 }}
-              >
-                <img
-                  onLoad={() => {
-                    props.setLoadingImages(false);
-                  }}
-                  onClick={() => props.handleClick(photo.id)}
-                  src={photo.base64}
-                  alt={`Photo ${index}`}
-                  width={"100%"}
-                  style={{ borderRadius: "5px" }}
-                />
-
-                {/* {photo.type === "video" && (
+                onClick={() => props.handleClick(photo.id)}
+                src={photo.base64}
+                alt={`Photo ${index}`}
+                width={"100%"}
+                style={{ borderRadius: "5px" }}
+              />
+            )}
+            {photo.type === "video" && (
               <video
                 width={"100%"}
                 controls
@@ -108,31 +107,30 @@ const EcographImages = (props) => {
               >
                 <source src={photo.base64} type="video/mp4" />
               </video>
-            )} */}
+            )}
 
-                <Button
-                  onClick={() => handleEditScan(photo)}
-                  endIcon={<EditIcon />}
-                  style={{ textTransform: "none" }}
-                  variant="outlined"
-                >
-                  {photo.scan || "Altro"}
-                </Button>
+            <Button
+              onClick={() => handleEditScan(photo)}
+              endIcon={<EditIcon />}
+              style={{ textTransform: "none" }}
+              variant="outlined"
+            >
+              {photo.scan || "Altro"}
+            </Button>
 
-                <Checkbox
-                  checked={props.photos
-                    .filter(
-                      (e) =>
-                        e.realJoint === currentJoint.name &&
-                        e.realSide === currentJoint.side
-                    )
-                    .includes(photo)}
-                  onChange={(e) => handleSelect(e, photo)}
-                />
-                {props.loadingImages && <Skeletons />}
-              </div>
-            )
-        )}
+            <Checkbox
+              checked={props.photos
+                .filter(
+                  (e) =>
+                    e.realJoint === currentJoint.name &&
+                    e.realSide === currentJoint.side
+                )
+                .includes(photo)}
+              onChange={(e) => handleSelect(e, photo)}
+            />
+            {props.loadingImages && <Skeletons />}
+          </div>
+        ))}
       </div>
       {showChangingJointFieldModal && idToChange !== -1 && (
         <ChangingJointFieldMediaModal

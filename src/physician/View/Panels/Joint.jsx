@@ -132,11 +132,11 @@ export default function Joint(props) {
               eco.actualModified = { value: false, select: null };
               setPhotos((prevState) => [...prevState, eco]);
             }
-            //console.log("ottenuta eco:", eco);
+            console.log("ottenuta eco:", eco);
             setIds((prevState) => [...prevState, e]);
           } catch (error) {
             console.error("Errore durante il recupero dell'immagine:", error);
-            if (!error.response) getNewImages();
+            //if (!error.response) getNewImages();
           }
         });
         await Promise.all(fetchImagePromises);
