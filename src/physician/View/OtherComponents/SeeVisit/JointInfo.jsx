@@ -32,8 +32,8 @@ export default function JointInfo(props) {
     setLoadingEcographies(true);
     setNetworkError(null);
     try {
-      const updatedEcographies = await Promise.all(
-        jointToDisplay.media_ids.map(async (e) => {
+      const imgsBase64 = await Promise.all(
+        jointToDisplay.media_ids.imgs.map(async (e) => {
           const eco = await CommunicationController.get("media/base64", {
             id: e,
           });
@@ -41,7 +41,17 @@ export default function JointInfo(props) {
           return eco;
         })
       );
-      setEcographies(updatedEcographies);
+      const videosBase64 = await Promise.all(
+        jointToDisplay.media_ids.videos.map(async (e) => {
+          const eco = await CommunicationController.get("media/base64", {
+            id: e,
+            videoFormat: "mp4",
+          });
+          console.log(eco);
+          return eco;
+        })
+      );
+      setEcographies([...imgsBase64, ...videosBase64]);
     } catch (err) {
       setNetworkError(err || "Errore inatteso");
     } finally {
@@ -197,7 +207,8 @@ export default function JointInfo(props) {
 
         <div>
           {!loadingEcographies &&
-            networkError === null &&
+            !networkError &&
+            ecographies.length > 0 &&
             ecographies.map((item, index) => (
               <>
                 {item.type === "image" && (
@@ -211,18 +222,21 @@ export default function JointInfo(props) {
                     }}
                   />
                 )}
-                {/* {item.type === "video" && (
+                {item.type === "video" && (
                   <video
+                    key={index}
+                    autoPlay
                     width={"100%"}
                     controls
-                    onClick={() => {
+                    loop
+                    /* onClick={() => {
                       setSelectedEco(item);
                       setShowPhotoModal(true);
-                    }}
+                    }} */
                   >
                     <source src={item.base64} type="video/mp4" />
                   </video>
-                )} */}
+                )}
                 <Modal
                   fullscreen={true}
                   show={showPhotoModal}

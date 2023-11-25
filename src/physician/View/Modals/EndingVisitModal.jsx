@@ -106,7 +106,7 @@ export default function EndingVisitModal(props) {
   };
 
   return (
-    <Modal show={props.showModal} animation={true} scrollable={true} size="lg">
+    <Modal show={props.showModal} animation={true} scrollable={true} fullscreen>
       <Modal.Header style={{ background: "#f0f8ff" }}>
         <Modal.Title>Confermare conclusione visita</Modal.Title>
       </Modal.Header>
@@ -223,11 +223,26 @@ export default function EndingVisitModal(props) {
 
           <br />
           <h5>Aricolazioni visitate</h5>
-          {props.visit.joints.length > 0 ? (
-            props.visit.joints.map((e) => {
-              return (
-                <>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              top: "0",
+              zIndex: "1",
+              background: "white",
+              borderRadius: 5,
+              overflowY: "scroll",
+              marginBottom: 10,
+              padding: 10,
+              height: "30vh",
+            }}
+          >
+            {props.visit.joints.length > 0 ? (
+              props.visit.joints.map((e) => {
+                return (
                   <button
+                    style={{ margin: 5 }}
                     className="btn btn-primary"
                     onClick={() => setSelectedJoint(e)}
                   >
@@ -236,14 +251,14 @@ export default function EndingVisitModal(props) {
                       e.side
                     )}
                   </button>
-                </>
-              );
-            })
-          ) : (
-            <p>
-              <em>Nessuna articolazione visitata</em>
-            </p>
-          )}
+                );
+              })
+            ) : (
+              <p>
+                <em>Nessuna articolazione visitata</em>
+              </p>
+            )}
+          </div>
           <div>
             {selectedJoint && (
               <button
@@ -279,62 +294,99 @@ export default function EndingVisitModal(props) {
               <> Ecografie non utilizzate: </>
             )}
           </h5>
-
-          {selectedJoint ? (
-            <div
-              style={{
-                padding: 10,
-                display: "flex",
-                flexDirection: "column",
-                overflowY: "scroll",
-              }}
-            >
-              {" "}
-              {props.visit.ecographies
-                .filter(
-                  (e) =>
-                    e.realJoint === selectedJoint.jointName &&
-                    e.realSide === selectedJoint.side
-                )
-                .map((item, index) => (
-                  <>
-                    {console.log(item)}
-                    <img
-                      key={index}
-                      src={item.base64}
-                      style={{ width: "100%", margin: 5 }}
-                    />
-                  </>
-                ))}
-            </div>
-          ) : (
-            <div
-              style={{
-                padding: 10,
-                display: "flex",
-                flexDirection: "column",
-                overflowY: "scroll",
-              }}
-            >
-              {props.visit.ecographies.filter((e) => !e.realJoint).length ===
-                0 && (
-                <p>
-                  <em>Nessuna ecografia scartata</em>
-                </p>
-              )}
-              {props.visit.ecographies
-                .filter((e) => !e.realJoint)
-                .map((item, index) => (
-                  <>
-                    <img
-                      key={index}
-                      src={item.base64}
-                      style={{ width: "100%", margin: 5 }}
-                    />
-                  </>
-                ))}
-            </div>
-          )}
+          <div
+            style={{
+              // position: "sticky",
+              top: "0",
+              zIndex: "1",
+              background: "white",
+              borderRadius: "20px",
+              overflowY: "scroll",
+            }}
+          >
+            {selectedJoint ? (
+              <div
+                style={{
+                  padding: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {" "}
+                {props.visit.ecographies
+                  .filter(
+                    (e) =>
+                      e.realJoint === selectedJoint.jointName &&
+                      e.realSide === selectedJoint.side
+                  )
+                  .map((item, index) => (
+                    <>
+                      {item.type === "image" && (
+                        <img
+                          key={index}
+                          src={item.base64}
+                          style={{ width: "100%", margin: 5 }}
+                        />
+                      )}
+                      {item.type === "video" && (
+                        <video
+                          key={index}
+                          loop
+                          autoPlay
+                          controls="true"
+                          muted
+                          width="100%"
+                          height="100%"
+                          src={item.base64}
+                          type="video/mp4"
+                        ></video>
+                      )}
+                    </>
+                  ))}
+              </div>
+            ) : (
+              <div
+                style={{
+                  padding: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {props.visit.ecographies.filter((e) => !e.realJoint).length ===
+                  0 && (
+                  <p>
+                    <em>Nessuna ecografia scartata</em>
+                  </p>
+                )}
+                {props.visit.ecographies
+                  .filter((e) => !e.realJoint)
+                  .map((item, index) => (
+                    <>
+                      {item.type === "image" && (
+                        <img
+                          key={index}
+                          src={item.base64}
+                          style={{ width: "100%", margin: 5 }}
+                        />
+                      )}
+                      {item.type === "video" && (
+                        <video
+                          key={index}
+                          loop
+                          autoPlay
+                          controls="true"
+                          muted
+                          width="100%"
+                          height="100%"
+                          src={item.base64}
+                          type="video/mp4"
+                        ></video>
+                      )}
+                    </>
+                  ))}
+              </div>
+            )}
+          </div>
         </div>
       </Modal.Body>
 

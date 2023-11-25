@@ -101,12 +101,15 @@ const EcographImages = (props) => {
             )}
             {photo.type === "video" && (
               <video
-                width={"100%"}
-                controls
-                onClick={() => props.handleClick(photo.id)}
-              >
-                <source src={photo.base64} type="video/mp4" />
-              </video>
+                loop
+                autoPlay
+                controls="true"
+                muted
+                width="100%"
+                height="100%"
+                src={photo.base64}
+                type="video/mp4"
+              ></video>
             )}
 
             <Button
